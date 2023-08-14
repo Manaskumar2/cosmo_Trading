@@ -9,7 +9,8 @@ const Wallet = require("../models/companywallet");
 let walletId = "64c4e1fefff409e9859e8216";
 
 let groupOptions = ["small", "big"];
-let durationOptions = [1,3, 5,10];
+let durationOptions = [1, 3, 5, 10];
+
 // let durationOptions = [1];
 
 let downloadResult = [0.7, 0.5, 0.3, 0.2, 0.15, 0.1, 0.08, 0.06, 0.05, 0.04];
