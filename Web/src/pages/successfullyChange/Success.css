@@ -1,0 +1,82 @@
+.logo-box{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.title{
+    color: #FFF;
+  text-align: left;
+  font-family: 'Montserrat';
+  font-size: 1.75rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 3.125rem; /* 178.571% */
+  letter-spacing: 0.00875rem;
+  }
+  /* .forgotPage {min-height: 100vh;} */
+.forgotPage .container-fluid {padding: 40px;}
+.forgotPage .wrapper .logo-container {position: relative;}
+.forgotPage .wrapper .container-fluid {border-radius: 1.875rem 1.875rem 0rem 0rem;background: #003D69;min-height: 85vh; position: absolute; top:8.5rem;padding-top: 3rem;background-image: url('../../images/elipse.svg') ;background-repeat: no-repeat;}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.front{padding-right: 1rem;border-right: 1px solid #1970AE }
+.forgotPage .container-fluid .title-container {margin-top: 8rem;}
+.forgotPage .container-fluid .logo-container .logo {position: absolute;}
+.forgotPage .container-fluid .logo-container .back-btn {position: absolute;left: 0;top: 1.7rem;}
+.forgotPage .container-fluid .inputBox {margin-top: 2rem;}
+.inputBox {display: flex;padding: 15px;align-items: center;color: #fff;font-family: "Montserrat";align-self: stretch;border-radius: 5px;border: 1px solid #4e69b1;gap: .5rem;margin-bottom: 1.5rem;}
+.inputBox input {color: #fff;font-family: "Montserrat";font-size: 18px;font-style: normal;font-weight: 500;line-height: normal;letter-spacing: 0.9px;background-color: transparent;border: 0;outline: none;}
+.otp p {color: #3b6aa0;text-align: center;font-family: "Montserrat";font-size: 1rem;font-style: normal;font-weight: 400;line-height: normal;}
+.wrapper{position: static;}
+.top .row{background: url('../../images/Game-Banner.svg'); height: 10rem;}
+.back{padding-top: 1rem; padding-left: 1rem;}
+.head{padding-top: 1rem; padding-right: 1rem;}
+.title{margin-top: 1rem !important;text-align: center;}
+.top{overflow: hidden;}
+.top .row .col-8{color: #FFF;
+    text-align: center;
+    font-family: 'Montserrat';
+    font-size: 1.375rem;
+    font-style: normal;
+    font-weight: 500;
+    letter-spacing: 0.00688rem;
+    text-transform: capitalize; padding-top: 1rem;}
+    .btn-container{margin-top: 3rem;}
+.passwordChange-btn{margin-top: 3rem;}
+.back-btn{outline: none; border: 0; background-color: transparent;}
+.top-btn{border-radius: 6.25rem;
+    background: linear-gradient(143deg, #C82F36 0%, #EC4E55 100%);
+    box-shadow: 0px 4px 15px 0px rgba(200, 47, 54, 0.80);padding: 16px 30px;font-family: 'Dosis'; color: #FFF;border: 0;letter-spacing: 2.2px; outline: none;font-weight: 500; margin-top: 1rem; width: 100%;}
+  .bot-btn{width: 100%;text-align: center;background: transparent;border-radius: 6.25rem;
+    border: 1px solid #E5B21B;
+    box-shadow: 0px 2px 10px 0px #E8A806;font-weight: 500; padding: 16px 30px;font-family: 'Dosis'; color: #E7AC17;border: 0;letter-spacing: 2.2px; outline: none;font-weight: 500; margin-top: 1.5rem;}
+  .btn-container{margin-top: 3rem;}
+  @media (min-width: 768px){
+    .desktop{
+      width: 30vw;
+      display: block;
+      margin: auto;
+    }
+    .inputBox {
+      gap: 2rem;
+  }
+}
+.successBlue{width:100%; display :flex; justify-content: center; margin:1rem 0;}
+.login_here{color: #3B6AA0;
+    text-align: center; font-family: 'Montserrat';font-weight: 500;}
+.login_here a{text-decoration:none;color: #28C2F3;}
+@media (min-width: 768px){
+    .desktop{
+      width: 30vw;
+      display: block;
+      margin: auto;
+    }
+    .forgotPage .wrapper .container-fluid {
+      width: 30vw;
+    
+  }
+  }

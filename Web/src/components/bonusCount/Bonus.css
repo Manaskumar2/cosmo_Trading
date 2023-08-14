@@ -1,0 +1,7 @@
+.bonus .container{background-image: url('../../images/bonus.svg');background-repeat: no-repeat; height: 18rem;background-position: center;overflow: hidden;}
+.bonus .container .txt{    top: 10rem;
+    left: 7rem;
+    position: relative;}
+.bonus .container .txt p{color: #FFEBEB;font-family: 'Montserrat';font-size: 1rem; margin-bottom: 5px;}
+.bonus .container .txt h3{color: #FFF;font-family: 'Montserrat';font-size: 1.5rem;font-style: normal;font-weight: 600;}
+

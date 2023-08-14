@@ -1,0 +1,12 @@
+.count .container .row .col-4 p{color: #99EDFF;
+    text-align: center;
+    font-family: 'Montserrat';
+    font-size: 10px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;}
+.count .container{border-radius: 1.25rem;
+    background: #02375B; padding: 1rem; }
+    .count{padding: 0 1rem;}
+    .count .container .row .col-4{display: flex; flex-direction: column; justify-content: center; align-items: center;gap: .5rem;}
+    .num{color: #fff;}

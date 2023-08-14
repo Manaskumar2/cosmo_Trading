@@ -1,0 +1,60 @@
+const userModel = require("../models/userModel")
+
+
+
+const generateUniqueReferralCode = async () => {
+    const referralCodeLength = 6;
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let referralCode = '';
+    for (let i = 0; i < referralCodeLength; i++) {
+      referralCode += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    const user = await userModel.findOne({ referralCode: referralCode })
+    if (!user) {
+        return referralCode;
+    }
+    return await generateIniqueReferralCode() 
+}
+
+
+  const  generate7DigitUniqueId  = async() =>{
+  try {
+   
+    const timestamp = Date.now().toString();
+
+    function getRandomNumber(min, max) {
+      return Math.floor(Math.random() * (max - min)) + min;
+    }
+
+    const randomPortion = getRandomNumber(100, 1000);
+
+    const uniqueId = timestamp + randomPortion;
+   
+
+    const sevenDigitId = uniqueId.slice(-7);
+
+    return sevenDigitId;
+  } catch (error) {
+    console.error('Error generating unique ID:', error);
+    throw error;
+  }
+}
+async function generateUniqueNumber() {
+  const now = new Date();
+
+  const year = now.getFullYear().toString().padStart(4, '0');
+  const month = (now.getMonth() + 1).toString().padStart(2, '0');
+  const day = now.getDate().toString().padStart(2, '0');
+  const hour = now.getHours().toString().padStart(2, '0');
+  const minute = now.getMinutes().toString().padStart(2, '0');
+  const second = now.getSeconds().toString().padStart(2, '0');
+
+  const uniqueNumber = `${year}${month}${day}${hour}${minute}${second}`;
+  return uniqueNumber;
+}
+
+module.exports = {
+   generateUniqueReferralCode ,
+  generate7DigitUniqueId,
+   generateUniqueNumber
+  }

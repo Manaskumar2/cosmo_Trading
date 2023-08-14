@@ -1,0 +1,20 @@
+.accordion-button{background-image: url('../../images/rec.svg') ;background-position: cover; background-repeat: no-repeat; padding:8px; background-color:  #01284D; display: flex;justify-content: space-between;align-items: center;width: 100%; border: 0; outline: none;border-radius: 0px;border-bottom: 1px solid #0A4478;}
+.step{padding-left: 6rem;}
+.accordion-button:not(.collapsed) {background-color: #01284D;}
+.accordion-body{background-color: #01284D;color: #8FDEFF;font-family: 'Montserrat';font-size: 0.875rem;font-style: normal;font-weight: 400;line-height: 150%; /* 1.3125rem */}
+.how-it-works{margin-top: 4rem;padding: 1rem;}
+.accordion-item{border: 0; outline: none;border-radius: 0px;}
+.acc-title{ color: #FFF;
+    font-size: 1.3rem; font-weight: 500;
+    font-family: 'Montserrat';width: 70%;}
+    .accordion-button {margin-top: .8rem;}
+    .accordion-body {padding: 2rem}
+    .accordion-button:not(.collapsed) {
+        /* color: var(--bs-accordion-active-color); */
+        /* background-color: var(--bs-accordion-active-bg); */
+        box-shadow: none;
+    }
+    .acc-step{font-size: 1.3rem; font-weight: 500;
+        font-family: 'Montserrat';width: 30%;text-align: right;}
+    
+.accordion-button::after {display: none;}

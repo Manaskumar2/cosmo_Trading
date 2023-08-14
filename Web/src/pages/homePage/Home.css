@@ -1,0 +1,12 @@
+.home .container{border-bottom: 1px solid #133B77;
+    background: #001C3E; background-image: url('../../images/belips.png');background-position: bottom; background-repeat: no-repeat;}
+ .home .container .col-3{display: flex; justify-content: center; align-items: center;}
+.download svg{font-size: 2rem; color:#ffffff;}
+.home .container .col-9 {text-align: center;}
+.home .container .col-9 img {margin-left: 5rem;}
+
+.main-background{  background: #001C3E ; display: block; margin: auto;}
+
+@media(min-width:768px){
+    .main-background{width: 30vw;}
+}

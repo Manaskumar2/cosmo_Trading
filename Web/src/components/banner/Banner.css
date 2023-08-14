@@ -1,0 +1,7 @@
+.announcement{padding: 0 1.5rem;}
+.announcement .title{margin-bottom: 2rem;}
+.carousel-item img{width: 100%;}
+.announcement .title{margin-top: 2rem;}
+.marquee-wrapper{border-radius: 6.25rem;
+    background: #033066;color: #447BBD}
+    .title{color: #FFF;font-family: 'Montserrat';font-size: 1.75rem;font-style: normal;font-weight: 600;letter-spacing:0.00875rem;}
