@@ -28,8 +28,6 @@ const rootDir = path.resolve(__dirname);
 
 if (process.env.NODE_ENV === "development") {
   dotenv.config({ path: ".env.development" });
-} else if (process.env.NODE_ENV === "testenv") {
-  dotenv.config({ path: ".env.testenv" });
 } else if (process.env.NODE_ENV === "production") {
   dotenv.config({ path: ".env.production" });
 }
@@ -61,8 +59,6 @@ if (
   process.env.NODE_ENV === "development"
 ) {
   app.use(express.static("ui"));
-  app.use(express.static("sanity"));
-
   app.get("*", (req, res) => {
     res.sendFile(path.join(rootDir, "ui/index.html"));
   });

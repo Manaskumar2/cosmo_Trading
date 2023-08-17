@@ -9,6 +9,7 @@ const authentication = (req, res, next) => {
     let bearerToken = bearerHeader?.split(' ')
     let token = bearerToken[1] ? bearerToken[1] : req.body.authToken;
 
+
   
 
     jwt.verify(token, process.env.JWT_TOKEN, function (err, data) {
@@ -23,4 +24,13 @@ const authentication = (req, res, next) => {
     res.status(500).send({ status: false, error: err.message })
   }
 }
-module.exports = { authentication }
+const adminAuthorization = (req, res, next) => {
+ if( req.decodedToken.isAdmin=== "true" ){
+    next();
+  } else {
+    // User is not an admin
+    res.status(403).send({ status: false, message: 'Access denied. Admin privileges required.' });
+  }
+};
+
+module.exports = { authentication}

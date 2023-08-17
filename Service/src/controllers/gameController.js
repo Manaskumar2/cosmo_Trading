@@ -9,8 +9,7 @@ const Wallet = require("../models/companywallet");
 let walletId = "64c4e1fefff409e9859e8216";
 
 let groupOptions = ["small", "big"];
-let durationOptions = [1, 3, 5, 10];
-
+let durationOptions = [1,3, 5,10];
 // let durationOptions = [1];
 
 let downloadResult = [0.7, 0.5, 0.3, 0.2, 0.15, 0.1, 0.08, 0.06, 0.05, 0.04];
@@ -121,33 +120,30 @@ async function calculatResult(gameId) {
     });
     await wallet.save();
     console.log("remaining money is ", totalAmount - distributedAmount);
-  } else if (bigAmount == 0 || smallAmount == 0) {
-    let totalAmount = smallAmount + bigAmount;
-    game.bets.forEach((bet) => {
-      forEach(async (bet) => {
-        let winAmount = roundDown(bet.amount * 0.70, 2);
-        totalAmount = totalAmount - winAmount;
-        await userModel.updateOne(
-          { _id: bet.user._id },
-          { walletAmount: bet.user.walletAmount + winAmount }
-        );
-      });
-    });
-    let distributedAmount = await distributeComissionToAll(game);
-    let compnayFund = totalAmount - distributedAmount;
-    const wallet = await Wallet.findOne({ _id: walletId });
-    wallet.amount = wallet.amount + compnayFund;
-    wallet.actions.push({
-      actions: "+",
-      date: new Date(),
-      amount: compnayFund,
-      wonFrom: "betting",
-      source: game._id,
-    });
-    await wallet.save();
-    console.log("remaining money is ", totalAmount - distributedAmount);
-
+ } else if (bigAmount == 0 || smallAmount == 0) {
+  let totalAmount = smallAmount + bigAmount;
+  for (const bet of game.bets) {
+    let winAmount = roundDown(bet.amount * 0.70, 2);
+    totalAmount -= winAmount;
+    await userModel.updateOne(
+      { _id: bet.user._id },
+      { $inc: { walletAmount: winAmount } }
+    );
   }
+  let distributedAmount = await distributeComissionToAll(game);
+  let compnayFund = totalAmount - distributedAmount;
+  const wallet = await Wallet.findOne({ _id: walletId });
+  wallet.amount += compnayFund;
+  wallet.actions.push({
+    actions: "+",
+    date: new Date(),
+    amount: compnayFund,
+    wonFrom: "betting",
+    source: game._id,
+  });
+  await wallet.save();
+  console.log("remaining money is ", totalAmount - distributedAmount);
+}
 }
 
 async function distributeComissionToAll(game) {
@@ -213,14 +209,14 @@ const startAndCheckGame = async (duration) => {
         endTime: moment(new Date()).tz("Asia/Kolkata").add(duration, "m"),
         gameUID: await generateUniqueNumber()
       });
-      // setTimeout(() => {
-      //     startAndCheckGame(duration)
-      // }, duration * 60 * 1000)
+      setTimeout(() => {
+          startAndCheckGame(duration)
+      }, duration * 60 * 1000)
     } else {
       let currentDate = moment(new Date()).tz("Asia/Kolkata");
-      //   setTimeout(() => {
-      //     startAndCheckGame(duration);
-      //   }, (game.endTime.unix() - currentDate.unix()) * 1000);
+        setTimeout(() => {
+          startAndCheckGame(duration);
+        }, (game.endTime.unix() - currentDate.unix()) * 1000);
     }
   } else {
     await Game.create({
@@ -229,15 +225,15 @@ const startAndCheckGame = async (duration) => {
       endTime: moment(new Date()).tz("Asia/Kolkata").add(duration, "m"),
       gameUID: await generateUniqueNumber()
     });
-    // setTimeout(() => {
-    //   startAndCheckGame(duration);
-    // }, duration * 60 * 1000);
+    setTimeout(() => {
+      startAndCheckGame(duration);
+    }, duration * 60 * 1000);
   }
 };
 
-// durationOptions.forEach((value) => {
-//     startAndCheckGame(value)
-// })
+durationOptions.forEach((value) => {
+    startAndCheckGame(value)
+})
 
 const betController = async (req, res) => {
   try {
@@ -333,11 +329,12 @@ const growUpUserBettingHistroy = async (req, res) => {
         group: userBet.group
       };
     }).filter(entry => entry !== null);
+    const count =await Game.countDocuments({ 'bets.user': userId })
 
      res.status(200).json({
       currentPage: page,
-      totalPages: totalPages,
-      totalGames: gamesCount,
+      totalPages: Math.ceil(count / limit),
+      // totalGames: gamesCount,
       history: history
     });
   } catch (error) {

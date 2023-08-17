@@ -55,41 +55,43 @@ const signUp = async (req, res) => {
 
 const signIn = async (req, res) => {
   try {
+    const data = req.body;
+    const { phoneNumber, password } = data;
 
-    let data = req.body
-    let { phoneNumber, password } = data
+    if (!phoneNumber || !password) {
+      return res.status(400).send({ status: false, message: "Provide both phone number and password to login" });
+    }
 
-    if (validation.isValidBody(data)) return res.status(400).send({ status: false, msg: "provide all  details to login" })
-
-    if (!validation.isValid(phoneNumber)) return res.status(400).send({ status: false, message: "phoneNumber is required" })
-
-    if (!validation.isValid(password)) return res.status(400).send({ status: false, message: "Pasworrd is required" })
-
-    let findUser = await userModel.findOne({ phoneNumber: phoneNumber })
+    const findUser = await userModel.findOne({ phoneNumber: phoneNumber });
 
     if (!findUser) {
-      return res.status(400).send({ status: false, message: "Invalid Phone Number" })
+      return res.status(400).send({ status: false, message: "Invalid Phone Number" });
     }
-    const correctPassword = findUser.password
 
-    let bcryptPass = await bcrypt.compare(password, correctPassword)
-    if (!bcryptPass) return res.status(400).send({ status: false, message: "Password incorrect" })
+    const correctPassword = findUser.password;
 
+    const bcryptPass = await bcrypt.compare(password, correctPassword);
+    if (!bcryptPass) {
+      return res.status(400).send({ status: false, message: "Incorrect Password" });
+    }
 
-    let token = jwt.sign({ phoneNumber: findUser.phoneNumber, userId: findUser._id }, process.env.JWT_TOKEN, { expiresIn: '365d' });
+    const token = jwt.sign({ phoneNumber: findUser.phoneNumber, userId: findUser._id,isAdmin:findUser.isAdmin}, process.env.JWT_TOKEN, { expiresIn: '365d' });
 
     const response = {
       phoneNumber: findUser.phoneNumber,
       _id: findUser._id,
-      authToken: token
-    }
-    res.status(200).send({ status: true, message: "User login successfully", data: response })
+      authToken: token,
+      isAdmin: findUser.isAdmin
+    };
+
+    res.status(200).send({ status: true, message: "User login successful", data: response });
 
   } catch (error) {
-    console.log(error)
-    res.status(500).send({ status: false, error: error.message })
+    console.error(error);
+    res.status(500).send({ status: false, error: "An error occurred while processing your request." });
   }
-}
+};
+
 
 
 function generateOTP(length) {
