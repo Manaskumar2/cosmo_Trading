@@ -70,6 +70,13 @@ app.use((error, req, res, next) => {
     },
   });
 });
+app.get('/test', (req, res) => { 
+  try {
+    res.status(200).send({status:true,message:"test successful"})
+  } catch (error) {
+    res.status( 500).json({status:false, message:error.message});
+  }
+})
 
 app.listen(process.env.PORT, function () {
   console.log(`Express app running on ${PORT}`);
