@@ -57,7 +57,7 @@ if (
 ) {
   app.use(express.static("ui"));
   app.get("*", (req, res) => {
-    res.sendFile(path.join(rootDir, "/ui/index.html"));
+    res.sendFile(path.join(rootDir, "ui/index.html"));
   });
 }
 
