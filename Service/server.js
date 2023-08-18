@@ -26,7 +26,11 @@ app.use(upload.any());
 
 const rootDir = path.resolve(__dirname);
 
- dotenv.config({ path: ".env.production" });
+if (process.env.NODE_ENV === "development") {
+  dotenv.config({ path: ".env.development" });
+} else if (process.env.NODE_ENV === "production") {
+  dotenv.config({ path: ".env.production" });
+}
 
 
 
@@ -49,11 +53,16 @@ app.use("/api", route);
 
 
 
-  app.use(express.static("ui"));
 
+if (
+  process.env.NODE_ENV === "production" ||
+  process.env.NODE_ENV === "development"
+) {
+  app.use(express.static("ui"));
   app.get("*", (req, res) => {
-    res.sendFile(path.join(rootDir, "ui/index.html"));
+    res.sendFile(path.join(rootDir, "/ui/index.html"));
   });
+}
 
 app.use((req, res, next) => {
   const error = new Error("Path not found.");
@@ -70,13 +79,6 @@ app.use((error, req, res, next) => {
     },
   });
 });
-app.get('/test', (req, res) => { 
-  try {
-    res.status(200).send({status:true,message:"test successful"})
-  } catch (error) {
-    res.status( 500).json({status:false, message:error.message});
-  }
-})
 
 app.listen(process.env.PORT, function () {
   console.log(`Express app running on ${PORT}`);

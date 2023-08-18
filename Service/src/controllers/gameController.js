@@ -120,7 +120,7 @@ async function calculatResult(gameId) {
     });
     await wallet.save();
     console.log("remaining money is ", totalAmount - distributedAmount);
- } else if (bigAmount == 0 || smallAmount == 0) {
+  }  else if (bigAmount == 0 || smallAmount == 0) {
   let totalAmount = smallAmount + bigAmount;
   for (const bet of game.bets) {
     let winAmount = roundDown(bet.amount * 0.70, 2);
@@ -145,6 +145,7 @@ async function calculatResult(gameId) {
   console.log("remaining money is ", totalAmount - distributedAmount);
 }
 }
+
 
 async function distributeComissionToAll(game) {
   return new Promise(async function (resolve, reject) {
@@ -209,14 +210,14 @@ const startAndCheckGame = async (duration) => {
         endTime: moment(new Date()).tz("Asia/Kolkata").add(duration, "m"),
         gameUID: await generateUniqueNumber()
       });
-      setTimeout(() => {
-          startAndCheckGame(duration)
-      }, duration * 60 * 1000)
+      // setTimeout(() => {
+      //     startAndCheckGame(duration)
+      // }, duration * 60 * 1000)
     } else {
       let currentDate = moment(new Date()).tz("Asia/Kolkata");
-        setTimeout(() => {
-          startAndCheckGame(duration);
-        }, (game.endTime.unix() - currentDate.unix()) * 1000);
+      //   setTimeout(() => {
+      //     startAndCheckGame(duration);
+      //   }, (game.endTime.unix() - currentDate.unix()) * 1000);
     }
   } else {
     await Game.create({
@@ -225,15 +226,15 @@ const startAndCheckGame = async (duration) => {
       endTime: moment(new Date()).tz("Asia/Kolkata").add(duration, "m"),
       gameUID: await generateUniqueNumber()
     });
-    setTimeout(() => {
-      startAndCheckGame(duration);
-    }, duration * 60 * 1000);
+    // setTimeout(() => {
+    //   startAndCheckGame(duration);
+    // }, duration * 60 * 1000);
   }
 };
 
-durationOptions.forEach((value) => {
-    startAndCheckGame(value)
-})
+// durationOptions.forEach((value) => {
+//     startAndCheckGame(value)
+// })
 
 const betController = async (req, res) => {
   try {
