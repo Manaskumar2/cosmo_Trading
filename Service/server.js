@@ -25,6 +25,7 @@ app.use(upload.any());
 
 
 const rootDir = path.resolve(__dirname);
+ console.log(rootDir)
 
   dotenv.config({ path: ".env.production" });
 
