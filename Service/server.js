@@ -10,7 +10,7 @@ const mongoose = require('mongoose');
 app.use(
   cors({
     credentials: true,
-    origin: ["http://cosmotrade.live", "http://localhost:3000","http://localhost:3333"]
+    origin: ["http://cosmotrade.live","https://cosmotrade.netlify.app", "http://localhost:3000","http://localhost:3333"]
   })
 );
 
@@ -56,10 +56,10 @@ app.use("/api", route);
 //   process.env.NODE_ENV === "production"
 // )
 //  {
-  app.use(express.static("ui"));
-  app.get("*", (req, res) => {
-    res.sendFile(path.join(rootDir, "/ui/index.html"));
-  });
+  // app.use(express.static("ui"));
+  // app.get("*", (req, res) => {
+  //   res.sendFile(path.join(rootDir, "/ui/index.html"));
+  // });
 // }
 
 app.use((req, res, next) => {
