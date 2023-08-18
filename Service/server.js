@@ -26,11 +26,8 @@ app.use(upload.any());
 
 const rootDir = path.resolve(__dirname);
 
-if (process.env.NODE_ENV === "development") {
-  dotenv.config({ path: ".env.development" });
-} else if (process.env.NODE_ENV === "production") {
   dotenv.config({ path: ".env.production" });
-}
+
 
 
 
@@ -55,8 +52,8 @@ app.use("/api", route);
 
 
 if (
-  process.env.NODE_ENV === "production" ||
-  process.env.NODE_ENV === "development"
+  process.env.NODE_ENV === "production"
+
 ) {
   app.use(express.static("ui"));
   app.get("*", (req, res) => {
