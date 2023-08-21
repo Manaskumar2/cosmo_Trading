@@ -47,10 +47,10 @@ app.use("/api", route);
 
 
 
-if (
-   process.env.NODE_ENV === "production"
+// if (
+//    process.env.NODE_ENV === "production"
 
-) {
+// ) {
   // app.use(express.static("dist"));
   // app.get("*", (req, res) => {
   //   res.sendFile(path.join(rootDir, "../Web/dist/index.html"));
@@ -60,7 +60,7 @@ if (
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname + "../Web/dist/index.html"));
 });
- }
+//  }
 
 app.use((req, res, next) => {
   const error = new Error("Path not found.");
