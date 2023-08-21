@@ -48,7 +48,7 @@ app.use("/api", route);
 
 
 if (
-   process.env.NODE_ENV === "production"||process.env.NODE_ENV === "development"
+   process.env.NODE_ENV === "production"
 
 ) {
   // app.use(express.static("dist"));
