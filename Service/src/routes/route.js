@@ -1,8 +1,14 @@
 const express = require("express");
 const router = express.Router();
 const { signUp, signIn,sendOtpPhone,verifyOtp,resetPassword,updateUserProfile,getUserDetails, getDownlineDetails} = require("../controllers/userController")
-const{authentication} = require("../middlewares/authMiddleware")
+const{authentication,adminAuthorization} = require("../middlewares/authMiddleware")
 const gameController = require("../controllers/gameController")
+const { uploadQrCode } = require('../controllers/qrCodeController')
+const multer = require('multer');
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
 
 
 
@@ -18,6 +24,11 @@ router.post("/bet", authentication, gameController.betController)
 router.get("/bettingHistory/:UserId", authentication, gameController.growUpUserBettingHistroy)
 router.get('/getDownlinerDetails/:userId', authentication, getDownlineDetails)
 router.get('/getgame/:duration', authentication, gameController.getGame)
-router.get("/getSuccessFullGameHistory",authentication,gameController.getGameHistory)
+router.get("/getSuccessFullGameHistory", authentication, gameController.getGameHistory)
+
+
+router.post("/uploadQrcode",authentication,adminAuthorization,uploadQrCode)
+
+
 
 module.exports =router

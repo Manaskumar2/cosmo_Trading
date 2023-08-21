@@ -227,7 +227,8 @@ async function distributeComissionToThreeUsers(winner, runnerUp, losers, game) {
         totalAmount = totalAmount - winAmount
         await userModel.updateOne(
             { _id: winner.bets[i].user._id },
-            { walletAmount: winner.bets[i].user.walletAmount + winAmount }
+            { walletAmount: winner.bets[i].user.walletAmount + winAmount },
+            {winningAmount: bet.user.winningAmount + winAmount}
         );
     }
 
@@ -236,7 +237,8 @@ async function distributeComissionToThreeUsers(winner, runnerUp, losers, game) {
         totalAmount = totalAmount - winAmount
         await userModel.updateOne(
             { _id: runnerUp.bets[i].user._id },
-            { walletAmount: runnerUp.bets[i].user.walletAmount + winAmount }
+            { walletAmount: runnerUp.bets[i].user.walletAmount + winAmount },
+            {winningAmount: bet.user.winningAmount + winAmount}
         );
     }
 
@@ -247,7 +249,8 @@ async function distributeComissionToThreeUsers(winner, runnerUp, losers, game) {
             totalAmount = totalAmount - winAmount
             await userModel.updateOne(
                 { _id: game.bets[i].user._id },
-                { walletAmount: game.bets[i].user.walletAmount + winAmount }
+                { walletAmount: game.bets[i].user.walletAmount + winAmount },
+                {winningAmount: bet.user.winningAmount + winAmount}
             );
         }
     }
@@ -280,7 +283,8 @@ async function distributeComissionToTWoUsers(winner, losers, game) {
         totalAmount = totalAmount - winAmount
         await userModel.updateOne(
             { _id: winner.bets[i].user._id },
-            { walletAmount: winner.bets[i].user.walletAmount + winAmount }
+            { walletAmount: winner.bets[i].user.walletAmount + winAmount },
+            {winningAmount: bet.user.winningAmount + winAmount}
         );
     }
 
@@ -292,7 +296,8 @@ async function distributeComissionToTWoUsers(winner, losers, game) {
             totalAmount = totalAmount - winAmount
             await userModel.updateOne(
                 { _id: game.bets[i].user._id },
-                { walletAmount: game.bets[i].user.walletAmount + winAmount }
+                { walletAmount: game.bets[i].user.walletAmount + winAmount },
+                {winningAmount: bet.user.winningAmount + winAmount}
             );
         }
     }
@@ -333,7 +338,8 @@ async function distributeComissionToOneUser(winner, game) {
             totalAmount = totalAmount - winAmount
             await userModel.updateOne(
                 { _id: game.bets[i].user._id },
-                { walletAmount: game.bets[i].user.walletAmount + winAmount }
+                { walletAmount: game.bets[i].user.walletAmount + winAmount },
+                {winningAmount: bet.user.winningAmount + winAmount}
             );
         }
     }

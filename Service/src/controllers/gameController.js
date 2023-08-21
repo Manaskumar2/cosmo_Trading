@@ -93,7 +93,8 @@ async function calculatResult(gameId) {
         totalAmount = totalAmount - winAmount;
         await userModel.updateOne(
           { _id: bet.user._id },
-          { walletAmount: bet.user.walletAmount + winAmount }
+          { walletAmount: bet.user.walletAmount + winAmount },
+          {winningAmount: bet.user.winningAmount + winAmount}
         );
       });
     } else if (winnerGroup == "big") {
@@ -102,7 +103,9 @@ async function calculatResult(gameId) {
         totalAmount = totalAmount - winAmount;
         await userModel.updateOne(
           { _id: bet.user._id },
-          { walletAmount: bet.user.walletAmount + winAmount }
+          { walletAmount: bet.user.walletAmount + winAmount },
+          {winningAmount: bet.user.winningAmount + winAmount}
+
         );
       });
     }
@@ -120,7 +123,7 @@ async function calculatResult(gameId) {
     });
     await wallet.save();
     console.log("remaining money is ", totalAmount - distributedAmount);
-  }  else if (bigAmount == 0 || smallAmount == 0) {
+  } else if (bigAmount == 0 || smallAmount == 0) {
   let totalAmount = smallAmount + bigAmount;
   for (const bet of game.bets) {
     let winAmount = roundDown(bet.amount * 0.70, 2);
@@ -203,21 +206,27 @@ const startAndCheckGame = async (duration) => {
     if (game.endTime.unix() - currentDate.unix() <= 0) {
       game.isCompleted = true;
       calculatResult(game._id);
-      await game.save();
+      await game.save({
+            duration: duration,
+        startTime: moment(new Date()).tz("Asia/Kolkata"),
+        endTime: moment(new Date()).tz("Asia/Kolkata").add(duration, "m"),
+        gameUID: await generateUniqueNumber()
+      }
+      );
       await Game.create({
         duration: duration,
         startTime: moment(new Date()).tz("Asia/Kolkata"),
         endTime: moment(new Date()).tz("Asia/Kolkata").add(duration, "m"),
         gameUID: await generateUniqueNumber()
       });
-      // setTimeout(() => {
-      //     startAndCheckGame(duration)
-      // }, duration * 60 * 1000)
+      setTimeout(() => {
+          startAndCheckGame(duration)
+      }, duration * 60 * 1000)
     } else {
       let currentDate = moment(new Date()).tz("Asia/Kolkata");
-      //   setTimeout(() => {
-      //     startAndCheckGame(duration);
-      //   }, (game.endTime.unix() - currentDate.unix()) * 1000);
+        setTimeout(() => {
+          startAndCheckGame(duration);
+        }, (game.endTime.unix() - currentDate.unix()) * 1000);
     }
   } else {
     await Game.create({
@@ -226,28 +235,27 @@ const startAndCheckGame = async (duration) => {
       endTime: moment(new Date()).tz("Asia/Kolkata").add(duration, "m"),
       gameUID: await generateUniqueNumber()
     });
-    // setTimeout(() => {
-    //   startAndCheckGame(duration);
-    // }, duration * 60 * 1000);
+    setTimeout(() => {
+      startAndCheckGame(duration);
+    }, duration * 60 * 1000);
   }
 };
 
-// durationOptions.forEach((value) => {
-//     startAndCheckGame(value)
-// })
+durationOptions.forEach((value) => {
+    startAndCheckGame(value)
+})
 
 const betController = async (req, res) => {
   try {
     const { amount, group, duration } = req.body;
+    console.log(amount,group,duration);
 
     if (
       !amount ||
       !group ||
-      !duration ||
-      isNaN(duration) ||
-      isNaN(amount) ||
-      !groupOptions.includes(group) ||
-      !durationOptions.includes(duration)
+      !duration 
+  
+
     ) {
       return res
         .status(400)
@@ -256,6 +264,7 @@ const betController = async (req, res) => {
 
     const user = await userModel.findById(req.decodedToken.userId);
     const game = await Game.findOne({ duration, isCompleted: false });
+    
 
     if (!user) {
       return res.status(404).json({ status: false, message: "User not found" });
@@ -282,7 +291,9 @@ const betController = async (req, res) => {
     let walletAmount = user.walletAmount - amount;
     game.bets.push({ user: user._id, amount, group });
 
-    await game.save();
+    await game.save(
+      
+    );
     await userModel.updateOne(
       { _id: user._id },
       { walletAmount: walletAmount }

@@ -54,9 +54,17 @@ const userSchema = new mongoose.Schema({
         type:Boolean,
         default:false
     },
-     isAdmin: { type: Boolean, default: false },
+    
+    isAdmin: {
+        type: Boolean,
+        default: false
+    },
+     winningAmount:{
+        type:Number,
+        default:0
+    },
 },
-
+ 
  { timestamps: true })
 
 module.exports = mongoose.model("users", userSchema)

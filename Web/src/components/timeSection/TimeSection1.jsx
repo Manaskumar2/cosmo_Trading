@@ -1,17 +1,54 @@
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue , useRecoilState} from 'recoil';
 import { OneMinute, TimeNo } from '../../Atoms/GameTime';
 import './TimeSection.css';
 import { useState, useEffect } from 'react';
+import { AuthState } from '../../Atoms/AuthState'
+import toast, { Toaster } from "react-hot-toast";
+import axios from 'axios';
+
+export const toastProps = {
+    position: "top-center",
+    duration: 2000,
+    style: {
+        fontSize: "1rem",
+        background: "#fff",
+        color: "#333",
+    },
+};
 
 function TimeSection1() {
+    const auth = useRecoilValue(AuthState);
     const timeNo = useRecoilValue(TimeNo);
-    const timeData = useRecoilValue(OneMinute);
+    const [timeData, setTimeData] = useRecoilState(OneMinute);
 
     const [remainingTime, setRemainingTime] = useState(0);
 
     const startTime = timeData?.data?.data?.startTime || null;
     const endTime = timeData?.data?.data?.endTime || null;
+    
 
+    const handleGameData= async () => {
+        try {
+            let token = auth.authToken;
+
+            console.log(token);
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/getgame/${timeNo}`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+
+            if (response.status === 200) {
+                toast.success('got it', { ...toastProps });
+                console.log(response);
+                setTimeData(response)
+                return response;
+            }
+        } catch (error) {
+            const errorMessage = error.response ? error.response.data.message : error.message;
+            toast.error(errorMessage || 'Something went wrong', { ...toastProps });
+        }
+    };
+
+    
     useEffect(() => {
         if (startTime && endTime) {
             const startMillis = new Date(startTime).getTime();
@@ -28,6 +65,11 @@ function TimeSection1() {
                             return prevTime - 1;
                         } else {
                             clearInterval(interval);
+
+                            if (Math.floor(prevTime / 60) === 0 && prevTime % 60 === 0) {
+                                handleGameData(); 
+                            }
+
                             return 0;
                         }
                     });
@@ -43,6 +85,7 @@ function TimeSection1() {
 
     return (
         <div>
+            <Toaster/>
             <div className="container">
                 <div className="row time-play">
                     <div className="col-6 left">

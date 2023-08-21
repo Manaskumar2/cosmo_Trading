@@ -28,9 +28,8 @@ const adminAuthorization = (req, res, next) => {
  if( req.decodedToken.isAdmin=== "true" ){
     next();
   } else {
-    // User is not an admin
     res.status(403).send({ status: false, message: 'Access denied. Admin privileges required.' });
   }
 };
 
-module.exports = { authentication}
+module.exports = { authentication,adminAuthorization}

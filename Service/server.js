@@ -10,13 +10,9 @@ const mongoose = require('mongoose');
 app.use(
   cors({
     credentials: true,
-    origin: ["http://cosmotrade.live","https://cosmotrade.netlify.app", "http://localhost:3000","http://localhost:3333"]
+    origin:  ["http://cosmotrade.live" ,"http://localhost:3000","http://localhost:3333"]
   })
 );
-
-
-
-
 const multer = require("multer");
 
 app.use(express.json());
@@ -25,7 +21,6 @@ app.use(upload.any());
 
 
 const rootDir = path.resolve(__dirname);
- console.log(rootDir)
 
   dotenv.config({ path: ".env.production" });
 
@@ -52,15 +47,20 @@ app.use("/api", route);
 
 
 
-// if (
-//   process.env.NODE_ENV === "production"
-// )
-//  {
-  // app.use(express.static("ui"));
+if (
+   process.env.NODE_ENV === "production"||process.env.NODE_ENV === "development"
+
+) {
+  // app.use(express.static("dist"));
   // app.get("*", (req, res) => {
-  //   res.sendFile(path.join(rootDir, "/ui/index.html"));
+  //   res.sendFile(path.join(rootDir, "../Web/dist/index.html"));
   // });
-// }
+
+  app.use(express.static(path.join(__dirname, "../Web/dist")));
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname + "../Web/dist/index.html"));
+});
+ }
 
 app.use((req, res, next) => {
   const error = new Error("Path not found.");

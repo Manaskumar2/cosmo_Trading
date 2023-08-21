@@ -20,7 +20,7 @@ const betSchema = new mongoose.Schema({
 const GameSchema = new mongoose.Schema({
   duration: {
     type: Number,
-    // enum: [1, 3, 5, 10],
+    enum: [1, 3, 5, 10],
     required: true
   },
   isCompleted: { type: Boolean, default: false },
@@ -41,6 +41,9 @@ const GameSchema = new mongoose.Schema({
     get:function (value) {
       return moment(value).tz("Asia/Kolkata")
     }
+  }
+  , gameUID: {
+     type: Number,
   }
 },{timestamps:true});
 

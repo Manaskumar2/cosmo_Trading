@@ -28,7 +28,7 @@ import { useRecoilValue } from 'recoil'
 import { Link } from 'react-router-dom'
 import { useSetRecoilState } from 'recoil'
 import { TimeNo , OneMinute } from '../../Atoms/GameTime'
-
+import {GameHistory} from '../../components/ComponentExport'
 
 export const toastProps = {
     position: "top-center",
@@ -86,14 +86,6 @@ function Growup() {
         return amount * multiplier;
     }, [amount, multiplier]);
 
-    // const handleSmallBtn = () => {
-    //     setSmShow(true)
-    //     setGroup('small')
-    // }
-    // const handleBigBtn = () => {
-    //     setLgShow(true)
-    //     setGroup('big')
-    // }
 
 
     const handleSubmit = async () => {
@@ -103,14 +95,9 @@ function Growup() {
         console.log(duration);
         console.log(token);
 
-        // if (!token) {
-        //     console.log("Token not available");
-        //     return;
-        // }
 
         try {
             let token = auth.authToken
-            // console.log(token);
             const response = await axios.post(`${import.meta.env.VITE_API_URL}/bet`, {
                 amount,
                 group,
@@ -121,11 +108,13 @@ function Growup() {
             );
 
             if (response.status === 200) {
-                toast.success("Bet created", { ...toastProps });
+                toast.success("Bet created Successfully!", { ...toastProps });
                 setGroup('');
                 setAmount(0);
                 setDuration(0);
                 console.log(response);
+                toast.success("Bet created", { ...toastProps })
+                navigate('/growUp')
                 return response;
             }
         } catch (error) {
@@ -437,7 +426,9 @@ function Growup() {
                                     </div>
                                 </Modal.Body>
                             </Modal>
+                            
                         </>
+                        <GameHistory/>
                     </>
                 }
                 {activeTab === 3 &&
@@ -653,7 +644,7 @@ function Growup() {
                                 </Modal.Body>
                             </Modal>
                         </>
-
+                        <GameHistory/>
                     </>}
                 {activeTab === 5 &&
                     <>
@@ -871,6 +862,7 @@ function Growup() {
                                 </Modal.Body>
                             </Modal>
                         </>
+                        <GameHistory/>
                     </>}
                 {activeTab === 10 &&
                     <>
@@ -1088,6 +1080,7 @@ function Growup() {
                                 </Modal.Body>
                             </Modal>
                         </>
+                        <GameHistory/>
                     </>}
             </div>
         </div>

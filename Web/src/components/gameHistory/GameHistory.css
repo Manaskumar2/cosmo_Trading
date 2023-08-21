@@ -1,0 +1,48 @@
+.record-btn{display: flex;width: 100%;padding: 1rem 1rem;justify-content: center;align-items: flex-start;color: #BCE3F9;font-family: 'Montserrat';font-size: 1rem;font-style: normal;font-weight: 500;border-radius: 6.25rem;background: #02375B;
+    border: none;}
+.activeTab{border-radius: 6.25rem;background: linear-gradient(180deg, #E72730 0%, #F55961 100%) !important;
+    }
+.record-btn-container{margin: 2rem 0 1rem 0;}
+.period-heading .heading{padding:0 2rem;}
+.period-heading .heading .row{
+    padding: .6rem 1.25rem;background: #198D6B;border-radius: 5px 5px 0 0;
+    }
+.period-heading .heading .row .col-8 , .period-heading .heading .row .col-4{color: #FFF;font-family: 'Montserrat';font-size: 1.25rem;font-style: normal;font-weight: 600;}
+.uid{color: #FFF;font-family: 'Montserrat';font-size: 0.975rem;font-style: normal;
+font-weight: 400;padding: 0.45rem 1.25rem;}
+.win{color: #FFF;font-family: 'Montserrat';font-size: 0.975rem;font-style: normal;
+    font-weight: 400;}
+.light-blue{border-bottom: 1px solid #0B5A8F;
+    background: rgba(2, 55, 91, 0.50) !important;}
+.darl-blue{border-bottom: 1px solid #0B5A8F;
+    background: #001C3E !important;}
+.container .list{margin: 0rem .5rem;display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.winGroup{width: 35%;color: #FFF;font-family: 'Montserrat';font-size: 0.975rem;font-style: normal;
+    font-weight: 400;padding: 0.45rem .9rem;}
+
+    .pagination-buttons-container{width: 100%; display: flex; justify-content: center; align-items: center;}
+    .pagination-buttons{display: flex; width: 10rem; justify-content: center; align-items: center;}
+    .increaseBtn{display: flex;
+        width: 3.75rem;
+        height: 2.875rem;
+        justify-content: center;
+        align-items: center;
+        gap: 0.625rem;
+        background: #045B73;}
+    .decreaseBtn{display: flex;
+        width: 3.75rem;
+        height: 2.875rem;
+        justify-content: center;
+        align-items: center;
+        gap: 0.625rem;
+        background: #045B73;}
+    .page-count{display: flex;
+        width: 4.75rem;
+        height: 2.875rem;
+        justify-content: center;
+        align-items: center;}
+        .increaseBtn:hover{background: linear-gradient(180deg, #EA3038 0%, #F55860 100%);}
+        .decreaseBtn:hover{background: linear-gradient(180deg, #EA3038 0%, #F55860 100%);}

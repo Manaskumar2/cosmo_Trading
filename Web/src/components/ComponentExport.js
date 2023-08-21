@@ -8,6 +8,7 @@ import Count from './onlineCount/OnlineCount'
 import RunningTime from './runningTime/RunningTime'
 import TimeSection from './timeSection/TimeSection1'
 import WithdrawSection from './withdrawSection/WithdrawSection'
+import GameHistory from './gameHistory/GameHistory'
 
 export {
   Accordian,
@@ -20,4 +21,5 @@ export {
   RunningTime,
   TimeSection,
   WithdrawSection,
+  GameHistory
 };

@@ -7,6 +7,7 @@ import lock from '../../images/lock.svg';
 import eye from '../../images/eye 1.svg';
 import axios from 'axios';
 import toast, { Toaster } from "react-hot-toast";
+
 // import { useHistory } from 'react-router-dom';
 // import bannerImg from '../../images/Game-Banner.svg'
 export const toastProps = {
@@ -21,7 +22,8 @@ export const toastProps = {
 
 
 function Login() {
-  // const history = useHistory();
+
+  // const [userData,setUserData]= useRecoilState(UserDataState)
   const [loading, setLoading] = useState(false);
   const [phoneNumber, setPhone] = useState('');
   const [password, setPassword] = useState('');
