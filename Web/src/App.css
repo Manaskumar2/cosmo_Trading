@@ -4,10 +4,11 @@
   box-sizing: border-box;
 }
 
-.inputBox:hover{border: 1px solid #26B5E2;
-  box-shadow: 0px 2px 4px 0px rgba(38, 181, 226, 0.80);}
+.inputBox:hover{border-radius: 5px;
+    border: 1px solid #26B5E2;
+    box-shadow: 0px 2px 4px 0px rgba(38, 181, 226, 0.80);}
 p{margin: 0;}
-.title{color: #FFF;font-family: 'Montserrat';font-size: 1.75rem;font-style: normal;font-weight: 600;letter-spacing:0.00875rem;}
+.title{color: #FFF;font-family: 'Montserrat';font-size: 1.55rem;font-style: normal;font-weight: 600;letter-spacing: 0.14px;}
 .logo-container{display: flex; justify-content: center;}
 .logo{
   margin:1.5rem 0 2.5rem 0;
@@ -15,16 +16,48 @@ p{margin: 0;}
 }
 .top{overflow: hidden;}
 a{text-decoration: none;}
-.top-btn{border-radius: 6.25rem;
+.top-btn{border-radius: 100px;
   background: linear-gradient(143deg, #C82F36 0%, #EC4E55 100%);
-  box-shadow: 0px 4px 15px 0px rgba(200, 47, 54, 0.80);padding: 16px 30px;font-family: 'Dosis'; color: #FFF;border: 0;letter-spacing: 2.2px; outline: none;font-weight: 500; margin-top: 1rem; width: 100%;}
-.bot-btn{width: 100%;text-align: center;background: transparent;border-radius: 6.25rem;
-  border: 1px solid #E5B21B;
-  box-shadow: 0px 2px 10px 0px #E8A806;font-weight: 500; padding: 16px 30px;font-family: 'Dosis'; color: #E7AC17;border: 0;letter-spacing: 2.2px; outline: none;font-weight: 500; margin-top: 1.5rem;}
+  box-shadow: 0px 4px 15px 0px rgba(200, 47, 54, 0.80);padding: 16px 25px;font-family: Poppins; color: #FFF;border: 0;letter-spacing: 2px; outline: none;font-weight: 500; margin-top: 1rem; width: 100%;}
+.bot-btn{width: 100%;text-align: center;background: transparent;border-radius: 100px;
+  border: 1px solid #E5B21B;box-shadow: 0px 2px 10px 0px #e8a80666;font-weight: 500; padding: 16px 25px;font-family: Poppins; color: #E7AC17;letter-spacing: 2px; outline: none;font-weight: 500; margin-top: 1.5rem;}
 .btn-container{margin-top: 3rem;}
 .passwordChange-btn{margin-top: 3rem;}
 .back-btn{outline: none; border: 0; background-color: transparent;}
 .top .row .col-8{padding-top: 1rem;}
+
+::-webkit-input-placeholder { /* Edge */
+  color: #3592D3;
+  font-family: Montserrat;
+  font-size: 16px;
+  opacity: 0.5;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: 0.9px;
+  }
+
+  :-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: #3592D3;
+  font-family: Montserrat;
+  font-size: 16px;
+  opacity: 0.5;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: 0.9px;
+  }
+
+  ::placeholder {
+    color: #3592D3;
+  font-family: Montserrat;
+  font-size: 16px;
+  opacity: 0.5;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: 0.9px;
+}
 
 @media (min-width: 768px){
   .back-icon{margin-left: 2rem;}
@@ -37,4 +70,153 @@ a{text-decoration: none;}
   .passwordChange-btn{margin-top: 2rem;}
   .btn-container{margin-top: 2rem;}
 }
+
+.front i{color: #3592D3;}
+
+.inputBox:hover .front i{color: #26B5E2;}
+
+.back-icon i{font-size: 20px;vertical-align: middle;color: #3592D3;}
+
+.inputBox:hover .back-icon i{color: #26B5E2;}
+
+.winNav .col-2 img{max-width: 24px; max-height: 24px;}
+
+/*ICONS FONTS*/
+@font-face {
+  font-family: 'icomoon';
+  src:  url('fonts/icomoon.eot?6n3ujd');
+  src:  url('fonts/icomoon.eot?6n3ujd#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?6n3ujd') format('truetype'),
+    url('fonts/icomoon.woff?6n3ujd') format('woff'),
+    url('fonts/icomoon.svg?6n3ujd#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-headphone:before {
+  content: "\e900";
+}
+.icon-home:before {
+  content: "\e901";
+}
+.icon-info-circle:before {
+  content: "\e902";
+}
+.icon-lock:before {
+  content: "\e903";
+}
+.icon-mobile:before {
+  content: "\e904";
+}
+.icon-next:before {
+  content: "\e905";
+}
+.icon-normal-upi:before {
+  content: "\e906";
+}
+.icon-prev:before {
+  content: "\e907";
+}
+.icon-profile:before {
+  content: "\e908";
+}
+.icon-promotion:before {
+  content: "\e909";
+}
+.icon-refresh:before {
+  content: "\e90a";
+}
+.icon-resend:before {
+  content: "\e90b";
+}
+.icon-rupee:before {
+  content: "\e90c";
+}
+.icon-usdt:before {
+  content: "\e90d";
+}
+.icon-walet:before {
+  content: "\e90e";
+}
+.icon-audio:before {
+  content: "\e910";
+}
+.icon-back-arrow:before {
+  content: "\e911";
+}
+.icon-bank:before {
+  content: "\e912";
+}
+.icon-checkmark:before {
+  content: "\e913";
+}
+.icon-cross:before {
+  content: "\e915";
+}
+.icon-eye:before {
+  content: "\e916";
+}
+.icon-fast-upi:before {
+  content: "\e917";
+}
+
   
+/*CHECKBOX CUSTOM*/
+.custom_checkbox input {
+  padding: 0;
+  height: initial;
+  width: initial;
+  margin-bottom: 0;
+  display: none;
+  cursor: pointer;
+}
+
+.custom_checkbox label {
+  position: relative;
+  cursor: pointer;
+}
+
+.custom_checkbox label:before {
+  content:'';
+  -webkit-appearance: none;
+  background-color: transparent;
+  border: 2px solid #FBB040;
+  border-radius: 2px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05);
+  padding: 10px;
+  display: inline-block;
+  position: relative;
+  vertical-align: middle;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.custom_checkbox input:checked + label:after {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 4px;
+  left: 9px;
+  width: 6px;
+  height: 14px;
+  border: solid #FBB040;
+/*  background: #FBB040;*/
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}

@@ -76,19 +76,24 @@ function Login() {
           <Toaster />
           <form onSubmit={handleSubmit} className='container-fluid'>
             <div className='inputBox'>
-              <div className='front'>+91</div>
-              <div><input type="number" placeholder='Phone Number' onChange={(e) => setPhone(e.target.value)} value={phoneNumber}/></div>
-              <div className='back-icon'><img src={phoneImg} alt="" /></div>
+                <div className="inputBoxInner">
+                  <div className='front'>+91</div>
+                  <div><input type="number" placeholder='Phone Number' onChange={(e) => setPhone(e.target.value)} value={phoneNumber}/></div>
+                </div>
+                <div className='back-icon'><i className="icon-mobile"></i></div>
+              
             </div>
             <div className='inputBox '>
-              <div className='front'><img src={lock} alt="" /></div>
-              <div><input type="password" placeholder='Password' onChange={(e) => setPassword(e.target.value)} value={password} /></div>
-              <div className='back-icon'><img src={eye} alt="" /></div>
+              <div className="inputBoxInner">
+                <div className='front'><i className="icon-lock"></i></div>
+                <div><input type="password" placeholder='Password' onChange={(e) => setPassword(e.target.value)} value={password} /></div>
+              </div>
+              <div className='back-icon'><i className="icon-eye"></i></div>
             </div>
             <div className='forget'><Link to='/forgotPassword'>Forgot Password?</Link></div>
             <div className="btn-container">
-              <button className='top-btn' type='submit'>{loading ? <div className="loader"></div> : "LOGIN"}</button>
-              <button className='bot-btn' onClick={()=>{navigate('/signUp')}}>REGISTER</button>
+              <button className='top-btn' type='submit'>{loading ? <div className="loader"></div> : "LogIn"}</button>
+              <button className='bot-btn' onClick={()=>{navigate('/signUp')}}>Register</button>
             </div>
           </form>
           </div>

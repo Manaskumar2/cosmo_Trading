@@ -61,14 +61,16 @@ function OTP() {
                 </div> */}
                 <form onSubmit={handleSubmit} className="container-fluid">
                 <div className='inputBox'>
-                    <div className='front'>OTP</div>
-                    <div><input type="number" placeholder='Enter OTP' value={otp} onChange={(e)=>setOtp(e.target.value)}/></div>
-                    <div className='back-icon'><img src={phone} alt="" /></div>
+                    <div className="inputBoxInner">
+                        <div className='front'>OTP</div>
+                        <div><input type="number" placeholder='Enter OTP' value={otp} onChange={(e)=>setOtp(e.target.value)}/></div>
+                    </div>
+                    <div className='back-icon'><i className="icon-mobile"></i></div>
                 </div>
                 <div className='otp'><p >Enter your OTP, which sent by SMS to mobile number XXXXXX4444</p></div>
                 <div className='resend'><button><img src={resend} alt="" />Resend OTP</button></div>
                 <div className='passwordChange-btn'>
-            <button className='top-btn' onClick={()=>{navigate("/resetPassword")}}>VERIFY</button>
+            <button className='top-btn' onClick={()=>{navigate("/resetPassword")}}>Verify</button>
             <button className='bot-btn' onClick={()=>{navigate("/resetPassword")}}>Back</button>
             </div>
                 </form>

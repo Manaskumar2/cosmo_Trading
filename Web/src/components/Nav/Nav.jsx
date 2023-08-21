@@ -9,11 +9,11 @@ import user from '../../images/user.svg'
 function Nav() {
     return (
         <div className='navBar container'>
-                <div className='link-container row'>
-                    <div className='link col-3'> <Link> <img src={home} alt="" /> <p> HOME</p></Link>  </div>
-                    <div className='link col-3'> <Link> <img src={diamond} alt="" /><p> PROMOTION</p> </Link>  </div>
-                    <div className='link col-3'> <Link> <img src={wallet} alt="" /> <p> WALLET</p></Link>  </div>
-                    <div className='link col-3'> <Link> <img src={user} alt="" /><p>PROFILE</p> </Link> </div>
+                <div className='link-container rowX'>
+                    <div className='link'> <Link to='/'><i className="icon-home"></i> <p>Home</p></Link>  </div>
+                    <div className='link'> <Link><i className="icon-promotion"></i> <p>Promotion</p> </Link>  </div>
+                    <div className='link'> <Link><i className="icon-walet"></i> <p>Wallet</p></Link>  </div>
+                    <div className='link'> <Link to='/profile'><i className="icon-profile"></i> <p>Profile</p> </Link> </div>
                 </div>
         </div>
     )

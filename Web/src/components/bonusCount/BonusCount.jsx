@@ -1,17 +1,19 @@
 // import bonusBG from '../../images/bonus.svg'
 import './Bonus.css'
 import rupee from '../../images/rupee.svg'
+import WidthDrawBonus from '../../images/img-withdraw-bonus.svg'
+
 function BonusCount() {
   return (
     <div className='bonus'>
         <div className='container'>
             <div className='txt'>
-            <p>Today Total Withdrawal</p>
-                <h3><img src={rupee} alt="" />1,876362.00</h3>
+                <img src={WidthDrawBonus} alt="" className="img_bonus" />
+                <div className="total_wdraw">
+                    <p>Today Total Withdrawal</p>
+                    <h3><i className="icon-rupee"></i> 1,876362.00</h3>
                 </div>
-            
-                
-            
+            </div>
         </div>
     </div>
   )

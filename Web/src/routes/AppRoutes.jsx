@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { useEffect } from "react";
 import { Navigate, Route, Routes , useNavigate} from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { Login, Register, Forgot, OTP, Reset, Success, Home, Growup } from "./importPages";
+import { Login, Register, Forgot, OTP, Reset, Success, Home, Growup ,ProfileComponent} from "./importPages";
 import { AuthState } from "../Atoms/AuthState";
 // import { PrivateRoute } from "./PrivateRoute";
 
@@ -49,6 +49,7 @@ export const AppRoutes = () => {
             <Route path="/verifyOtp" element={<Suspense fallback={<div className='loading'>Loading</div>}><OTP /></Suspense>} />
             <Route path="/resetPassword" element={<Suspense fallback={<div className='loading'>Loading</div>}><Reset /></Suspense>} />
             <Route path="/success" element={<Suspense fallback={<div className='loading'>Loading</div>}><Success /></Suspense>} />
+            <Route path="/profile" element={<Suspense fallback={<div className='loading'>Loading</div>}><ProfileComponent /></Suspense>} />
         </Routes>
     );
 }

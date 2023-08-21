@@ -23,7 +23,7 @@ function TimeSection1() {
 
     const [remainingTime, setRemainingTime] = useState(0);
 
-    const startTime = timeData?.data?.data?.startTime || null;
+    const startTime = new Date() || null;
     const endTime = timeData?.data?.data?.endTime || null;
     
 
@@ -37,7 +37,7 @@ function TimeSection1() {
             });
 
             if (response.status === 200) {
-                toast.success('got it', { ...toastProps });
+                // toast.success('uid', { ...toastProps });
                 console.log(response);
                 setTimeData(response)
                 return response;
@@ -97,10 +97,10 @@ function TimeSection1() {
                         ) : null}
                     </div>
                     <div className="col-6 right">
-                        <p style={{ color: '#97E2F2', marginBottom: '0' }}>Left time to buy</p>
+                        <p style={{ color: '#97E2F2', textAlign:'center', marginBottom: '0' }}>Left time to buy</p>
                         <div className="end-time">
                             <div className="row">
-                                {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
+                                <div className="time_minute">{minutes}</div> <div className="time_colon">:</div> <div className="time_seconds">{seconds < 10 ? `0${seconds}` : seconds}</div>
                             </div>
                         </div>
                     </div>

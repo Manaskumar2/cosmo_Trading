@@ -16,5 +16,7 @@ const Home= lazy(()=>
 import('../pages/homePage/Home'))
 const Growup= lazy(()=>
 import('../pages/growup/Growup'))
+const ProfileComponent= lazy(()=>
+import('../pages/profile/ProfileComponent'))
 
-export {Login,Register,Forgot,OTP,Reset,Success,Home,Growup}
+export {Login,Register,Forgot,OTP,Reset,Success,Home,Growup,ProfileComponent}

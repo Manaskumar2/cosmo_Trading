@@ -7,6 +7,9 @@ import { useRecoilState, useRecoilValue } from 'recoil'
 import './GameHistory.css'
 import left from '../../images/leftArr.svg'
 import right from '../../images/RightArr.svg'
+import Winner from '../../images/icon-winner.svg'
+import Alpha from '../../images/icon-alpha.svg'
+import Beta from '../../images/icon-beta.svg'
 export const toastProps = {
     position: "top-center",
     duration: 2000,
@@ -98,37 +101,126 @@ function GameHistory() {
 
             {activeTab === 1 &&
                 <div className='period-heading'>
-                    <div className="container heading">
-                        <div className="row">
-                            <div className="col-8">Period</div>
-                            <div className="col-4">Winner</div>
-                        </div>
-                    </div>
-                    <div className="container ">
-                        {gameHistoryList && gameHistoryList.data && gameHistoryList.data.data && gameHistoryList.data.data.map((item, index) => (
-                            <div
-                                key={index}
-                                className={` ${index % 2 === 0 ? ' light-blue  list' : ' dark-blue  list'}`}
-                            >
-                                <div className=" uid">{item.gameUID}</div>
-                                <div className=" winGroup">Alfa</div>
-                            </div>
-                        ))}
 
+                <div className="table-responsive game_history_table">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                          <th>Period</th>
+                          <th width="140">Winner</th>
+                        </tr>
+                        </thead>
+                      <tbody>
+                        
+                        <tr>
+                          <td>2023080311378</td>
+                          <td width="140">
+                              <div className="winners_col_row">
+                                  <span className="icon_win"><img src={Winner} /></span>
+                                  <p>ALPHA</p>
+                                  <span className="icon_rate"><img src={Alpha} /></span>
+                              </div>
+                          </td>
+                        </tr>
 
-                    </div>
+                        <tr>
+                          <td>2023080311378</td>
+                          <td width="140">
+                              <div className="winners_col_row">
+                                  <span className="icon_win"><img src={Winner} /></span>
+                                  <p>Beta</p>
+                                  <span className="icon_rate"><img src={Beta} /></span>
+                              </div>
+                          </td>
+                        </tr>
+
+                        <tr>
+                          <td>2023080311378</td>
+                          <td width="140">
+                              <div className="winners_col_row">
+                                  <span className="icon_win"><img src={Winner} /></span>
+                                  <p>ALPHA</p>
+                                  <span className="icon_rate"><img src={Alpha} /></span>
+                              </div>
+                          </td>
+                        </tr>
+
+                        <tr>
+                          <td>2023080311378</td>
+                          <td width="140">
+                              <div className="winners_col_row">
+                                  <span className="icon_win"><img src={Winner} /></span>
+                                  <p>Beta</p>
+                                  <span className="icon_rate"><img src={Beta} /></span>
+                              </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                </div>
 
                 </div>
             }
             {activeTab === 2 &&
                 <div>
                     <div className='period-heading'>
-                        <div className="container heading">
-                            <div className="row">
-                                <div className="col-8">Period</div>
-                                <div className="col-4">Winner</div>
-                            </div>
-                        </div>
+                        <div className="table-responsive game_history_table">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                          <th>Period</th>
+                          <th width="140">Winner</th>
+                        </tr>
+                        </thead>
+                      <tbody>
+                        
+                        <tr>
+                          <td>2023080311378</td>
+                          <td width="140">
+                              <div className="winners_col_row">
+                                  <span className="icon_win"><img src={Winner} /></span>
+                                  <p>ALPHA</p>
+                                  <span className="icon_rate"><img src={Alpha} /></span>
+                              </div>
+                          </td>
+                        </tr>
+
+                        <tr>
+                          <td>2023080311378</td>
+                          <td width="140">
+                              <div className="winners_col_row">
+                                  <span className="icon_win"><img src={Winner} /></span>
+                                  <p>Beta</p>
+                                  <span className="icon_rate"><img src={Beta} /></span>
+                              </div>
+                          </td>
+                        </tr>
+
+                        <tr>
+                          <td>2023080311378</td>
+                          <td width="140">
+                              <div className="winners_col_row">
+                                  <span className="icon_win"><img src={Winner} /></span>
+                                  <p>ALPHA</p>
+                                  <span className="icon_rate"><img src={Alpha} /></span>
+                              </div>
+                          </td>
+                        </tr>
+
+                        <tr>
+                          <td>2023080311378</td>
+                          <td width="140">
+                              <div className="winners_col_row">
+                                  <span className="icon_win"><img src={Winner} /></span>
+                                  <p>Beta</p>
+                                  <span className="icon_rate"><img src={Beta} /></span>
+                              </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                </div>
+                
                         <div className="container ">
                             {userGames && userGames.data && userGames.data.history.map((item, index) => (
                                 <div>

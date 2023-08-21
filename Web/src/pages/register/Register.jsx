@@ -71,23 +71,29 @@ function Register() {
           <Toaster/>
           <form onSubmit={handleSubmit} className='container-fluid'>
             <div className='inputBox'>
-              <div className='front'>+91</div>
-              <div><input type="number" placeholder='Phone Number' onChange={(e) => setPhone(e.target.value)} value={phoneNumber}/></div>
-              <div className='back-icon'><img src={phoneImg} alt="" /></div>
+              <div className="inputBoxInner">
+                <div className='front'>+91</div>
+                <div><input type="number" placeholder='Phone Number' onChange={(e) => setPhone(e.target.value)} value={phoneNumber}/></div>
+              </div>
+              <div className='back-icon'><i className="icon-mobile"></i></div>
             </div>
             <div className='inputBox'>
-            <div className='front'><img src={lock} alt="" /></div>
-              <div><input type="password" placeholder='Password' onChange={(e) => setPassword(e.target.value)} value={password}/></div>
-              <div className='back-icon'><img src={eye} alt="" /></div>
+              <div className="inputBoxInner">
+                <div className='front'><i className="icon-lock"></i></div>
+                <div><input type="password" placeholder='Password' onChange={(e) => setPassword(e.target.value)} value={password}/></div>
+              </div>
+              <div className='back-icon'><i className="icon-eye"></i></div>
             </div>
             <div className='inputBox'>
-            <div className='front'><img src={comp} alt="" /></div>
-              <div ><input type="text" placeholder='Referral Code' onChange={(e) => setReferral(e.target.value)} value={referral}/></div>
-            </div>
+              <div className="inputBoxInner">
+                <div className='front'><img src={comp} alt="" /></div>
+                <div ><input type="text" placeholder='Referral Code' onChange={(e) => setReferral(e.target.value)} value={referral}/></div>
+              </div>
+              </div>
             <div className='policy'><input type="checkbox" /> I Agree <Link>Privacy Policy</Link> </div>
             <div className="btn-container">
-              <button className='top-btn' type='submit'>REGISTER</button>
-              <button className='bot-btn' onClick={navigateToLogin}>LOGIN</button>
+              <button className='top-btn' type='submit'>Register</button>
+              <button className='bot-btn' onClick={navigateToLogin}>Already have an account, Log in</button>
             </div>
           </form>
           </div>

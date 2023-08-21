@@ -59,13 +59,15 @@ function ForgotPassword() {
                         <Toaster />
                         <form onSubmit={handleSubmit} >
                             <div className='inputBox'>
-                                <div className='front'>+91</div>
-                                <div><input type="number" placeholder='Phone Number' value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} /></div>
-                                <div className='back-icon'><img src={phoneImg} alt="" /></div>
+                                <div className="inputBoxInner">
+                                    <div className='front'>+91</div>
+                                    <div><input type="number" placeholder='Phone Number' value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} /></div>
+                                </div>
+                                <div className='back-icon'><i className="icon-mobile"></i></div>
                             </div>
                             <div className='otp'><p >Enter your register mobile number to get OTP</p></div>
                             <div className='passwordChange-btn'>
-                                <button className='top-btn' type='submit' >GET OTP</button>
+                                <button className='top-btn' type='submit' >Get OTP</button>
                                 <button className='bot-btn' onClick={() => { navigate('/verifyOtp') }}>Back</button>
                             </div>
                         </form>

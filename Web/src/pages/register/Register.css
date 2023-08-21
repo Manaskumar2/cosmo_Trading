@@ -14,52 +14,60 @@
 }
 .logo-container{display: flex; justify-content: center;}
 .logo{
-  margin:1.5rem 0 2.5rem 0;
+  margin:0 0 2.5rem 0;
   text-align: center;
 }
 .title{
     color: #FFF;
   text-align: left;
   font-family: 'Montserrat';
-  font-size: 1.75rem;
+  font-size: 1.55rem;
   font-style: normal;
   font-weight: 600;
-  line-height: 3.125rem; /* 178.571% */
-  letter-spacing: 0.00875rem;
+  line-height: 45px; /* 178.571% */
+  letter-spacing: 0.14px;
   }
   .btn-container{margin-top: 3rem;}
 .passwordChange-btn{margin-top: 3rem;}
 .back-btn{outline: none; border: 0; background-color: transparent;}
-.top-btn{border-radius: 6.25rem;
+/*.top-btn{border-radius: 6.25rem;
     background: linear-gradient(143deg, #C82F36 0%, #EC4E55 100%);
     box-shadow: 0px 4px 15px 0px rgba(200, 47, 54, 0.80);padding: 16px 30px;font-family: 'Dosis'; color: #FFF;border: 0;letter-spacing: 2.2px; outline: none;font-weight: 500; margin-top: 1rem; width: 100%;}
   .bot-btn{width: 100%;text-align: center;background: transparent;border-radius: 6.25rem;
     border: 1px solid #E5B21B;
-    box-shadow: 0px 2px 10px 0px #E8A806;font-weight: 500; padding: 16px 30px;font-family: 'Dosis'; color: #E7AC17;border: 0;letter-spacing: 2.2px; outline: none;font-weight: 500; margin-top: 1.5rem;}
+    box-shadow: 0px 2px 10px 0px #E8A806;font-weight: 500; padding: 16px 30px;font-family: 'Dosis'; color: #E7AC17;border: 0;letter-spacing: 2.2px; outline: none;font-weight: 500; margin-top: 1.5rem;}*/
   .btn-container{margin-top: 3rem;}
 .register { min-height:100vh ;}
-.register .container-fluid{padding: 40px }
-.register .container-fluid div a{text-decoration: none; color: #7D95D3; font-family: 'Montserrat'}
+.register .container-fluid{padding: 40px; padding-top: 20px;}
+.register .container-fluid div .policy{color: #238FCB;font-size: 14px;}
+.register .container-fluid div a{text-decoration: none; color: #43DDFF; font-family: 'Montserrat'}
 .forget{display: flex; justify-content: end;}
 .inputBox{display: flex;padding: 15px;align-items: center;color: #FFF;font-family: 'Montserrat';align-self: stretch;border-radius: 0.3125rem;
     border: 1px solid #155F94;gap:1rem; margin-bottom: 1.5rem;}
-    .inputBox input{color: #FFF;font-family: 'Montserrat';font-size: 18px;font-style: normal;font-weight: 500;line-height: normal;letter-spacing:0.9px;background-color: transparent;border: 0;outline: none;width: 100%;}
-    .signup-container {border-radius: 1.875rem 1.875rem 0rem 0rem;background: #003D69; position: absolute;top: 15rem;   min-height: 80vh;width: 100%;}
+    .inputBox input{color: #FFF;font-family: 'Montserrat';font-size: 16px;font-style: normal;font-weight: 500;line-height: normal;letter-spacing:0.9px;background-color: transparent;border: 0;outline: none;width: 100%;}
+    .signup-container {border-radius: 1.875rem 1.875rem 0rem 0rem;background: url(/src/images/bg_form_login.svg) top no-repeat; position: absolute;top: 15rem; min-height: 80vh; background-size: cover; width: 100%;}
     .signup-container h3{padding-top: 1.5rem; text-align: center;}
-    .signup-container .container-fluid{ background-image: url('../../images/elipse.svg'); background-repeat: no-repeat;}
+/*    .signup-container .container-fluid{background: url(/src/images/bg_form_login.svg) top no-repeat;}*/
     .signup-container p{ margin-bottom: 1rem; font-family: 'Montserrat';color: #445D9D;}
     .signup-container p span a{ text-decoration: none; color: #299DEA; font-weight: 550;}
-    .logo-container{background: url('../../images/Game-Banner.svg');height: 50vh;}
+    .logo-container{background: url('../../images/Game-Banner.svg') top center no-repeat; background-size: contain; height: 50vh;}
     .logo-container img{height: 5rem;}
     .wrapper{position: relative;}
-    .front{padding-right: 1rem;border-right: 1px solid #4E69B1 }
+    .front{padding-right: 1rem;border-right: 1px solid #4E69B1;margin-right:12px; }
     input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
+
+.inputBox:hover .front{border-color: #26B5E2}
+
+.inputBox:hover .front i{color: #26B5E2}
+
 .inputBox:hover{border: 1px solid #26B5E2;
   box-shadow: 0px 2px 4px 0px rgba(38, 181, 226, 0.80);}
+
+  .inputBoxInner{display: flex;}
 @media (min-width: 768px){
   .desktop{
     width: 30vw;

@@ -1,34 +1,29 @@
 import back from '../../images/back-button 1.svg'
-import logo from '../../images/Cosmo Logo.svg'
+import logo from '../../images/LogoInner.svg'
 import wallet from '../../images/green-wallet.svg'
 import clock from '../../images/clock 1.svg'
 import ear from '../../images/earphone.svg'
+import Audio from '../../images/audio.svg'
 import rupee from '../../images/rupee.svg'
 import reload from '../../images/reload 1.svg'
 import './Growup.css'
 import { useState, useMemo, useEffect } from 'react';
 import Modal from 'react-bootstrap/Modal';
-// import eclips1 from '../../images/Ellipse 27.svg'
-// import eclips2 from '../../images/Ellipse 28.svg'
 import alfa from '../../images/alfa.svg'
 import beta from '../../images/beta.svg'
 import bg from '../../images/Section.svg'
 import aModal from '../../images/A-modal.svg'
-// import div from 'react-bootstrap/div';
-// import divs from 'react-bootstrap/divs';
 import {TimeSection} from '../../components/ComponentExport'
-// import TimeSection2 from '../../components/timeSection/TimeSection2'
-// import TimeSection3 from '../../components/timeSection/TimeSection3'
-// import TimeSection4 from '../../components/timeSection/TimeSection4'
+import { UserDetails } from '../../Atoms/UserDetails'
 import axios from 'axios';
 import toast, { Toaster } from "react-hot-toast";
-// import { memo } from 'react';
 import { AuthState } from '../../Atoms/AuthState'
-import { useRecoilValue } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import { Link } from 'react-router-dom'
 import { useSetRecoilState } from 'recoil'
 import { TimeNo , OneMinute } from '../../Atoms/GameTime'
 import {GameHistory} from '../../components/ComponentExport'
+import { useNavigate } from 'react-router-dom'
 
 export const toastProps = {
     position: "top-center",
@@ -40,6 +35,9 @@ export const toastProps = {
     },
 };
 function Growup() {
+    const navigate = useNavigate()
+
+    const [userData,setUserData]=useRecoilState(UserDetails)
     const [activeTab, setActiveTab] = useState(1);
 
     const setTimeNo=useSetRecoilState(TimeNo)
@@ -86,7 +84,29 @@ function Growup() {
         return amount * multiplier;
     }, [amount, multiplier]);
 
+///////
 
+const handleUserMoney = async () => {
+
+    try {
+        let token = auth.authToken
+        let UID = auth.UID
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/getUserProfile/${UID}`,  {
+            headers: { Authorization: `Bearer ${token}` }
+        }
+        );
+
+        if (response.status === 200) {
+            // toast.success("got user money data", { ...toastProps });
+            console.log(response);
+            setUserData(response)
+            return response;
+        }
+    } catch (error) {
+        const errorMessage = error.response ? error.response.data.message : error.message;
+        toast.error(errorMessage || "Something went wrong", { ...toastProps });
+    }
+}
 
     const handleSubmit = async () => {
         let token = auth.authToken
@@ -107,12 +127,13 @@ function Growup() {
             }
             );
 
-            if (response.status === 200) {
+            if (response.status === 201) {
                 toast.success("Bet created Successfully!", { ...toastProps });
                 setGroup('');
                 setAmount(0);
                 setDuration(0);
                 console.log(response);
+                console.log("Bapi")
                 toast.success("Bet created", { ...toastProps })
                 navigate('/growUp')
                 return response;
@@ -133,7 +154,7 @@ function Growup() {
             });
 
             if (response.status === 200) {
-                toast.success('got it', { ...toastProps });
+                // toast.success('growup', { ...toastProps });
                 console.log(response);
                 setTimeNo(duration)
                 setMinute(response)
@@ -148,6 +169,7 @@ function Growup() {
     useEffect(() => {
         console.log(duration);
         handleMin(duration);
+        handleUserMoney()
     }, [duration]);
 
 
@@ -162,7 +184,8 @@ function Growup() {
                         <img src={logo} alt="" />
                     </div>
                     <div className="col-2">
-                        <img src={ear} alt="" />
+                        <img src={ear} alt="" className="header_headphone" />
+                        <img src={Audio} alt="" />
                     </div>
                 </div>
             </div>
@@ -170,12 +193,14 @@ function Growup() {
             <div className="wallet">
                 <div className="container winWallet">
                     <div className="row">
-                        <div className="col-8" style={{ marginBottom: "1.5rem" }}>
-                            <h4 style={{ color: '#6FC0EE' }}>Total</h4>
-                            <p style={{ color: '#29CEE4' }}>Wallet balance</p>
-                            <h2 style={{ color: '#fff' }}><img src={rupee} alt="" /> 25000 <img src={reload} alt="" /></h2>
+                        <div className="col-8" style={{ marginBottom: "10px" }}>
+                            <h4 style={{marginBottom:3, color: '#6FC0EE',fontFamily: 'Montserrat',letterSpacing: 0.09, fontWeight:600, }}>Total</h4>
+                            <p style={{ color: '#29CEE4',fontFamily: 'Montserrat' }}>Wallet balance</p>
+                            </div>
+                            <div className="col-4" style={{textAlign:'right'}}><img src={wallet} alt="" /></div>
+                            <h2 style={{ color: '#fff',letterSpacing: 0.15,fontSize: 27,fontFamily: 'Montserrat',display:'flex', fontWeight: 600}}><img src={rupee} alt="" /> {userData && userData.data.data.userDetails.walletAmount} <img src={reload} alt="" style={{marginLeft:10,}} /></h2>
                         </div>
-                        <div className="col-4"><img src={wallet} alt="" /></div>
+                        
                         <div className="container">
                             <div className="row wr-btns">
                                 <div className="col-6 "><button className='withdraw'>Withdraw</button></div>
@@ -184,10 +209,7 @@ function Growup() {
                         </div>
                     </div>
                 </div>
-            </div>
-            <div
-
-            >
+            <div>
                 <div className="container-fluid">
                     <div className='clock-btn-container row'>
                         <button className={activeTab === 1 ? 'activeClock col-3' : 'clock-btn col-3'} onClick={() => { setDuration(1); handleMin(duration); handleTabClick(1) }}>
@@ -224,7 +246,7 @@ function Growup() {
                                     <button className=" right" onClick={() => {setLgShow(true); setGroup('big')}}><img src={beta} alt="" /></button>
                                     </div>
                                     <div className=" x-row-section">
-                                        <button className="x-section">x1</button>
+                                        <button className="x-section active">x1</button>
                                         <button className="x-section">x2</button>
                                         <button className="x-section">x5</button>
                                         <button className="x-section">x10</button>
@@ -242,10 +264,11 @@ function Growup() {
                                 <Modal.Header closeButton>
                                     <Modal.Title id="example-modal-sizes-title-lg modal-title">
                                         1 minute
+                                        <div style={{textAlign:'center'}}><img src={aModal} alt="" /></div>
                                     </Modal.Title>
                                 </Modal.Header>
                                 <Modal.Body>
-                                    <img src={aModal} alt="" />
+                                    
                                     <div className=' money-container'>
                                         <div className="money">
                                             <div>
@@ -278,6 +301,7 @@ function Growup() {
                                                 </button>
                                             </div>
                                         </div>
+                                        <div className="hrline"></div>
                                         <div className="multiply">
                                             <div>
                                                 <p>Multiply</p>
@@ -288,6 +312,7 @@ function Growup() {
                                                 <button onClick={handlePlusButtonClick}>+</button>
                                             </div>
                                         </div>
+                                        <div className="hrline"></div>
                                         <div className="x-row-section">
                                             <button
                                                 className={`x-section ${activeMultiplier === 1 ? 'active-btn' : ''}`}
@@ -326,6 +351,13 @@ function Growup() {
                                                 x100
                                             </button>
                                         </div>
+                                        <div className="hrline"></div>
+                                        <div className="custom_checkbox">
+                                          <input type="checkbox" id="Agree" />
+                                          <label for="Agree">I Agree <Link>Privacy Policy</Link></label>
+                                        </div>
+
+                                        <div className="hrline"></div>
                                         <button className='total-btn' onClick={handleSubmit}>Total Price: {calculateTotalPrice}</button>
                                     </div>
                                 </Modal.Body>
@@ -342,7 +374,7 @@ function Growup() {
                                     </Modal.Title>
                                 </Modal.Header>
                                 <Modal.Body>
-                                    <div>
+                                    <div style={{width:'100%'}}>
                                         <div className="money">
                                             <div>
                                                 <p>Money</p>
@@ -374,6 +406,7 @@ function Growup() {
                                                 </button>
                                             </div>
                                         </div>
+                                        <div className="hrline"></div>                                        
                                         <div className="multiply">
                                             <div>
                                                 <p>Multiply</p>
@@ -384,6 +417,7 @@ function Growup() {
                                                 <button onClick={handlePlusButtonClick}>+</button>
                                             </div>
                                         </div>
+                                        <div className="hrline"></div>   
                                         <div className="x-row-section">
                                             <button
                                                 className={`x-section ${activeMultiplier === 1 ? 'active-btn' : ''}`}
@@ -422,6 +456,12 @@ function Growup() {
                                                 x100
                                             </button>
                                         </div>
+                                        <div className="hrline"></div>   
+                                        <div className="custom_checkbox">
+                                          <input type="checkbox" id="Agree2" />
+                                          <label for="Agree2">I Agree <Link>Privacy Policy</Link></label>
+                                        </div>
+                                        <div className="hrline"></div>   
                                         <button className='total-btn' onClick={handleSubmit}>Total Price: {calculateTotalPrice}</button>
                                     </div>
                                 </Modal.Body>

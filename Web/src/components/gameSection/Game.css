@@ -7,3 +7,24 @@
 .game-banner p{color: #fff; font-weight: 600;}
 .trx{    background: url(../img/game-card-bg.22677281.png) no-repeat 50%,linear-gradient(135deg,#64be57,#27704d);} */
 .game-banner img{width: 100%; margin-top: 1rem;}
+
+.game-banner{position: relative;}
+
+.game_user_row{position: absolute;bottom: 0;width: 100%;display: flex;align-items: center;justify-content: space-between; background: #862020; padding: 5px 12px;border-bottom-left-radius: 13px;border-bottom-right-radius: 13px;}
+
+.game_user_row1{position: absolute;bottom: 0;width: 100%;display: flex;align-items: center;justify-content: space-between; background: #02544F; padding: 5px 12px;border-bottom-left-radius: 13px;border-bottom-right-radius: 13px;}
+
+.game_user_col, 
+.game_win_col{display: flex;align-items: center;}
+
+.game_user_img, .game_win_col{line-height: 0;}
+
+.game_user_img img, .game_win_col img{max-width: 20px;margin: 0; vertical-align: middle;}
+
+.game_user_name {
+    font-family: Montserrat;
+    font-size: 12px;
+    color: #FFF;
+    margin-left: 5px;
+/*    margin-top: 4px;*/
+}

@@ -1,7 +1,7 @@
 import {atom} from 'recoil';
 
-const UserDataState = atom({
-    key: "UserDataState",
+const UserDetails = atom({
+    key: "UserDetails",
     default: ''
 })
-export {UserDataState}
+export {UserDetails}

@@ -1,7 +1,14 @@
-.bonus .container{background-image: url('../../images/bonus.svg');background-repeat: no-repeat; height: 18rem;background-position: center;overflow: hidden;}
-.bonus .container .txt{    top: 10rem;
-    left: 7rem;
-    position: relative;}
+.bonus .container .txt{margin-top:1rem;background-image: url('../../images/bonus.svg');background-repeat: no-repeat; background-size: cover;}
+.bonus .container .txt{width: 100%; text-align: center; padding: 35px 20px;border-radius: 20px;}
 .bonus .container .txt p{color: #FFEBEB;font-family: 'Montserrat';font-size: 1rem; margin-bottom: 5px;}
 .bonus .container .txt h3{color: #FFF;font-family: 'Montserrat';font-size: 1.5rem;font-style: normal;font-weight: 600;}
 
+.txt img.img_bonus{height: 52px;}
+
+.total_wdraw{margin-top: 14px; border-radius: 100px;background: #BB2227;padding: 8px}
+
+.total_wdraw p{color: #FFEBEB;font-family: Montserrat;font-size: 14px;letter-spacing: 0.8px;}
+
+.total_wdraw h3{color: #FFEBEB;font-family: Montserrat;font-size: 22px;font-weight: 600;}
+
+.total_wdraw h3 i{font-size: 18px;}

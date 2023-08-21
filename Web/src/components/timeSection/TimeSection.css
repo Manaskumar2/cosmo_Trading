@@ -7,10 +7,16 @@
     .clock:hover{background: #fff;}
     .mint{color: #FFF;font-family: Montserrat;font-size: 0.875rem;font-style: normal;font-weight: 600;line-height: 1.25rem; /* 142.857% */}
 .time-play{background: linear-gradient(180deg, #02375B 0%, #076D84 100%);}
-.end-time .row  {background: linear-gradient(180deg, #013151 44.79%, #005275 44.80%, #013251 100%);display: flex;padding: 0.625rem;justify-content: center;align-items: center; margin: 5px; color: #fff; font-weight: 500; font-size: 1.2rem;
+.end-time .row  {display: flex;justify-content: center;align-items: center; color: #fff; font-weight: 600; font-size: 18px;letter-spacing: 1px;
 }
 .time-play .left{padding: 1.2rem; display: flex;flex-direction: column;justify-content: center;align-items: center;color: #FFF;gap: 1rem;}
 .time-play .right{padding: 1.2rem; display: flex;flex-direction: column;color: #FFF;gap: .25rem;}
-.time-play .left h3{font-family: 'Montserrat';font-size: 1.125rem;font-style: normal;font-weight: 600;letter-spacing: 0.2rem;}
-.selected-mint{border-radius: 6.25rem;
-background: linear-gradient(180deg, #0C568C 0%, #0782A9 100%);padding: .25rem .6rem;}
+.time-play .left h3{font-family: 'Montserrat';font-size: 1.125rem;font-style: normal;font-weight: 600;letter-spacing:0.36px;;}
+.selected-mint{border-radius: 100px; font-size: 12px;font-family: 'Montserrat';font-weight: 500;
+background: linear-gradient(180deg, #0C568C 0%, #0782A9 100%);padding: 4px 14px;border:1px solid #3DAAD9;text-transform: capitalize;}
+
+.time_minute{width: 30%}
+
+.time_colon{width: 12%}
+
+.time_seconds{width: 30%}

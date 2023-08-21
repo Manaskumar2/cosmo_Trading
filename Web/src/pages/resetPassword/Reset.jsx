@@ -70,17 +70,21 @@ function Reset() {
                     <Toaster/>
                     <form onSubmit={handleSubmit}>
                     <div className='inputBox reset-input'>
-                        <div className='front'><img src={lock} alt="" /></div>
-                        <div><input type='password' placeholder='New Password' onChange={(e) => setNewPassword(e.target.value)} value={newPassword}/></div>
-                        <div className='back-icon'><img src={eye} alt="" /></div>
+                        <div className="inputBoxInner">
+                            <div className='front'><i className="icon-lock"></i></div>
+                            <div><input type='password' placeholder='New Password' onChange={(e) => setNewPassword(e.target.value)} value={newPassword}/></div>
+                        </div>
+                        <div className='back-icon'><i className="icon-eye"></i></div>
                     </div>
                     <div className='inputBox reset-input'>
-                        <div className='front'><img src={lock} alt="" /></div>
-                        <div><input placeholder='Confirm Password' type='password' onChange={(e) => setConfirm(e.target.value)} value={confirm}/></div>
-                        <div className='back-icon'><img src={eye} alt="" /></div>
+                        <div className="inputBoxInner">
+                            <div className='front'><i className="icon-lock"></i></div>
+                            <div><input placeholder='Confirm Password' type='password' onChange={(e) => setConfirm(e.target.value)} value={confirm}/></div>
+                        </div>
+                        <div className='back-icon'><i className="icon-eye"></i></div>
                     </div>
                     <div className='passwordChange-btn'>
-                        <button className='top-btn' type='submit' onClick={() => { navigate('/success') }}>RESET PASSWORD</button>
+                        <button className='top-btn' type='submit' onClick={() => { navigate('/success') }}>Reset Password</button>
                         <button className='bot-btn' type='submit' onClick={() => { navigate('/success') }}>Back</button>
                     </div>
                     </form>

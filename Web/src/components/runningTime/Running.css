@@ -1,13 +1,16 @@
-.time .container .col-4{color: #fff;}
-.time .container .col-4 .top{border-radius: 0.625rem 0.625rem 0rem 0rem;
-    background: #198D6B;padding: 0.875rem .8rem;font-weight: 600;text-align: center;font-size: 1.375rem;}
-.time .container .col-4 .bot{border-radius: 0rem 0rem 0.625rem 0.625rem;
-    background: #144C7C;padding: 0.875rem 1rem;font-weight: 400;text-align: center;font-size: 1rem;text-transform: uppercase;}
+.time .container .col-4{color: #fff;padding-left: 7px;padding-right: 7px;}
+.time .container .col-4 .top{border-radius: 10px 10px 0rem 0rem;
+    background: #198D6B;padding: 0.875rem .8rem;font-weight: 600;text-align: center;font-size: 18px;}
+.time .container .col-4 .bot{border-radius: 0rem 0rem 10px 10px;
+    background: #144C7C;padding: 0.875rem 1rem;font-weight: 400;text-align: center;font-size: 14px;text-transform: uppercase;}
     .time .container {
         padding: 0 1.5rem;
         padding-bottom: 4rem;
+        margin-top: 2rem;
     }
     .time .container .title{
-        font-size: 1.5rem;
-        margin-bottom: 2rem;
+        font-size: 22px;
+        font-weight: 600;
+        text-transform: uppercase;
+        margin-bottom: 1rem;
     }

@@ -1,7 +1,7 @@
 .win{background: #001C3E;}
-.winNav{background: #001C3E; background-image: url('../../images/belips.png');background-position: bottom; background-repeat: no-repeat; padding:0 2rem;}
+.winNav{background: #001C3E; background-image: url('../../images/belips.png');background-position: bottom; background-repeat: no-repeat; padding:15px 2rem;border-bottom: 1px solid #133B77;}
 .winWallet{background: linear-gradient(180deg, rgba(5, 42, 86, 0.80) 0%, rgba(10, 171, 182, 0.80) 100%);padding: 1.5625rem;border-radius: 1.2rem;
-}
+border:1px solid #295992}
 .winNav .row .col-2{display: flex; justify-content: center;align-items: center;}
 .winNav .row .col-8{display: flex; justify-content: center;align-items: center;}
 .wallet{padding: 1rem;}
@@ -14,8 +14,8 @@
     border: 1px solid #FFF;
     background: linear-gradient(143deg, #296DAC 0%, #2FB0E7 100%);
     box-shadow: 0px 4px 5px 0px rgba(41, 109, 172, 0.40);width: 100%;}
-    .wr-btns .col-6 button{color: #FFF;font-family: 'Montserrat';padding: 0.625rem 2.5rem;font-size: 0.875rem;font-style: normal;font-weight: 500;line-height: normal;letter-spacing: 0.04375rem}
-        .clock{border-radius: 50%;background: rgba(31, 100, 150, 0.50);padding: .5rem;    height: 3.3rem !important;width: 3.3rem !important;display: flex; justify-content: center; align-items: center;}
+    .wr-btns .col-6 button{color: #FFF;font-family: 'Montserrat';padding: 0.625rem 12px;font-size: 0.875rem;font-style: normal;font-weight: 500;line-height: normal;letter-spacing: 0.7px;}
+        .clock{border-radius: 50%;background: rgba(31, 100, 150, 0.50);padding: .5rem; height: 3.3rem !important;width: 3.3rem !important;display: flex; justify-content: center; align-items: center;}
         .timeBtn .row{background: linear-gradient(180deg, rgba(5, 42, 86, 0.80) 0%, rgba(10, 171, 182, 0.80) 100%);}
         .timeBtn .row button{background: transparent; padding: .5rem; border: 0; outline: none;}
         .clock img{height: 2.2rem !important;width: 2.2rem !important;}
@@ -39,18 +39,34 @@
     .big-small .left img{width: 11rem;display: flex; justify-content: center;align-items: center;}
     .big-small .right img{width: 11rem;display: flex; justify-content: center;align-items: center;}
     .main-btn{display: flex;gap: 1rem;}
-    .x-row-section{display: flex;gap: .8rem; margin-top: 1.5rem;}
+    .x-row-section{display: flex;gap: .8rem; margin-top: 1.5rem;justify-content: center;}
     .x-section{border-radius: 0.25rem;border: 1px solid #1B92AC;background: #152B4B;display: flex;padding: 0.625rem 0.75rem;justify-content: center;align-items: center; color: #fff; text-transform: uppercase; }
     .main-btn button{outline: none; border: 0;    background: transparent}
-    .x-row-section button{outline: none; border: 0;border-radius: 0.25rem;border: 1px solid #1B92AC;background: #152B4B}
+    .x-row-section button{outline: none; border: 0;border-radius: 0.25rem;border: 1px solid #1B92AC;background: #152B4B;font-size: 14px;}
+
+    .x-row-section button:hover, .x-row-section button.active{border-radius: 4px;background: linear-gradient(180deg, #E5222B 0%, #F55C64 100%);border-color:#F55C64 !important}
+
 /* /////// Modal ///////// */
-.modal-content{border-radius: 1.875rem 1.875rem 0rem 0rem;border-top: 4px solid #FFDD54;background: linear-gradient(180deg, rgba(0, 56, 95, 0.80) 0%, rgba(28, 147, 174, 0.80) 100%);backdrop-filter: blur(15px);}
+.modal{--bs-modal-margin:0;}
+.modal-content{border-radius: 30px 30px 0px 0px;
+border-top: 4px solid #FFDD54;
+background: linear-gradient(180deg, rgba(0, 56, 95, 0.80) 0%, rgba(28, 147, 174, 0.80) 100%);
+backdrop-filter: blur(15px);}
 
-.modal-title{color: #FFF;font-family: 'Montserrat';font-size: 1.5rem;font-style: normal;font-weight: 600;margin-left: 7rem;}
+.modal-title{color: #FFF;font-family: 'Montserrat';font-size: 28px; margin-bottom: 10px; text-transform: capitalize; font-style: normal;font-weight: 600;width: 100%; text-align: center;}
 
-.modal-body{display: flex; justify-content: center; align-items: center; flex-direction: column;}
+.modal-body{display: flex; padding-left: 0;padding-right: 0; justify-content: center; align-items: center; flex-direction: column;padding-top: 4px;}
 
-.money{ display: flex; justify-content: space-between; align-items: center; margin-top: 1.2rem;}
+.money-container{width: 100%}
+
+.modal-header{border-bottom: 1px solid #1F6B8A;}
+
+.modal-header .btn-close{position: absolute;top: -20px;right: 17px;
+    border-radius: 100px; background: url(../../images/cross.svg) center center no-repeat #E92C35; background-size: 18px; width: 34px;height: 34px;opacity: 1 !important;}
+
+.money{ display: flex; padding-left: 20px;padding-right: 20px; justify-content: space-between; align-items: center; margin-top: 1.2rem;}
+
+.hrline{height: 1px;background-color: #1F6B8A; margin-top: 25px;}
 
 .money-container .x-row-section button{border-radius: 0.25rem;
     border: 1px solid #1B92AC;
@@ -60,24 +76,55 @@
     border: 1px solid #1B92AC;
     background: #145C7A;}
 
-.multiply{ display: flex; justify-content: space-between; margin-top: 1.2rem;}
+.multiply{padding-left: 20px;padding-right: 20px; display: flex; justify-content: space-between; margin-top: 1.2rem;}
+
+.policy{
+    font-family: 'Montserrat';
+    color: #E1F4FF;
+    font-size: 16px;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-top: 20px;
+}
+.policy a{
+    color: #43DDFF;
+    font-family: 'Montserrat';
+    font-style: 400;
+}
+.policy input{
+    font-family: 'Montserrat';
+    background: #103782;
+    size: 1rem;
+    height: 16px;
+    width: 16px;
+    position: relative;
+    top: 3px;
+}
 
 .plus-minus{ display: flex; gap: 1rem;}
 .plus-minus > div{display: flex;width: 5rem;height: 2.5rem;padding: 0.625rem 0.75rem;justify-content: center;align-items: center;gap: 0.625rem;border-radius: 0.25rem;border: 1px solid #FFF;background: #1B3C6B; color: #fff; font-size: 1rem;}
-.plus-minus button{border-radius: 0.25rem;border: 1px solid #1B92AC;background: #145C7A;display: flex;padding: 0.625rem 1rem;justify-content: center;align-items: center;}
-.active-btn{background: linear-gradient(180deg, #E7262F 0%, #F55A62 100%) !important;}
+.plus-minus button{font-size: 18px; border-radius: 0.25rem;border: 1px solid #1B92AC;background: #145C7A;display: flex;padding: 0.625rem 1rem; height: 2.5rem; justify-content: center;align-items: center;color: rgba(255, 255, 255, 0.40);}
+.plus-minus button:hover, .plus-minus button:focus{background: #E83C44;color: #FFF;border-color: #E83C44}
+.active-btn{background: linear-gradient(180deg, #E7262F 0%, #F55A62 100%) !important;border-color: #F55A62 !important}
 .money >div >p{color: #FFF;font-family: 'Montserrat';font-size: 1.25rem;font-style: normal;font-weight: 500;}
 .multiply >div >p{color: #FFF;font-family: 'Montserrat';font-size: 1.25rem;font-style: normal;font-weight: 500;}
-.total-btn{border-radius: 6.25rem;
+.total-btn{
+    border-radius: 100px;
     border: 2px solid #FFF;
-    background: linear-gradient(139deg, #C82F36 0%, #C83E44 55.21%, #EC4E56 100%);display: flex;
+    background: linear-gradient(139deg, #C82F36 0%, #C83E44 55.21%, #EC4E56 100%);
+    display: flex;
+    font-family: Montserrat;
+    font-size: 18px;
     padding: 0.875rem 1.25rem;
-    justify-content: center; font-size: 1.2rem; font-weight: 500;color: #fff;
+    justify-content: center; font-weight: 600;color: #fff;
     align-items: flex-start;
     gap: 0.625rem;
-    width: 100%; margin-top: 1.5rem;}
+    width: 90%;
+    margin: auto;
+    margin-top: 20px;}
     .modal-content {
-        top: 50vh;
+        bottom: 0;
+        position: absolute;
     }
     .clock-btn-container .col-3{display: flex; gap: .5rem; flex-direction: column; justify-content: center; align-items: center;padding: .5rem;}
     .clock-btn-container .col-3 p{color: #99EDFF;font-family: 'Montserrat';font-size: 0.875rem;font-style: normal;font-weight: 600;line-height: 1.25rem; /* 142.857% */}
@@ -87,9 +134,9 @@
     .activeClock .clock{ background: #fff !important;}
     .activeClock p{ color: #fff !important;}
     .fade , .modal , .show{padding: 0 !important;}
-    .clock-btn-container{background-image: url('../../images/Ellipse 27.svg');}
+    .clock-btn-container{background: linear-gradient(180deg, #02375B 0%, #076D84 100%);}
 
-
+.header_headphone{margin-right: 10px;}
 
 
 
@@ -109,7 +156,7 @@
                     width: 30vw;
                     display: block;
 margin: auto}
-.x-row-section{gap: .8rem !important;}
+.x-row-section{gap: .8rem !important;justify-content: center;}
 .modal.show .modal-dialog {
 display:block;
 margin: auto;}
@@ -138,3 +185,13 @@ margin: auto;}
         .x-row-section{gap: .2rem !important;}
     }
 
+
+.wr-btns .col-6{padding-left: 7px;padding-right: 7px;}
+
+.custom_checkbox{padding-left: 20px;padding-right: 20px;margin-top: 20px}
+
+.custom_checkbox label{color: #E1F4FF;font-size: 17px;font-family: Montserrat;letter-spacing: 0.9px;font-weight: 400;}
+
+.custom_checkbox label a{color: #43DDFF}
+
+.modal.show .modal-dialog{height: 100%;}

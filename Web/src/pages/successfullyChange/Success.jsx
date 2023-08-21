@@ -28,14 +28,12 @@ function Success() {
                     height: "200px",
                 }} />
                 <div className='success-container'>
-                    <h4 className='title' style={{textAlign:"center"}}>Successfully 
-</h4>
-                    <h4 className='title' style={{textAlign:"center"}}>password Changed!</h4>
+                    <h4 className='title' style={{textAlign:"center"}}>Successfully<br />password Changed!</h4>
                     <div className='successBlue'><img src={blueLine} alt=""/></div>
                 </div>
-                <div className='login_here'>Your password has been successfully reset, please <Link>Login Here</Link>  </div>
+                <div className='login_here'>Your password has been successfully <br />reset, please <Link>Login Here</Link>  </div>
                 <div className='passwordChange-btn' style={{marginTop:'3rem'}}>
-            <button className='top-btn' onClick={()=>{navigate('/signIn')}}>LOGIN</button>
+            <button className='top-btn' onClick={()=>{navigate('/signIn')}}>Login</button>
             </div>
             </div>
             </div>
