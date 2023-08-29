@@ -86,6 +86,7 @@ function Promotion() {
         textField.innerText = userData.data.data.userDetails.referralCode;
         document.body.appendChild(textField);
         textField.select();
+        alert("Invitation Code Copied!")
         document.execCommand('copy');
         document.body.removeChild(textField);
     };
@@ -94,6 +95,7 @@ function Promotion() {
         textField.innerText = referalLink;
         document.body.appendChild(textField);
         textField.select();
+        alert("Invitation Link Copied!")
         document.execCommand('copy');
         document.body.removeChild(textField);
     };
@@ -184,9 +186,11 @@ function Promotion() {
                                 <button onClick={copyToClipboard} className="col-2"><img src={paper} alt="" /></button>
                             </div>
                         </div>
+                        <h4 style={{ color: '#fff' }} className='text-center'>Invitation Link</h4>
                         <div className='container'>
-                            <div className="row invitation-row" onClick={copyLinkToClipboard} >
-                                {userData && <div className="col-12">{referalLink}</div>}
+                            <div className="row invitation-row"  >
+                                {userData && <div className="col-10">Copy Invitation Link</div>}
+                                <button onClick={copyLinkToClipboard} className="col-2"><img src={paper} alt="" /></button>
                             </div>
                         </div>
                     </div>
