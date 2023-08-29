@@ -1,10 +1,14 @@
-import { useRecoilValue , useRecoilState} from 'recoil';
+import { useRecoilValue, useRecoilState } from 'recoil';
 import { OneMinute, TimeNo } from '../../Atoms/GameTime';
 import './TimeSection.css';
 import { useState, useEffect } from 'react';
-import { AuthState } from '../../Atoms/AuthState'
+import { AuthState } from '../../Atoms/AuthState';
 import toast, { Toaster } from "react-hot-toast";
 import axios from 'axios';
+import { CountDown } from '../../Atoms/CountDown';
+
+
+
 
 export const toastProps = {
     position: "top-center",
@@ -17,29 +21,29 @@ export const toastProps = {
 };
 
 function TimeSection1() {
-    const auth = useRecoilValue(AuthState);
-    const timeNo = useRecoilValue(TimeNo);
+    const [coutDown, setCountDown] = useRecoilState(CountDown)
+
     const [timeData, setTimeData] = useRecoilState(OneMinute);
+
+    const auth = useRecoilValue(AuthState);
+
+    const timeNo = useRecoilValue(TimeNo);
 
     const [remainingTime, setRemainingTime] = useState(0);
 
-    const startTime = new Date() || null;
-    const endTime = timeData?.data?.data?.endTime || null;
-    
+    const startTime = timeData?.data?.currentTime || null;
 
-    const handleGameData= async () => {
+    const endTime = timeData?.data?.data?.endTime || null;
+
+    const handleGameData = async () => {
         try {
             let token = auth.authToken;
-
-            console.log(token);
             const response = await axios.get(`${import.meta.env.VITE_API_URL}/getgame/${timeNo}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
 
             if (response.status === 200) {
-                // toast.success('uid', { ...toastProps });
-                console.log(response);
-                setTimeData(response)
+                setTimeData(response);
                 return response;
             }
         } catch (error) {
@@ -48,44 +52,51 @@ function TimeSection1() {
         }
     };
 
-    
     useEffect(() => {
-        if (startTime && endTime) {
+        if (endTime) {
             const startMillis = new Date(startTime).getTime();
             const endMillis = new Date(endTime).getTime();
             const intervalMillis = endMillis - startMillis;
-
+    
             if (intervalMillis > 0) {
                 const intervalSeconds = Math.floor(intervalMillis / 1000);
                 setRemainingTime(intervalSeconds);
-
+    
                 const interval = setInterval(() => {
                     setRemainingTime(prevTime => {
                         if (prevTime > 0) {
+                            if (Math.floor(prevTime / 60) === 0 && prevTime % 60 === 6) {
+                                setCountDown(true);
+                                console.log(coutDown);
+                            }
                             return prevTime - 1;
                         } else {
                             clearInterval(interval);
-
+    
                             if (Math.floor(prevTime / 60) === 0 && prevTime % 60 === 0) {
-                                handleGameData(); 
+                                handleGameData();
                             }
-
+    
                             return 0;
                         }
                     });
                 }, 1000);
-
+    
                 return () => clearInterval(interval);
             }
         }
-    }, [startTime, endTime]);
-
+    }, [endTime, setCountDown]);  
+    
+    useEffect(() => {
+        console.log(coutDown);
+    }, [coutDown]);
+    
     const minutes = Math.floor(remainingTime / 60);
     const seconds = remainingTime % 60;
 
     return (
         <div>
-            <Toaster/>
+            <Toaster />
             <div className="container">
                 <div className="row time-play">
                     <div className="col-6 left">
@@ -97,7 +108,7 @@ function TimeSection1() {
                         ) : null}
                     </div>
                     <div className="col-6 right">
-                        <p style={{ color: '#97E2F2', textAlign:'center', marginBottom: '0' }}>Left time to buy</p>
+                        <p style={{ color: '#97E2F2', textAlign: 'center', marginBottom: '0' }}>Left time to buy</p>
                         <div className="end-time">
                             <div className="row">
                                 <div className="time_minute">{minutes}</div> <div className="time_colon">:</div> <div className="time_seconds">{seconds < 10 ? `0${seconds}` : seconds}</div>

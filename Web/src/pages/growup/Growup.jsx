@@ -13,7 +13,7 @@ import alfa from '../../images/alfa.svg'
 import beta from '../../images/beta.svg'
 import bg from '../../images/Section.svg'
 import aModal from '../../images/A-modal.svg'
-import {TimeSection} from '../../components/ComponentExport'
+import { TimeSection } from '../../components/ComponentExport'
 import { UserDetails } from '../../Atoms/UserDetails'
 import axios from 'axios';
 import toast, { Toaster } from "react-hot-toast";
@@ -21,10 +21,11 @@ import { AuthState } from '../../Atoms/AuthState'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { Link } from 'react-router-dom'
 import { useSetRecoilState } from 'recoil'
-import { TimeNo , OneMinute } from '../../Atoms/GameTime'
-import {GameHistory} from '../../components/ComponentExport'
+import { TimeNo, OneMinute } from '../../Atoms/GameTime'
+import { GameHistory } from '../../components/ComponentExport'
 import { useNavigate } from 'react-router-dom'
-
+import { CountDown } from '../../Atoms/CountDown';
+import Timer from '../../components/timer/Timer'
 export const toastProps = {
     position: "top-center",
     duration: 2000,
@@ -37,10 +38,10 @@ export const toastProps = {
 function Growup() {
     const navigate = useNavigate()
 
-    const [userData,setUserData]=useRecoilState(UserDetails)
+    const [userData, setUserData] = useRecoilState(UserDetails)
     const [activeTab, setActiveTab] = useState(1);
 
-    const setTimeNo=useSetRecoilState(TimeNo)
+    const setTimeNo = useSetRecoilState(TimeNo)
     const setMinute = useSetRecoilState(OneMinute)
 
     const auth = useRecoilValue(AuthState)
@@ -56,57 +57,59 @@ function Growup() {
     const [lgShow2, setLgShow2] = useState(false);
     const [smShow3, setSmShow3] = useState(false);
     const [lgShow3, setLgShow3] = useState(false);
-    const [multiplier, setMultiplier] = useState(1);
+
     const [activeMultiplier, setActiveMultiplier] = useState(1);
 
+    const showCountDown = useRecoilValue(CountDown)
+
+    const [money, setMoney] = useState(0)
     const handleTabClick = (tabIndex) => {
         setActiveTab(tabIndex);
     };
 
-    const handleMoneyButtonClick = (money) => {
-        setAmount(money);
+    const handleMoneyButtonClick = (moneyToken) => {
+        setAmount(moneyToken);
     };
 
     const handlePlusButtonClick = () => {
-        setAmount(prevAmount => prevAmount + amount);
+        setAmount(prevAmount => prevAmount + money);
     };
 
     const handleMinusButtonClick = () => {
-        setAmount(prevAmount => prevAmount - amount);
+        setAmount(prevAmount => prevAmount - money);
     };
 
     const handleMultiplierClick = (multiplierValue) => {
-        setMultiplier(multiplierValue);
-        setActiveMultiplier(multiplierValue);
+        setAmount(prevAmount => prevAmount * multiplierValue);
     };
+    
 
-    const calculateTotalPrice = useMemo(() => {
-        return amount * multiplier;
-    }, [amount, multiplier]);
 
-///////
 
-const handleUserMoney = async () => {
 
-    try {
-        let token = auth.authToken
-        let UID = auth.UID
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/getUserProfile/${UID}`,  {
-            headers: { Authorization: `Bearer ${token}` }
+    ///////
+
+    const handleUserMoney = async () => {
+
+        try {
+            let token = auth.authToken
+            let UID = auth.UID
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/getUserProfile/${UID}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            }
+            );
+
+            if (response.status === 200) {
+                // toast.success("got user money data", { ...toastProps });
+                console.log(response);
+                setUserData(response)
+                return response;
+            }
+        } catch (error) {
+            const errorMessage = error.response ? error.response.data.message : error.message;
+            toast.error(errorMessage || "Something went wrong", { ...toastProps });
         }
-        );
-
-        if (response.status === 200) {
-            // toast.success("got user money data", { ...toastProps });
-            console.log(response);
-            setUserData(response)
-            return response;
-        }
-    } catch (error) {
-        const errorMessage = error.response ? error.response.data.message : error.message;
-        toast.error(errorMessage || "Something went wrong", { ...toastProps });
     }
-}
 
     const handleSubmit = async () => {
         let token = auth.authToken
@@ -131,7 +134,7 @@ const handleUserMoney = async () => {
                 toast.success("Bet created Successfully!", { ...toastProps });
                 setGroup('');
                 setAmount(0);
-                setDuration(0);
+
                 console.log(response);
                 console.log("Bapi")
                 toast.success("Bet created", { ...toastProps })
@@ -169,7 +172,13 @@ const handleUserMoney = async () => {
     useEffect(() => {
         console.log(duration);
         handleMin(duration);
-        handleUserMoney()
+        const timer = setTimeout(async () => {
+            await handleUserMoney();
+        }, 3000);
+
+        return () => {
+            clearTimeout(timer);
+        };
     }, [duration]);
 
 
@@ -194,37 +203,37 @@ const handleUserMoney = async () => {
                 <div className="container winWallet">
                     <div className="row">
                         <div className="col-8" style={{ marginBottom: "10px" }}>
-                            <h4 style={{marginBottom:3, color: '#6FC0EE',fontFamily: 'Montserrat',letterSpacing: 0.09, fontWeight:600, }}>Total</h4>
-                            <p style={{ color: '#29CEE4',fontFamily: 'Montserrat' }}>Wallet balance</p>
-                            </div>
-                            <div className="col-4" style={{textAlign:'right'}}><img src={wallet} alt="" /></div>
-                            <h2 style={{ color: '#fff',letterSpacing: 0.15,fontSize: 27,fontFamily: 'Montserrat',display:'flex', fontWeight: 600}}><img src={rupee} alt="" /> {userData && userData.data.data.userDetails.walletAmount} <img src={reload} alt="" style={{marginLeft:10,}} /></h2>
+                            <h4 style={{ marginBottom: 3, color: '#6FC0EE', fontFamily: 'Montserrat', letterSpacing: 0.09, fontWeight: 600, }}>Total</h4>
+                            <p style={{ color: '#29CEE4', fontFamily: 'Montserrat' }}>Wallet balance</p>
                         </div>
-                        
-                        <div className="container">
-                            <div className="row wr-btns">
-                                <div className="col-6 "><button className='withdraw'>Withdraw</button></div>
-                                <div className="col-6 "><button className='recharge'>Recharge</button></div>
-                            </div>
+                        <div className="col-4" style={{ textAlign: 'right' }}><img src={wallet} alt="" /></div>
+                        <h2 style={{ color: '#fff', letterSpacing: 0.15, fontSize: 27, fontFamily: 'Montserrat', display: 'flex', fontWeight: 600 }}><img src={rupee} alt="" /> {userData && userData.data.data.userDetails.walletAmount} <img src={reload} alt="" style={{ marginLeft: 10, }} onClick={handleUserMoney} /></h2>
+                    </div>
+
+                    <div className="container">
+                        <div className="row wr-btns">
+                            <div className="col-6 "><button onClick={() => navigate('/withdraw')} className='withdraw'>Withdraw</button></div>
+                            <div className="col-6 "><button onClick={() => navigate('/recharge')} className='recharge'>Recharge</button></div>
                         </div>
                     </div>
                 </div>
+            </div>
             <div>
                 <div className="container-fluid">
                     <div className='clock-btn-container row'>
-                        <button className={activeTab === 1 ? 'activeClock col-3' : 'clock-btn col-3'} onClick={() => { setDuration(1); handleMin(duration); handleTabClick(1) }}>
+                        <button className={activeTab === 1 ? 'activeClock col-3' : 'clock-btn col-3'} onClick={() => { setDuration(1); handleMin(duration); handleTabClick(1); setTimeNo(1) }}>
                             <div className='clock'><img src={clock} alt="" /></div>
                             <p>1 minute</p>
                         </button>
-                        <button className={activeTab === 3 ? 'activeClock col-3' : 'clock-btn col-3'} onClick={() => { setDuration(3); handleMin(duration); handleTabClick(3) }}>
+                        <button className={activeTab === 3 ? 'activeClock col-3' : 'clock-btn col-3'} onClick={() => { setDuration(3); handleMin(duration); handleTabClick(3); setTimeNo(3) }}>
                             <div className='clock'><img src={clock} alt="" /></div>
                             <p>3 minute</p>
                         </button>
-                        <button className={activeTab === 5 ? 'activeClock col-3' : 'clock-btn col-3'} onClick={() => { setDuration(5); handleMin(duration); handleTabClick(5) }}>
+                        <button className={activeTab === 5 ? 'activeClock col-3' : 'clock-btn col-3'} onClick={() => { setDuration(5); handleMin(duration); handleTabClick(5); setTimeNo(5) }}>
                             <div className='clock'><img src={clock} alt="" /></div>
                             <p>5 minute</p>
                         </button>
-                        <button className={activeTab === 10 ? 'activeClock col-3' : 'clock-btn col-3'} onClick={() => { setDuration(10); handleMin(duration); handleTabClick(10) }}>
+                        <button className={activeTab === 10 ? 'activeClock col-3' : 'clock-btn col-3'} onClick={() => { setDuration(10); handleMin(duration); handleTabClick(10); setTimeNo(10) }}>
                             <div className='clock'><img src={clock} alt="" /></div>
 
                             <p>10 minute</p>
@@ -238,22 +247,27 @@ const handleUserMoney = async () => {
                     <>
                         <TimeSection />
                         <>
-                            <div className=" big-small-game-wrapper " >
-                                <div><img src={bg} alt="" className='bg' /></div>
-                                <div className=" big-small">
-                                    <div className="main-btn">
-                                    <button className="left" onClick={() =>{ setSmShow(true);setGroup('small')}}><img src={alfa} alt="" /></button>
-                                    <button className=" right" onClick={() => {setLgShow(true); setGroup('big')}}><img src={beta} alt="" /></button>
+                            <div className="big-small-game-wrapper " >
+
+                                {/* ///// */}
+                                {showCountDown === true ? <Timer/> :
+                                <div className='image-cover'>
+                                    <div className=" big-small">
+                                        <div className="main-btn">
+                                            <button className="left" onClick={() => { setSmShow(true); setGroup('small') }}><img src={alfa} alt="" /></button>
+                                            <button className=" right" onClick={() => { setLgShow(true); setGroup('big') }}><img src={beta} alt="" /></button>
+                                        </div>
+                                        <div className=" x-row-section">
+                                            <button className="x-section active">x1</button>
+                                            <button className="x-section">x2</button>
+                                            <button className="x-section">x5</button>
+                                            <button className="x-section">x10</button>
+                                            <button className="x-section">x50</button>
+                                            <button className="x-section">x100</button>
+                                        </div>
                                     </div>
-                                    <div className=" x-row-section">
-                                        <button className="x-section active">x1</button>
-                                        <button className="x-section">x2</button>
-                                        <button className="x-section">x5</button>
-                                        <button className="x-section">x10</button>
-                                        <button className="x-section">x50</button>
-                                        <button className="x-section">x100</button>
-                                    </div>
-                                </div>
+                                </div>}
+                                {/* ///// */}
                             </div>
                             <Modal
                                 size="lg"
@@ -264,11 +278,11 @@ const handleUserMoney = async () => {
                                 <Modal.Header closeButton>
                                     <Modal.Title id="example-modal-sizes-title-lg modal-title">
                                         1 minute
-                                        <div style={{textAlign:'center'}}><img src={aModal} alt="" /></div>
+                                        <div style={{ textAlign: 'center' }}><img src={aModal} alt="" /></div>
                                     </Modal.Title>
                                 </Modal.Header>
                                 <Modal.Body>
-                                    
+
                                     <div className=' money-container'>
                                         <div className="money">
                                             <div>
@@ -277,25 +291,25 @@ const handleUserMoney = async () => {
                                             <div className="x-row-section">
                                                 <button
                                                     className={`x-section ${amount === 100 ? 'active-btn' : ''}`}
-                                                    onClick={() => handleMoneyButtonClick(100)}
+                                                    onClick={() => { handleMoneyButtonClick(100); setMoney(100) }}
                                                 >
                                                     100
                                                 </button>
                                                 <button
                                                     className={`x-section ${amount === 200 ? 'active-btn' : ''}`}
-                                                    onClick={() => handleMoneyButtonClick(200)}
+                                                    onClick={() => { handleMoneyButtonClick(200); setMoney(200) }}
                                                 >
                                                     200
                                                 </button>
                                                 <button
                                                     className={`x-section ${amount === 500 ? 'active-btn' : ''}`}
-                                                    onClick={() => handleMoneyButtonClick(500)}
+                                                    onClick={() => { handleMoneyButtonClick(500); setMoney(500) }}
                                                 >
                                                     500
                                                 </button>
                                                 <button
                                                     className={`x-section ${amount === 1000 ? 'active-btn' : ''}`}
-                                                    onClick={() => handleMoneyButtonClick(1000)}
+                                                    onClick={() => { handleMoneyButtonClick(1000); setMoney(1000) }}
                                                 >
                                                     1000
                                                 </button>
@@ -353,12 +367,12 @@ const handleUserMoney = async () => {
                                         </div>
                                         <div className="hrline"></div>
                                         <div className="custom_checkbox">
-                                          <input type="checkbox" id="Agree" />
-                                          <label for="Agree">I Agree <Link>Privacy Policy</Link></label>
+                                            <input type="checkbox" id="Agree" />
+                                            <label for="Agree">I Agree <Link>Privacy Policy</Link></label>
                                         </div>
 
                                         <div className="hrline"></div>
-                                        <button className='total-btn' onClick={handleSubmit}>Total Price: {calculateTotalPrice}</button>
+                                        <button className='total-btn' onClick={handleSubmit}>Total Price: {amount}</button>
                                     </div>
                                 </Modal.Body>
                             </Modal>
@@ -370,11 +384,11 @@ const handleUserMoney = async () => {
                             >
                                 <Modal.Header closeButton>
                                     <Modal.Title id="example-modal-sizes-title-lg">
-                                        Big 1 minute
+                                        Beta 1 minute
                                     </Modal.Title>
                                 </Modal.Header>
                                 <Modal.Body>
-                                    <div style={{width:'100%'}}>
+                                    <div style={{ width: '100%' }}>
                                         <div className="money">
                                             <div>
                                                 <p>Money</p>
@@ -382,31 +396,31 @@ const handleUserMoney = async () => {
                                             <div className="x-row-section">
                                                 <button
                                                     className={`x-section ${amount === 100 ? 'active-btn' : ''}`}
-                                                    onClick={() => handleMoneyButtonClick(100)}
+                                                    onClick={() => { handleMoneyButtonClick(100); setMoney(100) }}
                                                 >
                                                     100
                                                 </button>
                                                 <button
                                                     className={`x-section ${amount === 200 ? 'active-btn' : ''}`}
-                                                    onClick={() => handleMoneyButtonClick(200)}
+                                                    onClick={() => { handleMoneyButtonClick(200); setMoney(200) }}
                                                 >
                                                     200
                                                 </button>
                                                 <button
                                                     className={`x-section ${amount === 500 ? 'active-btn' : ''}`}
-                                                    onClick={() => handleMoneyButtonClick(500)}
+                                                    onClick={() => { handleMoneyButtonClick(500); setMoney(500) }}
                                                 >
                                                     500
                                                 </button>
                                                 <button
                                                     className={`x-section ${amount === 1000 ? 'active-btn' : ''}`}
-                                                    onClick={() => handleMoneyButtonClick(1000)}
+                                                    onClick={() => { handleMoneyButtonClick(1000); setMoney(1000) }}
                                                 >
                                                     1000
                                                 </button>
                                             </div>
                                         </div>
-                                        <div className="hrline"></div>                                        
+                                        <div className="hrline"></div>
                                         <div className="multiply">
                                             <div>
                                                 <p>Multiply</p>
@@ -417,7 +431,7 @@ const handleUserMoney = async () => {
                                                 <button onClick={handlePlusButtonClick}>+</button>
                                             </div>
                                         </div>
-                                        <div className="hrline"></div>   
+                                        <div className="hrline"></div>
                                         <div className="x-row-section">
                                             <button
                                                 className={`x-section ${activeMultiplier === 1 ? 'active-btn' : ''}`}
@@ -456,42 +470,44 @@ const handleUserMoney = async () => {
                                                 x100
                                             </button>
                                         </div>
-                                        <div className="hrline"></div>   
+                                        <div className="hrline"></div>
                                         <div className="custom_checkbox">
-                                          <input type="checkbox" id="Agree2" />
-                                          <label for="Agree2">I Agree <Link>Privacy Policy</Link></label>
+                                            <input type="checkbox" id="Agree2" />
+                                            <label for="Agree2">I Agree <Link>Privacy Policy</Link></label>
                                         </div>
-                                        <div className="hrline"></div>   
-                                        <button className='total-btn' onClick={handleSubmit}>Total Price: {calculateTotalPrice}</button>
+                                        <div className="hrline"></div>
+                                        <button className='total-btn' onClick={handleSubmit}>Total Price: {amount}</button>
                                     </div>
                                 </Modal.Body>
                             </Modal>
-                            
+
                         </>
-                        <GameHistory/>
+                        <GameHistory />
                     </>
                 }
-                {activeTab === 3 &&
+                {
+                    activeTab === 3 &&
                     <>
                         <TimeSection />
                         <>
-                            <div className=" big-small-game-wrapper " >
-                                <div><img src={bg} alt="" className='bg' /></div>
-                                <div className=" big-small">
-                                    <div className="main-btn">
-                                    <button className="left" onClick={() => {setSmShow1(true); setGroup('small')}}><img src={alfa} alt="" /></button>
-                                        <button className=" right" onClick={() => {setLgShow1(true); setGroup('big')}}><img src={beta} alt="" /></button>
+                        <div className="big-small-game-wrapper " >
+                        {showCountDown === true ? <Timer/> :
+                                <div className='image-cover'>
+                                    <div className=" big-small">
+                                        <div className="main-btn">
+                                            <button className="left" onClick={() => { setSmShow1(true); setGroup('small') }}><img src={alfa} alt="" /></button>
+                                            <button className=" right" onClick={() => { setLgShow1(true); setGroup('big') }}><img src={beta} alt="" /></button>
+                                        </div>
+                                        <div className=" x-row-section">
+                                            <button className="x-section active">x1</button>
+                                            <button className="x-section">x2</button>
+                                            <button className="x-section">x5</button>
+                                            <button className="x-section">x10</button>
+                                            <button className="x-section">x50</button>
+                                            <button className="x-section">x100</button>
+                                        </div>
                                     </div>
-                                    <div className="x-row-section">
-                                        <button className="x-section">x1</button>
-                                        <button className="x-section">x2</button>
-                                        <button className="x-section">x5</button>
-                                        <button className="x-section">x10</button>
-                                        <button className="x-section">x50</button>
-                                        <button className="x-section">x100</button>
-                                    </div>
-
-                                </div>
+                                </div>}
 
                             </div>
                             <Modal
@@ -502,7 +518,7 @@ const handleUserMoney = async () => {
                             >
                                 <Modal.Header closeButton>
                                     <Modal.Title id="example-modal-sizes-title-lg">
-                                        small 3 minute
+                                        Alfa 3 minute
                                     </Modal.Title>
                                 </Modal.Header>
                                 <Modal.Body>
@@ -514,25 +530,25 @@ const handleUserMoney = async () => {
                                             <div className="x-row-section">
                                                 <button
                                                     className={`x-section ${amount === 100 ? 'active-btn' : ''}`}
-                                                    onClick={() => handleMoneyButtonClick(100)}
+                                                    onClick={() => { handleMoneyButtonClick(100); setMoney(100) }}
                                                 >
                                                     100
                                                 </button>
                                                 <button
                                                     className={`x-section ${amount === 200 ? 'active-btn' : ''}`}
-                                                    onClick={() => handleMoneyButtonClick(200)}
+                                                    onClick={() => { handleMoneyButtonClick(200); setMoney(200) }}
                                                 >
                                                     200
                                                 </button>
                                                 <button
                                                     className={`x-section ${amount === 500 ? 'active-btn' : ''}`}
-                                                    onClick={() => handleMoneyButtonClick(500)}
+                                                    onClick={() => { handleMoneyButtonClick(500); setMoney(500) }}
                                                 >
                                                     500
                                                 </button>
                                                 <button
                                                     className={`x-section ${amount === 1000 ? 'active-btn' : ''}`}
-                                                    onClick={() => handleMoneyButtonClick(1000)}
+                                                    onClick={() => { handleMoneyButtonClick(1000); setMoney(1000) }}
                                                 >
                                                     1000
                                                 </button>
@@ -586,7 +602,7 @@ const handleUserMoney = async () => {
                                                 x100
                                             </button>
                                         </div>
-                                        <button className='total-btn' onClick={handleSubmit}>Total Price: {calculateTotalPrice}</button>
+                                        <button className='total-btn' onClick={handleSubmit}>Total Price: {amount}</button>
                                     </div>
                                 </Modal.Body>
                             </Modal>
@@ -598,7 +614,7 @@ const handleUserMoney = async () => {
                             >
                                 <Modal.Header closeButton>
                                     <Modal.Title id="example-modal-sizes-title-lg">
-                                        Big   3 minute
+                                        Beta   3 minute
                                     </Modal.Title>
                                 </Modal.Header>
                                 <Modal.Body>
@@ -610,22 +626,25 @@ const handleUserMoney = async () => {
                                             <div className="x-row-section">
                                                 <button
                                                     className={`x-section ${amount === 100 ? 'active-btn' : ''}`}
-                                                    onClick={() => handleMoneyButtonClick(100)}>100</button>
+                                                    onClick={() => { handleMoneyButtonClick(100); setMoney(100) }}
+                                                >
+                                                    100
+                                                </button>
                                                 <button
                                                     className={`x-section ${amount === 200 ? 'active-btn' : ''}`}
-                                                    onClick={() => handleMoneyButtonClick(200)}
+                                                    onClick={() => { handleMoneyButtonClick(200); setMoney(200) }}
                                                 >
                                                     200
                                                 </button>
                                                 <button
                                                     className={`x-section ${amount === 500 ? 'active-btn' : ''}`}
-                                                    onClick={() => handleMoneyButtonClick(500)}
+                                                    onClick={() => { handleMoneyButtonClick(500); setMoney(500) }}
                                                 >
                                                     500
                                                 </button>
                                                 <button
                                                     className={`x-section ${amount === 1000 ? 'active-btn' : ''}`}
-                                                    onClick={() => handleMoneyButtonClick(1000)}
+                                                    onClick={() => { handleMoneyButtonClick(1000); setMoney(1000) }}
                                                 >
                                                     1000
                                                 </button>
@@ -679,34 +698,37 @@ const handleUserMoney = async () => {
                                                 x100
                                             </button>
                                         </div>
-                                        <button className='total-btn' onClick={handleSubmit}>Total Price: {calculateTotalPrice}</button>
+                                        <button className='total-btn' onClick={handleSubmit}>Total Price: {amount}</button>
                                     </div>
                                 </Modal.Body>
                             </Modal>
                         </>
-                        <GameHistory/>
-                    </>}
-                {activeTab === 5 &&
+                        <GameHistory />
+                    </>
+                }
+                {
+                    activeTab === 5 &&
                     <>
                         <TimeSection />
                         <>
-                            <div className=" big-small-game-wrapper " >
-                                <div><img src={bg} alt="" className='bg' /></div>
-                                <div className=" big-small">
-                                    <div className="main-btn">
-                                        <button className="left" onClick={() => {setSmShow2(true);setGroup('small')}}><img src={alfa} alt="" /></button>
-                                        <button className=" right" onClick={() => {setLgShow2(true);setGroup('big')}}><img src={beta} alt="" /></button>
+                        <div className="big-small-game-wrapper " >
+                        {showCountDown === true ? <Timer/> :
+                                <div className='image-cover'>
+                                    <div className=" big-small">
+                                        <div className="main-btn">
+                                            <button className="left" onClick={() => { setSmShow2(true); setGroup('small') }}><img src={alfa} alt="" /></button>
+                                            <button className=" right" onClick={() => { setLgShow2(true); setGroup('big') }}><img src={beta} alt="" /></button>
+                                        </div>
+                                        <div className=" x-row-section">
+                                            <button className="x-section active">x1</button>
+                                            <button className="x-section">x2</button>
+                                            <button className="x-section">x5</button>
+                                            <button className="x-section">x10</button>
+                                            <button className="x-section">x50</button>
+                                            <button className="x-section">x100</button>
+                                        </div>
                                     </div>
-                                    <div className=" x-row-section">
-                                        <button className="x-section">x1</button>
-                                        <button className="x-section">x2</button>
-                                        <button className="x-section">x5</button>
-                                        <button className="x-section">x10</button>
-                                        <button className="x-section">x50</button>
-                                        <button className="x-section">x100</button>
-                                    </div>
-
-                                </div>
+                                </div>}
 
                             </div>
                             <Modal
@@ -717,7 +739,7 @@ const handleUserMoney = async () => {
                             >
                                 <Modal.Header closeButton>
                                     <Modal.Title id="example-modal-sizes-title-lg">
-                                        small 5 minute
+                                        Alfa 5 minute
                                     </Modal.Title>
                                 </Modal.Header>
                                 <Modal.Body>
@@ -729,25 +751,25 @@ const handleUserMoney = async () => {
                                             <div className="x-row-section">
                                                 <button
                                                     className={`x-section ${amount === 100 ? 'active-btn' : ''}`}
-                                                    onClick={() => handleMoneyButtonClick(100)}
+                                                    onClick={() => { handleMoneyButtonClick(100); setMoney(100) }}
                                                 >
                                                     100
                                                 </button>
                                                 <button
                                                     className={`x-section ${amount === 200 ? 'active-btn' : ''}`}
-                                                    onClick={() => handleMoneyButtonClick(200)}
+                                                    onClick={() => { handleMoneyButtonClick(200); setMoney(200) }}
                                                 >
                                                     200
                                                 </button>
                                                 <button
                                                     className={`x-section ${amount === 500 ? 'active-btn' : ''}`}
-                                                    onClick={() => handleMoneyButtonClick(500)}
+                                                    onClick={() => { handleMoneyButtonClick(500); setMoney(500) }}
                                                 >
                                                     500
                                                 </button>
                                                 <button
                                                     className={`x-section ${amount === 1000 ? 'active-btn' : ''}`}
-                                                    onClick={() => handleMoneyButtonClick(1000)}
+                                                    onClick={() => { handleMoneyButtonClick(1000); setMoney(1000) }}
                                                 >
                                                     1000
                                                 </button>
@@ -801,7 +823,7 @@ const handleUserMoney = async () => {
                                                 x100
                                             </button>
                                         </div>
-                                        <button className='total-btn' onClick={handleSubmit}>Total Price: {calculateTotalPrice}</button>
+                                        <button className='total-btn' onClick={handleSubmit}>Total Price: {amount}</button>
                                     </div>
                                 </Modal.Body>
                             </Modal>
@@ -813,7 +835,7 @@ const handleUserMoney = async () => {
                             >
                                 <Modal.Header closeButton>
                                     <Modal.Title id="example-modal-sizes-title-lg">
-                                        Big 5 minute
+                                        Beta 5 minute
                                     </Modal.Title>
                                 </Modal.Header>
                                 <Modal.Body>
@@ -825,25 +847,25 @@ const handleUserMoney = async () => {
                                             <div className="x-row-section">
                                                 <button
                                                     className={`x-section ${amount === 100 ? 'active-btn' : ''}`}
-                                                    onClick={() => handleMoneyButtonClick(100)}
+                                                    onClick={() => { handleMoneyButtonClick(100); setMoney(100) }}
                                                 >
                                                     100
                                                 </button>
                                                 <button
                                                     className={`x-section ${amount === 200 ? 'active-btn' : ''}`}
-                                                    onClick={() => handleMoneyButtonClick(200)}
+                                                    onClick={() => { handleMoneyButtonClick(200); setMoney(200) }}
                                                 >
                                                     200
                                                 </button>
                                                 <button
                                                     className={`x-section ${amount === 500 ? 'active-btn' : ''}`}
-                                                    onClick={() => handleMoneyButtonClick(500)}
+                                                    onClick={() => { handleMoneyButtonClick(500); setMoney(500) }}
                                                 >
                                                     500
                                                 </button>
                                                 <button
                                                     className={`x-section ${amount === 1000 ? 'active-btn' : ''}`}
-                                                    onClick={() => handleMoneyButtonClick(1000)}
+                                                    onClick={() => { handleMoneyButtonClick(1000); setMoney(1000) }}
                                                 >
                                                     1000
                                                 </button>
@@ -897,34 +919,37 @@ const handleUserMoney = async () => {
                                                 x100
                                             </button>
                                         </div>
-                                        <button className='total-btn'>Total Price: {calculateTotalPrice}</button>
+                                        <button className='total-btn'>Total Price:{amount}</button>
                                     </div>
                                 </Modal.Body>
                             </Modal>
                         </>
-                        <GameHistory/>
-                    </>}
-                {activeTab === 10 &&
+                        <GameHistory />
+                    </>
+                }
+                {
+                    activeTab === 10 &&
                     <>
                         <TimeSection />
                         <>
-                            <div className=" big-small-game-wrapper " >
-                                <div><img src={bg} alt="" className='bg' /></div>
-                                <div className=" big-small">
-                                    <div className="main-btn">
-                                        <button className="left" onClick={() =>{ setSmShow3(true); setGroup('small')}}><img src={alfa} alt="" /></button>
-                                        <button className=" right" onClick={() => {setLgShow3(true); setGroup('big')}}><img src={beta} alt="" /></button>
+                        <div className="big-small-game-wrapper " >
+                        {showCountDown === true ? <Timer/> :
+                                <div className='image-cover'>
+                                    <div className=" big-small">
+                                        <div className="main-btn">
+                                            <button className="left" onClick={() => { setSmShow3(true); setGroup('small') }}><img src={alfa} alt="" /></button>
+                                            <button className=" right" onClick={() => { setLgShow3(true); setGroup('big') }}><img src={beta} alt="" /></button>
+                                        </div>
+                                        <div className=" x-row-section">
+                                            <button className="x-section active">x1</button>
+                                            <button className="x-section">x2</button>
+                                            <button className="x-section">x5</button>
+                                            <button className="x-section">x10</button>
+                                            <button className="x-section">x50</button>
+                                            <button className="x-section">x100</button>
+                                        </div>
                                     </div>
-                                    <div className=" x-row-section">
-                                        <button className="x-section">x1</button>
-                                        <button className="x-section">x2</button>
-                                        <button className="x-section">x5</button>
-                                        <button className="x-section">x10</button>
-                                        <button className="x-section">x50</button>
-                                        <button className="x-section">x100</button>
-                                    </div>
-
-                                </div>
+                                </div>}
 
                             </div>
                             <Modal
@@ -935,7 +960,7 @@ const handleUserMoney = async () => {
                             >
                                 <Modal.Header closeButton>
                                     <Modal.Title id="example-modal-sizes-title-lg">
-                                        small 10 minute
+                                        Alfa 10 minute
                                     </Modal.Title>
                                 </Modal.Header>
                                 <Modal.Body>
@@ -947,25 +972,25 @@ const handleUserMoney = async () => {
                                             <div className="x-row-section">
                                                 <button
                                                     className={`x-section ${amount === 100 ? 'active-btn' : ''}`}
-                                                    onClick={() => handleMoneyButtonClick(100)}
+                                                    onClick={() => { handleMoneyButtonClick(100); setMoney(100) }}
                                                 >
                                                     100
                                                 </button>
                                                 <button
                                                     className={`x-section ${amount === 200 ? 'active-btn' : ''}`}
-                                                    onClick={() => handleMoneyButtonClick(200)}
+                                                    onClick={() => { handleMoneyButtonClick(200); setMoney(200) }}
                                                 >
                                                     200
                                                 </button>
                                                 <button
                                                     className={`x-section ${amount === 500 ? 'active-btn' : ''}`}
-                                                    onClick={() => handleMoneyButtonClick(500)}
+                                                    onClick={() => { handleMoneyButtonClick(500); setMoney(500) }}
                                                 >
                                                     500
                                                 </button>
                                                 <button
                                                     className={`x-section ${amount === 1000 ? 'active-btn' : ''}`}
-                                                    onClick={() => handleMoneyButtonClick(1000)}
+                                                    onClick={() => { handleMoneyButtonClick(1000); setMoney(1000) }}
                                                 >
                                                     1000
                                                 </button>
@@ -1019,7 +1044,7 @@ const handleUserMoney = async () => {
                                                 x100
                                             </button>
                                         </div>
-                                        <button className='total-btn' onClick={handleSubmit}>Total Price: {calculateTotalPrice}</button>
+                                        <button className='total-btn' onClick={handleSubmit}>Total Price: {amount}</button>
                                     </div>
                                 </Modal.Body>
                             </Modal>
@@ -1031,7 +1056,7 @@ const handleUserMoney = async () => {
                             >
                                 <Modal.Header closeButton>
                                     <Modal.Title id="example-modal-sizes-title-lg">
-                                        Big 10 minute
+                                        Beta 10 minute
                                     </Modal.Title>
                                 </Modal.Header>
                                 <Modal.Body>
@@ -1043,25 +1068,25 @@ const handleUserMoney = async () => {
                                             <div className="x-row-section">
                                                 <button
                                                     className={`x-section ${amount === 100 ? 'active-btn' : ''}`}
-                                                    onClick={() => handleMoneyButtonClick(100)}
+                                                    onClick={() => { handleMoneyButtonClick(100); setMoney(100) }}
                                                 >
                                                     100
                                                 </button>
                                                 <button
                                                     className={`x-section ${amount === 200 ? 'active-btn' : ''}`}
-                                                    onClick={() => handleMoneyButtonClick(200)}
+                                                    onClick={() => { handleMoneyButtonClick(200); setMoney(200) }}
                                                 >
                                                     200
                                                 </button>
                                                 <button
                                                     className={`x-section ${amount === 500 ? 'active-btn' : ''}`}
-                                                    onClick={() => handleMoneyButtonClick(500)}
+                                                    onClick={() => { handleMoneyButtonClick(500); setMoney(500) }}
                                                 >
                                                     500
                                                 </button>
                                                 <button
                                                     className={`x-section ${amount === 1000 ? 'active-btn' : ''}`}
-                                                    onClick={() => handleMoneyButtonClick(1000)}
+                                                    onClick={() => { handleMoneyButtonClick(1000); setMoney(1000) }}
                                                 >
                                                     1000
                                                 </button>
@@ -1115,15 +1140,16 @@ const handleUserMoney = async () => {
                                                 x100
                                             </button>
                                         </div>
-                                        <button className='total-btn' onClick={handleSubmit}>Total Price: {calculateTotalPrice}</button>
+                                        <button className='total-btn' onClick={handleSubmit}>Total Price: {amount}</button>
                                     </div>
                                 </Modal.Body>
                             </Modal>
                         </>
-                        <GameHistory/>
-                    </>}
-            </div>
-        </div>
+                        <GameHistory />
+                    </>
+                }
+            </div >
+        </div >
     )
 }
 

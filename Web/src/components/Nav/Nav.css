@@ -8,7 +8,7 @@
 
 .promotion .out .in svg{font-size: 2rem; color: #ffffff;}
 .pro-txt{ padding-top: 1.4rem;} */
-.navBar{padding:1rem 1rem;}
+.navBar{padding:1rem 1rem; position: relative; bottom: 0;}
 .link-container{border-radius: 0.625rem;
     background: linear-gradient(180deg, #00406F 0%, #2B62A5 100%);
     box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.20);}
@@ -18,12 +18,14 @@
         font-size: 0.75rem;
         font-style: normal;
         font-weight: 500;}
-        .link a{display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 1rem 12px;gap: .5rem;margin: .5rem 0;color: #8BBCDF;font-family: Montserrat;font-size: 12px;font-weight: 500;}
+        .nav-Link{display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 1rem 12px;gap: .5rem;margin: .5rem 0;color: #8BBCDF;font-family: Montserrat;font-size: 12px;font-weight: 500;}
         .link-container .col-3 a p{margin: 0;}
         .link-container .link :hover{border-radius: 0.625rem;
             border-radius: 10px;background: linear-gradient(180deg, #FB4040 0%, #E0CA02 100%);box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.20);color: #FFF;}
+            .active{border-radius: 0.625rem;
+                border-radius: 10px;background: linear-gradient(180deg, #FB4040 0%, #E0CA02 100%);box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.20);color: #FFF;}
             .link-container .link a img{height: 20px;}
-
+            .navBar .link-container .link .activeLink{border-radius: 0.625rem;border-radius: 10px;background: linear-gradient(180deg, #FB4040 0%, #E0CA02 100%);box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.20);color: #d31414}
 .link-container{display: flex;align-items: center;justify-content: space-between;padding: 0 10px;}
 
 .link-container .link :hover p, 

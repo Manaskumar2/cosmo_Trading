@@ -1,0 +1,16 @@
+.heading-amount{color: #FFF;font-family: 'Montserrat'}
+.table-heading {display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 1rem;}
+.greenBg{background: #198D6B; }
+.tableBodyRow td{ text-align: center;}
+.table-subHeading{color: #A4F8DE;
+    text-align: center;
+    font-family: Montserrat;
+    font-size: 0.675rem; font-weight: 300;}
+.greenBg th{background: #198D6B;color: #FFF;
+    text-align: center;
+    font-family: Montserrat;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;}
+.line{margin-bottom: 1.5rem;}

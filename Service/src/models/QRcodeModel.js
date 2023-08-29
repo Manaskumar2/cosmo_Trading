@@ -1,10 +1,16 @@
-// models/QrCode.js
+
 
 const mongoose = require('mongoose');
 
 const qrCodeSchema = new mongoose.Schema({
-  name: String, 
-  imageUrl: String, 
+  upiId: {
+    type: String,
+    required: true,
+  } , 
+  qrCode: {
+    type: String,
+    required: true,
+  },
   uploadedBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',

@@ -8,6 +8,7 @@ require("moment-timezone");
 const Wallet = require("../models/companywallet");
 let walletId = "64c4e1fefff409e9859e8216";
 
+
 let groupOptions = ["small", "big"];
 let durationOptions = [1,3, 5,10];
 // let durationOptions = [1];
@@ -20,7 +21,7 @@ async function calculatResult(gameId) {
     populate: { path: "downline" },
   });
   if (!game) {
-    return;
+    return; 
   }
   const bigUsers = game.bets.filter((bet) => {
     return bet.group == "big";
@@ -122,7 +123,7 @@ async function calculatResult(gameId) {
       source: game._id,
     });
     await wallet.save();
-    console.log("remaining money is ", totalAmount - distributedAmount);
+    // console.log("remaining money is ", totalAmount - distributedAmount);
   } else if (bigAmount == 0 || smallAmount == 0) {
   let totalAmount = smallAmount + bigAmount;
   for (const bet of game.bets) {
@@ -134,9 +135,13 @@ async function calculatResult(gameId) {
     );
   }
   let distributedAmount = await distributeComissionToAll(game);
-  let compnayFund = totalAmount - distributedAmount;
-  const wallet = await Wallet.findOne({ _id: walletId });
-  wallet.amount += compnayFund;
+    let compnayFund = totalAmount - distributedAmount;
+    const totalBettingAmount = bigAmount + smallAmount;
+    const wallet = await Wallet.findOne({ _id: walletId });
+   
+    wallet.amount += compnayFund;
+    wallet.totalBettingAmount += totalBettingAmount;
+
   wallet.actions.push({
     actions: "+",
     date: new Date(),
@@ -144,8 +149,19 @@ async function calculatResult(gameId) {
     wonFrom: "betting",
     source: game._id,
   });
+    
+    const today = new Date();
+  if (!moment(wallet.lastUpdatedDate).isSame(today, 'day')) {
+  
+    wallet.everydayBettingAmount = 0;
+    
+    wallet.lastUpdatedDate = today;
+  }
+
+  wallet.everydayBettingAmount += totalBettingAmount;
+
   await wallet.save();
-  console.log("remaining money is ", totalAmount - distributedAmount);
+    
 }
 }
 
@@ -155,33 +171,87 @@ async function distributeComissionToAll(game) {
     let distributedAmount = 0;
     for (let i = 0; i < game.bets.length; i++) {
       let bet = game.bets[i];
-      let dAmount = await distributeComission(bet.user, bet.amount);
+      let dAmount = await distributeCommission(bet.user, bet.amount);
       distributedAmount += dAmount;
     }
     resolve(distributedAmount);
   });
 }
 
-async function distributeComission(user, amount) {
+// async function distributeComission(user, amount) {
+//   let currentUser = user;
+//   let distributedAmount = 0;
+//   for (let i = 0; i < 10; i++) {
+//     if (currentUser.parentReferralCode != null) {
+//       let parentUser = await userModel.findOne({
+//         referralCode: currentUser.parentReferralCode,
+//       });
+//       if (!parentUser) {
+//         return distributedAmount;
+//       }
+
+//       let dAmount = roundDown(amount * 0.97 * (downloadResult[i] / 100), 2);
+//       let newWalletAmount = parentUser.walletAmount + dAmount;
+//       let newCommisiionAmount = parentUser.commissionAmount+ dAmount;
+//       distributedAmount += dAmount;
+//       await userModel.updateOne(
+//         { _id: parentUser._id },
+//         { walletAmount: newWalletAmount },
+//         {
+//           commissionAmount: newCommisiionAmount
+//         }
+//       );
+//       currentUser = parentUser;
+//       if (i == 9) {
+//         return distributedAmount;
+//       }
+//     } else {
+//       return distributedAmount;
+//     }
+//   }
+//   return distributedAmount;
+// }
+
+
+async function distributeCommission(user, amount) {
   let currentUser = user;
   let distributedAmount = 0;
+
   for (let i = 0; i < 10; i++) {
     if (currentUser.parentReferralCode != null) {
       let parentUser = await userModel.findOne({
         referralCode: currentUser.parentReferralCode,
       });
+
       if (!parentUser) {
         return distributedAmount;
       }
 
       let dAmount = roundDown(amount * 0.97 * (downloadResult[i] / 100), 2);
+
+      
+      let dailyCommission = {
+        date: new Date(),
+        amount: dAmount,
+      };
+
+      parentUser.commissions.push(dailyCommission);
+
       let newWalletAmount = parentUser.walletAmount + dAmount;
+      let newCommissionAmount = parentUser.commissionAmount + dAmount;
       distributedAmount += dAmount;
+
       await userModel.updateOne(
         { _id: parentUser._id },
-        { walletAmount: newWalletAmount }
+        {
+          walletAmount: newWalletAmount,
+          commissionAmount: newCommissionAmount,
+          $push: { commissions: dailyCommission }, 
+        }
       );
+
       currentUser = parentUser;
+
       if (i == 9) {
         return distributedAmount;
       }
@@ -189,8 +259,10 @@ async function distributeComission(user, amount) {
       return distributedAmount;
     }
   }
+
   return distributedAmount;
 }
+
 function roundDown(num, decimalPlaces = 2) {
   const factor = 10 ** decimalPlaces;
   return Math.floor(num * factor) / factor;
@@ -198,6 +270,48 @@ function roundDown(num, decimalPlaces = 2) {
 
 calculatResult("64c32e7a488a94ffca2bdd2c");
 
+// const startAndCheckGame = async (duration) => {
+//   const currentDate = moment(new Date()).tz("Asia/Kolkata");
+//   const game = await Game.findOne({ isCompleted: false, duration: duration });
+
+//   if (game) {
+//     if (game.endTime.unix() - currentDate.unix() <= 0) {
+//       game.isCompleted = true;
+//       calculatResult(game._id);
+//       await game.save({
+//             duration: duration,
+//         startTime: moment(new Date()).tz("Asia/Kolkata"),
+//         endTime: moment(new Date()).tz("Asia/Kolkata").add(duration, "m"),
+//         gameUID: await generateUniqueNumber()
+//       }
+//       );
+//       await Game.create({
+//         duration: duration,
+//         startTime: moment(new Date()).tz("Asia/Kolkata"),
+//         endTime: moment(new Date()).tz("Asia/Kolkata").add(duration, "m"),
+//         gameUID: await generateUniqueNumber()
+//       });
+//       setTimeout(() => {
+//           startAndCheckGame(duration)
+//       }, duration * 60 * 1000)
+//     } else {
+//       let currentDate = moment(new Date()).tz("Asia/Kolkata");
+//         setTimeout(() => {
+//           startAndCheckGame(duration);
+//         }, (game.endTime.unix() - currentDate.unix()) * 1000);
+//     }
+//   } else {
+//     await Game.create({
+//       duration: duration,
+//       startTime: moment(new Date()).tz("Asia/Kolkata"),
+//       endTime: moment(new Date()).tz("Asia/Kolkata").add(duration, "m"),
+//       gameUID: await generateUniqueNumber()
+//     });
+//     setTimeout(() => {
+//       startAndCheckGame(duration);
+//     }, duration * 60 * 1000);
+//   }
+// };
 const startAndCheckGame = async (duration) => {
   const currentDate = moment(new Date()).tz("Asia/Kolkata");
   const game = await Game.findOne({ isCompleted: false, duration: duration });
@@ -207,32 +321,30 @@ const startAndCheckGame = async (duration) => {
       game.isCompleted = true;
       calculatResult(game._id);
       await game.save({
-            duration: duration,
-        startTime: moment(new Date()).tz("Asia/Kolkata"),
-        endTime: moment(new Date()).tz("Asia/Kolkata").add(duration, "m"),
+        duration: duration,
+        startTime: currentDate, 
+        endTime: currentDate.clone().add(duration, "m"), 
         gameUID: await generateUniqueNumber()
-      }
-      );
+      });
       await Game.create({
         duration: duration,
-        startTime: moment(new Date()).tz("Asia/Kolkata"),
-        endTime: moment(new Date()).tz("Asia/Kolkata").add(duration, "m"),
+        startTime: currentDate, 
+        endTime: currentDate.clone().add(duration, "m"),
         gameUID: await generateUniqueNumber()
       });
       setTimeout(() => {
-          startAndCheckGame(duration)
+        startAndCheckGame(duration)
       }, duration * 60 * 1000)
     } else {
-      let currentDate = moment(new Date()).tz("Asia/Kolkata");
-        setTimeout(() => {
-          startAndCheckGame(duration);
-        }, (game.endTime.unix() - currentDate.unix()) * 1000);
+      setTimeout(() => {
+        startAndCheckGame(duration);
+      }, (game.endTime.unix() - currentDate.unix()) * 1000);
     }
   } else {
     await Game.create({
       duration: duration,
-      startTime: moment(new Date()).tz("Asia/Kolkata"),
-      endTime: moment(new Date()).tz("Asia/Kolkata").add(duration, "m"),
+      startTime: currentDate,
+      endTime: currentDate.clone().add(duration, "m"), 
       gameUID: await generateUniqueNumber()
     });
     setTimeout(() => {
@@ -286,6 +398,12 @@ const betController = async (req, res) => {
       return res
         .status(400)
         .json({ status: false, message: "Insufficient funds" });
+    }
+
+        const hasBet = game.bets.some(bet => bet.user.toString() === user._id.toString());
+
+    if (hasBet) {
+      return res.status(400).json({ status: false, message: "User already placed a bet in this game" });
     }
 
     let walletAmount = user.walletAmount - amount;
@@ -358,15 +476,18 @@ const growUpUserBettingHistroy = async (req, res) => {
 
 const getGame = async (req, res) => { 
   try {
+    const currentDate = moment(new Date()).tz("Asia/Kolkata");
     const duration = parseInt(req.params.duration)
     console.log(duration)
     if (!duration) return res.status(400).send({status: false, meessage:"please provide time duration for game"})
 
 
     const game = await Game.findOne({ duration: duration, isCompleted: false }).select({ isCompleted: 1, endTime: 1, startTime: 1 ,gameUID:1})
-    if(!game) return res.status(404).send({status:false,message:"Game was ended"})
+    if (!game) return res.status(404).send({ status: false, message: "Game was ended" })
+    
   
-    return res.status(200).send({status:true,meessage:"success",data:game})
+  
+    return res.status(200).send({status:true,meessage:"success",data:game,currentTime:currentDate})
      
 
   } catch (error) {

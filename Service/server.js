@@ -4,21 +4,21 @@ const route = require("./src/routes/route");
 const app = express();
 const cors = require('cors')
 const path = require('path');
+const server = require("http").Server(app)
 const mongoose = require('mongoose');
+const {initSocket}=require("./src/socket/socketio.js")
+const bodyParser = require('body-parser');
 
 
 app.use(
   cors({
     credentials: true,
-    origin:  ["http://cosmotrade.live" ,"http://localhost:3000","http://localhost:3333"]
+    origin:  ["http://cosmotrade.live","https://cosmotrade.live/" ,"http://localhost:3000","http://localhost:3333"]
   })
 );
-const multer = require("multer");
-
 app.use(express.json());
-const upload = multer();
-app.use(upload.any());
-
+app.use(bodyParser.json({ limit: '50mb' })); // Adjust the limit to your needs
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true })); // Adjust the limit to your needs
 
 const rootDir = path.resolve(__dirname);
 
@@ -41,14 +41,14 @@ mongoose
   .then(() => console.log("MongoDb is connected"))
   .catch((err) => console.log(err));
 
-
+initSocket(server);
 app.use("/api", route);
 
 
 
 
 // if (
-//    process.env.NODE_ENV === "production"
+//    process.env.NODE_ENV === "production"||process.env.NODE_ENV === "development"
 
 // ) {
   // app.use(express.static("dist"));
@@ -78,6 +78,6 @@ app.use((error, req, res, next) => {
   });
 });
 
-app.listen(process.env.PORT, function () {
+server.listen(process.env.PORT, function () {
   console.log(`Express app running on ${PORT}`);
 });

@@ -13,7 +13,7 @@ return (
                 </div>
             </div>
             <div className="table-responsive">
-                <table class="table table-striped">
+                <table className="table table-striped">
                   <tbody>
                     <tr>
                       <td width="20"><img src={User} alt="" /></td>

@@ -18,7 +18,7 @@ border: 1px solid #FFF;
 background: linear-gradient(143deg, #296DAC 0%, #2FB0E7 100%);width: 100%;}
 .wr-btns {border-top: 1px solid #2EACBD; padding-top: 1.5rem;}
 .wr-btns .col-6 button{color: #FFF;font-family: 'Montserrat';padding: 0.625rem 12px;font-size: 0.875rem;font-style: normal;font-weight: 500;line-height: normal;letter-spacing: 0.7px;}
-.promotion-btn{background: url('../../../../SVG/colorBtn.svg'); width: 100%; border: 0; outline: none; padding:10px; margin-top: 1.5rem; border-radius: 2rem; border: 2px solid white;}
+.promotion-btn{background: url('./colorBtn.svg'); width: 100%; border: 0; outline: none; padding:10px; margin-top: 1.5rem; border-radius: 2rem; border: 2px solid white;}
 .promotion{display: flex;align-items: center;color:#fff; font-size: 1.1rem; font-weight: 500;justify-content: center;gap: 1rem;}
 .profileIcons .row .col-4 .icon{display: flex; justify-content: center; align-items: center; border-radius: 6.25rem;border: 1px solid rgba(255, 255, 255, 0.50);background: #002652; height: 4.5rem; width: 4.5rem;}
 .profileIcons .row .col-4 .icon img{width: 2.2rem;height: 2.2rem; }
@@ -32,6 +32,7 @@ justify-content: center;align-items: center;border-radius: 6.25rem;background: #
 .backImg{display: flex; justify-content: center; align-items: center;}
 .lvl{border-radius: 6.25rem;background: linear-gradient(180deg, #CF433B 0%, #FDD754 100%);display: flex;     padding: 6px 12px;justify-content: space-between;align-items: center;}
 .lvlContainer{display: flex; justify-content: space-between;align-items: center;}
+
 @media (min-width: 768px) {
     .profileContainer{width: 30vw; display: block; margin: auto;}
 }

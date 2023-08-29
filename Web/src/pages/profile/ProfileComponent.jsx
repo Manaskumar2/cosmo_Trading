@@ -19,10 +19,37 @@ import video from '../../../../SVG/video-2 1.svg'
 import info from '../../../../SVG/information-button 1.svg'
 import customer from '../../../../SVG/customer-service 1.svg'
 import Nav from '../../components/Nav/Nav'
-// import { UserDetails } from '../../Atoms/UserDetails'
-// import { useRecoilValue } from 'recoil'
+import { AuthState } from '../../Atoms/AuthState'
+import { UserDetails } from '../../Atoms/UserDetails'
+import { useRecoilValue, useRecoilState } from 'recoil'
+import axios from 'axios'
+ import { useEffect } from 'react'
+ import { useNavigate } from 'react-router-dom'
 function Profile() {
-    // const userData= useRecoilValue(UserDetails)
+    const navigate = useNavigate()
+    const auth= useRecoilValue(AuthState )
+    const [userData , setUserData]=useRecoilState(UserDetails )
+    
+    const handleUserdata = async () => {
+
+        try {
+            let token = auth.authToken
+            let UID = auth.UID
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/getUserProfile/${UID}`,  {
+                headers: { Authorization: `Bearer ${token}` }
+            }
+            );
+            if (response.status === 200) {
+                // toast.success("got user money data", { ...toastProps });
+                console.log(response);
+                setUserData(response)
+                return response;
+            }
+        } catch (error) {
+            const errorMessage = error.response ? error.response.data.message : error.message;
+        }
+        useEffect(()=>{handleUserdata()},[])
+    }
     return (
         <div className='profileContainer'>
             
@@ -45,9 +72,9 @@ function Profile() {
                         <div className='col-4'><div className='img-cover'><img src={profileImg} alt="" /></div></div>
                         <div className='col-8'>
                             <div className='userData'>
-                            <p>Member : 4581666</p>
-                        <p>ID : 135468</p>
-                        <p>Mobile : 7005643072</p>
+                            
+                        <p>ID : {auth.UID}</p>
+                        <p>Mobile :{auth.phoneNumber}</p>
                             </div>
                         
                         </div>
@@ -61,7 +88,7 @@ function Profile() {
                             <p style={{ color: '#29CEE4',fontFamily: 'Montserrat' }}>Wallet balance</p>
                             </div>
                             <div className="col-4" style={{textAlign:'right'}}><img src={wallet} alt="" /></div>
-                            <h2 style={{ color: '#fff',letterSpacing: 0.15,fontSize: 27,fontFamily: 'Montserrat',display:'flex', fontWeight: 600}}><img src={rupee} alt="" /> 25,000.00 <img src={reload} alt="" style={{marginLeft:10,}} /></h2>
+                            <h2 style={{ color: '#fff',letterSpacing: 0.15,fontSize: 27,fontFamily: 'Montserrat',display:'flex', fontWeight: 600}}><img src={rupee} alt="" />{userData && userData.data.data.userDetails.walletAmount} <img src={reload} alt="" style={{marginLeft:10,}} /></h2>
                         </div>
                         
                         <div className="container">
@@ -74,7 +101,7 @@ function Profile() {
                     </div>
                     <div className="container">
                             <div className="color-btn">
-                                <button className='promotion-btn'><div className='promotion'><img src={mic} alt="" />Promotion<img src={next} alt="" /></div></button>
+                                <button className='promotion-btn' onClick={()=>{navigate("/promotion")}}><div className='promotion'><img src={mic} alt="" />Promotion<img src={next} alt="" /></div></button>
                             </div>
                         </div>
 
@@ -84,11 +111,11 @@ function Profile() {
                                     <div className='icon'><img src={document} alt="" /></div>
                                     <div className='description'>Bet Record</div>
                                 </div>
-                                <div className="col-4"  style={{marginTop:'.8rem'}}>
+                                <div className="col-4"  style={{marginTop:'.8rem',cursor:'pointer'}} onClick={()=>{navigate("/transaction")}}>
                                 <div className='icon'><img src={list} alt="" /></div>
                                     <div className='description'>History Transaction</div>
                                 </div>
-                                <div className="col-4">
+                                <div className="col-4" onClick={()=>{navigate("/message")}}>
                                 <div className='icon'><img src={bell} alt="" /></div>
                                     <div className='description'>
                                         Message
@@ -107,29 +134,29 @@ function Profile() {
                                 <div className='col-8'>Account Security</div>
                                 <div className='col-2 backImg'><img src={next} alt="" /></div>
                             </div>
-                            <div className='row'>
+                            <div className='row' onClick={()=>{navigate("/promotion")}}>
                                 <div className='col-2'><div className='profile-logo-Wrapper'><img src={marketing} alt="" /></div></div>
                                 <div className='col-8 '>Promotion Mission </div>
                                 <div className='col-2 backImg'><img src={next} alt="" /></div>
                             </div>
-                            <div className='row'>
+                            <div className='row' onClick={()=>{navigate('/gift')}}>
                                 <div className='col-2'><div className='profile-logo-Wrapper'><img src={gift} alt="" /></div></div>
                                 <div className='col-8'>Gift Code</div>
                                 <div className='col-2 backImg'><img src={next} alt="" /></div>
                             </div>
-                            <div className='row'>
+                            <div className='row' onClick={()=>{navigate("/beginnerTutorial")}}>
                                 <div className='col-2'><div className='profile-logo-Wrapper'><img src={video} alt="" /></div></div>
-                                <div className='col-8'>Beginner Tutorial</div>
+                                <div className='col-8' >Beginner Tutorial</div>
                                 <div className='col-2 backImg'><img src={next} alt="" /></div>
                             </div>
-                            <div className='row'>
+                            <div className='row' onClick={()=>{navigate("/about")}}>
                                 <div className='col-2'><div className='profile-logo-Wrapper'><img src={info} alt="" /></div></div>
-                                <div className='col-8'>About</div>
+                                <div className='col-8' >About</div>
                                 <div className='col-2 backImg'><img src={next} alt="" /></div>
                             </div>
-                            <div className='row'>
+                            <div className='row'onClick={()=>{navigate("/customerCare")}}>
                                 <div className='col-2'><div className='profile-logo-Wrapper'><img src={customer} alt="" /></div></div>
-                                <div className='col-8'>Customer Service</div>
+                                <div className='col-8' >Customer Service</div>
                                 <div className='col-2 backImg'><img src={next} alt="" /></div>
                             </div>
                         </div>

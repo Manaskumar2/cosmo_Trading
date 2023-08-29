@@ -27,15 +27,28 @@ const actionsSchema = new mongoose.Schema({
 })
 
 const companyWalletSchema = new mongoose.Schema({
-    amount:{
-        type:Number,
-        default:0,
-        required:true
+    totalBettingAmount: {
+        type: Number,
+        default: 0,
     },
-    actions:{
-        type:[actionsSchema],
-        default:[]
+    everydayBettingAmount: {
+        type: Number,
+        default: 0,
+    },
+       lastUpdatedDate: {
+        type: Date,
+        default: new Date(),
+    }, 
+    amount: {
+        type: Number,
+        default: 0,
+        required: true,
+    },
+    actions: {
+        type: [actionsSchema],
+        default: [],
     },
 })
+
 
 module.exports = mongoose.model("companywallet",companyWalletSchema)

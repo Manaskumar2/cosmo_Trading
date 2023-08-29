@@ -1,0 +1,12 @@
+.beginnerTutorial{min-height: 100vh;background: #001C3E;}
+.Beginner-tutorial{color: #C0E8FF;
+    text-align: center;
+    font-family: Montserrat;
+    font-size: 1.375rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;width: 100%;height: 100vh; display: flex;justify-content: center;align-items: center;}
+
+    @media (min-width: 768px){
+        .beginnerTutorial{width: 30vw;display: block;margin: auto;}
+    }

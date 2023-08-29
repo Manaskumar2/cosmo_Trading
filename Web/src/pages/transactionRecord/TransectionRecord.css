@@ -1,0 +1,13 @@
+.message{min-height: 100vh;background: #001C3E;}
+.profile-logo-Wrapper{display: flex;width: 2.5rem;height: 2.5rem;padding: 0.625rem;
+    justify-content: center;align-items: center;border-radius: 6.25rem;background: #17478F;}
+    .delete-btn{display: flex;padding: 0.25rem 0.625rem;flex-direction: column;justify-content: center;align-items: center;gap: 0.25rem;align-self: stretch;border-radius: 6.25rem;background: #C82F36;color: #FFF;font-family: Montserrat;font-size: 0.875rem;font-style: normal;font-weight: 500;line-height: normal;border: 0; outline: none;}
+    .message-row{padding: 1rem 0;border-bottom: 1px solid #2C6E9E;}
+    .message-row .col-3{margin: auto;}
+    .message-row .col-7 h6{color: #C0E8FF;font-family: Montserrat;font-size: 1.125rem;font-style: normal;font-weight: 600;line-height: normal;}
+    .message-row .col-7 p{color: #55A7B2;font-family: Montserrat;font-size: 1rem;font-style: normal;font-weight: 400;line-height: normal;}
+
+
+    @media (min-width: 768px){
+        .message{width: 30vw;display: block;margin: auto;}
+    }

@@ -11,7 +11,7 @@
 }
 .time-play .left{padding: 1.2rem; display: flex;flex-direction: column;justify-content: center;align-items: center;color: #FFF;gap: 1rem;}
 .time-play .right{padding: 1.2rem; display: flex;flex-direction: column;color: #FFF;gap: .25rem;}
-.time-play .left h3{font-family: 'Montserrat';font-size: 1.125rem;font-style: normal;font-weight: 600;letter-spacing:0.36px;;}
+.time-play .left h3{font-family: 'Montserrat';font-size: 1.125rem;font-style: normal;font-weight: 600;letter-spacing:0.36px !important;}
 .selected-mint{border-radius: 100px; font-size: 12px;font-family: 'Montserrat';font-weight: 500;
 background: linear-gradient(180deg, #0C568C 0%, #0782A9 100%);padding: 4px 14px;border:1px solid #3DAAD9;text-transform: capitalize;}
 

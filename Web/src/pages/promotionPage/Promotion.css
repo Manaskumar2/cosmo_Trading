@@ -1,0 +1,49 @@
+.PromoNav{background: #001C3E; background-image: url('../../images/belips.png');background-position: bottom; background-repeat: no-repeat; padding:15px 1.5rem;border-bottom: 1px solid #133B77;}
+.PromoNav .row .col-8{color: #FFF;text-align: center;font-family: 'Montserrat';font-size: 1.1rem;font-weight: 500;letter-spacing: 0.00688rem;text-transform: capitalize;}
+.tab-btn-container{overflow: hidden;display: flex;justify-content: center;align-items: center}
+.tab-btn-container .col-3{width: 23.5%;outline: none; border: 0; background-color: transparent;padding: 10px 15px; font-weight: 450; font-size: 1rem; }
+.promotionContainer{background: #001C3E; overflow: hidden; }
+.tab-btn-container .tab{color: #6CD7EE;}
+.tab-btn-container .active-Tab{border-bottom: 1.5px  solid #FBB040; color:  #fff;}
+.gift{width: 100%; background: #001C3E; display: flex; justify-content: center; align-items: center; flex-direction: column;padding:  1.5rem 0;gap: 1rem;}
+.gift p{color: #6CD7EE; font-weight: 450;font-family: 'Montserrat';}
+.commission{padding: 1rem 1rem 0rem 1rem; border:2px solid #295992;margin: 1rem; width: 93%; border-radius: 20px;}
+.commission h2{color: #fff;}
+.commission p{color: #DEAC4C; margin-bottom: 1.5rem;}
+.commission-row{padding: .7rem 0;border-top: 1px solid #164781;}
+.commission-bot-row{padding: .7rem 0;border-bottom: 1px solid #164781;}
+.commission-row .col-10{color: #0AE2FF;font-family: 'Montserrat';font-size: 1rem;}
+.commission-bot-row .col-10{color: #0AE2FF;font-family: 'Montserrat';font-size: 1rem;}
+.commission-row .col-2{color: #FFF;font-family: 'Montserrat';font-size: 1rem;text-align: center;}
+.commission-bot-row .col-2{color: #FFF;font-family: 'Montserrat';font-size: 1rem;text-align: center;}
+.total-commission{color: #FFF; padding: .8rem 0; font-size: 1.2rem; font-weight: 480;font-family: 'Montserrat';border-top: 2px solid #DCB17F;}
+.invitation-row{border-radius: 12.5rem;margin: 2rem 0;
+    border: 1px solid #FFF;
+    background: linear-gradient(143deg, #C82F36 0%, #EC4E55 100%);
+    box-shadow: 0px 4px 5px 0px rgba(200, 47, 54, 0.40);padding: 0rem 0 0rem 1rem;height: 2rem;}
+    .invitation-row .col-2{border: 0; outline: none; display: flex; justify-content: center; align-items: center;border-radius: 6.25rem;
+        border: 1px solid #FFF;
+        background: linear-gradient(180deg, #C11821 0%, #EB941B 100%);}
+.invitation-row .col-10{display: flex;justify-content: flex-start; align-items: center;color: #fff;}
+.heading-amount{color: #FFF;font-family: 'Montserrat'}
+.table-heading {display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 1rem;}
+.greenBg{background: #198D6B; }
+.tableBodyRow td{ text-align: center;}
+.table-subHeading{color: #A4F8DE;
+    text-align: center;
+    font-family: Montserrat;
+    font-size: 0.675rem; font-weight: 300;}
+.greenBg th{background: #198D6B;color: #FFF;
+    text-align: center;
+    font-family: Montserrat;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;}
+.line{margin-bottom: 1.5rem;}
+.invitation-row .col-12{color: #FFF;
+    font-family: Montserrat;
+    font-size: 12px;display: flex;align-items: center;}
+@media (min-width: 768px) {
+    .promotionContainer{width: 30vw; display: block; margin: auto;}
+}

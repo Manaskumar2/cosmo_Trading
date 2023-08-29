@@ -46,6 +46,8 @@ const isUrlValid = (urlLink) => {
 let regexSpaceChar = function (attribute) {
     return (/^[A-Za-z\s]{1,}[\,]{0,1}[A-Za-z\s]{0,}$/.test(attribute))
 }
+let checkUpiId =(upiId)=> {
+    return (/^[a-zA-Z0-9]+([._][a-zA-Z0-9]+)*@([a-zA-Z0-9]+\.)*[a-zA-Z0-9]+$/.test(upiId))
+}
 
-
-module.exports = { isValid, isValidBody, isValidPhone, isValidEmail, isValidPwd, isValidObjectId, isValidName, isValidImage, isValidGender, PinCode, isUrlValid,regexSpaceChar ,isValidreqBody}
+module.exports = { isValid, isValidBody, isValidPhone, isValidEmail, isValidPwd, isValidObjectId, isValidName, isValidImage, isValidGender, PinCode, isUrlValid,regexSpaceChar ,isValidreqBody,checkUpiId}

@@ -75,13 +75,14 @@ const signIn = async (req, res) => {
       return res.status(400).send({ status: false, message: "Incorrect Password" });
     }
 
-    const token = jwt.sign({ phoneNumber: findUser.phoneNumber, userId: findUser._id,isAdmin:findUser.isAdmin}, process.env.JWT_TOKEN, { expiresIn: '365d' });
+    const token = jwt.sign({ phoneNumber: findUser.phoneNumber, userId: findUser._id,isAdmin:findUser.isAdmin,UID:findUser.UID}, process.env.JWT_TOKEN, { expiresIn: '365d' });
 
     const response = {
       phoneNumber: findUser.phoneNumber,
       _id: findUser._id,
       authToken: token,
-      isAdmin: findUser.isAdmin
+      isAdmin: findUser.isAdmin,
+      UID:findUser.UID
     };
 
     res.status(200).send({ status: true, message: "User login successful", data: response });
@@ -91,6 +92,46 @@ const signIn = async (req, res) => {
     res.status(500).send({ status: false, error: "An error occurred while processing your request." });
   }
 };
+
+
+const adminlogin =async (req, res) => { 
+    try {
+    const data = req.body;
+    const { phoneNumber, password } = data;
+
+    if (!phoneNumber || !password) {
+      return res.status(400).send({ status: false, message: "Provide both phone number and password to login" });
+    }
+
+    const findUser = await userModel.findOne({ phoneNumber: phoneNumber });
+
+    if (!findUser) {
+      return res.status(400).send({ status: false, message: "Invalid Phone Number" });
+      }
+      if(findUser.isAdmin!==true) return res.status(403).send({ status: false, message: "wrong url please go to the user login page" });
+
+    const correctPassword = findUser.password;
+
+    const bcryptPass = await bcrypt.compare(password, correctPassword);
+    if (!bcryptPass) {
+      return res.status(400).send({ status: false, message: "Incorrect Password" });
+    }
+
+    const token = jwt.sign({ phoneNumber: findUser.phoneNumber}, process.env.JWT_TOKEN, { expiresIn: '365d' });
+
+    const response = {
+      phoneNumber: findUser.phoneNumber,
+      _id: findUser._id,
+      authToken: token,
+    };
+
+    res.status(200).send({ status: true, message: "User login successful", data: response });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ status: false, error: "An error occurred while processing your request." });
+  }
+}
 
 
 
@@ -228,38 +269,78 @@ const updateUserProfile = async (req, res) => {
 // -------------------------------user update and get user details---------------------------------//
 
 
+// const getUserDetails = async (req, res) => {
+//   try {
+//     const UID = req.params.UID;
+//     const userId = req.decodedToken.userId
+//     let userDetails;
+
+//     if (UID) {
+    
+//         const key = `userDetails_${UID}`;
+
+//       // const cachedData = cache.get(key);
+
+//       userDetails = await userModel.findOne({ UID: UID })
+//            if (!userDetails) {
+//         return res
+//           .status(400)
+//           .send({ status: false, message: "Please Enter correct UID" });
+//       }
+
+//     } else {
+//       userDetails = await userModel.findOne({ _id: userId })
+//              if (!userDetails) {
+//         return res
+//           .status(400)
+//           .send({ status: false, message: "Please logIn" });
+//       }
+//     }
+//     // cache.put(key, userDetails, 60 * 60 * 1000);
+
+//     return res
+//       .status(200)
+//       .send({ status: true, data: { userDetails } });
+//   } catch (error) {
+//     return res.status(500).send({ status: false, message: error.message });
+//   }
+// };
 const getUserDetails = async (req, res) => {
   try {
     const UID = req.params.UID;
-    const userId = req.decodedToken.userId
+    const userId = req.decodedToken.userId;
     let userDetails;
 
     if (UID) {
-    
-        const key = `userDetails_${UID}`;
-
-      const cachedData = cache.get(key);
-
-      userDetails = await userModel.findOne({ UID: UID })
-           if (!userDetails) {
+      const key = `userDetails_${UID}`;
+      userDetails = await userModel.findOne({ UID: UID });
+      if (!userDetails) {
         return res
           .status(400)
           .send({ status: false, message: "Please Enter correct UID" });
       }
-
     } else {
-      userDetails = await userModel.findOne({ _id: userId })
-             if (!userDetails) {
+      userDetails = await userModel.findOne({ _id: userId });
+      if (!userDetails) {
         return res
           .status(400)
           .send({ status: false, message: "Please logIn" });
       }
     }
-    cache.put(key, userDetails, 60 * 60 * 1000);
 
-    return res
-      .status(200)
-      .send({ status: true, data: { userDetails, cachedData } });
+  
+    const commissionDetails = userDetails.commissions.map((commission) => ({
+      date: commission.date,
+      amount: commission.amount,
+    }));
+
+    return res.status(200).send({
+      status: true,
+      data: {
+        userDetails,
+        commissionDetails,
+      },
+    });
   } catch (error) {
     return res.status(500).send({ status: false, message: error.message });
   }
@@ -302,6 +383,45 @@ const getDownlineDetails =async (req, res) => {
   }
 }
 
+const getReferralStats = async (req, res) => {
+  try {
+    const referralID  = req.params.referralID;
+
+    if (!referralID) return res.status(400).send({ status: false, message: 'please enter a referral ID' })
+    const today = new Date();
+    const todayStart = new Date(today);
+    todayStart.setHours(0, 0, 0, 0);
+
+    const todayEnd = new Date(today);
+    todayEnd.setHours(23, 59, 59, 999);
+
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(today.getDate() - 7);
+    sevenDaysAgo.setHours(0, 0, 0, 0);
+    console.log(sevenDaysAgo);
+    const todayCount = await userModel.countDocuments({
+      parentReferralCode:referralID,
+      createdAt: { $gte: todayStart, $lte: todayEnd },
+    });
+
+    const weeklyCount = await userModel.countDocuments({parentReferralCode:referralID,
+      createdAt: { $gte: sevenDaysAgo, $lte: todayEnd },
+    });
+
+    return res.status(200).json({
+      status: true,
+      data: {
+        todayCount: todayCount,
+        weeklyCount: weeklyCount,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({ status: false, message: error.message });
+  }
+};
+
+
+
 module.exports = {
   signIn,
   signUp,
@@ -309,7 +429,10 @@ module.exports = {
   verifyOtp,
   resetPassword,
   updateUserProfile,
+
   getUserDetails,
-  getDownlineDetails
+  getDownlineDetails,
+  getReferralStats,
+  adminlogin
 
 }

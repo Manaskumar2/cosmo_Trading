@@ -1,5 +1,6 @@
 
-const jwt = require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
+const { trusted } = require("mongoose");
 
 const authentication = (req, res, next) => {
   try {
@@ -25,7 +26,7 @@ const authentication = (req, res, next) => {
   }
 }
 const adminAuthorization = (req, res, next) => {
- if( req.decodedToken.isAdmin=== "true" ){
+ if( req.decodedToken.isAdmin===true ){
     next();
   } else {
     res.status(403).send({ status: false, message: 'Access denied. Admin privileges required.' });

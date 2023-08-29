@@ -2,6 +2,6 @@ import {atom} from 'recoil';
 
 const GameHistoryList = atom({
     key: "GameHistoryList",
-    default: []
+    default:''
 });
 export {GameHistoryList}

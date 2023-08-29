@@ -1,0 +1,49 @@
+.giftPage{min-height: 100vh;background: #001C3E;}
+.gift-body{padding: 1rem;}
+.gift-body .box{padding: 2.5rem;border-radius: 1.25rem;
+    background: linear-gradient(180deg, #07365D 0%, #0A607B 100%);display: flex; flex-direction: column;margin-top: 5rem;}
+.gift-body .container h6{color: #C0E8FF;
+    text-align: center;
+    font-family: Montserrat;
+    font-size: 1.1rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;}
+.gift-body .container p{color: #50B8D9;
+    text-align: center;
+    font-family: Montserrat;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;}
+.gift-body .container img{position: relative;bottom: 5rem;}
+.gift-body .container input{border-radius: 0.3125rem;
+    border: 1px solid #C1B227;
+    background: #063D5E;display: flex;
+    padding: 0.75rem 1.25rem;
+    justify-content: center;
+    align-items: center;
+    gap: 0.625rem;color: #fff;
+    font-family: Montserrat;
+    font-size: 1rem;margin-top: 1.2rem;}
+.gift-btn button{display: flex;
+    padding: 1rem 1.875rem;
+    justify-content: center;
+    align-items: center;
+    gap: 0.625rem;
+    flex: 1 0 0;border-radius: 6.25rem;
+    border: 1px solid #FFF;
+    background: linear-gradient(160deg, #B92F35 0%, #FDA00C 100%);
+    box-shadow: 0px 4px 10px 0px rgba(255, 221, 84, 0.30);color: #FFF;
+    font-family: Montserrat;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: 0.02rem;
+    text-transform: uppercase;margin-top: 4rem;}
+
+
+    @media (min-width: 768px){
+        .giftPage{width: 30vw;display: block;margin: auto;}
+    }

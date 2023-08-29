@@ -10,6 +10,7 @@ import BonusCount from '../../components/bonusCount/BonusCount'
 import RunningTime from '../../components/runningTime/RunningTime'
 import WithdrawSection from '../../components/withdrawSection/WithdrawSection'
 import Accordian from '../../components/accordian/Accordian'
+import Timer from '../../components/timer/Timer'
 function Home() {
   return (
     <div className='main-background'>
@@ -21,6 +22,7 @@ function Home() {
             </div>
         </div>
     </div>
+
     <Banner/>
     <GameSection/>
     <OnlineCount/>

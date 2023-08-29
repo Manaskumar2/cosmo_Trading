@@ -1,0 +1,30 @@
+.team-top-row{display: flex;
+    padding: 1.25rem;
+    justify-content: space-between;
+    align-items: center;
+    align-self: stretch;}
+    .team-top-row .col-5{display: flex; align-items: center; gap: 1rem;border-radius: 0.3125rem;border: 1px solid #4991D3;background: #042A57;padding: .2rem .6rem; color: #FFF; font-size: 1rem;}
+    .team-top-row .col-7{display: flex; align-items: center;padding: .2rem .6rem; color: #FFF; font-size: 1rem;}
+    .myTeam .blue{background: #034277;}
+    .inquries .col-6{display: flex; justify-content: center; align-items: center;}
+    .inquries .col-6 input{border-radius: 0.3125rem;
+        border: 1px solid #4991D3;
+        background: #042A57;width: 10rem;
+        padding: 0.625rem 0.75rem;}
+        .inquries{margin-top: 1.2rem;}
+    .inquries .col-6 button{border: 0; outline: none ;border-radius: 0.3125rem;
+        background: linear-gradient(128deg, #C82F36 0%, #EC4E55 100%);display: flex;
+        padding: 0.625rem 0.75rem;
+        justify-content: center;
+        align-items: center;color: #fff; text-align: center;font-family: Montserrat;font-size: 1rem;}
+.inquries{margin-top: 1.2rem;}
+.total-bet-row{border-top: 1px solid #1E5D81;border-bottom: 1px solid #1E5D81;margin-top: 1.2rem;}
+.total-bet-row .col-6{display: flex;padding: 0.625rem .5rem;justify-content: center;align-items: center;color: #fff; text-align: center;font-family: Montserrat;font-size: .9rem;}
+.details-btn{border-radius: 0.25rem;
+    background: #0E6FA6;display: flex;
+    padding: 0.125rem 0.3125rem;
+    justify-content: center;
+    align-items: center;
+    border: 0;outline: none;
+    font-family: Montserrat;color: #fff;
+    }

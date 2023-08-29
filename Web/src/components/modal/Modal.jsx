@@ -7,8 +7,7 @@ import bg from '../../images/Section.svg'
 function ModalComp() {
     const [smShow, setSmShow] = useState(false);
     const [lgShow, setLgShow] = useState(false);
-    // const [smallMoney,setSmallMoney] = useState('')
-    // const [bigMoney,setBigMoney] = useState('')
+
     return (
         <>
         <div className=" big-small-game-wrapper " >

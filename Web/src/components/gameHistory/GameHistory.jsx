@@ -24,7 +24,7 @@ function GameHistory() {
     const [activeTab, setActiveTab] = useState(1);
     const auth = useRecoilValue(AuthState)
     const [gameHistoryList, setGameHistoryList] = useRecoilState(GameHistoryList)
-    const [userGames, setUserGames] = useState([])
+    const [userGames, setUserGames] = useState(null)
     const [page, setPage] = useState(1)
 
     const getUserGameHistory = async () => {
@@ -58,10 +58,10 @@ function GameHistory() {
             const response = await axios.get(`${import.meta.env.VITE_API_URL}/getSuccessFullGameHistory`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
-
             if (response.status === 200) {
                 console.log(response);
-                setGameHistoryList(response)
+                setGameHistoryList(response.data)
+                console.log(gameHistoryList);
                 return response;
             }
         } catch (error) {
@@ -71,8 +71,13 @@ function GameHistory() {
     }
 
     useEffect(() => {
-        getGameHistory()
-    }, [])
+        getGameHistory();
+        // const interval = setInterval(() => {
+        //     getGameHistory();
+        // }, 60000);
+        // return () => clearInterval(interval);
+    }, []);
+
     useEffect(() => {
         getUserGameHistory()
     }, [page])
@@ -102,62 +107,31 @@ function GameHistory() {
             {activeTab === 1 &&
                 <div className='period-heading'>
 
-                <div className="table-responsive game_history_table">
-                    <table class="table table-striped">
-                        <thead>
-                        <tr>
-                          <th>Period</th>
-                          <th width="140">Winner</th>
-                        </tr>
-                        </thead>
-                      <tbody>
-                        
-                        <tr>
-                          <td>2023080311378</td>
-                          <td width="140">
-                              <div className="winners_col_row">
-                                  <span className="icon_win"><img src={Winner} /></span>
-                                  <p>ALPHA</p>
-                                  <span className="icon_rate"><img src={Alpha} /></span>
-                              </div>
-                          </td>
-                        </tr>
+                    <div className="table-responsive game_history_table">
+                        <table className="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Period</th>
+                                    <th width="140">Winner</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {gameHistoryList && gameHistoryList.data.map((item, index) =>
+                                    <tr key={index}>
+                                        <td>{item.gameUID}</td>
+                                        <td width="140">
+                                            <div className="winners_col_row">
+                                                <span className="icon_win"><img src={Winner} /></span>
+                                                <p>{item.Winner}</p>
+                                                <span className="icon_rate"><img src={item.Winner === 'alfa' ? Alfa : Beta}  /></span>
+                                            </div>
 
-                        <tr>
-                          <td>2023080311378</td>
-                          <td width="140">
-                              <div className="winners_col_row">
-                                  <span className="icon_win"><img src={Winner} /></span>
-                                  <p>Beta</p>
-                                  <span className="icon_rate"><img src={Beta} /></span>
-                              </div>
-                          </td>
-                        </tr>
+                                        </td>
+                                    </tr>)}
 
-                        <tr>
-                          <td>2023080311378</td>
-                          <td width="140">
-                              <div className="winners_col_row">
-                                  <span className="icon_win"><img src={Winner} /></span>
-                                  <p>ALPHA</p>
-                                  <span className="icon_rate"><img src={Alpha} /></span>
-                              </div>
-                          </td>
-                        </tr>
-
-                        <tr>
-                          <td>2023080311378</td>
-                          <td width="140">
-                              <div className="winners_col_row">
-                                  <span className="icon_win"><img src={Winner} /></span>
-                                  <p>Beta</p>
-                                  <span className="icon_rate"><img src={Beta} /></span>
-                              </div>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                </div>
+                            </tbody>
+                        </table>
+                    </div>
 
                 </div>
             }
@@ -165,62 +139,30 @@ function GameHistory() {
                 <div>
                     <div className='period-heading'>
                         <div className="table-responsive game_history_table">
-                    <table class="table table-striped">
-                        <thead>
-                        <tr>
-                          <th>Period</th>
-                          <th width="140">Winner</th>
-                        </tr>
-                        </thead>
-                      <tbody>
-                        
-                        <tr>
-                          <td>2023080311378</td>
-                          <td width="140">
-                              <div className="winners_col_row">
-                                  <span className="icon_win"><img src={Winner} /></span>
-                                  <p>ALPHA</p>
-                                  <span className="icon_rate"><img src={Alpha} /></span>
-                              </div>
-                          </td>
-                        </tr>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Period</th>
+                                        <th width="140">Winner</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
 
-                        <tr>
-                          <td>2023080311378</td>
-                          <td width="140">
-                              <div className="winners_col_row">
-                                  <span className="icon_win"><img src={Winner} /></span>
-                                  <p>Beta</p>
-                                  <span className="icon_rate"><img src={Beta} /></span>
-                              </div>
-                          </td>
-                        </tr>
+                                    <tr>
+                                        <td>2023080311378</td>
+                                        <td width="140">
+                                            <div className="winners_col_row">
+                                                <span className="icon_win"><img src={Winner} /></span>
+                                                <p>ALPHA</p>
+                                                <span className="icon_rate"><img src={Alpha} /></span>
+                                            </div>
+                                        </td>
+                                    </tr>
 
-                        <tr>
-                          <td>2023080311378</td>
-                          <td width="140">
-                              <div className="winners_col_row">
-                                  <span className="icon_win"><img src={Winner} /></span>
-                                  <p>ALPHA</p>
-                                  <span className="icon_rate"><img src={Alpha} /></span>
-                              </div>
-                          </td>
-                        </tr>
+                                </tbody>
+                            </table>
+                        </div>
 
-                        <tr>
-                          <td>2023080311378</td>
-                          <td width="140">
-                              <div className="winners_col_row">
-                                  <span className="icon_win"><img src={Winner} /></span>
-                                  <p>Beta</p>
-                                  <span className="icon_rate"><img src={Beta} /></span>
-                              </div>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                </div>
-                
                         <div className="container ">
                             {userGames && userGames.data && userGames.data.history.map((item, index) => (
                                 <div>

@@ -44,6 +44,7 @@ const GameSchema = new mongoose.Schema({
   }
   , gameUID: {
      type: Number,
+
   }
 },{timestamps:true});
 
