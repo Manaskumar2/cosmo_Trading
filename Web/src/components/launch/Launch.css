@@ -1,7 +1,4 @@
 .launchBody{background: #001C3E;display: flex;justify-content: center;align-items: center;min-height: 100vh;}
 .launch-box{border-radius: 1.2rem;border-radius: 1.2rem;padding: 3rem;box-shadow: rgba(8, 20, 248, 0.4) 0px 2px 4px, rgb(255, 255, 255) 0px 7px 13px -3px, rgba(25, 212, 236, 0.701) 0px -3px 0px inset;}
 .launch-box p{font-size: 2rem;font-weight: 600;font-family: monospace;color: aliceblue;}
-
-    
-
-
+.back-to-home{padding: .25rem 1.5rem; color: #fff; background-color: #0a73f3;box-shadow: rgba(250, 248, 248, 0.881) 0px 2px 5px -1px, rgba(203, 214, 235, 0.947) 0px 1px 3px -1px;outline: none; border: 0; border-radius: 8px;margin-top: 3rem;}

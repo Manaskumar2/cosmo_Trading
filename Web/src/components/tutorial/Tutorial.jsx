@@ -3,11 +3,11 @@ import line from '../../pages/promotionPage/Line 28.svg'
 function Tutorial() {
   return (
     <div>
-                    <div className='table-heading' style={{marginTop:"1.5rem"}}>
-                        <h5 className='text-center heading-amount'>Rebate Amount Corresponding Table</h5>
+                    <div className='table-heading' style={{marginTop:"1.5rem",minHeight:"100vh"}}>
+                        <h5 className='text-center heading-amount'>Coming Soon</h5>
                         <img src={line} alt="line" className='line' />
                     </div>
-                    <div className="table-responsive">
+                    {/* <div className="table-responsive">
                         <table class="table table-striped">
                             <thead >
                                 <tr className='greenBg' >
@@ -129,7 +129,7 @@ function Tutorial() {
 
                             </tbody>
                         </table>
-                    </div>
+                    </div> */}
     </div>
   )
 }

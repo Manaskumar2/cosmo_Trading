@@ -8,8 +8,11 @@
 
 .promotion .out .in svg{font-size: 2rem; color: #ffffff;}
 .pro-txt{ padding-top: 1.4rem;} */
-.navBar{padding:1rem 1rem; position: fixed; bottom: 0;}
-.link-container{border-radius: 0.625rem;
+.navBar{padding: 0;
+    /* padding: 1rem 1rem; */
+    position: fixed;
+    bottom: 0;}
+.link-container{border-radius: 0.625rem 0.625rem 0 0;
     background: linear-gradient(180deg, #00406F 0%, #2B62A5 100%);
     box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.20);}
     .link-container .col-3 a{color: #8BBCDF;

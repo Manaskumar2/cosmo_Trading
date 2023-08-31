@@ -24,7 +24,7 @@ function banner() {
                     </Carousel.Item>
                 </Carousel>
             </div>
-            <div className='announcement container'>
+            {/* <div className='announcement container'>
                 <div className='title text-center'><h4>Latest Announcement</h4></div>
             <div className='row marquee-wrapper'>
                 <div className='img_marquee'>
@@ -36,7 +36,7 @@ function banner() {
                     </marquee>
                 </div>
             </div>
-            </div>
+            </div> */}
 
         </div>
     )

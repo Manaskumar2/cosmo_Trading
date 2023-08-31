@@ -110,9 +110,9 @@ function Promotion() {
                     <div className="col-8">
                         Promotion
                     </div>
-                    <div className="col-2">
+                    {/* <div className="col-2">
                         <img src={bill} alt="" className="header_headphone" />
-                    </div>
+                    </div> */}
                 </div>
             </div>
             <div className='tab-btn-container row'>
@@ -187,18 +187,18 @@ function Promotion() {
                             </div>
                         </div>
                         <h4 style={{ color: '#fff' }} className='text-center'>Invitation Link</h4>
-                        <div className='container'>
+                        <div className='container' style={{paddingBottom:"8rem"}}>
                             <div className="row invitation-row"  >
                                 {userData && <div className="col-10">Copy Invitation Link</div>}
                                 <button onClick={copyLinkToClipboard} className="col-2"><img src={paper} alt="" /></button>
                             </div>
                         </div>
                     </div>
-                    <div className='table-heading'>
+                    {/* <div className='table-heading'>
                         <h5 className='text-center heading-amount'>Rebate Amount Corresponding Table</h5>
                         <img src={line} alt="line" className='line' />
-                    </div>
-                    <div className="table-responsive " style={{paddingBottom:"8rem"}}>
+                    </div> */}
+                    {/* <div className="table-responsive " style={{paddingBottom:"8rem"}}>
                         <table class="table table-striped">
                             <thead >
                                 <tr className='greenBg' >
@@ -256,7 +256,7 @@ function Promotion() {
 
                             </tbody>
                         </table>
-                    </div>
+                    </div> */}
                     {/* <div className='table-heading'>
                         <h5 className='text-center heading-amount'>Commission Calculation Method (Lottery)</h5>
                         <img src={line} alt="line" className='line' />

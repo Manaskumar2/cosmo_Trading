@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './Launch.css'
+import { useNavigate } from 'react-router-dom';
 function Launch() {
+  const navigate = useNavigate()
   const targetDate = new Date('2023-09-10T12:00:00');
   const [timeLeft, setTimeLeft] = useState(getTimeLeft(targetDate));
 
@@ -46,6 +48,7 @@ function Launch() {
           <p>{timeLeft.hours} hours</p>
           <p>{timeLeft.minutes} minutes</p>
           <p>{timeLeft.seconds} seconds</p>
+          <button onClick={()=>{navigate('/')}} className='back-to-home'>Back To Home</button>
         </div>
       ) : (
         <p>Launched!!!</p>

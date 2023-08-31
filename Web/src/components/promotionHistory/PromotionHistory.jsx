@@ -1,9 +1,12 @@
 import React from 'react'
-
+import './PromotionHistory.css'
 function PromotionHistory() {
   return (
     <div style={{minHeight:"100vh"}}>
-                  <div className="table-responsive" style={{marginTop:"1.5rem"}}>
+        <h2 className='comingSoon'>
+            Coming Soon
+        </h2>
+                {/* <div className="table-responsive" style={{marginTop:"1.5rem"}}>
                         <table className="table table-striped">
                             <thead >
                                 <tr className='greenBg' >
@@ -61,7 +64,7 @@ function PromotionHistory() {
                                 </tr>
                             </tbody>
                         </table>
-                    </div>
+                    </div> */}
     </div>
   )
 }

@@ -88,7 +88,7 @@ function Profile() {
                     </div>
                 </div>
                 <div className="wallet">
-                <div className="container winWallet">
+                {/* <div className="container winWallet">
                     <div className="row">
                         <div className="col-8" style={{ marginBottom: "10px" }}>
                             <h4 style={{marginBottom:3, color: '#6FC0EE',fontFamily: 'Montserrat',letterSpacing: 0.09, fontWeight:600, }}>Total</h4>
@@ -105,14 +105,14 @@ function Profile() {
                             </div>
                         </div>
                         
-                    </div>
+                    </div> */}
                     <div className="container">
                             <div className="color-btn">
                                 <button className='promotion-btn' onClick={()=>{navigate("/promotion")}}><div className='promotion'><img src={mic} alt="" />Promotion<img src={next} alt="" /></div></button>
                             </div>
                         </div>
 
-                        <div className="container profileIcons">
+                        {/* <div className="container profileIcons">
                             <div className="row">
                                 <div className="col-4">
                                     <div className='icon'><img src={document} alt="" /></div>
@@ -129,16 +129,16 @@ function Profile() {
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
                         <div className="container chart">
-                            <div className='row'>
+                            <div className='row' onClick={()=>{navigate("/comingSoon")}}>
                                 <div className='col-2'><div className='profile-logo-Wrapper'><img src={premium} alt="" /></div></div>
-                                <div className='col-8 lvlContainer'>Membership Level <div className='lvl'>LV1</div></div>
+                                <div className='col-8 lvlContainer'>Prime Membership <div className='lvl'>LV1</div></div>
                                 <div className='col-2 backImg'><img src={next} alt="" /></div>
                             </div>
                             <div className='row'>
                                 <div className='col-2'><div className='profile-logo-Wrapper'><img src={shield} alt="" /></div></div>
-                                <div className='col-8'>Account Security</div>
+                                <div className='col-8' onClick={()=>{navigate("/comingSoon")}}>Account Security</div>
                                 <div className='col-2 backImg'><img src={next} alt="" /></div>
                             </div>
                             <div className='row' onClick={()=>{navigate("/promotion")}}>
@@ -166,11 +166,11 @@ function Profile() {
                                 <div className='col-8' >Customer Service</div>
                                 <div className='col-2 backImg'><img src={next} alt="" /></div>
                             </div>
-                            <div className='row'onClick={()=>{navigate('/admin/home')}}>
+                            {/* <div className='row'onClick={()=>{navigate('/admin/home')}}>
                                 <div className='col-2'><div className='profile-logo-Wrapper'><img src={customer} alt="" /></div></div>
                                 <div className='col-8' >Admin Panel</div>
                                 <div className='col-2 backImg'><img src={next} alt="" /></div>
-                            </div>
+                            </div> */}
                         </div>
                 </div>
                 <div className="container">
