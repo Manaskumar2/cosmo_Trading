@@ -89,8 +89,8 @@ function Growup() {
 
     ///////
 
-    const handleUserMoney = async () => {
 
+    const handleUserMoney = async () => {
         try {
             let token = auth.authToken
             let UID = auth.UID
@@ -171,15 +171,17 @@ function Growup() {
 
     useEffect(() => {
         console.log(duration);
-        handleMin(duration);
-        const timer = setTimeout(async () => {
-            await handleUserMoney();
-        }, 3000);
-
-        return () => {
-            clearTimeout(timer);
-        };
-    }, [duration]);
+        if (auth.authToken && auth.UID) {
+            handleMin(duration);
+            const timer = setTimeout(async () => {
+                await handleUserMoney();
+            }, 3000);
+            return () => {
+                clearTimeout(timer);
+            };
+        }
+    }, [auth, duration]);
+    
 
 
     return (

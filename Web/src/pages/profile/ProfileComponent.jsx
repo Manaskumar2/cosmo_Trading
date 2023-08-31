@@ -29,6 +29,13 @@ function Profile() {
     const navigate = useNavigate()
     const auth= useRecoilValue(AuthState )
     const [userData , setUserData]=useRecoilState(UserDetails )
+
+     const logout = () => {
+
+        sessionStorage.removeItem('authToken');
+
+        navigate('/signIn')
+      };
     
     const handleUserdata = async () => {
 
@@ -161,6 +168,11 @@ function Profile() {
                             </div>
                         </div>
                 </div>
+                <div className="container">
+                            <div className="color-btn">
+                                <button className='promotion-btn' style={{background: 'linear-gradient(140deg, #C82F36 0%, #EC4E56 100%)', marginTop:"3rem"}} onClick={logout}><div className='promotion'>Log Out</div></button>
+                            </div>
+                        </div>
                 
             </div>
             <Nav/>

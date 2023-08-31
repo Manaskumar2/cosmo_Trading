@@ -13,12 +13,13 @@ const createBankAccount = async (req, res) => {
       email,
       bankBranchAddress,
       } = req.body;
+      console.log(req.body)
       const userId = req.decodedToken.userId
 
     if (!bankName || !accountHolderName || !bankAccountNo || !city || !ifscCode || !email || !bankBranchAddress || !userId) {
       return res.status(400).json({ error: 'All fields are required' });
     }
-    const userExists = await User.findById(userId);
+    const userExists = await userModel.findById(userId);
     if (!userExists) {
       return res.status(404).json({ error: 'User not found' });
     }
