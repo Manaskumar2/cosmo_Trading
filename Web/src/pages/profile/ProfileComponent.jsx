@@ -166,11 +166,16 @@ function Profile() {
                                 <div className='col-8' >Customer Service</div>
                                 <div className='col-2 backImg'><img src={next} alt="" /></div>
                             </div>
+                            <div className='row'onClick={()=>{navigate('/admin/home')}}>
+                                <div className='col-2'><div className='profile-logo-Wrapper'><img src={customer} alt="" /></div></div>
+                                <div className='col-8' >Admin Panel</div>
+                                <div className='col-2 backImg'><img src={next} alt="" /></div>
+                            </div>
                         </div>
                 </div>
                 <div className="container">
                             <div className="color-btn">
-                                <button className='promotion-btn' style={{background: 'linear-gradient(140deg, #C82F36 0%, #EC4E56 100%)', marginTop:"3rem"}} onClick={logout}><div className='promotion'>Log Out</div></button>
+                                <button className='promotion-btn' style={{background: 'linear-gradient(140deg, #C82F36 0%, #EC4E56 100%)', marginTop:"3rem",marginBottom:'8rem'}} onClick={logout}><div className='promotion'>Log Out</div></button>
                             </div>
                         </div>
                 

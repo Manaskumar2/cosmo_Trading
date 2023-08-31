@@ -42,5 +42,17 @@ const Message= lazy(()=>
 import('../pages/messageCenter/Message'))
 const Transection= lazy(()=>
 import('../pages/transactionRecord/TransectionRecord'))
+const Launch= lazy(()=>
+import('../../src/components/launch/Launch'))
+const AdminHome= lazy(()=>
+import('../../src/pages/Admin/adminHome/AdminHome'))
+const AdminUser= lazy(()=>
+import('../../src/pages/Admin/adminUserData/AdminUserData'))
+const AdminRecharge= lazy(()=>
+import('../../src/pages/Admin/adminRecharge/AdminRecharge'))
+const AdminWithdraw= lazy(()=>
+import('../../src/pages/Admin/adminWithdraw/AdminWithdraw'))
+const AdminLogin= lazy(()=>
+import('../../src/pages/Admin/adminLogin/Adminlogin'))
 
-export {Login,Register,Forgot,OTP,Reset,Success,Home,Growup,ProfileComponent,Promotion,Recharge,UPI,Withdraw,BankCard,Wallet,Gift,BeginnerTutorial,About,Customer,Message,Transection}
+export {Login,Register,Forgot,OTP,Reset,Success,Home,Growup,ProfileComponent,Promotion,Recharge,UPI,Withdraw,BankCard,Wallet,Gift,BeginnerTutorial,About,Customer,Message,Transection,Launch,AdminHome,AdminUser,AdminRecharge,AdminWithdraw,AdminLogin}

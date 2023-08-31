@@ -8,7 +8,7 @@
 
 .promotion .out .in svg{font-size: 2rem; color: #ffffff;}
 .pro-txt{ padding-top: 1.4rem;} */
-.navBar{padding:1rem 1rem; position: relative; bottom: 0;}
+.navBar{padding:1rem 1rem; position: fixed; bottom: 0;}
 .link-container{border-radius: 0.625rem;
     background: linear-gradient(180deg, #00406F 0%, #2B62A5 100%);
     box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.20);}
@@ -32,3 +32,8 @@
 .link-container .link :hover i{box-shadow: none;background: none;}
 
 .link-container .link i{font-size: 20px;}
+
+
+@media(min-width:768px){
+    .navBar{width: 30vw;}
+}

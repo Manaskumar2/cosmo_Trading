@@ -127,7 +127,7 @@ backdrop-filter: blur(15px);}
     .modal-content {
         bottom: 0;
         position: absolute;
-        left: 20%;
+        
     }
     .clock-btn-container .col-3{display: flex; gap: .5rem; flex-direction: column; justify-content: center; align-items: center;padding: .5rem;}
     .clock-btn-container .col-3 p{color: #99EDFF;font-family: 'Montserrat';font-size: 0.875rem;font-style: normal;font-weight: 600;line-height: 1.25rem; /* 142.857% */}
@@ -167,7 +167,11 @@ backdrop-filter: blur(15px);}
                 .modal-content {
                     width: 30vw;
                     display: block;
-margin: auto}
+margin: auto;
+    bottom: 0;
+    position: absolute;
+    left: 20%;
+}
 .x-row-section{gap: .8rem !important;justify-content: center;}
 .modal.show .modal-dialog {
 display:block;

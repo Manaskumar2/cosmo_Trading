@@ -5,7 +5,7 @@ const{authentication,adminAuthorization} = require("../middlewares/authMiddlewar
 const gameController = require("../controllers/gameController")
 const { uploadQrCode, getAllImageURLs } = require('../controllers/qrCodeController')
 const { createRecharge } = require("../controllers/rechargeController")
-const {createBankAccount}=require("../controllers/withdrawAccountController")
+const { createBankAccount } = require("../controllers/withdrawAccountController")
 // const multer = require('multer');
 // const path = require('path');
 

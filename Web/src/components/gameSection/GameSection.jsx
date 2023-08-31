@@ -11,7 +11,7 @@ function GameSection() {
             <div className="container">
 
                 <div className="col-12 game">
-                    <Link to='/growUp'>
+                    <Link to='/comingSoon'>
                         <div className='game-banner'>
                             <img src={game1} alt="" />
                             <div className="game_user_row1">
@@ -35,7 +35,7 @@ function GameSection() {
                             </div>
                         </div>
                         </Link>
-                        <Link>
+                        <Link to='/comingSoon'>
                         <div className='game-banner trx'>
                         <img src={game2} alt="" />
                         <div className="game_user_row">

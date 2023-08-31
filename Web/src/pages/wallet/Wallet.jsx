@@ -51,7 +51,7 @@ function Wallet() {
                         <img src={back} alt="" />
                     </Link>
                     <div className="col-8">
-                        Profile
+                        Wallet
                     </div>
                     <div className="col-2">
                         <img src={ear} alt="" className="header_headphone" />
@@ -107,7 +107,7 @@ function Wallet() {
                             </div>
                         </div>
 
-                        <div className="container chart">
+                        <div className="container chart" style={{marginBottom:"8rem"}}>
                         <div className='row'>
                                 <div className='col-2'><div className='profile-logo-Wrapper'><img src={wallet1} alt="" /></div></div>
                                 <div className='col-8 lvlContainer'>Recharge Record </div>

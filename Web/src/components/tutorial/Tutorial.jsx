@@ -70,7 +70,7 @@ function Tutorial() {
                         <h5 className='text-center heading-amount'>Commission Calculation Method (Lottery)</h5>
                         <img src={line} alt="line" className='line' />
                     </div>
-                    <div className="table-responsive">
+                    <div className="table-responsive" style={{paddingBottom:"8rem"}}>
                         <table class="table table-striped">
                             <thead >
                                 <tr className='greenBg' >
@@ -81,7 +81,7 @@ function Tutorial() {
 
                                 </tr>
                             </thead>
-                            <tbody className='tableBodyRow'>
+                            <tbody className='tableBodyRow' style={{marginBottom:'8rem'}}>
                                 <tr>
                                     <td>0LV</td>
                                     <td style={{ paddingLeft: 0 }}>0.6</td>

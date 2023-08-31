@@ -198,7 +198,7 @@ function Promotion() {
                         <h5 className='text-center heading-amount'>Rebate Amount Corresponding Table</h5>
                         <img src={line} alt="line" className='line' />
                     </div>
-                    <div className="table-responsive">
+                    <div className="table-responsive " style={{paddingBottom:"8rem"}}>
                         <table class="table table-striped">
                             <thead >
                                 <tr className='greenBg' >
@@ -208,7 +208,7 @@ function Promotion() {
                                     <th>Recharge</th>
                                 </tr>
                             </thead>
-                            <tbody className='tableBodyRow'>
+                            <tbody className='tableBodyRow' >
                                 <tr>
                                     <td>0LV</td>
                                     <td style={{ paddingLeft: 0 }}>0</td>

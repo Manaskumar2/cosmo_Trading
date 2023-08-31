@@ -420,8 +420,94 @@ const getReferralStats = async (req, res) => {
   }
 };
 
+const deactiveUser = async (req, res) => {
+    try {
+        const userId = req.params.userId
+        if (!validation.isValidObjectId(adminId)) return res.status(400).send({ status: false, message: " ENTER VALID ADMIN ID" })
+
+        if (!validation.isValidObjectId(userId)) return res.status(400).send({ status: false, message: " ENTER VALID USER ID" })
+        const userData = await userModel.findOne({ _id: userId, isDeleted: false })
+        if (!userData) return res.status(400).send({ status: false, message: "No user Exist in this Id" })
+
+        await userModel.findByIdAndUpdate(userId, { isDeleted:true}, { new: true })
+        return res.status(200).send({ status: true, message: "sucessfully deactivated ", userId: userData._id })
 
 
+    } catch (error) {
+        res.status(500).send({ status: false, error: error.message })
+
+    }
+}
+const activeUser = async (req, res) => {
+    try {
+
+
+        const { userId } = req.params
+
+        if (!validation.isValidObjectId(adminId)) return res.status(400).send({ status: false, message: " ENTER VALID ADMIN ID" })
+
+         if(userId == adminId) return res.status(403).send({status:false,mesage:"you cannot active yourself"})
+
+        if (!validation.isValidObjectId(userId)) return res.status(400).send({ status: false, message: " ENTER VALID USER ID" })
+        const userData = await userModel.findOne({ _id: userId, isDeleted: false })
+        if (!userData) return res.status(400).send({ status: false, message: "No user Exist in this Id" })
+
+        await userModel.findByIdAndUpdate(userId, { isDeleted:false}, { new: true })
+        return res.status(200).send({ status: true, message: "sucessfully activated ", userId: userData._id })
+
+
+    } catch (error) {
+        res.status(500).send({ status: false, error: error.message })
+
+    }
+}
+    const  getAllUsers = async (req, res) => {
+      try {
+        const { queryPageIndex = 1, queryPageSize = 10, queryPageFilter, queryPageSortBy = [{ id: '_id', desc: false }] } = req.query;
+        let query = {};
+        let sortBy = queryPageSortBy[0].id;
+        let sortOrder = queryPageSortBy[0].desc ? -1 : 1;
+        
+    
+        if (queryPageFilter) {
+          let searchRegex = new RegExp(queryPageFilter, "i");
+          query = {
+            $or: [
+              { phone: searchRegex },
+            ],
+          };
+        }
+
+        let getUsers;
+        
+        const count = await userModel.countDocuments(query);
+
+        getUsers = await userModel
+          .find(query)
+          .sort({ [sortBy]: sortOrder })
+          .limit(parseInt(queryPageSize))
+          .skip((parseInt(queryPageIndex) - 1) * parseInt(queryPageSize))
+          .exec();
+
+        if (getUsers.length < 1) {
+          return res
+            .status(400)
+            .send({ status: false, message: "No user found" });
+        }
+
+        const response = {
+          getUsers,
+          totalPages: Math.ceil(count / parseInt(queryPageSize)),
+          currentPage: parseInt(queryPageIndex),
+          totalCount: count,
+        };
+
+        return res.status(200).send({ status: true, message: "Successful", response });
+
+      } catch (error) {
+        return res.status(500).send({ status: false, message: error.message });
+    }
+};
 module.exports = {
   signIn,
   signUp,
@@ -433,6 +519,9 @@ module.exports = {
   getUserDetails,
   getDownlineDetails,
   getReferralStats,
-  adminlogin
+  adminlogin,
+  getAllUsers,
+  activeUser,
+  deactiveUser
 
 }

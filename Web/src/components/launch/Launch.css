@@ -1,0 +1,7 @@
+.launchBody{background: #001C3E;display: flex;justify-content: center;align-items: center;min-height: 100vh;}
+.launch-box{border-radius: 1.2rem;border-radius: 1.2rem;padding: 3rem;box-shadow: rgba(8, 20, 248, 0.4) 0px 2px 4px, rgb(255, 255, 255) 0px 7px 13px -3px, rgba(25, 212, 236, 0.701) 0px -3px 0px inset;}
+.launch-box p{font-size: 2rem;font-weight: 600;font-family: monospace;color: aliceblue;}
+
+    
+
+

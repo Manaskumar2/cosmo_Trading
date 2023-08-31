@@ -15,12 +15,17 @@ function Home() {
   return (
     <div className='main-background'>
     <div className='home'> 
-        <div className='container'>
-            <div className='row'>
-            <div className='col-9'><img src={logo} alt="" /></div>
-            <div className='col-3 download'><img src={telegram} alt="" /></div>
-            </div>
+    <div className='container'>
+    <div className='row'>
+        <div className='col-9'><img src={logo} alt="" /></div>
+        <div className='col-3 download'>
+            <a href="https://t.me/cosmotradeofficial" target="_blank" rel="noopener noreferrer">
+                <img src={telegram} alt="" />
+            </a>
         </div>
+    </div>
+</div>
+
     </div>
 
     <Banner/>

@@ -22,7 +22,7 @@ function Nav() {
                     </NavLink>
                 </div>
                 <div className='link'>
-                    <NavLink to='/wallet'  exact="true" className='nav-Link'>
+                    <NavLink to='/comingSoon'  exact="true" className='nav-Link'>
                         <i className="icon-walet"></i> <p>Wallet</p>
                     </NavLink>
                 </div>

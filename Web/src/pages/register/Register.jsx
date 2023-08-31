@@ -6,7 +6,15 @@ import comp from '../../images/computer.svg';
 import toast, { Toaster } from 'react-hot-toast';
 import axios from 'axios';
 
-// ... Your existing code ...
+export const toastProps = {
+  position: "top-center",
+  duration: 2000,
+  style: {
+      fontSize: "1rem",
+      background: "#fff",
+      color: "#333",
+  },
+};
 
 function Register() {
   const [phoneNumber, setPhone] = useState('');
@@ -31,8 +39,14 @@ function Register() {
     navigate('/signIn');
   };
 
+  
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    if (!phoneNumber || !password || !referral) {
+      toast.error('Phone Number, Password, and Referral Code are required', { ...toastProps });
+      return;
+    }
 
     try {
       const response = await axios.post(`${import.meta.env.VITE_API_URL}/SignUp`, {
@@ -46,16 +60,16 @@ function Register() {
         toast.success('Registration Successful', { ...toastProps });
         setPhone('');
         setPassword('');
-        navigate('/signIn');
-        window.location.reload();
+        setReferral('');
+        setTimeout(() => {
+          navigate('/signIn');
+        }, 1500);
         console.log(response);
         return response;
       }
     } catch (error) {
       const errorMessage = error.response ? error.response.data.message : error.message;
       toast.error(errorMessage || 'Something went wrong', { ...toastProps });
-
-      return;
     }
   };
 

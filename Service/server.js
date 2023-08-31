@@ -1,6 +1,7 @@
 const dotenv = require("dotenv");
 const express = require("express");
 const route = require("./src/routes/route");
+const admin = require("./src/routes/adminRoutes")
 const app = express();
 const cors = require('cors')
 const path = require('path');
@@ -43,6 +44,7 @@ mongoose
 
 initSocket(server);
 app.use("/api", route);
+app.use("/api/admin", admin);
 
 
 
@@ -57,7 +59,7 @@ app.use("/api", route);
   // });
 
   app.use(express.static(path.join(__dirname, "../Web/dist")));
-app.get("/", (req, res) => {
+app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname + "../Web/dist/index.html"));
 });
 //  }
