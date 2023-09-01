@@ -359,13 +359,11 @@ const getUserDetails = async (req, res) => {
   }
 };
 
-const getDownlineDetails =async (req, res) => {
+const getDownlineDetails = async (req, res) => {
   try {
     const userId = req.params.userId;
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
-
-
 
     const user = await userModel.findById(userId)
       .populate({
@@ -378,11 +376,26 @@ const getDownlineDetails =async (req, res) => {
       })
       .exec();
 
-    const downlineDetails = user.downline.map(downlineUser => ({
-      phoneNumber: downlineUser.user.phoneNumber,
-      UID: downlineUser.user.UID,
-      referralDate: downlineUser.user.createdAt
-    }));
+    if (!user) {
+      res.status(404).json({ error: 'User not found' });
+      return;
+    }
+
+    const downlineDetails = user.downline.map(downlineUser => {
+      if (downlineUser.user) {
+        return {
+          phoneNumber: downlineUser.user.phoneNumber || null,
+          UID: downlineUser.user.UID || null,
+          referralDate: downlineUser.user.createdAt || null
+        };
+      } else {
+        return {
+          phoneNumber: null,
+          UID: null,
+          referralDate: null
+        };
+      }
+    });
 
     res.json({
       currentPage: page,
@@ -394,7 +407,7 @@ const getDownlineDetails =async (req, res) => {
     console.error('Error fetching downline user details:', error);
     res.status(500).json({ error: 'An error occurred while fetching downline user details' });
   }
-}
+};
 
 const getReferralStats = async (req, res) => {
   try {
