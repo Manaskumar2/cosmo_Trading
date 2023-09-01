@@ -18,7 +18,7 @@ export const toastProps = {
 
 function Register() {
   const [phoneNumber, setPhone] = useState('');
-  const [referral, setReferral] = useState('');
+  const [referralCode, setReferral] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
@@ -43,7 +43,7 @@ function Register() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (!phoneNumber || !password || !referral) {
+    if (!phoneNumber || !password || !referralCode) {
       toast.error('Phone Number, Password, and Referral Code are required', { ...toastProps });
       return;
     }
@@ -52,7 +52,7 @@ function Register() {
       const response = await axios.post(`${import.meta.env.VITE_API_URL}/SignUp`, {
         phoneNumber,
         password,
-        referral,
+        referralCode,
       });
 
       console.log(response);
@@ -132,7 +132,7 @@ function Register() {
                       type="text"
                       placeholder="Referral Code"
                       onChange={(e) => setReferral(e.target.value)}
-                      value={referral}
+                      value={referralCode}
                     />
                   </div>
                 </div>
@@ -155,5 +155,5 @@ function Register() {
     </div>
   );
 }
+export default React.memo(Register);
 
-export default Register;

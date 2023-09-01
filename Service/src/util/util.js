@@ -17,28 +17,57 @@ const generateUniqueReferralCode = async () => {
 }
 
 
-  const  generate7DigitUniqueId  = async() =>{
-  try {
+//   const  generate7DigitUniqueId  = async() =>{
+//   try {
    
-    const timestamp = Date.now().toString();
+//     const timestamp = Date.now().toString();
 
-    function getRandomNumber(min, max) {
-      return Math.floor(Math.random() * (max - min)) + min;
-    }
+//     function getRandomNumber(min, max) {
+//       return Math.floor(Math.random() * (max - min)) + min;
+//     }
 
-    const randomPortion = getRandomNumber(100, 1000);
+//     const randomPortion = getRandomNumber(100, 1000);
 
-    const uniqueId = timestamp + randomPortion;
+//     const uniqueId = timestamp + randomPortion;
    
 
-    const sevenDigitId = uniqueId.slice(-7);
+//     const sevenDigitId = uniqueId.slice(-7);
 
-    return sevenDigitId;
-  } catch (error) {
-    console.error('Error generating unique ID:', error);
-    throw error;
+//     return sevenDigitId;
+//   } catch (error) {
+//     console.error('Error generating unique ID:', error);
+//     throw error;
+//   }
+// }
+
+
+function createUIDGenerator() {
+  // Initialize currentNumber with 11111
+  let currentNumber = 11111;
+
+ 
+  async function generateUID() {
+    const uid = currentNumber;
+    currentNumber++; 
+    return uid;
   }
+
+  
+  function setCurrentNumber(value) {
+    currentNumber = value;
+  }
+
+  return { generateUID, setCurrentNumber };
 }
+
+const { generateUID, setCurrentNumber } = createUIDGenerator();
+
+
+
+
+
+
+
 async function generateUniqueNumber() {
   const now = new Date();
 
@@ -55,6 +84,7 @@ async function generateUniqueNumber() {
 
 module.exports = {
    generateUniqueReferralCode ,
-  generate7DigitUniqueId,
-   generateUniqueNumber
+  generateUniqueNumber,
+  generateUID,
+   setCurrentNumber
   }

@@ -1,13 +1,4 @@
 const mongoose = require("mongoose");
-
-const referralSchema = new mongoose.Schema({
-  user: {
-    type: mongoose.Types.ObjectId,
-    ref: 'users',
-    default: []
-  },
-}, { timestamps: true });
-
 const commissionSchema = new mongoose.Schema({
   date: {
     type: Date,
@@ -47,10 +38,18 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
-  downline: {
-    type: [referralSchema],
-    default: [],
-  },
+    downline: [
+    {
+      user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'users',
+      },
+      referralDate: {
+        type: Date,
+        default: Date.now,
+      },
+    },
+  ],
   UID: {
     type: Number,
     required: true,

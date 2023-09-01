@@ -1,20 +1,20 @@
-import React, { useEffect } from 'react'
-import './Promotion.css'
-import bill from './bill.svg'
-import back from '../../images/back-button 1.svg'
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import gift from '../../../../SVG/gift-box 1.svg'
-import paper from './papers 1.svg'
-import line from './Line 28.svg'
-import { Nav } from '../../components/ComponentExport'
-import MyTeam from '../../components/myTeam/MyTeam'
-import Tutorial from '../../components/tutorial/Tutorial'
-import PromotionHistory from '../../components/promotionHistory/PromotionHistory'
-import { UserDetails } from '../../Atoms/UserDetails'
-import { AuthState } from '../../Atoms/AuthState'
-import { useRecoilState, useRecoilValue } from 'recoil'
-import axios from 'axios'
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import axios from 'axios';
+import './Promotion.css';
+import { UserDetails } from '../../Atoms/UserDetails';
+import { AuthState } from '../../Atoms/AuthState';
+import { Nav } from '../../components/ComponentExport';
+import MyTeam from '../../components/myTeam/MyTeam';
+import Tutorial from '../../components/tutorial/Tutorial';
+import PromotionHistory from '../../components/promotionHistory/PromotionHistory';
+import bill from './bill.svg';
+import back from '../../images/back-button 1.svg';
+import gift from '../../../../SVG/gift-box 1.svg';
+import paper from './papers 1.svg';
+import line from './Line 28.svg';
+
 // /getReferralStats/:referralID
 function Promotion() {
     const auth = useRecoilValue(AuthState)
@@ -22,7 +22,7 @@ function Promotion() {
     const [activeTab, setActiveTab] = useState(1)
     const [referalLink, setReferalLink] = useState(() => {
         if (import.meta.env.VITE_LIVE_URL && userData?.data?.data?.userDetails?.referralCode) {
-            return `${import.meta.env.VITE_LIVE_URL}/signUp?referral=${userData.data.data.userDetails.referralCode}`;
+            return `${import.meta.env.VITE_LIVE_URL}/#/signUp?referral=${userData.data.data.userDetails.referralCode}`;
         } else {
             return null;
         }
@@ -77,9 +77,12 @@ function Promotion() {
         }
     }
     useEffect(() => {
-        handleUserdata()
-        handleReferrelData()
-    }, [])
+        handleUserdata();
+        setTimeout(() => {
+          handleReferrelData();
+        }, 1500);
+      }, []);
+      
 
     const copyToClipboard = () => {
         const textField = document.createElement('textarea');
@@ -92,7 +95,7 @@ function Promotion() {
     };
     const copyLinkToClipboard = () => {
         const textField = document.createElement('textarea');
-        textField.innerText = referalLink;
+        textField.innerText = `${import.meta.env.VITE_LIVE_URL}/#/signUp?referral=${userData.data.data.userDetails.referralCode}`
         document.body.appendChild(textField);
         textField.select();
         alert("Invitation Link Copied!")
@@ -190,6 +193,7 @@ function Promotion() {
                         <div className='container' style={{paddingBottom:"8rem"}}>
                             <div className="row invitation-row"  >
                                 {userData && <div className="col-10">Copy Invitation Link</div>}
+                                
                                 <button onClick={copyLinkToClipboard} className="col-2"><img src={paper} alt="" /></button>
                             </div>
                         </div>
@@ -331,4 +335,5 @@ function Promotion() {
     )
 }
 
-export default Promotion
+export default React.memo(Promotion);
+

@@ -1,11 +1,15 @@
 import React from 'react'
 import AdminNav from '../adminNav/AdminNav'
+import Side from '../adminSide/Side'
 
 function AdminHome() {
   return (
     <div>
       <AdminNav/>
-        home
+        <div className='flex-div'>
+          <Side/>
+          home
+        </div>
     </div>
   )
 }

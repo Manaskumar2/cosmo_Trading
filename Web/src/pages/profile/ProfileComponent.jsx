@@ -27,12 +27,13 @@ import axios from 'axios'
  import { useNavigate } from 'react-router-dom'
 function Profile() {
     const navigate = useNavigate()
-    const auth= useRecoilValue(AuthState )
+    const [auth,setAuth]= useRecoilState(AuthState )
     const [userData , setUserData]=useRecoilState(UserDetails )
 
      const logout = () => {
 
         sessionStorage.removeItem('authToken');
+        setAuth(null)
 
         navigate('/signIn')
       };

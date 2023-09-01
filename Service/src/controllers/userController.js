@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken")
 const bcrypt = require('bcrypt')
 const cache = require("memory-cache");
 const validation = require("../validations/validation")
-const { generateUniqueReferralCode, generate7DigitUniqueId } = require("../util/util")
+const { generateUniqueReferralCode, } = require("../util/util")
 
 
 const twilio = require('twilio')("ACfe32400dd6c9efafd446cecf70102c0b", "7a4d599d44148524de82afe08e75b4d2");
@@ -16,6 +16,7 @@ const signUp = async (req, res) => {
     let { phoneNumber, password, referralCode } = data
 
     if (validation.isValidBody(data)) return res.status(400).send({ status: false, message: "provide all required fields" })
+    if(!referralCode) return res.status(400).send({ status: false, message: "please provide refferal code" })
 
 
     if (!validation.isValid(phoneNumber)) return res.status(400).send({ status: false, message: `PhoneNumber  is Required` })
@@ -26,14 +27,23 @@ const signUp = async (req, res) => {
     if (!validation.isValidPwd(password)) return res.status(400).send({ status: false, message: "Password should be 8-15 characters long and must contain one of 0-9,A-Z,a-z and special characters", })
 
     const hashedPassword = await bcrypt.hash(password, 10)
-
+  
+    const latestUser = await userModel
+      .findOne()
+      .sort({ createdAt: -1 })
+    let latestUID = latestUser.UID
+    let  UID = latestUID+1;
+   
+    
+    if (!UID) return res.status(404).send({ status: false, message: "udi is not available" })
     const createUser = new userModel({
       phoneNumber: phoneNumber,
       password: hashedPassword,
-      parentReferralCode: referralCode || null,
-      referralCode: await generateUniqueReferralCode(),
-      UID: await generate7DigitUniqueId()
+      parentReferralCode: referralCode,
+      referralCode: await generateUniqueReferralCode()+UID,
+      UID:UID
     })
+    await createUser.save()
     if (referralCode) {
       findParentUser = await userModel.findOne({ referralCode: referralCode })
 
@@ -41,10 +51,13 @@ const signUp = async (req, res) => {
         return res.status(400).send({ status: false, message: `Invalid Referal Code`, })
       }
 
-      findParentUser.downline.push({ user: createUser });
+      const newUserObjectId = createUser._id;
+      console.log(newUserObjectId);
+
+      findParentUser.downline.push({ user: newUserObjectId });
       await findParentUser.save();
     }
-    await createUser.save()
+  
 
     res.status(201).json({ status: true, message: "user create sucessfully", data: createUser })
   } catch (error) {

@@ -22,10 +22,13 @@ function Login() {
   const [loading, setLoading] = useState(false);
   const [phoneNumber, setPhone] = useState('');
   const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false); // Added state for showing password
+  const [showPassword, setShowPassword] = useState(false); 
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
+    if (loading) {
+      return;
+    }
     event.preventDefault();
     setLoading(true);
 
@@ -119,5 +122,5 @@ function Login() {
     </div>
   );
 }
+export default React.memo(Login);
 
-export default Login;
