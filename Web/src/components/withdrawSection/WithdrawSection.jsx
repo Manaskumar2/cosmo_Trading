@@ -17,40 +17,40 @@ return (
                   <tbody>
                     <tr>
                       <td width="20"><img src={User} alt="" /></td>
-                      <td style={{paddingLeft:0}}>Rajesh Barik</td>
+                      <td style={{paddingLeft:0}}>Salman Reang</td>
                       <td><h5><i className="icon-rupee"></i> 300.00</h5></td>
                       <td><h6>09:20 AM</h6></td>
                     </tr>
                     <tr>
                       <td width="20"><img src={User} alt="" /></td>
-                      <td style={{paddingLeft:0}}>Bharat Jena</td>
+                      <td style={{paddingLeft:0}}>Subham Sharma</td>
                       <td><h5><i className="icon-rupee"></i> 5000.00</h5></td>
                       <td><h6>06:30 PM</h6></td>
                     </tr>
 
                     <tr>
                       <td width="20"><img src={User} alt="" /></td>
-                      <td style={{paddingLeft:0}}>Rajesh Barik</td>
+                      <td style={{paddingLeft:0}}>Rajesh Maiti</td>
                       <td><h5><i className="icon-rupee"></i> 300.00</h5></td>
                       <td><h6>09:20 AM</h6></td>
                     </tr>
                     <tr>
                       <td width="20"><img src={User} alt="" /></td>
-                      <td style={{paddingLeft:0}}>Bharat Jena</td>
-                      <td><h5><i className="icon-rupee"></i> 5000.00</h5></td>
+                      <td style={{paddingLeft:0}}>Deepika Ghosh</td>
+                      <td><h5><i className="icon-rupee"></i> 700.00</h5></td>
                       <td><h6>06:30 PM</h6></td>
                     </tr>
 
                     <tr>
                       <td width="20"><img src={User} alt="" /></td>
-                      <td style={{paddingLeft:0}}>Rajesh Barik</td>
-                      <td><h5><i className="icon-rupee"></i> 300.00</h5></td>
+                      <td style={{paddingLeft:0}}>Sunam Verma</td>
+                      <td><h5><i className="icon-rupee"></i> 450.00</h5></td>
                       <td><h6>09:20 AM</h6></td>
                     </tr>
                     <tr>
                       <td width="20"><img src={User} alt="" /></td>
-                      <td style={{paddingLeft:0}}>Bharat Jena</td>
-                      <td><h5><i className="icon-rupee"></i> 5000.00</h5></td>
+                      <td style={{paddingLeft:0}}>Abhishek Saini</td>
+                      <td><h5><i className="icon-rupee"></i> 1400.00</h5></td>
                       <td><h6>06:30 PM</h6></td>
                     </tr>
                   </tbody>

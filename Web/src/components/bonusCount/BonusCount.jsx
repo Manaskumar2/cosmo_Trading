@@ -11,7 +11,7 @@ function BonusCount() {
                 <img src={WidthDrawBonus} alt="" className="img_bonus" />
                 <div className="total_wdraw">
                     <p>Today Total Withdrawal</p>
-                    <h3><i className="icon-rupee"></i> 1,876362.00</h3>
+                    <h3><i className="icon-rupee"></i> 68,520.00</h3>
                 </div>
             </div>
         </div>

@@ -20,7 +20,7 @@ function GameSection() {
                                         <img src={Profile} alt="" />
                                     </div>
                                     <div className="game_user_name">
-                                        Bharat Jena
+                                        Cosmo5454
                                     </div>
                                 </div>
 
@@ -44,7 +44,7 @@ function GameSection() {
                                     <img src={Profile} alt="" />
                                 </div>
                                 <div className="game_user_name">
-                                    Rajesh Barik
+                                    Cosmo2934
                                 </div>
                             </div>
 

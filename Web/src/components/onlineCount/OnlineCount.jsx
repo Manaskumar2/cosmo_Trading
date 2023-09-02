@@ -9,17 +9,17 @@ function OnlineCount() {
                 <div className="online_count_row">
                     <div className="online_count_col">
                         <div className='count-logo'><img src={count3} alt="" /></div>
-                        <div className='num'>203383</div>
+                        <div className='num'>3251</div>
                         <p>Players</p>
                     </div>
                     <div className="online_count_col">
                         <div className='count-logo'><img src={count2} alt="" /></div>
-                        <div className='num'>9874593483848</div>
+                        <div className='num'>78031</div>
                         <p>Total of betting</p>
                     </div>
                     <div className="online_count_col">
                         <div className='count-logo'><img src={count1} alt="" /></div>
-                        <div className='num'>203383</div>
+                        <div className='num'>2033</div>
                         <p>Online</p>
                     </div>
                 </div>
