@@ -16,12 +16,16 @@ const signUp = async (req, res) => {
     let { phoneNumber, password, referralCode } = data
 
     if (validation.isValidBody(data)) return res.status(400).send({ status: false, message: "provide all required fields" })
-    if(!referralCode) return res.status(400).send({ status: false, message: "please provide refferal code" })
+    if (!referralCode) return res.status(400).send({ status: false, message: "please provide refferal code" })
+    const checkrefferalCode = await userModel.findOne({ referralCode: referralCode })
+    if (!checkrefferalCode) return res.status(400).send({ status: false, message: "Invalid referral code" })
 
 
     if (!validation.isValid(phoneNumber)) return res.status(400).send({ status: false, message: `PhoneNumber  is Required` })
+
     let uniquePhone = await userModel.findOne({ phoneNumber: phoneNumber })
     if (!validation.isValidPhone(phoneNumber)) return res.status(400).send({ status: false, message: `This PhoneNumber is Invalid` })
+
     if (uniquePhone) return res.status(400).send({ status: false, message: `This PhoneNumber  has already registered Please Sign In`, })
 
     if (!validation.isValidPwd(password)) return res.status(400).send({ status: false, message: "Password should be 8-15 characters long and must contain one of 0-9,A-Z,a-z and special characters", })
@@ -36,14 +40,14 @@ const signUp = async (req, res) => {
    
     
     if (!UID) return res.status(404).send({ status: false, message: "udi is not available" })
-    const createUser = new userModel({
+    const createUser = await userModel.create({
       phoneNumber: phoneNumber,
       password: hashedPassword,
       parentReferralCode: referralCode,
       referralCode: await generateUniqueReferralCode()+UID,
       UID:UID
     })
-    await createUser.save()
+   
     if (referralCode) {
       findParentUser = await userModel.findOne({ referralCode: referralCode })
 
