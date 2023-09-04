@@ -253,9 +253,7 @@ const resetPassword = async (req, res) => {
 const updateUserProfile = async (req, res) => {
 
   try {
-    if (!req.file) {
-      return res.status(400).json({ status:false,message: 'No file provided' });
-    }
+
 
     const { nickName } = req.body;
 
@@ -270,7 +268,7 @@ const updateUserProfile = async (req, res) => {
     }
 
     user.nickName = nickName;
-    user.profilePhoto = '/userImages/' + req.file.filename;
+  
 
     await user.save();
 
@@ -363,55 +361,107 @@ const getUserDetails = async (req, res) => {
   }
 };
 
+// const getDownlineDetails = async (req, res) => {
+//   try {
+//     const userId = req.params.userId;
+//     const level = parseInt(req.query.level) || 1;
+//     const limit = parseInt(req.query.limit) || 10;
+
+//     const user = await userModel.findById(userId);
+
+//     if (!user) {
+//       res.status(404).json({ error: 'User not found' });
+//       return;
+//     }
+
+//     const getDownline = async (user, currentLevel) => {
+//       if (currentLevel === level) {
+//         return [];
+//       }
+
+//       const downlineDetails = [];
+//       for (const downlineUser of user.downline) {
+//         if (downlineUser.user) {
+//           const subUser = await userModel.findById(downlineUser.user._id);
+//           if (subUser) {
+//             const subUserDownline = await getDownline(subUser, currentLevel + 1);
+//             downlineDetails.push({
+//               phoneNumber: subUser.phoneNumber || null,
+//               UID: subUser.UID || null,
+//               referralDate: subUser.createdAt || null,
+//               downline: subUserDownline,
+//             });
+//           }
+//         }
+//       }
+
+//       return downlineDetails;
+//     };
+
+//     const downlineDetails = await getDownline(user, 1);
+
+//     res.json({
+//       level: level,
+//       totalUsers: downlineDetails.length,
+//       downlineDetails: downlineDetails.slice(0, limit),
+//     });
+//   } catch (error) {
+//     console.error('Error fetching downline user details:', error);
+//     res.status(500).json({ error: 'An error occurred while fetching downline user details' });
+//   }
+// };
 const getDownlineDetails = async (req, res) => {
   try {
     const userId = req.params.userId;
-    const page = parseInt(req.query.page) || 1;
+    const level = parseInt(req.query.level) || 1;
     const limit = parseInt(req.query.limit) || 10;
 
-    const user = await userModel.findById(userId)
-      .populate({
-        path: 'downline.user',
-        select: 'phoneNumber UID createdAt',
-        options: {
-          skip: (page - 1) * limit,
-          limit: limit
-        }
-      })
-      .exec();
+    const user = await userModel.findById(userId);
 
     if (!user) {
       res.status(404).json({ error: 'User not found' });
       return;
     }
 
-    const downlineDetails = user.downline.map(downlineUser => {
-      if (downlineUser.user) {
-        return {
-          phoneNumber: downlineUser.user.phoneNumber || null,
-          UID: downlineUser.user.UID || null,
-          referralDate: downlineUser.user.createdAt || null
-        };
-      } else {
-        return {
-          phoneNumber: null,
-          UID: null,
-          referralDate: null
-        };
+    const getDownline = async (user, currentLevel) => {
+      if (currentLevel === level) {
+        return [
+          {
+            phoneNumber: user.phoneNumber || null,
+            UID: user.UID || null,
+            referralDate: user.createdAt || null,
+            downline: [],
+          }
+        ];
       }
-    });
+
+      const downlineDetails = [];
+      for (const downlineUser of user.downline) {
+        if (downlineUser.user) {
+          const subUser = await userModel.findById(downlineUser.user._id);
+          if (subUser) {
+            const subUserDownline = await getDownline(subUser, currentLevel + 1);
+            downlineDetails.push(...subUserDownline);
+          }
+        }
+      }
+
+      return downlineDetails;
+    };
+
+    const downlineDetails = await getDownline(user, 1);
 
     res.json({
-      currentPage: page,
-      totalPages: Math.ceil(user.downline.length / limit),
-      totalUsers: user.downline.length,
-      downlineDetails: downlineDetails
+      level: level,
+      totalUsers: downlineDetails.length,
+      downlineDetails: downlineDetails.slice(0, limit),
     });
   } catch (error) {
     console.error('Error fetching downline user details:', error);
     res.status(500).json({ error: 'An error occurred while fetching downline user details' });
   }
 };
+
 
 const getReferralStats = async (req, res) => {
   try {

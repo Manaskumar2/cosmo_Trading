@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { useEffect } from "react";
 import { Navigate, Route, Routes , useNavigate} from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { Login, Register, Forgot, OTP, Reset, Success, Home, Growup ,ProfileComponent, Promotion,Recharge, UPI, Withdraw, BankCard,Wallet,Gift,BeginnerTutorial,About,Customer,Message,Transection,Launch,AdminHome,AdminUser,AdminWithdraw,AdminRecharge,AdminLogin} from "./importPages";
+import { Login, Register, Forgot, OTP, Reset, Success, Home, Growup ,ProfileComponent, Promotion,Recharge, UPI, Withdraw, BankCard,Wallet,Gift,BeginnerTutorial,About,Customer,Message,Transection,Launch,Terms} from "./importPages";
 import { AuthState } from "../Atoms/AuthState";
 import Loader from '../components/loader/Loader'
 // import { PrivateRoute } from "./PrivateRoute";
@@ -23,6 +23,7 @@ export const AppRoutes = () => {
             <Route path="/signIn" element={<Suspense fallback={<Loader/>}><Login /></Suspense>} />
             <Route path="/signUp" element={<Suspense fallback={<Loader/>}><Register /></Suspense>} />
             <Route path="/forgotPassword" element={<Suspense fallback={<Loader/>}><Forgot /></Suspense>} />
+            <Route path="/terms&condition" element={<Suspense fallback={<Loader/>}><Terms /></Suspense>} />
 
             {!authData ? (
                 <Route path="/" element={<Navigate to="/signIn" replace />} />
@@ -140,46 +141,7 @@ export const AppRoutes = () => {
                             </Suspense>
                         }
                     />
-                    <Route
-                        path="/admin/home"
-                        element={
-                            <Suspense fallback={<Loader/>}>
-                                    <AdminHome/>
-                            </Suspense>
-                        }
-                    />
-                    <Route
-                        path="/admin/user"
-                        element={
-                            <Suspense fallback={<Loader/>}>
-                                    <AdminUser/>
-                            </Suspense>
-                        }
-                    />
-                    <Route
-                        path="/admin/recharge"
-                        element={
-                            <Suspense fallback={<Loader/>}>
-                                    <AdminRecharge/>
-                            </Suspense>
-                        }
-                    />
-                    <Route
-                        path="/admin/withdraw"
-                        element={
-                            <Suspense fallback={<Loader/>}>
-                                    <AdminWithdraw/>
-                            </Suspense>
-                        }
-                    />
-                    <Route
-                        path="/admin"
-                        element={
-                            <Suspense fallback={<Loader/>}>
-                                    <AdminLogin/>
-                            </Suspense>
-                        }
-                    />
+                    
                 </>
             )}
 

@@ -11,6 +11,12 @@
         border: 1px solid #4991D3;
         background: #042A57;width: 10rem;
         padding: 0.625rem 0.75rem;}
+        .options{    border: 0;
+            outline: none;
+            border-radius: 2px;
+            background-color: #034277;
+            color: white;
+            font-weight: 450;}
         .inquries{margin-top: 1.2rem;}
     .inquries .col-6 button{border: 0; outline: none ;border-radius: 0.3125rem;
         background: linear-gradient(128deg, #C82F36 0%, #EC4E55 100%);display: flex;

@@ -54,5 +54,7 @@ const AdminWithdraw= lazy(()=>
 import('../../src/pages/Admin/adminWithdraw/AdminWithdraw'))
 const AdminLogin= lazy(()=>
 import('../../src/pages/Admin/adminLogin/Adminlogin'))
+const Terms= lazy(()=>
+import('../../src/pages/termsAndCondition/Terms'))
 
-export {Login,Register,Forgot,OTP,Reset,Success,Home,Growup,ProfileComponent,Promotion,Recharge,UPI,Withdraw,BankCard,Wallet,Gift,BeginnerTutorial,About,Customer,Message,Transection,Launch,AdminHome,AdminUser,AdminRecharge,AdminWithdraw,AdminLogin}
+export {Login,Register,Forgot,OTP,Reset,Success,Home,Growup,ProfileComponent,Promotion,Recharge,UPI,Withdraw,BankCard,Wallet,Gift,BeginnerTutorial,About,Customer,Message,Transection,Launch,AdminHome,AdminUser,AdminRecharge,AdminWithdraw,AdminLogin,Terms}

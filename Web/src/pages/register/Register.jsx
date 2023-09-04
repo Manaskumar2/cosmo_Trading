@@ -10,9 +10,9 @@ export const toastProps = {
   position: "top-center",
   duration: 2000,
   style: {
-      fontSize: "1rem",
-      background: "#fff",
-      color: "#333",
+    fontSize: "1rem",
+    background: "#fff",
+    color: "#333",
   },
 };
 
@@ -21,30 +21,30 @@ function Register() {
   const [referralCode, setReferral] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [agreed, setAgreed] = useState(false); // Added state for agreement
   const navigate = useNavigate();
-  const location = useLocation(); 
+  const location = useLocation();
+
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     const referralCodeFromURL = searchParams.get('referral');
-  
+
     console.log('Referral Code from URL:', referralCodeFromURL);
-  
+
     if (referralCodeFromURL) {
       setReferral(referralCodeFromURL);
     }
   }, [location.search]);
-  
 
   const navigateToLogin = () => {
     navigate('/signIn');
   };
 
-  
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (!phoneNumber || !password || !referralCode) {
-      toast.error('Phone Number, Password, and Referral Code are required', { ...toastProps });
+    if (!phoneNumber || !password || !referralCode || !agreed) { // Check for agreement
+      toast.error('Phone Number, Password, Referral Code, and Agreement are required', { ...toastProps });
       return;
     }
 
@@ -61,6 +61,7 @@ function Register() {
         setPhone('');
         setPassword('');
         setReferral('');
+        setAgreed(false); // Reset agreement status
         setTimeout(() => {
           navigate('/signIn');
         }, 1500);
@@ -71,6 +72,10 @@ function Register() {
       const errorMessage = error.response ? error.response.data.message : error.message;
       toast.error(errorMessage || 'Something went wrong', { ...toastProps });
     }
+  };
+
+  const handleCheckboxChange = () => {
+    setAgreed(!agreed);
   };
 
   return (
@@ -138,10 +143,17 @@ function Register() {
                 </div>
               </div>
               <div className="policy">
-                <input type="checkbox" /> I Agree <Link>Privacy Policy</Link>{' '}
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={agreed}
+                    onChange={handleCheckboxChange}
+                  />{' '}
+                  I Agree <Link to='/terms&condition'>Privacy Policy</Link>
+                </label>
               </div>
               <div className="btn-container">
-                <button className="top-btn" type="submit">
+                <button className="top-btn" type="submit" disabled={!agreed}>
                   Register
                 </button>
                 <button className="bot-btn" onClick={navigateToLogin}>
@@ -156,4 +168,3 @@ function Register() {
   );
 }
 export default React.memo(Register);
-

@@ -1,0 +1,8 @@
+@media (min-width: 768px){.col-md-3 {
+    flex: 0 0 auto;
+    width: 82%;
+}}
+
+.flex-column >a{text-decoration: none; color: #252525; font-size: 1.2rem;margin-top: 1.2rem;}
+.nav{width: 15rem;
+min-height: 100vh;}
