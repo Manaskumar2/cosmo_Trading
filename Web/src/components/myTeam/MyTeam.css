@@ -3,6 +3,7 @@
     justify-content: space-between;
     align-items: center;
     align-self: stretch;}
+    .myTeam{position: relative;}
     .team-top-row .col-5{display: flex; align-items: center; gap: 1rem;border-radius: 0.3125rem;border: 1px solid #4991D3;background: #042A57;padding: .2rem .6rem; color: #FFF; font-size: 1rem;}
     .team-top-row .col-7{display: flex; align-items: center;padding: .2rem .6rem; color: #FFF; font-size: 1rem;}
     .myTeam .blue{background: #034277;}
@@ -25,7 +26,7 @@
         align-items: center;color: #fff; text-align: center;font-family: Montserrat;font-size: 1rem;}
 .inquries{margin-top: 1.2rem;}
 .total-bet-row{border-top: 1px solid #1E5D81;border-bottom: 1px solid #1E5D81;margin-top: 1.2rem;}
-.total-bet-row .col-6{display: flex;padding: 0.625rem .5rem;justify-content: center;align-items: center;color: #fff; text-align: center;font-family: Montserrat;font-size: .9rem;}
+.total-bet-row .col-6{display: flex;padding: 0.625rem .5rem;justify-content: center;align-items: center;color: #fff; text-align: center;font-family: Montserrat;font-size: .8rem;}
 .details-btn{border-radius: 0.25rem;
     background: #0E6FA6;display: flex;
     padding: 0.125rem 0.3125rem;
@@ -35,3 +36,6 @@
     font-family: Montserrat;color: #fff;
     }
     .calender{background: transparent;color: #fff;border: 0; outline: none;width: 6rem;}
+    .down-details{color: #fff;}
+    .popup{position: absolute;top: 0;background-color: #4991D3;width: 100%;padding: 1rem;}
+    .close-popup{background-color: #EC4E55;color: #fff; border: 0;outline: none;padding: .2rem .8rem;}
