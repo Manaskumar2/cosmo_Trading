@@ -123,6 +123,7 @@ function MyTeam() {
                             <option value={8}>Level 7</option>
                             <option value={9}>Level 8</option>
                             <option value={10}>Level 9</option>
+                            <option value={11}>Level 10</option>
                         </select>
                     </div>
                     <div className="col-4"><button>Inquiries</button></div>
