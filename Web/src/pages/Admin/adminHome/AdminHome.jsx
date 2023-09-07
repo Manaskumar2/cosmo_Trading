@@ -8,7 +8,7 @@ function AdminHome() {
       <AdminNav/>
         <div className='flex-div'>
           <Side/>
-          home
+         <div className='admin-rightSection'>Home</div>
         </div>
     </div>
   )

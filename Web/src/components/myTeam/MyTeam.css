@@ -6,19 +6,19 @@
     .team-top-row .col-5{display: flex; align-items: center; gap: 1rem;border-radius: 0.3125rem;border: 1px solid #4991D3;background: #042A57;padding: .2rem .6rem; color: #FFF; font-size: 1rem;}
     .team-top-row .col-7{display: flex; align-items: center;padding: .2rem .6rem; color: #FFF; font-size: 1rem;}
     .myTeam .blue{background: #034277;}
-    .inquries .col-6{display: flex; justify-content: center; align-items: center;}
-    .inquries .col-6 input{border-radius: 0.3125rem;
+    .inquries .col-4{display: flex; justify-content: center; align-items: center;}
+    .inquries .col-4 input{border-radius: 0.3125rem;
         border: 1px solid #4991D3;
-        background: #042A57;width: 10rem;
+        background: #042A57;width: 8rem;
         padding: 0.625rem 0.75rem;}
         .options{    border: 0;
             outline: none;
             border-radius: 2px;
             background-color: #034277;
             color: white;
-            font-weight: 450;}
+            font-weight: 450; padding: .4rem;}
         .inquries{margin-top: 1.2rem;}
-    .inquries .col-6 button{border: 0; outline: none ;border-radius: 0.3125rem;
+    .inquries .col-4 button{border: 0; outline: none ;border-radius: 0.3125rem;
         background: linear-gradient(128deg, #C82F36 0%, #EC4E55 100%);display: flex;
         padding: 0.625rem 0.75rem;
         justify-content: center;
@@ -34,3 +34,4 @@
     border: 0;outline: none;
     font-family: Montserrat;color: #fff;
     }
+    .calender{background: transparent;color: #fff;border: 0; outline: none;width: 6rem;}

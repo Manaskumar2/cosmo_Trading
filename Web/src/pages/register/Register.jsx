@@ -5,7 +5,8 @@ import logo from '../../images/Cosmo Logo.svg';
 import comp from '../../images/computer.svg';
 import toast, { Toaster } from 'react-hot-toast';
 import axios from 'axios';
-
+import { useRecoilState } from 'recoil';
+import { Uid } from '../../Atoms/Uid';
 export const toastProps = {
   position: "top-center",
   duration: 2000,
@@ -17,11 +18,12 @@ export const toastProps = {
 };
 
 function Register() {
+  const [uid , setUid]=useRecoilState(Uid)
   const [phoneNumber, setPhone] = useState('');
   const [referralCode, setReferral] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [agreed, setAgreed] = useState(false); // Added state for agreement
+  const [agreed, setAgreed] = useState(false); 
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -58,12 +60,13 @@ function Register() {
       console.log(response);
       if (response.status === 201) {
         toast.success('Registration Successful', { ...toastProps });
+        setUid(response)
         setPhone('');
         setPassword('');
         setReferral('');
-        setAgreed(false); // Reset agreement status
+        setAgreed(false);
         setTimeout(() => {
-          navigate('/signIn');
+          navigate('/registered');
         }, 1500);
         console.log(response);
         return response;

@@ -588,6 +588,47 @@ const activeUser = async (req, res) => {
         return res.status(500).send({ status: false, message: error.message });
     }
 };
+
+const getCommissionByDate = async (req, res) => {
+  try {
+    
+    const requestedDate = new Date(req.params.date);
+
+    if (isNaN(requestedDate)) {
+      return res.status(400).json({ status: false, message: "Invalid date format" });
+    }
+
+    
+    const userId = req.decodedToken.userId;
+
+
+    const user = await userModel.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ status: false, message: "User not found" });
+    }
+
+    const commissionsForDate = user.commissions.filter((commission) => {
+      const commissionDate = new Date(commission.date);
+      return commissionDate.toDateString() === requestedDate.toDateString();
+    });
+
+    const totalCommissionAmount = commissionsForDate.reduce((total, commission) => {
+      return total + commission.amount;
+    }, 0);
+
+    return res.status(200).json({
+      status: true,
+      message: "Commission amount for the specified date",
+      date: requestedDate,
+      totalCommissionAmount,
+    });
+  } catch (error) {
+    console.error("Error getting commission by date:", error);
+    return res.status(500).json({ status: false, message: "Internal server error" });
+  }
+};
+
 module.exports = {
   signIn,
   signUp,
@@ -602,6 +643,7 @@ module.exports = {
   adminlogin,
   getAllUsers,
   activeUser,
-  deactiveUser
+  deactiveUser,
+  getCommissionByDate
 
 }

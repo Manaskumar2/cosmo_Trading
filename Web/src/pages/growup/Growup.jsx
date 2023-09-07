@@ -100,7 +100,6 @@ function Growup() {
             );
 
             if (response.status === 200) {
-                // toast.success("got user money data", { ...toastProps });
                 console.log(response);
                 setUserData(response)
                 return response;

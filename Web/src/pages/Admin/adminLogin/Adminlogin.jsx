@@ -3,6 +3,7 @@ import { useState } from 'react'
 import './AdminLogin.css'
 import toast, { Toaster } from "react-hot-toast";
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom';
 export const toastProps = {
     position: "top-center",
     duration: 2000,
@@ -14,21 +15,23 @@ export const toastProps = {
 };
 
 function Adminlogin() {
+    const navigate = useNavigate()
     const [phoneNumber, setPhone] = useState('')
     const [password, setPassword] = useState('')
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-
             const response = await axios.post(`${import.meta.env.VITE_API_URL}/admin/signIn`, {
-                phoneNumber,password
+                phoneNumber, password
             }
             );
-
             if (response.status === 200) {
                 toast.success("Welcome Admin", { ...toastProps });
                 console.log(response);
-
+                sessionStorage.setItem('authToken', JSON.stringify(response.data.data));
+                setPhone('');
+                setPassword('');
+                navigate('/admin/home')
                 return response;
             }
         } catch (error) {
@@ -38,7 +41,7 @@ function Adminlogin() {
     }
     return (
         <div className='admin-login'>
-            <Toaster/>
+            <Toaster />
             <form onSubmit={handleSubmit} >
                 <h2>Welcome Admin</h2>
                 <p>Phone No</p>

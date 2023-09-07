@@ -7,7 +7,7 @@ function AdminWithdraw() {
       <AdminNav/>
       <div className='flex-div'>
           <Side/>
-          <div></div>
+          <div className='admin-rightSection'>Withdraw</div>
         </div>
     </div>
   )

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Launch.css'
 import { useNavigate } from 'react-router-dom';
-import logo from './Logo.svg'
+import logo from './logo.svg'
 
 function Launch() {
   const navigate = useNavigate()

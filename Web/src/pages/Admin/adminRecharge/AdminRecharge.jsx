@@ -7,7 +7,7 @@ function AdminRecharge() {
       <AdminNav/>
       <div className='flex-div'>
           <Side/>
-          <div>Recharge</div>
+          <div className='admin-rightSection'>Recharge</div>
         </div>
     </div>
   )

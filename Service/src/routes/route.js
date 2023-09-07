@@ -1,11 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const { signUp, signIn,sendOtpPhone,verifyOtp,resetPassword,updateUserProfile,getUserDetails, getDownlineDetails,getReferralStats} = require("../controllers/userController")
+const { signUp, signIn,sendOtpPhone,verifyOtp,resetPassword,updateUserProfile,getUserDetails, getDownlineDetails,getReferralStats, getCommissionByDate} = require("../controllers/userController")
 const{authentication,adminAuthorization} = require("../middlewares/authMiddleware")
 const gameController = require("../controllers/gameController")
 const { uploadQrCode, getAllImageURLs } = require('../controllers/qrCodeController')
 const { createRecharge } = require("../controllers/rechargeController")
-const { createBankAccount } = require("../controllers/withdrawAccountController")
+const { createBankAccount } = require("../controllers/withdrawAccountController");
+const { applyPremiumUser, getpremiumRequest } = require("../controllers/premiumController");
 // const multer = require('multer');
 // const path = require('path');
 
@@ -54,12 +55,19 @@ router.post("/uploadQrcode", authentication, uploadQrCode)
 
 // router.patch('/payment-request', authentication, adminAuthorization, getpaymentRequest)
 
-
+router.get("/getCommissionDetails/:date", authentication,getCommissionByDate)
 
 
 //...............................................withdrows****************//
 
-router.post("/createbankAccount",authentication,createBankAccount)
+router.post("/createbankAccount", authentication, createBankAccount)
+
+
+//...............................................premium ********************************//
+
+
+router.post("/applyPremium", authentication, applyPremiumUser)
+router.get("/getPremiumUser", authentication,getpremiumRequest)
 
 
 

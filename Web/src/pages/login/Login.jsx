@@ -2,9 +2,6 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Login.css';
 import logo from '../../images/Cosmo Logo.svg';
-import phoneImg from '../../images/smartphone 1.svg';
-import lock from '../../images/lock.svg';
-import eye from '../../images/eye 1.svg';
 import axios from 'axios';
 import toast, { Toaster } from 'react-hot-toast';
 

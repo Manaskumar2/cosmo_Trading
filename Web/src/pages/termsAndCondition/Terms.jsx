@@ -60,7 +60,7 @@ function Terms() {
 <p>10.2 Users engage in betting activities at their own risk, and CosmoTreade.live shall not be liable for any losses incurred.</p>
 <button className='terms-back-btn' onClick={()=>{navigate("/signUp")}}>Back</button>
     </div>
-  )
+)
 }
 
 export default Terms
