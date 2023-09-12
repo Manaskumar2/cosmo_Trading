@@ -1,5 +1,5 @@
 import React from 'react'
-
+import './AdminNav.css'
 function AdminNav() {
 
   return (

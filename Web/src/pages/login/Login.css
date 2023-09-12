@@ -1,23 +1,36 @@
-.login { min-height:100vh ;}
-    .login .container-fluid{padding: 40px 25px; padding-top: 20px}
-.login .container-fluid div a{text-decoration: none; color: #1970AE; font-family: 'Montserrat';font-size: 14px;}
-    .forget{display: flex; justify-content: end;}
-    .inputBox{display: flex;padding:11px 15px;align-items: center;color: #FFF;font-family: 'Montserrat';align-self: stretch;border-radius: 5px;border: 1px solid #155F94;gap:1rem; margin-bottom: 1.5rem;justify-content:space-between;}
-    .inputBox input{color: #FFF;font-family: 'Montserrat';font-size: 16px;font-style: normal;font-weight: 500;line-height: normal;letter-spacing: 0.9px;background-color: transparent;border: 0;outline: none; width: 100%; }
-    .front{padding-right: 1rem;border-right: 1px solid #1970AE;width:40px; margin-right: 12px;}
-    .login-container {border-radius: 30px 30px 0rem 0rem;background: url(/src/images/bg_form_login.svg) top no-repeat; background-size: cover; width: 100%; position: absolute;top: 20rem; min-height: 80vh;}
-    .login-container h3{padding-top: 1.5rem; text-align: center;}
-/*    .login-container .container-fluid{ background: url('../../images/elipse.svg')no-repeat;height: 67vh;}*/
-    .login-container p{ margin-bottom: 1rem; font-family: 'Montserrat';color: #445D9D;}
-    .login-container p span a{ text-decoration: none; color: #299DEA; font-weight: 550;}
-    .logo-container{background: url('../../images/Game-Banner.svg') top center no-repeat;height: 75vh;}
-    .logo-container img{height: 5rem;}
-    .wrapper{position: relative;}
-    .logo-container{display: flex; justify-content: center;}
-.logo{
-  margin:0 0 2.5rem 0;
-  text-align: center;
-}
+.desktop, .login-container{max-width:450px; margin: 0 auto; background: #003d69;}
+.login {min-height:100vh;}
+.login .container-fluid{padding:40px 20px; padding-top:20px}
+.login .container-fluid div a{text-decoration: none; color:#3b9be0; font-family: 'Montserrat';font-size: 14px;}
+.forget{display: flex; justify-content: end;}
+.inputBox{display: flex;padding:11px 15px;align-items: center;color: #FFF;font-family: 'Montserrat';align-self: stretch;border-radius: 5px;border: 1px solid #155F94;gap:1rem; margin-bottom: 1.5rem;justify-content:space-between;}
+.inputBox input{color: #FFF;font-family: 'Montserrat';font-size: 16px;font-style: normal;font-weight: 500;line-height: normal;letter-spacing: 0.9px;background-color: transparent;border: 0;outline: none; width: 100%; }
+.front{padding-right: 1rem;border-right: 1px solid #1970AE;width:40px; margin-right: 12px;}
+.login-container {width:100%; border-radius:30px 30px 0 0; background:#003d69 url(/src/images/bg_form_login.svg) top no-repeat; background-size: cover; position: relative; top:-40px; min-height: 100vh;}
+.login-container h3{padding-top: 1.5rem; text-align: center;}
+.login-container p{ margin-bottom: 1rem; font-family: 'Montserrat';color: #445D9D;}
+.login-container p span a{ text-decoration: none; color: #299DEA; font-weight: 550;}
+.logo-container{background: url('../../images/Game-Banner.svg') top center no-repeat; height:240px;}
+.logo-container img{height: 5rem;}
+.wrapper{position: relative;}
+.logo-container{display: flex; justify-content: center;}
+.logo{margin:0 0 2.5rem 0;text-align: center;}
+
+.inputBox:hover{border-radius: 5px; border: 1px solid #26B5E2; box-shadow: 0px 2px 4px 0px rgba(38, 181, 226, 0.80);}
+
+.title{color: #FFF;text-align: left;font-family: 'Montserrat';font-size: 1.55rem;font-style: normal;font-weight: 600;line-height: 45px; letter-spacing: 0.14px;}
+.top-btn{border-radius: 100px;background: linear-gradient(143deg, #C82F36 0%, #EC4E55 100%);box-shadow: 0px 4px 15px 0px rgba(200, 47, 54, 0.80);padding: 16px 30px; color: #FFF;border: 0;letter-spacing: 2px; outline: none;font-weight: 500; margin-top: 1rem; width: 100%;font-family: Poppins;}
+.bot-btn{width: 100%;text-align: center;border-radius: 100px;border: 1px solid #E5B21B;box-shadow: 0px 2px 10px 0px #e8a80666;font-weight: 500; padding: 16px 30px;font-family: Poppins; color: #E7AC17;letter-spacing:0; outline: none;font-weight: 500; margin-top: 1.5rem;}
+.btn-container{margin-top: 3rem;}
+.inputBoxInner{display: flex;}
+.inputBox:hover .front{border-color: #26B5E2}
+
+  @media (min-width: 500px){
+    .desktop{display: block;margin: auto;}
+    .inputBox {gap: 1rem;}
+  }
+
+
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -55,42 +68,3 @@ input::-webkit-inner-spin-button {
   line-height: normal;
   letter-spacing: 0.9px;
 }
-
-.inputBox:hover{
-    border-radius: 5px;
-    border: 1px solid #26B5E2;
-    box-shadow: 0px 2px 4px 0px rgba(38, 181, 226, 0.80);
-    }
-    .title{color: #FFF;text-align: left;font-family: 'Montserrat';font-size: 1.55rem;font-style: normal;font-weight: 600;line-height: 45px; /* 178.571% */letter-spacing: 0.14px;
-      }
-    .top-btn{border-radius: 100px;background: linear-gradient(143deg, #C82F36 0%, #EC4E55 100%);box-shadow: 0px 4px 15px 0px rgba(200, 47, 54, 0.80);padding: 16px 30px; color: #FFF;border: 0;letter-spacing: 2px; outline: none;font-weight: 500; margin-top: 1rem; width: 100%;font-family: Poppins;}
-      .bot-btn{width: 100%;text-align: center;border-radius: 100px;border: 1px solid #E5B21B;box-shadow: 0px 2px 10px 0px #e8a80666;font-weight: 500; padding: 16px 30px;font-family: Poppins; color: #E7AC17;letter-spacing: 2px; outline: none;font-weight: 500; margin-top: 1.5rem;}
-      .btn-container{margin-top: 3rem;}
-
-      .inputBoxInner{display: flex;}
-
-    .inputBox:hover .front{border-color: #26B5E2}
-
-      @media (min-width: 768px){
-        .desktop{
-          width: 30vw;
-          display: block;
-          margin: auto;
-        }
-        .login-container .container-fluid {
-/*          background: url(/src/images/elipse.svg)no-repeat;*/
-/*          height: 100vh;*/
-      }
-      .login-container {
-        border-radius: 30px 30px 0rem 0rem;
-/*        background: #003D69;*/
-        background: url(/src/images/bg_form_login.svg) top no-repeat;
-        position: absolute;
-        top: 20rem;
-        width: 30vw;
-        min-height: 100vh;
-    }
-    .inputBox {
-      gap: 1rem;
-  }
-      }
