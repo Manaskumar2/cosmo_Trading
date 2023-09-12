@@ -27,10 +27,18 @@ const createRecharge = async (req, res) => {
     return res.status(500).send({ status: false, message: error.message });
   }
 }
+const getPaymentList = async (req, res) => { 
+  try {
+
+    
+  } catch (error) {
+    return res.status(500).send({ status: false, message: error.message });
+  }
+}
 
 const getPaymentRequest = async (req, res) => {
   try {
-    const { paymentId } = req.query.paymentId;
+    const  paymentId  = req.query.paymentId;
 
 
     if (paymentId) {
@@ -43,7 +51,7 @@ const getPaymentRequest = async (req, res) => {
       if (!pendingPayments || pendingPayments.length === 0) {
         return res.status(404).json({ error: 'No pending payments found' });
       }
-      res.json(pendingPayments);
+      res.status(200).json(pendingPayments);
     }
   } catch (error) {
     console.error(error);

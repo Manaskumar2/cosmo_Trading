@@ -6,7 +6,8 @@ const { adminlogin,getAllUsers,activeUser,deactiveUser,getDownlineDetails } = re
 const { uploadQrCode, getAllImageURLs } = require('../controllers/qrCodeController')
 const { getBankAccountbyId } = require("../controllers/withdrawAccountController")
 const { getPaymentRequest, updatePaymentRequest } = require("../controllers/rechargeController")
-const {getpremiumRequest,updatePremiumUser, getPremiumRequestById} =  require("../controllers/premiumController")
+const {getpremiumRequest,updatePremiumUser, getPremiumRequestById} =  require("../controllers/premiumController");
+const { getWithdrawRequest, confirmRequest } = require("../controllers/userWithdrawController");
 
 router.post("/signIn", adminlogin)
 
@@ -16,7 +17,7 @@ router.patch("/activateUser/:userId", authentication, adminAuthorization, active
 router.get("/getDownliners/:userId",authentication,adminAuthorization,getDownlineDetails)
 
 
-router.post("/uploadQrcode", authentication, uploadQrCode)
+router.post("/uploadQrcode/:uploadedBy", authentication,adminAuthorization, uploadQrCode)
 router.get("/getqrcode",authentication,adminAuthorization,getAllImageURLs)
 
 router.get("/payment-request", authentication, adminAuthorization, getPaymentRequest)
@@ -27,7 +28,10 @@ router.patch("/confirm-payment", authentication, adminAuthorization,updatePaymen
 router.get("/getbankDetails/:userId", authentication, adminAuthorization, getBankAccountbyId)
 router.get("/getPremiumRequest", authentication, adminAuthorization, getpremiumRequest)
 router.get("/getPremiumRequest/:userId", authentication, adminAuthorization,getPremiumRequestById)
-router.put("/updatePremiumRequest/:userId", authentication, adminAuthorization,updatePremiumUser)
+router.put("/updatePremiumRequest/:userId", authentication, adminAuthorization, updatePremiumUser)
+
+router.get("/getWithdrawRequest", authentication, adminAuthorization, getWithdrawRequest)
+router.put("/conformWithdrawRequest/:requestId", authentication, adminAuthorization,confirmRequest)
 
 
 

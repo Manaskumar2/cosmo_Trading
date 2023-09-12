@@ -5,7 +5,8 @@ const validation = require('../validations/validation')
 
 const uploadQrCode = async (req, res) => {
   try {
-    const uploadedBy = req.decodedToken.userId
+    const uploadedBy = req.params.uploadedBy
+    
     const uploadedData = {};
 
     if (!uploadedBy) return res.status(400).json({ status: false, message: 'Please log in to upload image' });

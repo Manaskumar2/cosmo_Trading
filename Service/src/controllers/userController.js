@@ -79,10 +79,10 @@ const signIn = async (req, res) => {
       return res.status(400).send({ status: false, message: "Provide both phone number and password to login" });
     }
 
-    const findUser = await userModel.findOne({ phoneNumber: phoneNumber });
+    const findUser = await userModel.findOne({ phoneNumber: phoneNumber ,isDeleted:false});
 
     if (!findUser) {
-      return res.status(400).send({ status: false, message: "Invalid Phone Number" });
+      return res.status(400).send({ status: false, message: "Invalid Phone Number or your Mobile No Has  ban" });
     }
 
     const correctPassword = findUser.password;
@@ -120,7 +120,7 @@ const adminlogin =async (req, res) => {
       return res.status(400).send({ status: false, message: "Provide both phone number and password to login" });
     }
 
-    const findUser = await userModel.findOne({ phoneNumber: phoneNumber });
+    const findUser = await userModel.findOne({ phoneNumber: phoneNumber ,isDeleted:false});
 
     if (!findUser) {
       return res.status(400).send({ status: false, message: "Invalid Phone Number" });
@@ -134,12 +134,13 @@ const adminlogin =async (req, res) => {
       return res.status(400).send({ status: false, message: "Incorrect Password" });
     }
 
-    const token = jwt.sign({ phoneNumber: findUser.phoneNumber}, process.env.JWT_TOKEN, { expiresIn: '365d' });
+    const token = jwt.sign({ phoneNumber: findUser.phoneNumber,userId: findUser._id,isAdmin:findUser.isAdmin}, process.env.JWT_TOKEN, { expiresIn: '365d' });
 
     const response = {
       phoneNumber: findUser.phoneNumber,
       _id: findUser._id,
       authToken: token,
+      isAdmin: findUser.isAdmin
     };
 
     res.status(200).send({ status: true, message: "User login successful", data: response });
@@ -502,11 +503,15 @@ const getReferralStats = async (req, res) => {
 
 const deactiveUser = async (req, res) => {
     try {
-        const userId = req.params.userId
+      const userId = req.params.userId
+      console.log(userId)
+        const adminId = req.decodedToken.userId
+        console.log(adminId)
         if (!validation.isValidObjectId(adminId)) return res.status(400).send({ status: false, message: " ENTER VALID ADMIN ID" })
-
+        console.log(adminId)
         if (!validation.isValidObjectId(userId)) return res.status(400).send({ status: false, message: " ENTER VALID USER ID" })
         const userData = await userModel.findOne({ _id: userId, isDeleted: false })
+      
         if (!userData) return res.status(400).send({ status: false, message: "No user Exist in this Id" })
 
         await userModel.findByIdAndUpdate(userId, { isDeleted:true}, { new: true })
@@ -522,14 +527,15 @@ const activeUser = async (req, res) => {
     try {
 
 
-        const { userId } = req.params
+       const userId = req.params.userId
+        const adminId = req.decodedToken.userId
 
         if (!validation.isValidObjectId(adminId)) return res.status(400).send({ status: false, message: " ENTER VALID ADMIN ID" })
 
          if(userId == adminId) return res.status(403).send({status:false,mesage:"you cannot active yourself"})
 
         if (!validation.isValidObjectId(userId)) return res.status(400).send({ status: false, message: " ENTER VALID USER ID" })
-        const userData = await userModel.findOne({ _id: userId, isDeleted: false })
+        const userData = await userModel.findOne({ _id: userId, isDeleted: true })
         if (!userData) return res.status(400).send({ status: false, message: "No user Exist in this Id" })
 
         await userModel.findByIdAndUpdate(userId, { isDeleted:false}, { new: true })
@@ -544,16 +550,18 @@ const activeUser = async (req, res) => {
     const  getAllUsers = async (req, res) => {
       try {
         const { queryPageIndex = 1, queryPageSize = 10, queryPageFilter, queryPageSortBy = [{ id: '_id', desc: false }] } = req.query;
+        console.log( queryPageSortBy )
         let query = {};
         let sortBy = queryPageSortBy[0].id;
         let sortOrder = queryPageSortBy[0].desc ? -1 : 1;
-        
+        console.log(sortOrder)
+        console.log(sortBy)
     
         if (queryPageFilter) {
           let searchRegex = new RegExp(queryPageFilter, "i");
           query = {
             $or: [
-              { phone: searchRegex },
+              { phoneNumber: searchRegex },
             ],
           };
         }
