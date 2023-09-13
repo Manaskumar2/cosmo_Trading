@@ -32,8 +32,7 @@ function ForgotPassword() {
             if(response.status===200){
                 toast.success("Welcome to our Gaming Zone", { ...toastProps });
                 setPhoneNumber('');
-                // setPassword('');
-                // setLoading(false); 
+                navigate('/verifyOtp')
                 console.log(response)
                 return response;
             }
@@ -68,7 +67,7 @@ function ForgotPassword() {
                             <div className='otp'><p >Enter your register mobile number to get OTP</p></div>
                             <div className='passwordChange-btn'>
                                 <button className='top-btn' type='submit' >Get OTP</button>
-                                <button className='bot-btn' onClick={() => { navigate('/verifyOtp') }}>Back</button>
+                                <button className='bot-btn' onClick={() => { navigate('/signIn') }}>Back</button>
                             </div>
                         </form>
                     </div>

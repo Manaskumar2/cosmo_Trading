@@ -117,7 +117,7 @@ function Reset() {
                                 <button className="top-btn" type="submit">
                                     Reset Password
                                 </button>
-                                <button className="bot-btn" onClick={() => navigate('/success')}>
+                                <button className="bot-btn" onClick={() => navigate('/verifyOTP')}>
                                     Back
                                 </button>
                             </div>

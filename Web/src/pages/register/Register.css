@@ -9,9 +9,9 @@
 .passwordChange-btn{margin-top: 3rem;}
 .back-btn{outline: none; border: 0; background-color: transparent;}
 
-.btn-container{margin-top: 3rem;}
+.btn-container{margin-top:25px;}
 .register { min-height:100vh ;}
-.register .container-fluid{padding:40px 30px; padding-top: 20px;}
+.register .container-fluid{padding:40px 20px; padding-top: 20px;}
 .register .container-fluid div .policy{color: #238FCB;font-size: 14px;}
 .register .container-fluid div a{text-decoration: none; color: #43DDFF; font-family: 'Montserrat'}
 .forget{display: flex; justify-content: end;}
@@ -19,7 +19,7 @@
     border: 1px solid #155F94;gap:1rem; margin-bottom: 1.5rem;     justify-content: space-between;}
 .inputBox input{color: #FFF;font-family: 'Montserrat';font-size: 16px;font-style: normal;font-weight: 500;line-height: normal;letter-spacing:0.9px;background-color: transparent;border: 0;outline: none;width: 100%;}
 
-.signup-container {border-radius:30px 30px 0 0; background: url(/src/images/bg_form_login.svg) top no-repeat; position: relative; top: -40px; min-height: 80vh; background-size: cover; width: 100%;}
+.signup-container {border-radius:30px 30px 0 0; background: url(/src/images/bg_form_login.svg) top no-repeat; position: relative; top: -40px; background-size: cover; width: 100%;}
 .signup-container h3{padding-top: 1.5rem; text-align: center;}
 
 .signup-container p{ margin-bottom: 1rem; font-family: 'Montserrat';color: #445D9D;}
@@ -27,7 +27,7 @@
 .logo-container{background: url('../../images/Game-Banner.svg') top center no-repeat; height:240px;}
 .logo-container img{height: 5rem;}
 .wrapper{position: relative;}
-.front{padding-right: 1rem; border-right: 1px solid #346b8a; margin-right:12px; width: 36px; text-align: center;}
+.front{padding-right: 1rem; border-right: 1px solid #346b8a; margin-right:12px; width:34px; text-align: center;}
 
 .register-container {border-radius:30px 30px 0 0; background: #003D69; position:relative; top:-40px; width:100%; min-height:100vh;}
 
@@ -42,7 +42,7 @@ input::-webkit-inner-spin-button {
 .inputBox:hover{border: 1px solid #26B5E2; box-shadow: 0px 2px 4px 0px rgba(38, 181, 226, 0.80);}
 .inputBoxInner{display: flex;}
 
-.bot-btn{letter-spacing: 0;}
+.bot-btn{letter-spacing:0;}
 
 @media (min-width: 500px){
   .desktop{

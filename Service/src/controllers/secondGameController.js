@@ -1,5 +1,4 @@
 const userModel = require("../models/userModel");
-const jwt = require("jsonwebtoken");
 const Game = require("../models/secondGameModel");
 const moment = require("moment");
 require("moment-timezone");
@@ -94,9 +93,26 @@ async function calculatResult(gameId) {
     } else if (runners[2].amount == 0 && runners[1].amount == 0 && runners[0].amount != 0) {
 
         let winner = runners[0].amount
+    }
 
-    } else if (runners[2].amount == 0 && runners[1].amount == 0 && runners[0].amount == 0) {
+    // } else if (runners[2].amount == 0 && runners[1].amount == 0 && runners[0].amount == 0) {
 
+    // }
+     let winner = runners[2]
+        let runnerUp = runners[1]
+    let losers = runners[0]
+    
+        if (winner && runnerUp && losers) {
+        if (game.bets.length === 3) {
+            // Three groups in the game
+            await distributeComissionToThreeUsers(winner, runnerUp, losers, game);
+        } else if (game.bets.length === 2) {
+            // Two groups in the game
+            await distributeComissionToTWoUsers(winner, losers, game);
+        } else if (game.bets.length === 1) {
+            // Only one group in the game
+            await distributeComissionToOneUser(winner, game);
+        }
     }
 
     // if (bigAmount > 0 && smallAmount > 0 && bigAmount != smallAmount) {
@@ -243,17 +259,17 @@ async function distributeComissionToThreeUsers(winner, runnerUp, losers, game) {
     }
 
     //distributing premium users their money
-    for (let i = 0; i < game.bets.length; i++) {
-        if (game.bets[i].user.isPremiumUser) {
-            let winAmount = roundDown((game.bets[i].amount * 0.5), 2)
-            totalAmount = totalAmount - winAmount
-            await userModel.updateOne(
-                { _id: game.bets[i].user._id },
-                { walletAmount: game.bets[i].user.walletAmount + winAmount },
-                {winningAmount: bet.user.winningAmount + winAmount}
-            );
-        }
-    }
+    // for (let i = 0; i < game.bets.length; i++) {
+    //     if (game.bets[i].user.isPremiumUser) {
+    //         let winAmount = roundDown((game.bets[i].amount * 0.5), 2)
+    //         totalAmount = totalAmount - winAmount
+    //         await userModel.updateOne(
+    //             { _id: game.bets[i].user._id },
+    //             { walletAmount: game.bets[i].user.walletAmount + winAmount },
+    //             {winningAmount: bet.user.winningAmount + winAmount}
+    //         );
+    //     }
+    // }
 
     let distributedAmount = await distributeComissionToAll(game);
     totalAmount = totalAmount - distributedAmount
@@ -288,19 +304,19 @@ async function distributeComissionToTWoUsers(winner, losers, game) {
         );
     }
 
-    let subscriptionRatio = (losers.amount * 0.03) / (winner.amount + losers.amount)
-    //distributing premium users their money
-    for (let i = 0; i < game.bets.length; i++) {
-        if (game.bets[i].user.isPremiumUser) {
-            let winAmount = roundDown((game.bets[i].amount * subscriptionRatio), 2)
-            totalAmount = totalAmount - winAmount
-            await userModel.updateOne(
-                { _id: game.bets[i].user._id },
-                { walletAmount: game.bets[i].user.walletAmount + winAmount },
-                {winningAmount: bet.user.winningAmount + winAmount}
-            );
-        }
-    }
+    // let subscriptionRatio = (losers.amount * 0.03) / (winner.amount + losers.amount)
+    // //distributing premium users their money
+    // for (let i = 0; i < game.bets.length; i++) {
+    //     if (game.bets[i].user.isPremiumUser) {
+    //         let winAmount = roundDown((game.bets[i].amount * subscriptionRatio), 2)
+    //         totalAmount = totalAmount - winAmount
+    //         await userModel.updateOne(
+    //             { _id: game.bets[i].user._id },
+    //             { walletAmount: game.bets[i].user.walletAmount + winAmount },
+    //             {winningAmount: bet.user.winningAmount + winAmount}
+    //         );
+    //     }
+    // }
 
     let distributedAmount = await distributeComissionToAll(game);
     totalAmount = totalAmount - distributedAmount
@@ -332,17 +348,17 @@ async function distributeComissionToOneUser(winner, game) {
 
 
      //distributing premium users their money
-     for (let i = 0; i < game.bets.length; i++) {
-        if (game.bets[i].user.isPremiumUser) {
-            let winAmount = roundDown((game.bets[i].amount * 0.5), 2)
-            totalAmount = totalAmount - winAmount
-            await userModel.updateOne(
-                { _id: game.bets[i].user._id },
-                { walletAmount: game.bets[i].user.walletAmount + winAmount },
-                {winningAmount: bet.user.winningAmount + winAmount}
-            );
-        }
-    }
+    //  for (let i = 0; i < game.bets.length; i++) {
+    //     if (game.bets[i].user.isPremiumUser) {
+    //         let winAmount = roundDown((game.bets[i].amount * 0.5), 2)
+    //         totalAmount = totalAmount - winAmount
+    //         await userModel.updateOne(
+    //             { _id: game.bets[i].user._id },
+    //             { walletAmount: game.bets[i].user.walletAmount + winAmount },
+    //             {winningAmount: bet.user.winningAmount + winAmount}
+    //         );
+    //     }
+    // }
 
     let distributedAmount = await distributeComissionToAll(game);
     totalAmount = totalAmount - distributedAmount
@@ -513,6 +529,32 @@ async function distributeComission(user, amount) {
 function roundDown(num, decimalPlaces = 2) {
     const factor = 10 ** decimalPlaces;
     return Math.floor(num * factor) / factor;
+}
+async function calculateTotalBettingAmountForTheDay() {
+  try {
+    const today = moment().tz("Asia/Kolkata");
+    const startOfDay = today.startOf('day').toDate();
+    const endOfDay = today.endOf('day').toDate();
+
+    const games = await Game.find({
+      startTime: {
+        $gte: startOfDay,
+        $lte: endOfDay,
+      },
+    });
+    let totalBettingAmountForTheDay = 0;
+
+    for (const game of games) {
+      for (const bet of game.bets) {
+        totalBettingAmountForTheDay += bet.amount;
+      }
+    }
+
+    return totalBettingAmountForTheDay;
+  } catch (error) {
+    console.error('Error calculating total betting amount for the day:', error);
+    return 0;
+  }
 }
 
 

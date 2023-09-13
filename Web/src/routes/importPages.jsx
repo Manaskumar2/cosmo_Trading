@@ -58,5 +58,11 @@ const Terms= lazy(()=>
 import('../../src/pages/termsAndCondition/Terms'))
 const SRegister= lazy(()=>
 import('../../src/components/successfulRegistration/SuccessfulRegistration'))
+const AdminPrime= lazy(()=>
+import('../../src/pages/Admin/AdminPrime/AdminPrime'))
+const Premium= lazy(()=>
+import('../../src/pages/premium/Premium'))
+const PremiumApply= lazy(()=>
+import('../../src/pages/premiumApply/PremiumApply'))
 
-export {Login,Register,Forgot,OTP,Reset,Success,Home,Growup,ProfileComponent,Promotion,Recharge,UPI,Withdraw,BankCard,Wallet,Gift,BeginnerTutorial,About,Customer,Message,Transection,Launch,AdminHome,AdminUser,AdminRecharge,AdminWithdraw,AdminLogin,Terms,SRegister}
+export {Login,Register,Forgot,OTP,Reset,Success,Home,Growup,ProfileComponent,Promotion,Recharge,UPI,Withdraw,BankCard,Wallet,Gift,BeginnerTutorial,About,Customer,Message,Transection,Launch,AdminHome,AdminUser,AdminRecharge,AdminWithdraw,AdminLogin,Terms,SRegister,AdminPrime,Premium,PremiumApply}

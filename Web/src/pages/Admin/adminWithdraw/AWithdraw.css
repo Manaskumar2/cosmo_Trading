@@ -1,0 +1,4 @@
+.admin-Widthdraw-box p{margin-left: 1.2rem;}
+.admin-Widthdraw-box {display: flex;}
+.prime-approve-btn{border: 0; outline: none; padding: .3rem 1rem;color: aliceblue; background-color: rgb(23, 230, 23);}
+.prime-reject-btn{border: 0; outline: none; padding: .3rem 1rem;color: aliceblue; background-color: rgb(242, 70, 28);}

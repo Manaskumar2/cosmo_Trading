@@ -132,7 +132,7 @@ function Profile() {
                             </div>
                         </div> */}
                         <div className="container chart">
-                            <div className='row' onClick={()=>{navigate("/comingSoon")}}>
+                            <div className='row' onClick={()=>{navigate("/premium")}}>
                                 <div className='col-2'><div className='profile-logo-Wrapper'><img src={premium} alt="" /></div></div>
                                 <div className='col-8 lvlContainer'>Prime Membership <div className='lvl'>LV1</div></div>
                                 <div className='col-2 backImg'><img src={next} alt="" /></div>

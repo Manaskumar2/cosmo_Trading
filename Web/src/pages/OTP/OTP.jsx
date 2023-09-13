@@ -19,6 +19,7 @@ export const toastProps = {
 };
 
 function OTP() {
+    const navigate = useNavigate()
     const [otp, setOtp] = useState('');
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -29,8 +30,9 @@ function OTP() {
             });
             console.log(response);
             if(response.status===200){
-                toast.success("Welcome to our Gaming Zone", { ...toastProps });
+                // toast.success("Welcome to our Gaming Zone", { ...toastProps });
                 setOtp('');
+                navigate('/resetPassword')
                 console.log(response)
                 return response;
             }
@@ -41,7 +43,7 @@ function OTP() {
             return;
         }
     };
-    const navigate = useNavigate()
+    
     return (
 <div className="desktop">
  <div className='forgotPage'>
@@ -70,8 +72,8 @@ function OTP() {
                 <div className='otp'><p >Enter your OTP, which sent by SMS to mobile number XXXXXX4444</p></div>
                 <div className='resend'><button><img src={resend} alt="" />Resend OTP</button></div>
                 <div className='passwordChange-btn'>
-            <button className='top-btn' onClick={()=>{navigate("/resetPassword")}}>Verify</button>
-            <button className='bot-btn' onClick={()=>{navigate("/resetPassword")}}>Back</button>
+            <button className='top-btn' type='submit' >Verify</button>
+            <button className='bot-btn' onClick={()=>{navigate("/forgotPassword")}}>Back</button>
             </div>
                 </form>
                 

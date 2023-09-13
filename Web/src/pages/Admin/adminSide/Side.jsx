@@ -10,6 +10,7 @@ function Side() {
                 <Link to='/admin/user'>User</Link>
                 <Link to='/admin/recharge'> Recharge</Link>
                 <Link to='/admin/withdraw'> Withdraw</Link>
+                <Link to='/admin/prime'> Prime</Link>
 
             </ul>
        </div>

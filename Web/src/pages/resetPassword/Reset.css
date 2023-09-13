@@ -1,7 +1,7 @@
 /* .forgotPage {min-height: 100vh;} */
-.forgotPage .container-fluid {padding: 40px;}
+.forgotPage .container-fluid {padding:40px 20px; padding-top:20px;}
 .forgotPage .wrapper .logo-container {position: relative;}
-.forgotPage .wrapper .container-fluid {border-radius: 1.875rem 1.875rem 0rem 0rem;background: #003D69;min-height: 85vh; position: absolute; top:12rem;padding-top: 1.6rem;background-image: url('../../images/elipse.svg') ;background-repeat: no-repeat;}
+.forgotPage .wrapper .container-fluid {border-radius:30px 30px 0 0; position:relative; top:-64px; padding-top:1.6rem; background:#003D69 url('../../images/elipse.svg') top center no-repeat; background-size: cover;}
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -12,7 +12,7 @@ input::-webkit-inner-spin-button {
 .forgotPage .container-fluid .logo-container .logo {position: absolute;}
 .forgotPage .container-fluid .logo-container .back-btn {position: absolute;left: 0;top: 1.7rem;}
 .forgotPage .container-fluid .inputBox {margin-top: 2rem;}
-.inputBox {display: flex;padding: 15px;align-items: center;color: #fff;font-family: "Montserrat";align-self: stretch;border-radius: 5px;border: 1px solid #4e69b1;margin-bottom: 1.5rem; justify-content: space-between;}
+.inputBox {display: flex;padding: 15px;align-items: center;color: #fff;font-family: "Montserrat";align-self: stretch;border-radius: 5px;border: 1px solid #4e8db1;margin-bottom: 1.5rem; justify-content: space-between;}
 .inputBox input {color: #fff;font-family: "Montserrat";font-size: 16px;font-style: normal;font-weight: 500;line-height: normal;letter-spacing: 0.9px;background-color: transparent;border: 0;outline: none;}
 .otp p {color: #3b6aa0;text-align: center;font-family: "Montserrat";font-size: 1rem;font-style: normal;font-weight: 400;line-height: normal;}
 .wrapper{position: relative;}

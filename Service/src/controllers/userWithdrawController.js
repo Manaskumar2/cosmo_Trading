@@ -5,7 +5,7 @@ const withdrawModel = require('../models/withdrawlModel')
 
 
 
-const withdrawrequest = async (req, res) => { 
+const withdrawrequest = async (req, res) => {
 
     try {
         const { withdrawAmount } = req.body;
@@ -15,18 +15,18 @@ const withdrawrequest = async (req, res) => {
         if (!userId) return res.status(403).send({ status: false, message: "please login" })
         if (!withdrawAmount) return res.status(400).send({ status: false, message: "please enter amount" })
         if (withdrawAmount < 100) return res.status(400).send({ status: false, message: "can not withdrawbellow 100rs" })
-        
-        
+
+
         const user = await userModel.findOne({ userId: userId })
         if (user.winningAmount < withdrawAmount) return res.status(400).send({ status: false, message: "insufficient funds" })
-        
-        user.winningAmount - withdrawAmount
-        user.walletAmount - withdrawAmount
+
+        user.winningAmount -= withdrawAmount
+        user.walletAmount -= withdrawAmount
         user.save()
-        await withdrawlModel.create({withdrawAmount: withdrawAmount,userId:userId,status:"pending"})
+        await withdrawlModel.create({ withdrawAmount: withdrawAmount, userId: userId, status: "pending" })
         return res.status(200).send({ status: false, message: "waiting for payment confirmation" })
     } catch (error) {
-        return res.status(500).send({status:false, message:error.message})
+        return res.status(500).send({ status: false, message: error.message })
     }
 }
 
@@ -40,7 +40,7 @@ const getWithdrawRequest = async (req, res) => {
 }
 
 const confirmRequest = async (req, res) => {
-  try {
+    try {
         const requestId = req.params.requestId;
         const { newStatus } = req.body;
 
@@ -52,14 +52,14 @@ const confirmRequest = async (req, res) => {
         if (!request) {
             return res.status(404).send({ status: false, message: "Withdraw request not found" });
         }
-            if (request.status !== "pending") {
+        if (request.status !== "pending") {
             return res.status(400).send({ status: false, message: "Withdraw request is not pending" });
-      }
-      
-      const user = await userModel.findOne({ _id: request.userId });
+        }
 
-         if (newStatus === "confirmed") {
-           
+        const user = await userModel.findOne({ _id: request.userId });
+
+        if (newStatus === "confirmed") {
+
             request.status = newStatus;
             await request.save();
 
@@ -77,5 +77,5 @@ const confirmRequest = async (req, res) => {
     } catch (error) {
         return res.status(500).send({ status: false, message: error.message });
     }
- }
-module.exports ={withdrawrequest,getWithdrawRequest,confirmRequest}
+}
+module.exports = { withdrawrequest, getWithdrawRequest, confirmRequest }

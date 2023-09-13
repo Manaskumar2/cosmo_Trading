@@ -1,7 +1,7 @@
 import './Wallet.css'
 import back from '../../images/back-button 1.svg'
 import ear from '../../images/earphone.svg'
-import {Link} from  'react-router-dom'
+import {Link , useNavigate} from  'react-router-dom'
 import profileImg from '../../../../SVG/profile 2.svg'
 import wallet from '../../images/green-wallet.svg'
 import rupee from '../../images/rupee.svg'
@@ -18,6 +18,7 @@ import wallet1 from './wallet-2 1.svg'
 import wallet2 from './wallet-3 1.svg'
 
 function Wallet() {
+    const navigate = useNavigate()
     const auth= useRecoilValue(AuthState )
     const [userData , setUserData]=useRecoilState(UserDetails )
 
@@ -102,8 +103,8 @@ function Wallet() {
                     
                     <div className="container ">
                             <div className="row wr-btns" style={{borderTop:"0"}}>
-                                <div className="col-6 "><button className='withdraw'>Withdraw</button></div>
-                                <div className="col-6 "><button className='recharge'>Recharge</button></div>
+                                <div className="col-6 "><button className='withdraw' onClick={()=>{navigate("/withdraw")}}>Withdraw</button></div>
+                                <div className="col-6 "><button className='recharge' onClick={()=>{navigate("/recharge")}}>Recharge</button></div>
                             </div>
                         </div>
 

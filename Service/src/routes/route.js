@@ -1,12 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const { signUp, signIn,sendOtpPhone,verifyOtp,resetPassword,updateUserProfile,getUserDetails, getDownlineDetails,getReferralStats, getCommissionByDate} = require("../controllers/userController")
+const { signUp, signIn,sendOtpPhone,verifyOtp,resetPassword,updateUserProfile,getUserDetails, getDownlineDetails,getReferralStats, getCommissionByDate, walletToWalletTransactions, changePassword} = require("../controllers/userController")
 const{authentication,adminAuthorization} = require("../middlewares/authMiddleware")
 const gameController = require("../controllers/gameController")
 const { uploadQrCode, getAllImageURLs } = require('../controllers/qrCodeController')
 const { createRecharge } = require("../controllers/rechargeController")
 const { createBankAccount } = require("../controllers/withdrawAccountController");
 const { applyPremiumUser, getpremiumRequest } = require("../controllers/premiumController");
+const { withdrawrequest } = require("../controllers/userWithdrawController");
 // const multer = require('multer');
 // const path = require('path');
 
@@ -31,6 +32,8 @@ router.post("/resetPassword", resetPassword)
 router.post("/updateUserProfile", authentication, updateUserProfile)
 router.get("/getUserProfile/:UID", authentication, getUserDetails)
 router.get("/getReferralStats/:referralID", authentication, getReferralStats)
+router.post("/walletToWallet", authentication, walletToWalletTransactions)
+router.patch("/changePassword", authentication,changePassword)
 
 router.post("/bet", authentication, gameController.betController)
 router.get("/bettingHistory/:UserId", authentication, gameController.growUpUserBettingHistroy)
@@ -61,6 +64,7 @@ router.get("/getCommissionDetails/:date", authentication,getCommissionByDate)
 //...............................................withdrows****************//
 
 router.post("/createbankAccount", authentication, createBankAccount)
+router.post("/createWithdrawalRequest",authentication,withdrawrequest)
 
 
 //...............................................premium ********************************//

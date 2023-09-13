@@ -361,7 +361,38 @@ const getUserDetails = async (req, res) => {
     return res.status(500).send({ status: false, message: error.message });
   }
 };
+const getUserDetailsByUserId = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    let userDetails;
 
+    if (userId) {
+      const key = `userDetails_${userId}`;
+      userDetails = await userModel.findOne({ _id: userId });
+      if (!userDetails) {
+        return res
+          .status(400)
+          .send({ status: false, message: "Please Enter correct userId" });
+      }
+    }
+
+  
+    const commissionDetails = userDetails.commissions.map((commission) => ({
+      date: commission.date,
+      amount: commission.amount,
+    }));
+
+    return res.status(200).send({
+      status: true,
+      data: {
+        userDetails,
+        commissionDetails,
+      },
+    });
+  } catch (error) {
+    return res.status(500).send({ status: false, message: error.message });
+  }
+};
 // const getDownlineDetails = async (req, res) => {
 //   try {
 //     const userId = req.params.userId;
@@ -500,6 +531,25 @@ const getReferralStats = async (req, res) => {
     return res.status(500).json({ status: false, message: error.message });
   }
 };
+const changePassword = async (req, res) => {
+    try {
+        const userId = req.decodedToken.userId
+        const tokenData = await userModel.findOne({ _id: userId })
+        if (!tokenData) return res.status(201).send({ status: true, message: "invalid userId please logIn" })
+
+        const password = req.body.password
+      const confirmPassword = req.body.confirmPassword
+         if (!validation.isValidPwd(password)) return res.status(400).send({ status: false, message: "Password should be 8-15 characters long and must contain one of 0-9,A-Z,a-z and special characters", })
+        if (password != confirmPassword) return res.status(400).send({ status: true, message: "both password doesnot match" })
+        const hashedPassword = await bcrypt.hash(password, 10)
+        const updatedPassword = await userModel.findByIdAndUpdate({ _id:userId}, { $set: { password: hashedPassword } }, { new: true })
+        res.status(201).send({ status: true, message: "suceesfull update your password" })
+
+    } catch (error) {
+        res.status(500).send({ status: false, error: error.message })
+
+    }
+}
 
 const deactiveUser = async (req, res) => {
     try {
@@ -636,6 +686,75 @@ const getCommissionByDate = async (req, res) => {
     return res.status(500).json({ status: false, message: "Internal server error" });
   }
 };
+const walletToWalletTransactions = async (req, res) => { 
+  try {
+    const { receiverUID, amount } = req.body;
+    const senderId = req.decodedToken.userId
+    
+    if(validation.isValidObjectId(senderId))
+        if (
+            !amount ||
+            !receiverUID ||
+            isNaN(receiverUID) ||
+            isNaN(amount) 
+      
+        ) {
+            return res
+                .status(400)
+                .json({ status: false, message: "Missing parameters" });
+        }
+    const sender = await userModel.findById(senderId);
+    const receiver = await userModel.findOne({ UID: receiverUID });
+    if (amount < 100) return res.status(400).send({ status: false, message: "Amount must be greater than 100" });
+    if(amount>sender.walletAmount) return res.status(400).send({ status: false,message:"insufficient funds" });
+   
+    if (!sender || !receiver) {
+      return res.status(404).json({ message: "Sender or receiver not found." });
+    }
+
+    
+    if (sender.isPremiumUser) {
+      
+      const commission = (amount * 0.01);
+      sender.walletAmount -= amount;
+      receiver.walletAmount += amount
+
+      
+      sender.commissionAmount += commission;
+      sender.walletAmount+=commission
+      
+   
+      await sender.save();
+      await receiver.save();
+
+      return res.status(200).json({
+        message: "Transfer successful.",
+        sender: sender,
+        receiver: receiver,
+        commission: commission,
+      });
+    } else {
+      
+      sender.walletAmount -= amount;
+      receiver.walletAmount += amount;
+
+      
+      await sender.save();
+      await receiver.save();
+
+      return res.status(200).json({
+        message: "Transfer successful.",
+        sender: sender,
+        receiver: receiver,
+        amount:amount
+       
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Internal server error." });
+  }
+}
 
 module.exports = {
   signIn,
@@ -652,6 +771,9 @@ module.exports = {
   getAllUsers,
   activeUser,
   deactiveUser,
-  getCommissionByDate
+  changePassword,
+  getCommissionByDate,
+  walletToWalletTransactions,
+  getUserDetailsByUserId
 
 }

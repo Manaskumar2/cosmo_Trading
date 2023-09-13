@@ -42,14 +42,25 @@ function Adminlogin() {
     return (
         <div className='admin-login'>
             <Toaster />
-            <form onSubmit={handleSubmit} >
+            <form onSubmit={handleSubmit} className='admin-form'>
                 <h2>Welcome Admin</h2>
                 <p>Phone No</p>
                 <input type="number" placeholder='Enter Number' value={phoneNumber} onChange={(e) => { setPhone(e.target.value) }} />
                 <p>Password</p>
                 <input type="password" placeholder='Enter Password' value={password} onChange={(e) => { setPassword(e.target.value) }} />
                 <br />
-                <button type='submit' className='admin-login-btn'>Login</button>
+                <button class="btn-53" type='submit'>
+                    <div class="original">Button</div>
+                    <div class="letters">
+
+                        <span>L</span>
+                        <span>O</span>
+                        <span>G</span>
+                        <span>I</span>
+                        <span>N</span>
+                    </div>
+                </button>
+
             </form>
         </div>
     )

@@ -150,7 +150,7 @@ function Recharge() {
           <div className="col-2"><img src={rupee} alt="" /></div>
           <div className='col-10'><input value={rechargeAmount} type="number" onChange={(e)=>{setRechargeAmount(e.target.value)}} placeholder='Enter the amount'/></div>
         </div>
-        {/* <button>Recharge Now</button> */}
+
       </div>
       <div className="container">
         <div className="row recharge-Button">

@@ -17,13 +17,28 @@ import coins from '../../../../SVG/coins 1.svg'
 import { useRecoilState } from 'recoil'
 import { RechargeAmount } from '../../Atoms/RechargeAmount'
 import add from './add.svg'
+import axios from 'axios'
+import toast, { Toaster } from "react-hot-toast";
+import { AuthState } from '../../Atoms/AuthState'
+
+// import { RechargeAmount } from '../../Atoms/RechargeAmount'
+export const toastProps = {
+    position: "top-center",
+    duration: 2000,
+    style: {
+      fontSize: "1rem",
+      background: "#fff",
+      color: "#333",
+    },
+  };
 
 
 function Withdraw() {
-  const [withdraw, setWithdraw] = useState(0);
+  const auth = useRecoilValue(AuthState)
+  const [withdrawAmount, setAmount] = useState(0);
   const [selectedRoute, setSelectedRouteButton] = useState(true);
 
-  const [rechargeAmount, setRechargeAmount] = useRecoilState(RechargeAmount)
+  // const [rechargeAmount, setRechargeAmount] = useRecoilState(RechargeAmount)
   // const handleButtonClick = (buttonIndex) => {
   //   setSelectedButton(buttonIndex);
 
@@ -33,6 +48,31 @@ function Withdraw() {
     setSelectedRouteButton(buttonIndex)
   };
   const navigate = useNavigate()
+
+  const createPost = async () => {
+    try {
+        let token = auth.authToken
+        const response = await axios.post(`${import.meta.env.VITE_API_URL}/createWithdrawalRequest`,{
+          withdrawAmount
+        }, {
+            
+            headers: { Authorization: `Bearer ${token}` }
+        }
+        );
+        if (response.status === 201) {
+            console.log(response);
+            setUpiId("")
+            return response;
+        }
+    } catch (error) {
+        const errorMessage = error.response ? error.response.data.message : error.message;
+        toast.error(errorMessage || "Something went wrong", { ...toastProps });
+    }
+}
+
+// React.useEffect(()=>{handleUPI()},[])
+
+
   const userData = useRecoilValue(UserDetails)
   return (
     <div className='recharge'>
@@ -81,7 +121,7 @@ function Withdraw() {
         <div className="container" style={{ display: 'flex', justifyContent: 'center' }}>
           <div className="row inputRow">
             <div className="col-2"><img src={rupee} alt="" /></div>
-            <div className='col-10'><input value={withdraw} type="number" onChange={(e) => { setWithdraw(e.target.value) }} placeholder='Enter the amount' /></div>
+            <div className='col-10'><input value={withdrawAmount} type="number" onChange={(e) => { setAmount(e.target.value) }} placeholder='Enter the amount' /></div>
           </div>
           {/* <button>Recharge Now</button> */}
         </div>
@@ -93,7 +133,7 @@ function Withdraw() {
         </div>
         <div className="container">
           <div className="row recharge-Button">
-            <button className="col-12" onClick={() => { navigate('/upi') }}>Withdraw</button>
+            <button className="col-12" onClick={createPost}>Withdraw</button>
           </div>
         </div>
         <div className="container withdraw-chart">

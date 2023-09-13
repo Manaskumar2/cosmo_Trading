@@ -164,7 +164,31 @@ async function calculatResult(gameId) {
     
 }
 }
+const calculateTotalBettingAmountForTheDay = async (req,res)=> {
+  try {
+    const today = moment().tz("Asia/Kolkata");
+    const startOfDay = today.startOf('day').toDate();
+    const endOfDay = today.endOf('day').toDate();
 
+    const games = await Game.find({
+      startTime: {
+        $gte: startOfDay,
+        $lte: endOfDay,
+      },
+    });
+    let totalBettingAmountForTheDay = 0;
+
+    for (const game of games) {
+      for (const bet of game.bets) {
+        totalBettingAmountForTheDay += bet.amount;
+      }
+    }
+
+    return res.status(200).send({ status: true, message: "success", data: totalBettingAmountForTheDay })
+  } catch (error) {
+    console.error('Error calculating total betting amount for the day:', error);
+  }
+}
 
 async function distributeComissionToAll(game) {
   return new Promise(async function (resolve, reject) {

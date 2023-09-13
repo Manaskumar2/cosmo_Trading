@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { useEffect } from "react";
 import { Navigate, Route, Routes , useNavigate} from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { Login, Register, Forgot, OTP, Reset, Success, Home, Growup ,ProfileComponent, Promotion,Recharge, UPI, Withdraw, BankCard,Wallet,Gift,BeginnerTutorial,About,Customer,Message,Transection,Launch,Terms,SRegister} from "./importPages";
+import { Login, Register, Forgot, OTP, Reset, Success, Home, Growup ,ProfileComponent, Promotion,Recharge, UPI, Withdraw, BankCard,Wallet,Gift,BeginnerTutorial,About,Customer,Message,Transection,Launch,Terms,SRegister,Premium,PremiumApply} from "./importPages";
 import { AuthState } from "../Atoms/AuthState";
 import Loader from '../components/loader/Loader'
 // import { PrivateRoute } from "./PrivateRoute";
@@ -147,6 +147,22 @@ export const AppRoutes = () => {
                         element={
                             <Suspense fallback={<Loader/>}>
                                     <About/>
+                            </Suspense>
+                        }
+                    />
+                    <Route
+                        path="/premium"
+                        element={
+                            <Suspense fallback={<Loader/>}>
+                                    <Premium/>
+                            </Suspense>
+                        }
+                    />
+                    <Route
+                        path="/premiumApply"
+                        element={
+                            <Suspense fallback={<Loader/>}>
+                                    <PremiumApply/>
                             </Suspense>
                         }
                     />

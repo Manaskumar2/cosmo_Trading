@@ -5,7 +5,7 @@ import logo from './Logo.svg'
 
 function Launch() {
   const navigate = useNavigate()
-  const targetDate = new Date('2023-09-10T12:00:00');
+  const targetDate = new Date('2023-09-19T12:00:00');
   const [timeLeft, setTimeLeft] = useState(getTimeLeft(targetDate));
 
   useEffect(() => {

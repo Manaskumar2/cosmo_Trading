@@ -32,7 +32,7 @@ function Success() {
                     <div className='successBlue'><img src={blueLine} alt=""/></div>
                 </div>
                 <div className='login_here'>Your password has been successfully <br />reset, please <Link>Login Here</Link>  </div>
-                <div className='passwordChange-btn' style={{marginTop:'3rem'}}>
+                <div className='passwordChange-btn'>
             <button className='top-btn' onClick={()=>{navigate('/signIn')}}>Login</button>
             </div>
             </div>
