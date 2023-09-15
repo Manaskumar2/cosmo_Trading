@@ -3,11 +3,12 @@
   padding: 0;
   box-sizing: border-box;
 }
-.activate{background-color: rgb(43, 224, 43);color: #fff;}
-.deactivate{background-color: rgb(200, 59, 44);color: #fff;}
+.admin-rightSection{padding: 1.5rem;background-color:#001C3E;width: 100%;}
+.activate{background-color: rgb(43, 224, 43);color: #fff; padding: .3rem 1rem;border: 0;outline: none;width: 8rem;}
+.deactivate{background-color: rgb(200, 59, 44);color: #fff; padding: .3rem 1rem;border: 0;outline: none;width: 8rem;}
 .ac-de-btn{ display: flex;gap: 1.5rem; }
 .ac-de-btn button{padding: .5rem 1.2rem; border: 0; outline: none; border-radius: 10px; }
-.admin-rightSection{margin-top: 5rem;}
+.admin-rightSection{margin-top: 3rem;margin-left: 18rem;min-height: 100vh;}
 .flex-div{display: flex;}
 .ProNav{background: #001C3E; background-image: url('../../images/belips.png');background-position: bottom; background-repeat: no-repeat; padding:15px 1.5rem;border-bottom: 1px solid #133B77;}
 .ProNav .row .col-8{color: #FFF;text-align: center;font-family: 'Montserrat';font-size: 1.1rem;font-weight: 500;letter-spacing: 0.00688rem;text-transform: capitalize;}
@@ -65,6 +66,23 @@ a{text-decoration: none;}
   font-weight: 500;
   line-height: normal;
   letter-spacing: 0.9px;
+}
+/* For Chrome, Safari, and newer versions of Edge */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+/* For Firefox */
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+/* For older versions of Edge */
+input[type="number"]::-ms-inner-spin-button,
+input[type="number"]::-ms-outer-spin-button {
+    appearance: none;
 }
 
 @media (min-width:500px){

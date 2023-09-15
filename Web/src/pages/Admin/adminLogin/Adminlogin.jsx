@@ -32,6 +32,7 @@ function Adminlogin() {
                 setPhone('');
                 setPassword('');
                 navigate('/admin/home')
+                window.location.reload();
                 return response;
             }
         } catch (error) {
@@ -49,17 +50,11 @@ function Adminlogin() {
                 <p>Password</p>
                 <input type="password" placeholder='Enter Password' value={password} onChange={(e) => { setPassword(e.target.value) }} />
                 <br />
-                <button class="btn-53" type='submit'>
-                    <div class="original">Button</div>
-                    <div class="letters">
-
-                        <span>L</span>
-                        <span>O</span>
-                        <span>G</span>
-                        <span>I</span>
-                        <span>N</span>
-                    </div>
-                </button>
+                
+                <button class="Btn" type='submit'>
+  LOGIN
+  
+</button>
 
             </form>
         </div>

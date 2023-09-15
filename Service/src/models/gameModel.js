@@ -45,6 +45,10 @@ const GameSchema = new mongoose.Schema({
   , gameUID: {
      type: Number,
 
+  },
+  winnerGroup: {
+    type: String,
+    default:null
   }
 },{timestamps:true});
 

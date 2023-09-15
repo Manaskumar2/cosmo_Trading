@@ -35,7 +35,7 @@ function GameSection() {
                             </div>
                         </div>
                         </Link>
-                        <Link to='/comingSoon'>
+                        <Link to='/riseUp'>
                         <div className='game-banner trx'>
                         <img src={game2} alt="" />
                         <div className="game_user_row">

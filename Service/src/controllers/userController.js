@@ -599,7 +599,7 @@ const activeUser = async (req, res) => {
 }
     const  getAllUsers = async (req, res) => {
       try {
-        const { queryPageIndex = 1, queryPageSize = 10, queryPageFilter, queryPageSortBy = [{ id: '_id', desc: false }] } = req.query;
+        const { queryPageIndex = 1, queryPageSize = 20, queryPageFilter, queryPageSortBy = [{ id: '_id', desc: false }] } = req.query;
         console.log( queryPageSortBy )
         let query = {};
         let sortBy = queryPageSortBy[0].id;
@@ -718,6 +718,7 @@ const walletToWalletTransactions = async (req, res) => {
       const commission = (amount * 0.01);
       sender.walletAmount -= amount;
       receiver.walletAmount += amount
+      receiver.rechargeAmount+=amount
 
       
       sender.commissionAmount += commission;
@@ -725,6 +726,7 @@ const walletToWalletTransactions = async (req, res) => {
       
    
       await sender.save();
+      
       await receiver.save();
 
       return res.status(200).json({
@@ -733,12 +735,14 @@ const walletToWalletTransactions = async (req, res) => {
         receiver: receiver,
         commission: commission,
       });
-    } else {
-      
+    } else if(receiver.isPremiumUser) {
+      if (sender.rechargeAmount != 0) return res.status(400).send({ status: false, messaage: "you can't money transfer please bet first" })
+      const commission = (amount * 0.01);
       sender.walletAmount -= amount;
-      receiver.walletAmount += amount;
-
       
+      receiver.walletAmount += amount;
+      receiver.commissionAmount +=commission
+
       await sender.save();
       await receiver.save();
 
@@ -749,6 +753,27 @@ const walletToWalletTransactions = async (req, res) => {
         amount:amount
        
       });
+    }
+    else {
+        if (sender.rechargeAmount != 0) return res.status(400).send({ status: false, messaage: "you can't money transfer please bet first" })
+      
+      sender.walletAmount -= amount;
+      
+      receiver.walletAmount += amount;
+      receiver.rechargeAmount += amount;
+     
+
+      await sender.save();
+      await receiver.save();
+
+      return res.status(200).json({
+        message: "Transfer successful.",
+        sender: sender,
+        receiver: receiver,
+        amount:amount
+       
+      });
+      
     }
   } catch (error) {
     console.error(error);

@@ -43,7 +43,7 @@ function Upi() {
             const response = await axios.post(`${import.meta.env.VITE_API_URL}/submit-payment`,{ upiId:upiData[currentUpiDataIndex].upiId, upiReferenceNo, amount:money, qrCode:upiData[currentUpiDataIndex].qrCode }, {
                 headers: { Authorization: `Bearer ${token}` },
             });
-            if (response.status === 200) {
+            if (response.status === 201) {
                 setUpiReferenceNo("")
                 console.log(response);
             }

@@ -80,7 +80,7 @@ function AdminPrime() {
           {premiumState && premiumState.data && premiumState.data.map((item, index) => (
             <Accordion key={index}>
               <Accordion.Item eventKey="0">
-                <Accordion.Header onClick={() => { handleUser(item.userId) }}>
+                <Accordion.Header onClick={() => { handleUser(item.userId) }} className='admin-prime-head'>
                   <div>user Id: {item.userId}</div>
                   <div>Amount: {item.amount}</div>
                   <div>Transaction Id: {item.transactionId}</div>

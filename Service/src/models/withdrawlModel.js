@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const withdrawSchema = new mongoose.Schema({
     withdrawAmount: {
         type: Number,
-        min: 100,
+        min: 500,
         required: true
     },
     userId: {

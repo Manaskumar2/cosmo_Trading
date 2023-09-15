@@ -101,7 +101,7 @@ function AdminWithdraw() {
                 <Accordion.Body>
                   <div className='flex-div'>
 
-                    <div>
+                    <div className='admin-withdraw-data'>
                       <h3>User Details</h3>
                       <p>UID: {user && user.data.data.userDetails.UID}</p>
                       <p>Phone: {user && user.data.data.userDetails.phoneNumber}</p>
@@ -112,7 +112,7 @@ function AdminWithdraw() {
                     </div>
                     <div style={{ marginLeft: "6rem" }}>
                       <h3>Bank Data</h3>
-                      {bankData && <div>
+                      {bankData && <div className='admin-withdraw-data'>
                         <p>Account Holder Name: {bankData.data.data.accountHolderName}</p>
                         <p>Email: {bankData.data.data.email}</p>
                         <p>Bank Name: {bankData.data.data.bankName}</p>
@@ -120,7 +120,8 @@ function AdminWithdraw() {
                         <p>Ifsc Code: {bankData.data.data.ifscCode}</p>
                         <p>Branch Address: {bankData.data.data.bankBranchAddress}</p>
                         <p>City: {bankData.data.data.city}</p>
-                        <button onClick={() => { handleConfirm(item._id, "confirmed") }} className='prime-approve-btn'>Approve</button> <button onClick={() => { handleConfirm(item._id, "cancelled") }} className='prime-reject-btn'>Reject</button>
+                        <div className='flex-div'><button onClick={() => { handleConfirm(item._id, "confirmed") }} className='prime-approve-btn'>Approve</button> <button onClick={() => { handleConfirm(item._id, "cancelled") }} className='prime-reject-btn'>Reject</button></div>
+                        
                       </div>}
                     </div>
                   </div>

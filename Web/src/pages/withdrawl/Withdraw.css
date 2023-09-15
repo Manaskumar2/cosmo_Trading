@@ -47,6 +47,23 @@ letter-spacing: 0.02rem;display: flex; justify-content: center;align-items: cent
 .profile-logo-Wrapper{display: flex;width: 2.5rem;height: 2.5rem;padding: 0.625rem;
 justify-content: center;align-items: center;border-radius: 6.25rem;background: #17478F;}
 .withdraw-chart .row .col-10{color: #FFF;font-family: 'Montserrat';font-size: 1rem;font-style: normal;font-weight: 400;letter-spacing: 0.02rem;}
+/* For Chrome, Safari, and newer versions of Edge */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+/* For Firefox */
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+/* For older versions of Edge */
+input[type="number"]::-ms-inner-spin-button,
+input[type="number"]::-ms-outer-spin-button {
+    appearance: none;
+}
 
 @media(min-width:750px){
     .recharge{width: 30vw;display: block; margin: auto;}

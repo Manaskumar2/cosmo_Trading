@@ -4,10 +4,10 @@ const { signUp, signIn,sendOtpPhone,verifyOtp,resetPassword,updateUserProfile,ge
 const{authentication,adminAuthorization} = require("../middlewares/authMiddleware")
 const gameController = require("../controllers/gameController")
 const { uploadQrCode, getAllImageURLs } = require('../controllers/qrCodeController')
-const { createRecharge } = require("../controllers/rechargeController")
+const { createRecharge, getRechargeHistory } = require("../controllers/rechargeController")
 const { createBankAccount } = require("../controllers/withdrawAccountController");
 const { applyPremiumUser, getpremiumRequest } = require("../controllers/premiumController");
-const { withdrawrequest } = require("../controllers/userWithdrawController");
+const { withdrawrequest, withdrawalHistory } = require("../controllers/userWithdrawController");
 // const multer = require('multer');
 // const path = require('path');
 
@@ -36,27 +36,17 @@ router.post("/walletToWallet", authentication, walletToWalletTransactions)
 router.patch("/changePassword", authentication,changePassword)
 
 router.post("/bet", authentication, gameController.betController)
-router.get("/bettingHistory/:UserId", authentication, gameController.growUpUserBettingHistroy)
+router.get("/bettingHistory/:userId", authentication, gameController.growUpUserBettingHistory)
 router.get('/getDownlinerDetails/:userId', authentication, getDownlineDetails)
 router.get('/getgame/:duration', authentication, gameController.getGame)
-router.get("/getSuccessFullGameHistory", authentication, gameController.getGameHistory)
+router.get("/getSuccessFullGameHistory/:duration", authentication, gameController.getGameHistory)
 router.get('/getAllImageURLs', authentication, getAllImageURLs);
 
 
 
 router.post('/submit-payment',authentication,createRecharge)
 
-
-
-
-
-
-
-router.post("/uploadQrcode", authentication, uploadQrCode)
-
-
-
-// router.patch('/payment-request', authentication, adminAuthorization, getpaymentRequest)
+router.get("/rechargeHistory", authentication,getRechargeHistory)
 
 router.get("/getCommissionDetails/:date", authentication,getCommissionByDate)
 
@@ -64,7 +54,8 @@ router.get("/getCommissionDetails/:date", authentication,getCommissionByDate)
 //...............................................withdrows****************//
 
 router.post("/createbankAccount", authentication, createBankAccount)
-router.post("/createWithdrawalRequest",authentication,withdrawrequest)
+router.post("/createWithdrawalRequest", authentication, withdrawrequest)
+router.get("/getWithdrawalHistory/:userId", authentication,withdrawalHistory)
 
 
 //...............................................premium ********************************//

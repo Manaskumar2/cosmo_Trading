@@ -1,6 +1,9 @@
 const userModel = require('../models/userModel');
 const withdrawlModel = require('../models/withdrawlModel');
 const withdrawModel = require('../models/withdrawlModel')
+const rechargeModel = require('../models/rechargeModel');
+
+const mongoose = require('mongoose');
 
 
 
@@ -10,19 +13,28 @@ const withdrawrequest = async (req, res) => {
     try {
         const { withdrawAmount } = req.body;
         const userId = req.decodedToken.userId
-
+       
 
         if (!userId) return res.status(403).send({ status: false, message: "please login" })
         if (!withdrawAmount) return res.status(400).send({ status: false, message: "please enter amount" })
-        if (withdrawAmount < 100) return res.status(400).send({ status: false, message: "can not withdrawbellow 100rs" })
-
-
-        const user = await userModel.findOne({ userId: userId })
-        if (user.winningAmount < withdrawAmount) return res.status(400).send({ status: false, message: "insufficient funds" })
-
+      if (withdrawAmount < 500) return res.status(400).send({ status: false, message: "can not withdraw bellow 500rs" })
+      
+      const user = await userModel.findOne({ userId: userId })
+      const totalwithdraw= user.winningAmount+user.commissionAmount
+      if (totalwithdraw< withdrawAmount) return res.status(400).send({ status: false, message: "insufficient funds" })
+      if (user.rechargeAmount != 0) return res.status(400).send({ status: false, message: "you  need to be bet " + user.rechargeAmount + " for withdraw " })
+      
+      if (user.winningAmount > withdrawModel) {
         user.winningAmount -= withdrawAmount
         user.walletAmount -= withdrawAmount
         user.save()
+      }
+      else if (user.winningAmount < withdrawAmount) {
+        const remainingAmount = withdrawModel - user.winningAmount
+        user.commissionAmount -= remainingAmount
+        user.walletAmount -= withdrawAmount
+        user.save()
+      }
         await withdrawlModel.create({ withdrawAmount: withdrawAmount, userId: userId, status: "pending" })
         return res.status(200).send({ status: false, message: "waiting for payment confirmation" })
     } catch (error) {
@@ -78,4 +90,62 @@ const confirmRequest = async (req, res) => {
         return res.status(500).send({ status: false, message: error.message });
     }
 }
-module.exports = { withdrawrequest, getWithdrawRequest, confirmRequest }
+
+function getTodayDate() {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, '0');
+  const day = String(today.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+const withdrawalHistory = async (req, res) => { 
+  try {
+      const userId = req.params.userId;
+      console.log(userId);
+      
+     const totalWithdraw = await withdrawModel.find({
+  userId: userId,
+  status: 'confirmed'
+     });
+      
+  let totalWithdrawAmount = 0;
+
+for (const withdrawal of totalWithdraw) {
+  totalWithdrawAmount += withdrawal.withdrawAmount;
+}
+const todayDate = getTodayDate();
+
+const todayConfirmedWithdrawals = await withdrawModel.find({
+  userId: userId,
+  status: 'confirmed',
+  createdAt: {
+    $gte: new Date(todayDate + 'T00:00:00Z'),
+    $lte: new Date(todayDate + 'T23:59:59Z')
+  }
+});
+
+let todayTotalWithdrawAmount = 0;
+
+for (const withdrawal of todayConfirmedWithdrawals) {
+  todayTotalWithdrawAmount += withdrawal.withdrawAmount;
+}
+
+
+    const withdrawalHistory = await withdrawModel.find({
+      userId: userId,
+    });
+
+
+    res.json({
+      totalWithdrawAmount,
+    todayTotalWithdrawAmount,
+      withdrawalHistory
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+module.exports = { withdrawrequest, getWithdrawRequest, confirmRequest,withdrawalHistory }

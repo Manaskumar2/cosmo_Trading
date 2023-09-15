@@ -67,15 +67,16 @@ function TimeSection1() {
                         if (prevTime > 0) {
                             if (Math.floor(prevTime / 60) === 0 && prevTime % 60 === 6) {
                                 setCountDown(true);
-                                console.log(coutDown);
+                                
                             }
                             return prevTime - 1;
                         } else {
                             clearInterval(interval);
     
-                            if (Math.floor(prevTime / 60) === 0 && prevTime % 60 === 0) {
+                            if (prevTime === 0) {
                                 handleGameData();
                             }
+                            
     
                             return 0;
                         }
@@ -88,8 +89,11 @@ function TimeSection1() {
     }, [endTime, setCountDown]);  
     
     useEffect(() => {
-        console.log(coutDown);
-    }, [coutDown]);
+        const intervalId = setInterval(handleGameData, 5000);
+        return () => {
+          clearInterval(intervalId);
+        };
+      }, []); 
     
     const minutes = Math.floor(remainingTime / 60);
     const seconds = remainingTime % 60;

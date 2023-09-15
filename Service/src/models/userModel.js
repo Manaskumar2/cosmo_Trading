@@ -78,6 +78,15 @@ const userSchema = new mongoose.Schema({
   isDeleted: {
     type: Boolean,
     default: false,
+  },
+  bettingAmount: {
+    type: Number,
+    required: true,
+    default:0
+  },
+  rechargeAmount: {
+    type: Number,
+    default: 0
   }
 }, { timestamps: true });
 

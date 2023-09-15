@@ -42,29 +42,40 @@ async function calculatResult(gameId) {
     let totalAmount = bigAmount + smallAmount;
     if (bigAmount - smallAmount > 0) {
       winnerGroup = "small";
+      
+      
     }
+    game.winnerGroup = winnerGroup.toUpperCase()
+    await game.save()
 
     if (winnerGroup == "small") {
+      ;
       smallUsers.forEach(async (bet) => {
         let winAmount = roundDown(bet.amount * 1.94, 2);
         totalAmount = totalAmount - winAmount;
         await userModel.updateOne(
           { _id: bet.user._id },
-          { walletAmount: bet.user.walletAmount + winAmount }
+          {
+            walletAmount: bet.user.walletAmount + winAmount,
+            winningAmount: bet.user.winningAmount + winAmount
+          }
         );
       });
+      
     } else if (winnerGroup == "big") {
       bigUsers.forEach(async (bet) => {
         let winAmount = roundDown(bet.amount * 1.94, 2);
         totalAmount = totalAmount - winAmount;
         await userModel.updateOne(
           { _id: bet.user._id },
-          { walletAmount: bet.user.walletAmount + winAmount }
+          {
+            walletAmount: bet.user.walletAmount + winAmount,
+            winningAmount:bet.user.winningAmount+winAmount
+          }
         );
       });
     }
-    game.winner = winnerGroup.toUpperCase()
-    await game.save();
+    
 
     let distributedAmount = await distributeComissionToAll(game);
     let compnayFund = totalAmount - distributedAmount;
@@ -84,11 +95,17 @@ async function calculatResult(gameId) {
     let totalAmount = bigAmount + smallAmount;
     if (bigUsers.length - smallUsers.length > 0) {
       winnerGroup = "big";
+      
     } else if (bigUsers.length == smallUsers.length) {
       winnerGroup = parseInt(Math.random() * 10000) % 2 == 0 ? "small" : "big";
+     
     }
 
+    game.winnerGroup = winnerGroup.toUpperCase();
+    await game.save();
+
     if (winnerGroup == "small") {
+  
       smallUsers.forEach(async (bet) => {
         let winAmount = roundDown(bet.amount * 1.94, 2);
         totalAmount = totalAmount - winAmount;
@@ -98,6 +115,7 @@ async function calculatResult(gameId) {
           {winningAmount: bet.user.winningAmount + winAmount}
         );
       });
+      
     } else if (winnerGroup == "big") {
       bigUsers.forEach(async (bet) => {
         let winAmount = roundDown(bet.amount * 1.94, 2);
@@ -109,6 +127,7 @@ async function calculatResult(gameId) {
 
         );
       });
+    
     }
 
     let distributedAmount = await distributeComissionToAll(game);
@@ -125,15 +144,24 @@ async function calculatResult(gameId) {
     await wallet.save();
     // console.log("remaining money is ", totalAmount - distributedAmount);
   } else if (bigAmount == 0 || smallAmount == 0) {
+    let winnerGroup = "small";
+    if (bigAmount > 0) {
+      winnerGroup = "big";
+    }
+    else if (smallAmount > 0) { 
+      winnerGroup = "small";
+    }
   let totalAmount = smallAmount + bigAmount;
   for (const bet of game.bets) {
     let winAmount = roundDown(bet.amount * 0.70, 2);
     totalAmount -= winAmount;
     await userModel.updateOne(
       { _id: bet.user._id },
-      { $inc: { walletAmount: winAmount } }
+       { walletAmount: bet.user.walletAmount + winAmount },
+       {winningAmount: bet.user.winningAmount + winAmount}
     );
-  }
+    }
+    
   let distributedAmount = await distributeComissionToAll(game);
     let compnayFund = totalAmount - distributedAmount;
     const totalBettingAmount = bigAmount + smallAmount;
@@ -160,9 +188,12 @@ async function calculatResult(gameId) {
 
   wallet.everydayBettingAmount += totalBettingAmount;
 
-  await wallet.save();
+    await wallet.save();
+    game.winnerGroup = winnerGroup.toUpperCase();
+    await game.save();
     
-}
+  }
+  
 }
 const calculateTotalBettingAmountForTheDay = async (req,res)=> {
   try {
@@ -348,7 +379,8 @@ const startAndCheckGame = async (duration) => {
         duration: duration,
         startTime: currentDate, 
         endTime: currentDate.clone().add(duration, "m"), 
-        gameUID: await generateUniqueNumber()
+        gameUID: await generateUniqueNumber(),
+
       });
       await Game.create({
         duration: duration,
@@ -424,21 +456,28 @@ const betController = async (req, res) => {
         .json({ status: false, message: "Insufficient funds" });
     }
 
-        const hasBet = game.bets.some(bet => bet.user.toString() === user._id.toString());
+    //     const hasBet = game.bets.some(bet => bet.user.toString() === user._id.toString());
 
-    if (hasBet) {
-      return res.status(400).json({ status: false, message: "User already placed a bet in this game" });
-    }
+    // if (hasBet) {
+    //   return res.status(400).json({ status: false, message: "User already placed a bet in this game" });
+    // }
 
     let walletAmount = user.walletAmount - amount;
+    let bettingAmount = user.bettingAmount + amount;
+    let rechargeAmount = user.rechargeAmount-amount;
     game.bets.push({ user: user._id, amount, group });
+
 
     await game.save(
       
     );
     await userModel.updateOne(
       { _id: user._id },
-      { walletAmount: walletAmount }
+      {
+        walletAmount: walletAmount,
+        bettingAmount: bettingAmount,
+        rechargeAmount:rechargeAmount
+      }
     );
 
     res.status(201).json({ status: true, message: "Bet placed successfully" });
@@ -449,54 +488,155 @@ const betController = async (req, res) => {
 };
 
 
-const growUpUserBettingHistroy = async (req, res) => {
-   try {
-     const userId = req.params.userId;
-      const page = parseInt(req.query.page) || 1;
-     const limit = parseInt(req.query.limit) || 10;
+// const growUpUserBettingHistroy = async (req, res) => {
+//    try {
+//      const userId = req.params.userId;
+//       const page = parseInt(req.query.page) || 1;
+//      const limit = parseInt(req.query.limit) || 10;
      
 
 
-     const games = await Game.find({ 'bets.user': userId })
-       .sort({ createdAt: -1 })
-       .skip((page - 1) * limit)
+//      const games = await Game.find({ 'bets.user': userId })
+//        .sort({ createdAt: -1 })
+//        .skip((page - 1) * limit)
+//       .limit(limit)
+//       .exec();
+
+//     const history = games.map(game => {
+//       const userBet = game.bets.find(bet => bet.user.toString() === userId);
+
+//       if (!userBet) {
+//         return res.status(404).send({status:false,message:"you are not  beeting the game yet"})
+//       }
+
+//       const startTime = moment(game.startTime);
+//       const endTime = moment(game.endTime);
+//       const duration = moment.duration(endTime.diff(startTime)).asMinutes();
+
+//       return {
+//         gameId: game._id,
+//         startTime: startTime.format(),
+//         endTime: endTime.format(),
+//         duration: duration,
+//         amount: userBet.amount,
+//         group: userBet.group
+//       };
+//     }).filter(entry => entry !== null);
+//     const count =await Game.countDocuments({ 'bets.user': userId })
+
+//      res.status(200).json({
+//       currentPage: page,
+//       totalPages: Math.ceil(count / limit),
+//       // totalGames: gamesCount,
+//       history: history
+//     });
+//   } catch (error) {
+//     console.error('Error fetching user gameplay history:', error);
+//     res.status(500).json({ error: 'An error occurred while fetching user gameplay history' });
+//   }
+
+// }
+const growUpUserBettingHistory = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+
+    if (!userId) return res.status(400).send({ status: false, message: "please provide userId" });
+    
+    const user = await userModel.findOne({ _id: userId })
+    if (!user) return res.status(400).send({ status: false, message: "user not found" });
+
+    const games = await Game.find({ 'bets.user': userId })
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * limit)
       .limit(limit)
       .exec();
 
-    const history = games.map(game => {
-      const userBet = game.bets.find(bet => bet.user.toString() === userId);
+    const history = [];
+
+
+    for (const game of games) {
+      const userBet = game.bets.find((bet) => bet.user.toString() === userId);
+      console.log(userBet)
 
       if (!userBet) {
-        return res.status(404).send({status:false,message:"you are not  beeting the game yet"})
+        // User did not bet on this game, skip it.
+        continue;
       }
 
       const startTime = moment(game.startTime);
       const endTime = moment(game.endTime);
       const duration = moment.duration(endTime.diff(startTime)).asMinutes();
 
-      return {
-        gameId: game._id,
-        startTime: startTime.format(),
-        endTime: endTime.format(),
-        duration: duration,
-        amount: userBet.amount,
-        group: userBet.group
-      };
-    }).filter(entry => entry !== null);
-    const count =await Game.countDocuments({ 'bets.user': userId })
+      // Check if the user's bet was on the "small" group and the "small" group won.
+      if (userBet.group === 'small' && game.winnerGroup === 'SMALL') {
+        history.push({
+          gameId: game.gameUID,
+          startTime: startTime.format(),
+          endTime: endTime.format(),
+          duration: duration,
+          amount: userBet.amount,
+          group: userBet.group,
+          result: 'win',
+        });
+      }
 
-     res.status(200).json({
+    
+      if (userBet.group === 'big' && game.winnerGroup === 'BIG') {
+        history.push({
+          gameId: game.gameUID,
+          startTime: startTime.format(),
+          endTime: endTime.format(),
+          duration: duration,
+          amount: userBet.amount,
+          group: userBet.group,
+          result: 'win',
+        });
+      }
+
+      // Check if the user's bet did not win.
+      if (userBet.group === 'small' && game.winnerGroup === 'BIG') {
+        history.push({
+          gameId: game.gameUID,
+          startTime: startTime.format(),
+          endTime: endTime.format(),
+          duration: duration,
+          amount: userBet.amount,
+          group: userBet.group,
+          result: 'lose', 
+        });
+      }
+
+      // Check if the user's bet did not win.
+      if (userBet.group === 'big' && game.winnerGroup === 'SMALL') {
+        history.push({
+          gameId: game.gameUID,
+          startTime: startTime.format(),
+          endTime: endTime.format(),
+          duration: duration,
+          amount: userBet.amount,
+          group: userBet.group,
+          result: 'lose', 
+        });
+      }
+    }
+
+    const count = await Game.countDocuments({ 'bets.user': userId });
+
+    res.status(200).json({
       currentPage: page,
       totalPages: Math.ceil(count / limit),
-      // totalGames: gamesCount,
-      history: history
+      history: history,
     });
   } catch (error) {
     console.error('Error fetching user gameplay history:', error);
-    res.status(500).json({ error: 'An error occurred while fetching user gameplay history' });
+    res
+      .status(500)
+      .json({ error: 'An error occurred while fetching user gameplay history' });
   }
+};
 
-}
 
 const getGame = async (req, res) => { 
   try {
@@ -519,53 +659,56 @@ const getGame = async (req, res) => {
   }
 }
 
-const getGameHistory = async (req, res) => { 
+const getGameHistory = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
+    const duration = parseInt(req.params.duration);
 
+    
     const skip = (page - 1) * limit;
 
-    const gamesWithSuccessfulBets = await Game.aggregate([
-      {
-        $match: {
-          'bets.amount': { $gt: 0 },
-        },
-      },
-      {
-        $sort: {
-          createdAt: -1,
-        },
-      },
-      {
-        $skip: skip,
-      },
-      {
-        $limit: limit,
-      },
-      {
-        $project: {
-          _id: 0,
-          gameUID: 1,
-          winner: 1,
-        },
-      },
-    ]);
+    const gamesWithSuccessfulBets = await Game.find({ duration: duration })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
 
-   return res.status(200).send({status:true, message:"Success",data:gamesWithSuccessfulBets});
+    return res.status(200).send({ status: true, message: "Success", data: gamesWithSuccessfulBets });
   } catch (error) {
     console.error('Error fetching games with successful bets:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
+const deleteGames = async (req, res) => {
+  try {
+    const deletedGames = await Game.deleteMany({ 'bets': { $size: 0 } });
+
+    if (deletedGames.deletedCount > 0) {
+      return res.status(200).json({
+        status: true,
+        message: `${deletedGames.deletedCount} games with empty bets array deleted successfully.`,
+      });
+    } else {
+      return res.status(404).json({
+        status: false,
+        message: 'No games with empty bets array found.',
+      });
+    }
+  } catch (error) {
+    console.error('Error deleting games:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
 
 
 module.exports = {
   betController,
-  growUpUserBettingHistroy,
+  // growUpUserBettingHistroy,
+  growUpUserBettingHistory ,
   getGame,
-  getGameHistory
+  getGameHistory,
+  deleteGames
 
 };
 

@@ -1,0 +1,13 @@
+.ProNav{background: #001C3E; background-image: url('../../images/belips.png');background-position: bottom; background-repeat: no-repeat; padding:15px 1.5rem;border-bottom: 1px solid #133B77;}
+.ProNav .row .col-8{color: #FFF;text-align: center;font-family: 'Montserrat';font-size: 1.1rem;font-weight: 500;letter-spacing: 0.00688rem;text-transform: capitalize;}
+.withdrawHistoryPage{background: #001C3E;min-height: 100vh;}
+.rechargeHistory-body{padding: 1rem;}
+.rechargeHistory-body .container .row{border-bottom: 1px solid #2C6E9E;color: #fff;padding: 1rem 0;font-family: Montserrat;}
+.rechargeHistory-body .container .row .col-4{text-align: center;}
+
+
+
+
+@media(min-width:768px){
+    .withdrawHistoryPage{width: 30vw; margin: auto;}
+}

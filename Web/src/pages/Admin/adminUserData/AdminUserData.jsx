@@ -10,7 +10,7 @@ import Accordion from 'react-bootstrap/Accordion';
 import './User.css'
 function AdminUserData() {
   const authData = useRecoilValue(AuthState)
-  const [queryPageIndex, setQueryPageIndex] = useState(2)
+  const [queryPageIndex, setQueryPageIndex] = useState(1)
   const [queryPageFilter, setqueryPageFilter] = useState('')
   const [queryPageSortBy, setqueryPageSortBy] = useState([])
   const [allUser, setAllUser] = useRecoilState(AllUserData)
@@ -108,29 +108,39 @@ function AdminUserData() {
         <div className='admin-rightSection'>
           <input type="number" className='user-input' value={queryPageFilter} onChange={(e)=>{setqueryPageFilter(e.target.value)}} placeholder='Search Number'/>
           
-          {allUser && allUser.data.response.getUsers.map((user, index) => (
-            <div key={index}>
-              <Accordion >
-                <Accordion.Item eventKey={index}>
-                  <Accordion.Header>
-                    <div>UID: {user.UID}</div>
-                    <div style={{ marginLeft: "6rem" }}>Phone:{user.phoneNumber}</div>
-                  </Accordion.Header>
-                  <Accordion.Body>
-                    <div>Total Downline:{user.downline.length} </div>
-                    <div>Total Commission Earned:{user.commissionAmount}</div>
-                    <div>Level:{user.level}</div>
-                    <div>Wallet Ammount:{user.walletAmount}</div>
-                    <div>Winning Ammount:{user.winningAmount}</div>
-                    <div style={{ marginLeft: "6rem" }} className='ac-de-btn'>
-                      <button onClick={() => { handleActive(user._id) }} className='activate'>Activate</button>
-                      <button onClick={() => { handleDeactive(user._id) }} className='deactivate'>Deactivate</button>
-                    </div>
-                  </Accordion.Body>
-                </Accordion.Item>
-              </Accordion>
-            </div>
-          ))}
+          <table>
+  <thead>
+    <tr className='table-row'>
+      <th>UID</th>
+      <th>Phone</th>
+      <th>Total Downline</th>
+      <th>Total Commission Earned</th>
+      <th>Level</th>
+      <th>Wallet Amount</th>
+      <th>Winning Amount</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {allUser &&
+      allUser.data.response.getUsers.map((user, index) => (
+        <tr key={index} className='table-row'>
+          <td>{user.UID}</td>
+          <td>{user.phoneNumber}</td>
+          <td>{user.downline.length}</td>
+          <td>{user.commissionAmount}</td>
+          <td>{user.level}</td>
+          <td>{user.walletAmount}</td>
+          <td>{user.winningAmount}</td>
+          <td>
+            <button onClick={() => handleActive(user._id)} className='activate'>Activate</button>
+            <button onClick={() => handleDeactive(user._id)} className='deactivate'>Deactivate</button>
+          </td>
+        </tr>
+      ))}
+  </tbody>
+</table>
+
           <div className='inc-dec-btns'>
             <button onClick={handleDecrement}>-</button>
             <div>{queryPageIndex}/{totalPages}</div>

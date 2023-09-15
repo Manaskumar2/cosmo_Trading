@@ -12,18 +12,18 @@ import { AuthState } from '../../Atoms/AuthState'
 import { UserDetails } from '../../Atoms/UserDetails'
 import { useRecoilValue, useRecoilState } from 'recoil'
 import axios from 'axios'
- import { useEffect } from 'react'
+ import { useEffect,useState } from 'react'
  import next from '../../../../SVG/next.svg'
 import wallet1 from './wallet-2 1.svg'
 import wallet2 from './wallet-3 1.svg'
-
+import { WithdrawHistory } from '../../Atoms/WithdrawHistory'
 function Wallet() {
     const navigate = useNavigate()
     const auth= useRecoilValue(AuthState )
     const [userData , setUserData]=useRecoilState(UserDetails )
+    const [withdrawHistory , setWithdrawHistory]=useRecoilState(WithdrawHistory)
 
     const handleUserdata = async () => {
-
         try {
             let token = auth.authToken
             let UID = auth.UID
@@ -43,6 +43,27 @@ function Wallet() {
         }
         useEffect(()=>{handleUserdata()},[])
     }
+    const handleWithdrawHistory = async () => {
+        try {
+            let token = auth.authToken
+            let userId = auth._id
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/getWithdrawalHistory/${userId}`,  {
+                headers: { Authorization: `Bearer ${token}` }
+            }
+            );
+            if (response.status === 200) {
+                // toast.success("got user money data", { ...toastProps });
+                console.log(response);
+                setWithdrawHistory(response)
+                return response;
+            }
+        } catch (error) {
+            const errorMessage = error.response ? error.response.data.message : error.message;
+
+        }
+        
+    }
+    useEffect(()=>{handleWithdrawHistory()},[])
     return (
         <div className='WalletContainer'>
             
@@ -87,11 +108,13 @@ function Wallet() {
                             <div className="row history-row">
                                 <div className="col-6">
                                     <h6>History Withdraw</h6>
-                                    <p>&#8377; 20,000</p>
+                                    {withdrawHistory && <p>&#8377; {withdrawHistory.data.totalWithdrawAmount}</p>}
+                                    
+                                    
                                 </div>
                                 <div className="col-6">
                                 <h6>Today's Withdraw</h6>
-                                    <p> &#8377; 3,000</p>
+                                {withdrawHistory && <p>&#8377; {withdrawHistory.data.todayTotalWithdrawAmount}</p>}
                                 </div>
                             </div>
                         </div>
@@ -109,12 +132,12 @@ function Wallet() {
                         </div>
 
                         <div className="container chart" style={{marginBottom:"8rem"}}>
-                        <div className='row'>
+                        <div className='row' onClick={()=>{navigate('/rechargeRecord')}}>
                                 <div className='col-2'><div className='profile-logo-Wrapper'><img src={wallet1} alt="" /></div></div>
                                 <div className='col-8 lvlContainer'>Recharge Record </div>
                                 <div className='col-2 backImg'><img src={next} alt="" /></div>
                             </div>
-                        <div className='row'>
+                        <div className='row' onClick={()=>{navigate('/withdrawRecord')}}>
                                 <div className='col-2'><div className='profile-logo-Wrapper'><img src={wallet2} alt="" /></div></div>
                                 <div className='col-8 lvlContainer'>Withdraw Record</div>
                                 <div className='col-2 backImg'><img src={next} alt="" /></div>

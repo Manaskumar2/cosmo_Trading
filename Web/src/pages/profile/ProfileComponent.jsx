@@ -139,7 +139,7 @@ function Profile() {
                             </div>
                             <div className='row'>
                                 <div className='col-2'><div className='profile-logo-Wrapper'><img src={shield} alt="" /></div></div>
-                                <div className='col-8' onClick={()=>{navigate("/comingSoon")}}>Account Security</div>
+                                <div className='col-8' onClick={()=>{navigate("/security")}}>Account Security</div>
                                 <div className='col-2 backImg'><img src={next} alt="" /></div>
                             </div>
                             <div className='row' onClick={()=>{navigate("/promotion")}}>

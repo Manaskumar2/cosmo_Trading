@@ -20,7 +20,7 @@ export const toastProps = {
     },
 };
 
-function GameHistory() {
+function GameHistory({ duration }) {
     const [activeTab, setActiveTab] = useState(1);
     const auth = useRecoilValue(AuthState)
     const [gameHistoryList, setGameHistoryList] = useRecoilState(GameHistoryList)
@@ -55,7 +55,7 @@ function GameHistory() {
         try {
             let token = auth.authToken;
             console.log(token);
-            const response = await axios.get(`${import.meta.env.VITE_API_URL}/getSuccessFullGameHistory`, {
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/getSuccessFullGameHistory/${duration}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             if (response.status === 200) {
@@ -76,7 +76,7 @@ function GameHistory() {
         //     getGameHistory();
         // }, 60000);
         // return () => clearInterval(interval);
-    }, []);
+    }, [duration]);
 
     useEffect(() => {
         getUserGameHistory()
@@ -116,18 +116,22 @@ function GameHistory() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {gameHistoryList && gameHistoryList.data.map((item, index) =>
-                                    <tr key={index}>
-                                        <td>{item.gameUID}</td>
-                                        <td width="140">
-                                            <div className="winners_col_row">
-                                                <span className="icon_win"><img src={Winner} /></span>
-                                                <p>{item.Winner}</p>
-                                                <span className="icon_rate"><img src={item.Winner === 'alfa' ? Alfa : Beta}  /></span>
-                                            </div>
+                                {gameHistoryList && gameHistoryList.data
+                                    .filter(item => item.isCompleted) // Filter out items with isComplete === false
+                                    .map((item, index) => (
+                                        <tr key={index}>
+                                            <td>{item.gameUID}</td>
+                                            <td width="140">
+                                                <div className="winners_col_row">
+                                                    <span className="icon_win"><img src={Winner} /></span>
+                                                    <p>{item.winnerGroup === 'SMALL' ? "Alpha" : "Beta"}</p>
+                                                    <span className="icon_rate"></span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))
+                                }
 
-                                        </td>
-                                    </tr>)}
 
                             </tbody>
                         </table>
@@ -143,54 +147,43 @@ function GameHistory() {
                                 <thead>
                                     <tr>
                                         <th>Period</th>
-                                        <th width="140">Winner</th>
+                                        <th width="140">Result</th>
+                                        <th>Group</th>
+
                                     </tr>
                                 </thead>
                                 <tbody>
-
-                                    <tr>
-                                        <td>2023080311378</td>
-                                        <td width="140">
-                                            <div className="winners_col_row">
-                                                <span className="icon_win"><img src={Winner} /></span>
-                                                <p>ALPHA</p>
-                                                <span className="icon_rate"><img src={Alpha} /></span>
-                                            </div>
-                                        </td>
-                                    </tr>
+                                    {userGames && userGames.data && userGames.data.history.map((item, index) => (
+                                        <tr key={index}>
+                                            <td>{item.gameId}</td>
+                                            <td>{item.result}</td>
+                                            <td width="140">
+                                                <div className="winners_col_row">
+                                                    <span className="icon_win"><img src={Winner} /></span>
+                                                    <p style={{ textAlign: "left" }}>{item.group === 'small' ? 'Alpha' : 'Beta'}</p>
+                                                    <span className="icon_rate"><img src={item.group === 'small' ? Alpha : Beta} /></span>
+                                                </div>
+                                            </td>
+                                        </tr>))}
 
                                 </tbody>
                             </table>
                         </div>
 
-                        <div className="container ">
-                            {userGames && userGames.data && userGames.data.history.map((item, index) => (
-                                <div>
-                                    <div
-                                        key={index}
-                                        className={` ${index % 2 === 0 ? ' light-blue  list' : ' dark-blue  list'}`}
-                                    >
-                                        <div className=" uid">{item.gameUID}</div>
-                                        <div className=" winGroup"></div>
-                                    </div>
-                                    <div className='pagination-buttons-container'>
-                                        <div className='pagination-buttons'>
-                                            <button className='decreaseBtn' onClick={() => { setPage(Math.max(page - 1, 1)); }}>
-                                                <img src={left} alt="" />
-                                            </button>
-                                            <div className='page-count'>
-                                                {page}/{item.totalPage}
-                                            </div>
-                                            <button className='increaseBtn' onClick={() => { setPage(Math.min(page + 1, item.totalPage)); }}>
-                                                <img src={right} alt="" />
-                                            </button>
+                        <div className='pagination-buttons-container'>
+                            <div className='pagination-buttons'>
+                                <button className='decreaseBtn' onClick={() => { setPage(Math.max(page - 1, 1)); }}>
+                                    <img src={right} alt="" />
+                                </button>
 
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
+                                {userGames && <div className='page-count'>  {page}/{userGames.data.totalPages} </div>}
+                                {/* {page}/{item.totalPage} */}
 
+                                <button className='increaseBtn' onClick={() => { setPage(Math.min(page + 1, userGames.data.totalPages)); }}>
+                                    <img src={left} alt="" />
+                                </button>
 
+                            </div>
                         </div>
 
                     </div>

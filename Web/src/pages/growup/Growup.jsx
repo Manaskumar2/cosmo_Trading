@@ -45,7 +45,7 @@ function Growup() {
     const setMinute = useSetRecoilState(OneMinute)
 
     const auth = useRecoilValue(AuthState)
-    const [amount, setAmount] = useState(0);
+    const [amount, setAmount] = useState(1);
     const [group, setGroup] = useState('');
     const [duration, setDuration] = useState(1);
 
@@ -72,11 +72,11 @@ function Growup() {
     };
 
     const handlePlusButtonClick = () => {
-        setAmount(prevAmount => prevAmount + money);
+        setActiveMultiplier(prevAmount => prevAmount + 1);
     };
 
     const handleMinusButtonClick = () => {
-        setAmount(prevAmount => prevAmount - money);
+        setActiveMultiplier(prevAmount => prevAmount - 1);
     };
 
     const handleMultiplierClick = (multiplierValue) => {
@@ -86,7 +86,7 @@ function Growup() {
 
 
 
-
+// useEffect(()=>{ setAmount(amount*activeMultiplier)},[amount,activeMultiplier])
     ///////
 
 
@@ -258,14 +258,7 @@ function Growup() {
                                             <button className="left" onClick={() => { setSmShow(true); setGroup('small') }}><img src={alfa} alt="" /></button>
                                             <button className=" right" onClick={() => { setLgShow(true); setGroup('big') }}><img src={beta} alt="" /></button>
                                         </div>
-                                        <div className=" x-row-section">
-                                            <button className="x-section active">x1</button>
-                                            <button className="x-section">x2</button>
-                                            <button className="x-section">x5</button>
-                                            <button className="x-section">x10</button>
-                                            <button className="x-section">x50</button>
-                                            <button className="x-section">x100</button>
-                                        </div>
+                                        
                                     </div>
                                 </div>}
                                 {/* ///// */}
@@ -292,21 +285,21 @@ function Growup() {
                                             <div className="x-row-section">
                                                 <button
                                                     className={`x-section ${amount === 100 ? 'active-btn' : ''}`}
-                                                    onClick={() => { handleMoneyButtonClick(100); setMoney(100) }}
+                                                    onClick={() => { handleMoneyButtonClick(1); setMoney(1) }}
                                                 >
-                                                    100
+                                                    1
                                                 </button>
                                                 <button
                                                     className={`x-section ${amount === 200 ? 'active-btn' : ''}`}
-                                                    onClick={() => { handleMoneyButtonClick(200); setMoney(200) }}
+                                                    onClick={() => { handleMoneyButtonClick(10); setMoney(10) }}
                                                 >
-                                                    200
+                                                    10
                                                 </button>
                                                 <button
                                                     className={`x-section ${amount === 500 ? 'active-btn' : ''}`}
-                                                    onClick={() => { handleMoneyButtonClick(500); setMoney(500) }}
+                                                    onClick={() => { handleMoneyButtonClick(100); setMoney(100) }}
                                                 >
-                                                    500
+                                                    100
                                                 </button>
                                                 <button
                                                     className={`x-section ${amount === 1000 ? 'active-btn' : ''}`}
@@ -323,45 +316,56 @@ function Growup() {
                                             </div>
                                             <div className='plus-minus'>
                                                 <button onClick={handleMinusButtonClick}>-</button>
-                                                <div>{amount}</div>
+                                                <div>{activeMultiplier}</div>
                                                 <button onClick={handlePlusButtonClick}>+</button>
+                                            </div>
+                                        </div>
+                                        <div className="multiply">
+                                            <div>
+                                                <p>Custom Amount</p>
+                                            </div>
+                                            <div className='plus-minus'>
+                                                
+                                                <input className='plus-minus-input' type="number" value={amount} onChange={(e)=>{setAmount(e.target.value)}}/>
+                                                
                                             </div>
                                         </div>
                                         <div className="hrline"></div>
                                         <div className="x-row-section">
                                             <button
                                                 className={`x-section ${activeMultiplier === 1 ? 'active-btn' : ''}`}
-                                                onClick={() => handleMultiplierClick(1)}
+                                                
+                                                onClick={() => {setActiveMultiplier(1);handleMultiplierClick(1) }}
                                             >
                                                 x1
                                             </button>
                                             <button
                                                 className={`x-section ${activeMultiplier === 2 ? 'active-btn' : ''}`}
-                                                onClick={() => handleMultiplierClick(2)}
+                                                onClick={() => {setActiveMultiplier(2);handleMultiplierClick(2) }}
                                             >
                                                 x2
                                             </button>
                                             <button
                                                 className={`x-section ${activeMultiplier === 5 ? 'active-btn' : ''}`}
-                                                onClick={() => handleMultiplierClick(5)}
+                                                onClick={() => {setActiveMultiplier(5);handleMultiplierClick(5) }}
                                             >
                                                 x5
                                             </button>
                                             <button
                                                 className={`x-section ${activeMultiplier === 10 ? 'active-btn' : ''}`}
-                                                onClick={() => handleMultiplierClick(10)}
+                                                onClick={() =>{setActiveMultiplier(10);handleMultiplierClick(10) }}
                                             >
                                                 x10
                                             </button>
                                             <button
                                                 className={`x-section ${activeMultiplier === 50 ? 'active-btn' : ''}`}
-                                                onClick={() => handleMultiplierClick(50)}
+                                                onClick={() => {setActiveMultiplier(50);handleMultiplierClick(50) }}
                                             >
                                                 x50
                                             </button>
                                             <button
                                                 className={`x-section ${activeMultiplier === 100 ? 'active-btn' : ''}`}
-                                                onClick={() => handleMultiplierClick(100)}
+                                                onClick={() => {setActiveMultiplier(100);handleMultiplierClick(100) }}
                                             >
                                                 x100
                                             </button>
@@ -432,6 +436,16 @@ function Growup() {
                                                 <button onClick={handlePlusButtonClick}>+</button>
                                             </div>
                                         </div>
+                                        <div className="multiply">
+                                            <div>
+                                                <p>Custom Amount</p>
+                                            </div>
+                                            <div className='plus-minus'>
+                                                
+                                                <input className='plus-minus-input' type="number" value={amount} onChange={(e)=>{setAmount(e.target.value)}}/>
+                                                
+                                            </div>
+                                        </div>
                                         <div className="hrline"></div>
                                         <div className="x-row-section">
                                             <button
@@ -483,7 +497,7 @@ function Growup() {
                             </Modal>
 
                         </>
-                        <GameHistory />
+                        <GameHistory  duration={duration}/>
                     </>
                 }
                 {
@@ -499,14 +513,7 @@ function Growup() {
                                             <button className="left" onClick={() => { setSmShow1(true); setGroup('small') }}><img src={alfa} alt="" /></button>
                                             <button className=" right" onClick={() => { setLgShow1(true); setGroup('big') }}><img src={beta} alt="" /></button>
                                         </div>
-                                        <div className=" x-row-section">
-                                            <button className="x-section active">x1</button>
-                                            <button className="x-section">x2</button>
-                                            <button className="x-section">x5</button>
-                                            <button className="x-section">x10</button>
-                                            <button className="x-section">x50</button>
-                                            <button className="x-section">x100</button>
-                                        </div>
+                                        
                                     </div>
                                 </div>}
 
@@ -563,6 +570,16 @@ function Growup() {
                                                 <button onClick={handleMinusButtonClick}>-</button>
                                                 <div>{amount}</div>
                                                 <button onClick={handlePlusButtonClick}>+</button>
+                                            </div>
+                                        </div>
+                                        <div className="multiply">
+                                            <div>
+                                                <p>Custom Amount</p>
+                                            </div>
+                                            <div className='plus-minus'>
+                                                
+                                                <input className='plus-minus-input' type="number" value={amount} onChange={(e)=>{setAmount(e.target.value)}}/>
+                                                
                                             </div>
                                         </div>
                                         <div className="x-row-section">
@@ -661,6 +678,16 @@ function Growup() {
                                                 <button onClick={handlePlusButtonClick}>+</button>
                                             </div>
                                         </div>
+                                        <div className="multiply">
+                                            <div>
+                                                <p>Custom Amount</p>
+                                            </div>
+                                            <div className='plus-minus'>
+                                                
+                                                <input className='plus-minus-input' type="number" value={amount} onChange={(e)=>{setAmount(e.target.value)}}/>
+                                                
+                                            </div>
+                                        </div>
                                         <div className="x-row-section">
                                             <button
                                                 className={`x-section ${activeMultiplier === 1 ? 'active-btn' : ''}`}
@@ -704,7 +731,7 @@ function Growup() {
                                 </Modal.Body>
                             </Modal>
                         </>
-                        <GameHistory />
+                        <GameHistory duration={duration}/>
                     </>
                 }
                 {
@@ -720,14 +747,7 @@ function Growup() {
                                             <button className="left" onClick={() => { setSmShow2(true); setGroup('small') }}><img src={alfa} alt="" /></button>
                                             <button className=" right" onClick={() => { setLgShow2(true); setGroup('big') }}><img src={beta} alt="" /></button>
                                         </div>
-                                        <div className=" x-row-section">
-                                            <button className="x-section active">x1</button>
-                                            <button className="x-section">x2</button>
-                                            <button className="x-section">x5</button>
-                                            <button className="x-section">x10</button>
-                                            <button className="x-section">x50</button>
-                                            <button className="x-section">x100</button>
-                                        </div>
+                                        
                                     </div>
                                 </div>}
 
@@ -784,6 +804,16 @@ function Growup() {
                                                 <button onClick={handleMinusButtonClick}>-</button>
                                                 <div>{amount}</div>
                                                 <button onClick={handlePlusButtonClick}>+</button>
+                                            </div>
+                                        </div>
+                                        <div className="multiply">
+                                            <div>
+                                                <p>Custom Amount</p>
+                                            </div>
+                                            <div className='plus-minus'>
+                                                
+                                                <input className='plus-minus-input' type="number" value={amount} onChange={(e)=>{setAmount(e.target.value)}}/>
+                                                
                                             </div>
                                         </div>
                                         <div className="x-row-section">
@@ -882,6 +912,16 @@ function Growup() {
                                                 <button onClick={handlePlusButtonClick}>+</button>
                                             </div>
                                         </div>
+                                        <div className="multiply">
+                                            <div>
+                                                <p>Custom Amount</p>
+                                            </div>
+                                            <div className='plus-minus'>
+                                                
+                                                <input className='plus-minus-input' type="number" value={amount} onChange={(e)=>{setAmount(e.target.value)}}/>
+                                                
+                                            </div>
+                                        </div>
                                         <div className="x-row-section">
                                             <button
                                                 className={`x-section ${activeMultiplier === 1 ? 'active-btn' : ''}`}
@@ -925,7 +965,7 @@ function Growup() {
                                 </Modal.Body>
                             </Modal>
                         </>
-                        <GameHistory />
+                        <GameHistory duration={duration}/>
                     </>
                 }
                 {
@@ -941,14 +981,7 @@ function Growup() {
                                             <button className="left" onClick={() => { setSmShow3(true); setGroup('small') }}><img src={alfa} alt="" /></button>
                                             <button className=" right" onClick={() => { setLgShow3(true); setGroup('big') }}><img src={beta} alt="" /></button>
                                         </div>
-                                        <div className=" x-row-section">
-                                            <button className="x-section active">x1</button>
-                                            <button className="x-section">x2</button>
-                                            <button className="x-section">x5</button>
-                                            <button className="x-section">x10</button>
-                                            <button className="x-section">x50</button>
-                                            <button className="x-section">x100</button>
-                                        </div>
+                                       
                                     </div>
                                 </div>}
 
@@ -1005,6 +1038,16 @@ function Growup() {
                                                 <button onClick={handleMinusButtonClick}>-</button>
                                                 <div>{amount}</div>
                                                 <button onClick={handlePlusButtonClick}>+</button>
+                                            </div>
+                                        </div>
+                                        <div className="multiply">
+                                            <div>
+                                                <p>Custom Amount</p>
+                                            </div>
+                                            <div className='plus-minus'>
+                                                
+                                                <input className='plus-minus-input' type="number" value={amount} onChange={(e)=>{setAmount(e.target.value)}}/>
+                                                
                                             </div>
                                         </div>
                                         <div className="x-row-section">
@@ -1103,6 +1146,16 @@ function Growup() {
                                                 <button onClick={handlePlusButtonClick}>+</button>
                                             </div>
                                         </div>
+                                        <div className="multiply">
+                                            <div>
+                                                <p>Custom Amount</p>
+                                            </div>
+                                            <div className='plus-minus'>
+                                                
+                                                <input className='plus-minus-input' type="number" value={amount} onChange={(e)=>{setAmount(e.target.value)}}/>
+                                                
+                                            </div>
+                                        </div>
                                         <div className="x-row-section">
                                             <button
                                                 className={`x-section ${activeMultiplier === 1 ? 'active-btn' : ''}`}
@@ -1146,7 +1199,7 @@ function Growup() {
                                 </Modal.Body>
                             </Modal>
                         </>
-                        <GameHistory />
+                        <GameHistory duration={duration}/>
                     </>
                 }
             </div >

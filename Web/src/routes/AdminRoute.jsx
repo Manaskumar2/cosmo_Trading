@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { AdminHome, AdminUser, AdminRecharge, AdminWithdraw, AdminLogin, AdminPrime } from './importPages';
 import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
-import Loader from '../components/loader/Loader';
+import AdminLoader from '../pages/Admin/adminLoading/AdminLoading';
 import { Suspense } from 'react';
 import { AuthState } from '../Atoms/AuthState';
 import { useRecoilValue } from 'recoil';
@@ -24,7 +24,7 @@ function AdminRoute() {
         <Route
           path="/admin"
           element={
-            <Suspense fallback={<Loader />}>
+            <Suspense fallback={<AdminLoader />}>
               <AdminLogin />
             </Suspense>
           }
@@ -34,7 +34,7 @@ function AdminRoute() {
           <Route
             path="/admin/home"
             element={
-              <Suspense fallback={<Loader />}>
+              <Suspense fallback={<AdminLoader />}>
                 <AdminHome />
               </Suspense>
             }
@@ -42,7 +42,7 @@ function AdminRoute() {
           <Route
             path="/admin/user"
             element={
-              <Suspense fallback={<Loader />}>
+              <Suspense fallback={<AdminLoader />}>
                 <AdminUser />
               </Suspense>
             }
@@ -50,7 +50,7 @@ function AdminRoute() {
           <Route
             path="/admin/recharge"
             element={
-              <Suspense fallback={<Loader />}>
+              <Suspense fallback={<AdminLoader />}>
                 <AdminRecharge />
               </Suspense>
             }
@@ -58,7 +58,7 @@ function AdminRoute() {
           <Route
             path="/admin/withdraw"
             element={
-              <Suspense fallback={<Loader />}>
+              <Suspense fallback={<AdminLoader />}>
                 <AdminWithdraw />
               </Suspense>
             }
@@ -66,7 +66,7 @@ function AdminRoute() {
           <Route
             path="/admin/prime"
             element={
-              <Suspense fallback={<Loader />}>
+              <Suspense fallback={<AdminLoader />}>
                 <AdminPrime />
               </Suspense>
             }
@@ -74,7 +74,7 @@ function AdminRoute() {
           <Route
             path="/admin"
             element={
-              <Suspense fallback={<Loader />}>
+              <Suspense fallback={<AdminLoader />}>
                 <AdminLogin />
               </Suspense>
             }

@@ -1,0 +1,18 @@
+.PromoNav{background: #001C3E; background-image: url('../../images/belips.png');background-position: bottom; background-repeat: no-repeat; padding:15px 1.5rem;border-bottom: 1px solid #133B77;}
+.PromoNav .row .col-8{color: #FFF;text-align: center;font-family: 'Montserrat';font-size: 1.1rem;font-weight: 500;letter-spacing: 0.00688rem;text-transform: capitalize;}
+.sucurity-body{background: #001C3E;padding: 1.5rem;min-height: 100vh;display: flex;justify-content: center;}
+.sucurity-body p{color: #FFF;font-family: 'Montserrat';font-size: 1.2rem;margin-top: 1rem;}
+.sucurity-body input{padding: .4rem;font-family: 'Montserrat';margin-top: 1rem;width: 100%;background: #001C3E;color: #26B5E2;border: 1px solid #26B5E2;outline: none;}
+.sucurity-body button{padding: .4rem 1rem; margin-top: 3rem;font-size: 1rem; color: #FFF;background: #1f6adb;border: 0; outline: none;}
+.security-form {
+    padding: 1.2rem;
+    height: max-content;
+    border-radius: 0.8125rem;
+    border: 1px solid #26B5E2;
+    box-shadow: 0px 2px 4px 0px rgba(38, 181, 226, 0.80);
+}
+
+
+@media(min-width:750px){
+    .security{width: 30vw;margin: auto;}
+}

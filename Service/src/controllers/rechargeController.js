@@ -80,6 +80,7 @@ const updatePaymentRequest = async (req, res) => {
       }
 
       user.walletAmount += manualPayment.amount;
+      user.rechargeAmount+= manualPayment.amount;
       await user.save();
     } else if (status === 'cancel') {
       manualPayment.status = 'cancelled';
@@ -94,5 +95,21 @@ const updatePaymentRequest = async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+const getRechargeHistory = async (req, res) => { 
 
-module.exports = { createRecharge, updatePaymentRequest, getPaymentRequest }
+  try {
+    const userId = req.decodedToken.userId;
+    if(!userId) return res.status(400).send({status:false,message:"please login to get charge history"})
+    const payments = await rechargeModel.find({ userId }).exec();
+    if (!payments.length) return res.status(400).send({ status: false, message: "no recharge doing  yet" })
+
+    return res.status(200).send({ status: true, message: "charge history", data: payments })
+  
+  } catch (error) {
+    
+    console.error('Error fetching payments by userId:', error);
+    throw error;
+  }
+}
+
+module.exports = { createRecharge, updatePaymentRequest, getPaymentRequest,getRechargeHistory }

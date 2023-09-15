@@ -143,7 +143,7 @@ function Promotion() {
                     </div>
                     <div className='container commission'>
                         {userData && <h2 className='text-center'>{userData.data.data.userDetails.winningAmount}</h2>}
-                        <p className='text-center'>Yesterday Is Total Commission</p>
+                        <p className='text-center'>Total Winning</p>
                         <div className="container">
                             <div className="row commission-row">
                                 <div className="col-10">Direct Commission</div>

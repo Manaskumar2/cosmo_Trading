@@ -15,6 +15,6 @@
 }
 .carousel-indicators [data-bs-target]{border-radius: 100px;background: #024A73; width: 8px;height: 8px;border:0;}
 
-.carousel-indicators{bottom: -30px;}
+/* .carousel-indicators{bottom: -30px;} */
 
 .carousel-indicators .active{border-radius: 100px;background: #0BA3C5;box-shadow: 0px 0px 5px 0px #21CACA;}

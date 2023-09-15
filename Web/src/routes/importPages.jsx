@@ -64,5 +64,13 @@ const Premium= lazy(()=>
 import('../../src/pages/premium/Premium'))
 const PremiumApply= lazy(()=>
 import('../../src/pages/premiumApply/PremiumApply'))
+const Security= lazy(()=>
+import('../../src/pages/accountSecurity/AccountSecurity'))
+const RiseUp= lazy(()=>
+import('../../src/pages/riseUp/RiseUp'))
+const WidthdrawHistory= lazy(()=>
+import('../../src/pages/withdrawHistory/WIthdrawHistoryPage'))
+const RechargeHistory= lazy(()=>
+import('../../src/pages/rechargeHistory/RechargeHistoryPage'))
 
-export {Login,Register,Forgot,OTP,Reset,Success,Home,Growup,ProfileComponent,Promotion,Recharge,UPI,Withdraw,BankCard,Wallet,Gift,BeginnerTutorial,About,Customer,Message,Transection,Launch,AdminHome,AdminUser,AdminRecharge,AdminWithdraw,AdminLogin,Terms,SRegister,AdminPrime,Premium,PremiumApply}
+export {Login,Register,Forgot,OTP,Reset,Success,Home,Growup,ProfileComponent,Promotion,Recharge,UPI,Withdraw,BankCard,Wallet,Gift,BeginnerTutorial,About,Customer,Message,Transection,Launch,AdminHome,AdminUser,AdminRecharge,AdminWithdraw,AdminLogin,Terms,SRegister,AdminPrime,Premium,PremiumApply,Security,RiseUp,WidthdrawHistory,RechargeHistory}

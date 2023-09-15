@@ -59,9 +59,11 @@ function Withdraw() {
             headers: { Authorization: `Bearer ${token}` }
         }
         );
-        if (response.status === 201) {
+        if (response.status === 200) {
+          toast.success( "Withdraw Request Sent", { ...toastProps });
             console.log(response);
-            setUpiId("")
+            navigate('/wallet')
+            setAmount(0)
             return response;
         }
     } catch (error) {
@@ -90,6 +92,7 @@ function Withdraw() {
       </div>
 
       <div className="wallet">
+      <Toaster/>
         <div className="container winWallet">
           <div className="row">
             <div className="col-8" style={{ marginBottom: "10px" }}>
@@ -143,7 +146,7 @@ function Withdraw() {
         </div>
         <div className='row'>
           <div className='col-2'><div className='profile-logo-Wrapper'><img src={walleticon} alt="" /></div></div>
-          <div className='col-10'>2. Total Bet ₹ 59</div>
+          <div className='col-10'>2. Remaining Bet Amount ₹  {userData && userData.data.data.userDetails.rechargeAmount}</div>
         </div>
         <div className='row'>
           <div className='col-2'><div className='profile-logo-Wrapper'><img src={withdrawIcon} alt="" /></div></div>
@@ -155,11 +158,11 @@ function Withdraw() {
         </div>
         <div className='row'>
           <div className='col-2'><div className='profile-logo-Wrapper'><img src={coins} alt="" /></div></div>
-          <div className='col-10'>5. Withdrawal Amount Range 100-10000000</div>
+          <div className='col-10'>5. Withdrawal Amount Range 500-10000000</div>
         </div>
         <div className='row'>
           <div className='col-2'><div className='profile-logo-Wrapper'><img src={coins} alt="" /></div></div>
-          <div className='col-10'>6. Withdrawal multiple of ₹10</div>
+          <div className='col-10'>6. Withdrawal multiple of ₹100</div>
         </div>
 
 

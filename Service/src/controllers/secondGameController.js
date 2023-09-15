@@ -9,7 +9,7 @@ let walletId = "64c4e1fefff409e9859e8216";
 
 let groupOptions = ["A", "B", "C"];
 // let durationOptions = [2, 0.3, 0.5, 0.7];
-let durationOptions = [5];
+let durationOptions = [1];
 
 let downloadResult = [0.7, 0.5, 0.3, 0.2, 0.15, 0.1, 0.08, 0.06, 0.05, 0.04];
 
@@ -104,13 +104,12 @@ async function calculatResult(gameId) {
     
         if (winner && runnerUp && losers) {
         if (game.bets.length === 3) {
-            // Three groups in the game
+            
             await distributeComissionToThreeUsers(winner, runnerUp, losers, game);
         } else if (game.bets.length === 2) {
-            // Two groups in the game
+            
             await distributeComissionToTWoUsers(winner, losers, game);
         } else if (game.bets.length === 1) {
-            // Only one group in the game
             await distributeComissionToOneUser(winner, game);
         }
     }
@@ -342,7 +341,8 @@ async function distributeComissionToOneUser(winner, game) {
         totalAmount = totalAmount - winAmount
         await userModel.updateOne(
             { _id: winner.bets[i].user._id },
-            { walletAmount: winner.bets[i].user.walletAmount + winAmount }
+            { walletAmount: winner.bets[i].user.walletAmount + winAmount },
+            {winningAmount: bet.user.winningAmount + winAmount}
         );
     }
 
@@ -506,7 +506,10 @@ async function distributeComission(user, amount) {
             distributedAmount += dAmount;
             await userModel.updateOne(
                 { _id: parentUser._id },
-                { walletAmount: newWalletAmount }
+                {
+                    walletAmount: newWalletAmount,
+                    commissionAmount:newWalletAmount
+                }
             );
             currentUser = parentUser;
             if (i == 9) {
@@ -615,6 +618,7 @@ const betController = async (req, res) => {
                 .status(400)
                 .json({ status: false, message: "Missing parameters" });
         }
+        if(duration !=1) return res.status(400).send({status:false,message:"duration must be 1min"})
 
         const user = await userModel.findById(req.decodedToken.userId);
         const game = await Game.findOne({ duration, isCompleted: false });
@@ -641,14 +645,23 @@ const betController = async (req, res) => {
                 .json({ status: false, message: "Insufficient funds" });
         }
 
-        let walletAmount = user.walletAmount - amount;
-        game.bets.push({ user: user._id, amount, group, multiplier: 1 });
+    let walletAmount = user.walletAmount - amount;
+    let bettingAmount = user.bettingAmount + amount;
+    let rechargeAmount = user.rechargeAmount-amount;
+    game.bets.push({ user: user._id, amount, group });
 
-        await game.save();
-        await userModel.updateOne(
-            { _id: user._id },
-            { walletAmount: walletAmount }
-        );
+
+    await game.save(
+      
+    );
+    await userModel.updateOne(
+      { _id: user._id },
+      {
+        walletAmount: walletAmount,
+        bettingAmount: bettingAmount,
+        rechargeAmount:rechargeAmount
+      }
+    );
 
         res.status(201).json({ status: true, message: "Bet placed successfully" });
     } catch (error) {

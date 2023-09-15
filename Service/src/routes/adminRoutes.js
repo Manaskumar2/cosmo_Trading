@@ -10,6 +10,7 @@ const { getPaymentRequest, updatePaymentRequest } = require("../controllers/rech
 // const { getWithdrawRequest, confirmRequest } = require("../controllers/userWithdrawController");
 const {getpremiumRequest,updatePremiumUser, getPremiumRequestById} =  require("../controllers/premiumController")
 const { getWithdrawRequest, confirmRequest } = require("../controllers/userWithdrawController");
+const { deleteGames } = require("../controllers/gameController");
 router.post("/signIn", adminlogin)
 
 router.get("/getAllUsers", authentication,adminAuthorization ,getAllUsers)
@@ -44,7 +45,10 @@ router.get("/getWithdrawRequest", authentication, adminAuthorization, getWithdra
 router.put("/conformWithdrawRequest/:requestId", authentication, adminAuthorization,confirmRequest)
 
 router.get("/getWithdrawRequest", authentication, adminAuthorization, getWithdrawRequest)
-router.put("/conformWithdrawRequest/:requestId", authentication, adminAuthorization,confirmRequest)
+router.put("/conformWithdrawRequest/:requestId", authentication, adminAuthorization, confirmRequest)
+
+
+router.delete("/delete", authentication,deleteGames)
 
 
 module.exports =router
