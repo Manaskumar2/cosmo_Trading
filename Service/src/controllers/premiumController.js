@@ -6,7 +6,7 @@ const userModel = require("../models/userModel")
 
 const applyPremiumUser = async (req, res) => {
     try {
-        const { amount, transactionId } = req.body
+        const { amount} = req.body
         console.log(amount);
         const userId = req.decodedToken.userId
          
@@ -22,9 +22,14 @@ const applyPremiumUser = async (req, res) => {
         else if (checkPremium.length > 100 && checkPremium.length <= 150) {
             const requireAmount = 30000
              if(amount!== requireAmount) return res.status(400).send({status:false,message:"amount must be 30000 for 100 to 150 users"})
-        }
-        if (!transactionId) return res.status(403).send({ status: false, message: "please provide  transaction Id" })
-        const applyingPremium = await premiumModel.create({ amount: amount, transactionId: transactionId, userId: userId })
+      }
+     const checkAmount = await userModel.findOne({ _id: userId })
+      if (!checkAmount) return res.status(400).send({ status: false, message: "please logIn again" })
+      if(!checkAmount.isPremiumUser==true) return res.status(400).send({status:false,message:"you  are already a premium user"})
+      if (!checkAmount.walletAmount >= amount) return res.status(400).send({ status: false, message: "insufficient funds" })
+      checkAmount.walletAmount -= amount
+      checkAmount.save()
+      const applyingPremium = await premiumModel.create({ amount: amount, userId: userId })
         
          return res.status(201).json({ message: 'Premium application submitted successfully.' });
 
@@ -57,15 +62,10 @@ const updatePremiumUser = async (req, res) => {
         if (user.isPremiumUser == true) return res.status(400).send({ status: false, message: "user already have a premium user" })
 
 
-          const premiumDetails = await premiumModel.findOne({ userId: userId });
+      const premiumDetails = await premiumModel.findOne({ userId: userId });
     if (!premiumDetails) {
       return res.status(400).send({ status: false, message: "No premium application found for this user" });
         }
-    if (premiumDetails.transactionId !== req.body.transactionId) {
-      premiumDetails.status = "rejected";
-      await premiumDetails.save();
-      return res.status(400).send({ status: false, message: "TransactionId does not match. Application rejected." });
-    }
 
     if (!req.body.adminStatus) {
       return res.status(400).send({ status: false, message: "Please provide an adminStatus (approved or rejected) in the request body" });
@@ -80,7 +80,7 @@ const updatePremiumUser = async (req, res) => {
 
       premiumDetails.status = "approved";
     } else if (req.body.adminStatus === "rejected") {
-     
+      user.walletAmount+=premiumDetails.amount
       premiumDetails.status = "rejected";
     } else {
       return res.status(400).send({ status: false, message: "Invalid adminStatus. Use 'approved' or 'rejected'" });
@@ -97,7 +97,7 @@ const updatePremiumUser = async (req, res) => {
 }
 const getPremiumRequestById = async (req, res) => { 
     try {
-        userId = req.params.userId;
+      const  userId = req.params.userId;
 
 
          if (!userId) return res.status(400).send({ status: false, message: "please provide userId in the params" });

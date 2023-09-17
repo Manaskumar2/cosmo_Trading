@@ -82,3 +82,5 @@ font-weight: 500;
 line-height: normal;}
 
 .record-btn-container .col-6{padding-left: 7px;padding-right: 7px;}
+
+.pagination-buttons .decreaseBtn, .pagination-buttons .increaseBtn{border: 0;}

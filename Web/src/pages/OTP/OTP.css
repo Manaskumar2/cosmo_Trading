@@ -1,4 +1,4 @@
-.desktop, .login-container{max-width:450px; margin: 0 auto; background: #003d69;}
+.desktop, .login-container{max-width:500px; margin: 0 auto; background: #003d69;}
 .resend{display: flex; align-items: center; justify-content: center; margin-top: 2rem;}
 .resend  button{display: flex; align-items: center;gap: .5rem; background-color: transparent; border: 0; outline: none;color: #0CB0FF;font-family: 'Montserrat';}
 .forgotPage{min-height: 100vh; background:#003D69;}

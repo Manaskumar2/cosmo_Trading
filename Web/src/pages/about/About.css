@@ -16,6 +16,6 @@ justify-content: center;align-items: center;border-radius: 6.25rem;background: #
 .chart .row .col-8{color: #FFF;font-family: 'Montserrat';font-size: 1rem;font-style: normal;font-weight: 400;letter-spacing: 0.02rem;}
 .backImg{display: flex; justify-content: center; align-items: center;}
 
-@media (min-width: 768px){
-    .about{width: 30vw;display: block;margin: auto;}
+@media (min-width:500px){
+    .about{max-width:500px; display: block; margin:0 auto;}
 }

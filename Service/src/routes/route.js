@@ -8,6 +8,7 @@ const { createRecharge, getRechargeHistory } = require("../controllers/rechargeC
 const { createBankAccount } = require("../controllers/withdrawAccountController");
 const { applyPremiumUser, getpremiumRequest } = require("../controllers/premiumController");
 const { withdrawrequest, withdrawalHistory } = require("../controllers/userWithdrawController");
+const { get2ndGame, betController, bet2ndController, get2ndGameHistory } = require("../controllers/secondGameController");
 // const multer = require('multer');
 // const path = require('path');
 
@@ -40,7 +41,17 @@ router.get("/bettingHistory/:userId", authentication, gameController.growUpUserB
 router.get('/getDownlinerDetails/:userId', authentication, getDownlineDetails)
 router.get('/getgame/:duration', authentication, gameController.getGame)
 router.get("/getSuccessFullGameHistory/:duration", authentication, gameController.getGameHistory)
+
+
+//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<second Game>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+router.get("/getSecondGame/:duration", authentication, get2ndGame)
+router.post("/betSecondGame", authentication, bet2ndController)
+router.get("/gameHistory",authentication,get2ndGameHistory)
+
+// <<<<<< end >>>>>>>>>>>
+
 router.get('/getAllImageURLs', authentication, getAllImageURLs);
+
 
 
 
@@ -63,6 +74,8 @@ router.get("/getWithdrawalHistory/:userId", authentication,withdrawalHistory)
 
 router.post("/applyPremium", authentication, applyPremiumUser)
 router.get("/getPremiumUser", authentication,getpremiumRequest)
+
+
 
 
 

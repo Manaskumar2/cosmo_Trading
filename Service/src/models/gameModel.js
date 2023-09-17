@@ -8,7 +8,8 @@ const betSchema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
   amount: {
     type: Number,
-    required: true
+    required: true,
+    default:0
   },
   group: {
     type: String,

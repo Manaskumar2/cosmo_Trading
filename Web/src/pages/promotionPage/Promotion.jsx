@@ -142,12 +142,12 @@ function Promotion() {
                         <p>My Reward</p>
                     </div>
                     <div className='container commission'>
-                        {userData && <h2 className='text-center'>{userData.data.data.userDetails.winningAmount}</h2>}
+                        {userData && <h2 className='text-center'>{userData.data.data.userDetails.winningAmount.toFixed(2)}</h2>}
                         <p className='text-center'>Total Winning</p>
                         <div className="container">
                             <div className="row commission-row">
                                 <div className="col-10">Direct Commission</div>
-                                {userData && <div className="col-2">{userData.data.data.userDetails.commissionAmount}</div>}
+                                {userData && <div className="col-2">{userData.data.data.userDetails.commissionAmount.toFixed(2)}</div>}
                             </div>
 
                         </div>

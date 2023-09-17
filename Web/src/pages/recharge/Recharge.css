@@ -32,6 +32,6 @@
 
     .recharge-Button{display: flex; justify-content: center;}
     .container .money-btn-row .selected{ background: linear-gradient(180deg, #E92B34 0%, #F5575F 100%);;}
-    @media(min-width:750px){
-        .recharge{width: 30vw;display: block; margin: auto;}
+    @media(min-width:500px){
+        .recharge{max-width:500px; display: block; margin:0 auto;}
     }

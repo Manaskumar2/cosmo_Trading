@@ -38,7 +38,7 @@ function Premium() {
         <div className='premium'>
             <div className="container ProNav">
                 <div className="row">
-                    <Link to='/' className="col-2">
+                    <Link to='/profile' className="col-2">
                         <img src={back} alt="" />
                     </Link>
                     <div className="col-8">

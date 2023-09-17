@@ -17,6 +17,8 @@ import {RechargeAmount} from '../../Atoms/RechargeAmount'
 
 
 function Recharge() {
+  // const history = useHistory();
+
   const [selectedButton, setSelectedButton] = useState(null);
   const [selectedRoute, setSelectedRouteButton] = useState(null);
 
@@ -31,11 +33,14 @@ function Recharge() {
   };
   const navigate = useNavigate()
   const userData = useRecoilValue(UserDetails)
+  const handleBackButtonClick = () => {
+    window.history.back(); 
+  };
   return (
     <div className='recharge'>
       <div className="container-fluid PromoNav" >
         <div className="row">
-          <Link to='/growUp' className="col-2">
+          <Link onClick={handleBackButtonClick} className="col-2">
             <img src={back} alt="" />
           </Link>
           <div className="col-8">
@@ -54,7 +59,7 @@ function Recharge() {
               <p style={{ color: '#29CEE4', fontFamily: 'Montserrat' }}>Wallet balance</p>
             </div>
             <div className="col-4" style={{ textAlign: 'right' }}><img src={wallet} alt="" /></div>
-            <h2 style={{ color: '#fff', letterSpacing: 0.15, fontSize: 27, fontFamily: 'Montserrat', display: 'flex', fontWeight: 600 }}><img src={rupee} alt="" /> {userData && userData.data.data.userDetails.walletAmount} <img src={reload} alt="" style={{ marginLeft: 10, }} /></h2>
+            <h2 style={{ color: '#fff', letterSpacing: 0.15, fontSize: 27, fontFamily: 'Montserrat', display: 'flex', fontWeight: 600 }}><img src={rupee} alt="" /> {userData && userData.data.data.userDetails.walletAmount.toFixed(2)} <img src={reload} alt="" style={{ marginLeft: 10, }} /></h2>
           </div>
         </div>
       </div>

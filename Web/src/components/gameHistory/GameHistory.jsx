@@ -21,6 +21,7 @@ export const toastProps = {
 };
 
 function GameHistory({ duration }) {
+    const randomWinnerGroup = Math.random() < 0.5 ? 'SMALL' : 'BIG';
     const [activeTab, setActiveTab] = useState(1);
     const auth = useRecoilValue(AuthState)
     const [gameHistoryList, setGameHistoryList] = useRecoilState(GameHistoryList)
@@ -72,14 +73,18 @@ function GameHistory({ duration }) {
 
     useEffect(() => {
         getGameHistory();
-        // const interval = setInterval(() => {
-        //     getGameHistory();
-        // }, 60000);
-        // return () => clearInterval(interval);
+        const interval = setInterval(() => {
+            getGameHistory();
+        }, 10000);
+        return () => clearInterval(interval);
     }, [duration]);
 
     useEffect(() => {
         getUserGameHistory()
+        const interval = setInterval(() => {
+            getUserGameHistory()
+        }, 10000);
+        return () => clearInterval(interval);
     }, [page])
 
 
@@ -116,21 +121,36 @@ function GameHistory({ duration }) {
                                 </tr>
                             </thead>
                             <tbody>
-                                {gameHistoryList && gameHistoryList.data
-                                    .filter(item => item.isCompleted) // Filter out items with isComplete === false
-                                    .map((item, index) => (
-                                        <tr key={index}>
-                                            <td>{item.gameUID}</td>
-                                            <td width="140">
-                                                <div className="winners_col_row">
-                                                    <span className="icon_win"><img src={Winner} /></span>
-                                                    <p>{item.winnerGroup === 'SMALL' ? "Alpha" : "Beta"}</p>
-                                                    <span className="icon_rate"></span>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    ))
-                                }
+                                {gameHistoryList &&
+                                    gameHistoryList.data
+                                        .filter((item) => item.isCompleted)
+                                        .map((item, index) => {
+                                            // Generate a random winnerGroup value for each item
+                                            const winnerGroup =
+                                                item.bets && item.bets.length > 0
+                                                    ? item.winnerGroup // Use the actual winnerGroup if bets exist
+                                                    : Math.random() < 0.5
+                                                        ? 'SMALL'
+                                                        : 'BIG'; // Use a random value if bets are empty
+
+                                            return (
+                                                <tr key={index}>
+                                                    <td>{item.gameUID}</td>
+                                                    <td width="140">
+                                                        <div className="winners_col_row">
+                                                            <span className="icon_win">
+                                                                <img src={Winner} alt="Winner" />
+                                                            </span>
+                                                            <p>{winnerGroup === 'SMALL' ? 'Alpha' : 'Beta'}</p>
+                                                            <span className="icon_rate">
+                                                                <img src={winnerGroup === 'SMALL' ? Alpha : Beta} alt="Alpha or Beta" />
+                                                            </span>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })}
+
 
 
                             </tbody>

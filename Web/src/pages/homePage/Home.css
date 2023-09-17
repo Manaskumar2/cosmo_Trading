@@ -4,8 +4,8 @@
 .home .container .col-9 {text-align: center;}
 .home .container .col-9 img {margin-left: 5rem;}
 
-.main-background{background: #001C3E ; display: block; margin: auto; width:450px;}
+.main-background{background: #001C3E ; display: block; margin: auto; max-width:500px;}
 
 @media(min-width:500px){
-    .main-background{width:450px;}
+    .main-background{max-width:500px;}
 }

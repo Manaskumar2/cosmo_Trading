@@ -27,6 +27,6 @@ font-size: 1rem;font-weight: 500;}
 .ref-txt{ color: #FFF;font-family: Montserrat;font-size: 1rem;margin: 2rem 0;}
 .ref-imges{margin-bottom: 4rem;}
 .qr-img{width: 8rem;margin: auto;margin-left: 30%;}
-@media(min-width:750px){
-    .upi{width: 30vw;display: block; margin: auto;}
+@media(min-width:500px){
+    .upi{max-width:500px; display: block; margin:0 auto;}
 }

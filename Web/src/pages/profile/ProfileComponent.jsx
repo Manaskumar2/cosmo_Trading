@@ -88,7 +88,7 @@ function Profile() {
                         </div>
                     </div>
                 </div>
-                <div className="wallet">
+                <div className="wallet listing-wrapper">
                 {/* <div className="container winWallet">
                     <div className="row">
                         <div className="col-8" style={{ marginBottom: "10px" }}>

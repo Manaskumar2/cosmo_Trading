@@ -1,4 +1,4 @@
-.desktop, .login-container{max-width:450px; margin: 0 auto; background: #003d69;}
+.desktop, .login-container{max-width:500px; margin: 0 auto; background: #003d69;}
 .policy{font-family: 'Montserrat'; color: #1970AE;}
 .policy a{color: #299DEA;font-family: 'Montserrat';font-style: 500;}
 .policy input{font-family: 'Montserrat';background: #103782;size: 1rem; margin: 0 5px 0 0;}
@@ -24,7 +24,7 @@
 
 .signup-container p{ margin-bottom: 1rem; font-family: 'Montserrat';color: #445D9D;}
 .signup-container p span a{ text-decoration: none; color: #299DEA; font-weight: 550;}
-.logo-container{background: url('../../images/Game-Banner.svg') top center no-repeat; height:240px;}
+.logo-container{background: url('../../images/Game-Banner.svg') top center no-repeat; background-size:cover; height:220px;}
 .logo-container img{height: 5rem;}
 .wrapper{position: relative;}
 .front{padding-right: 1rem; border-right: 1px solid #346b8a; margin-right:12px; width:34px; text-align: center;}

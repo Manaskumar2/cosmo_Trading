@@ -12,7 +12,7 @@ import { AuthState } from '../../Atoms/AuthState'
 import { UserDetails } from '../../Atoms/UserDetails'
 import { useRecoilValue, useRecoilState } from 'recoil'
 import axios from 'axios'
- import { useEffect,useState } from 'react'
+ import { useEffect } from 'react'
  import next from '../../../../SVG/next.svg'
 import wallet1 from './wallet-2 1.svg'
 import wallet2 from './wallet-3 1.svg'
@@ -102,7 +102,7 @@ function Wallet() {
                             <p style={{ color: '#29CEE4',fontFamily: 'Montserrat' }}>Wallet balance</p>
                             </div>
                             <div className="col-4" style={{textAlign:'right'}}><img src={wallet} alt="" /></div>
-                            <h2 style={{ color: '#fff',letterSpacing: 0.15,fontSize: 27,fontFamily: 'Montserrat',display:'flex', fontWeight: 600}}><img src={rupee} alt="" />{userData && userData.data.data.userDetails.walletAmount} <img src={reload} alt="" style={{marginLeft:10,}} /></h2>
+                            <h2 style={{ color: '#fff',letterSpacing: 0.15,fontSize: 27,fontFamily: 'Montserrat',display:'flex', fontWeight: 600}}><img src={rupee} alt="" />{userData && userData.data.data.userDetails.walletAmount.toFixed(2)} <img src={reload} alt="" style={{marginLeft:10,}} /></h2>
                         </div>
                         <div className="container">
                             <div className="row history-row">

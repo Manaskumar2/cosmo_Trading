@@ -1,4 +1,6 @@
 import banner1 from '../../images/bannerCosmoTrade.svg'
+import banner2 from '../../images/bannerCosmoTrade2.svg';
+import banner3 from '../../images/bannerCosmoTrade3.svg';
 import Carousel from 'react-bootstrap/Carousel';
 import mic from '../../images/mic.svg'
 import './Banner.css'
@@ -13,12 +15,12 @@ function banner() {
                         </Carousel.Caption>
                     </Carousel.Item>
                     <Carousel.Item interval={8000}>
-                        <img src={banner1} />
+                        <img src={banner2} />
                         <Carousel.Caption>
                         </Carousel.Caption>
                     </Carousel.Item>
                     <Carousel.Item interval={8000}>
-                        <img src={banner1} />
+                        <img src={banner3} />
                         <Carousel.Caption>
                         </Carousel.Caption>
                     </Carousel.Item>

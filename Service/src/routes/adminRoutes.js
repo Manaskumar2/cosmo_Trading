@@ -5,12 +5,12 @@ const router = express.Router();
 const { authentication, adminAuthorization } = require("../middlewares/authMiddleware")
 const { adminlogin,getAllUsers,activeUser,deactiveUser,getDownlineDetails, getUserDetailsByUserId } = require("../controllers/userController")
 const { uploadQrCode, getAllImageURLs } = require('../controllers/qrCodeController')
-const { getBankAccountbyId } = require("../controllers/withdrawAccountController")
+const { getBankAccountbyId, updateBankAccount } = require("../controllers/withdrawAccountController")
 const { getPaymentRequest, updatePaymentRequest } = require("../controllers/rechargeController")
 // const { getWithdrawRequest, confirmRequest } = require("../controllers/userWithdrawController");
 const {getpremiumRequest,updatePremiumUser, getPremiumRequestById} =  require("../controllers/premiumController")
 const { getWithdrawRequest, confirmRequest } = require("../controllers/userWithdrawController");
-const { deleteGames } = require("../controllers/gameController");
+const { deleteGames, growUpBetamount } = require("../controllers/gameController");
 router.post("/signIn", adminlogin)
 
 router.get("/getAllUsers", authentication,adminAuthorization ,getAllUsers)
@@ -42,13 +42,15 @@ router.put("/updatePremiumRequest/:userId", authentication, adminAuthorization, 
 
 
 router.get("/getWithdrawRequest", authentication, adminAuthorization, getWithdrawRequest)
-router.put("/conformWithdrawRequest/:requestId", authentication, adminAuthorization,confirmRequest)
+router.put("/conformWithdrawRequest/:requestId", authentication, adminAuthorization, confirmRequest)
+router.put("/updateUserBankAccount/:bankId",authentication,adminAuthorization,updateBankAccount)
 
 router.get("/getWithdrawRequest", authentication, adminAuthorization, getWithdrawRequest)
 router.put("/conformWithdrawRequest/:requestId", authentication, adminAuthorization, confirmRequest)
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>GrowUp<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<//
+router.get("/growUpbetAmount", authentication,adminAuthorization,growUpBetamount)
 
-
-router.delete("/delete", authentication,deleteGames)
+router.delete("/delete", authentication,adminAuthorization,deleteGames)
 
 
 module.exports =router

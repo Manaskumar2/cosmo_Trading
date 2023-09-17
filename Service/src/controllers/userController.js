@@ -13,17 +13,20 @@ const signUp = async (req, res) => {
   try {
     let data = req.body;
 
-    let { phoneNumber, password, referralCode } = data
+    let { phoneNumber, password, referralCode,userName} = data
 
     if (validation.isValidBody(data)) return res.status(400).send({ status: false, message: "provide all required fields" })
     if (!referralCode) return res.status(400).send({ status: false, message: "please provide refferal code" })
     const checkrefferalCode = await userModel.findOne({ referralCode: referralCode })
     if (!checkrefferalCode) return res.status(400).send({ status: false, message: "Invalid referral code" })
+    if (!userName) return res.status(404).send({ status: false, message: "please enter your Name" })
+    if (!validation.isValidName(userName)) return res.status(404).send({ status: false, messaage: "Please enter valid Name" })
+    
 
 
     if (!validation.isValid(phoneNumber)) return res.status(400).send({ status: false, message: `PhoneNumber  is Required` })
 
-    let uniquePhone = await userModel.findOne({ phoneNumber: phoneNumber })
+    let uniquePhone = await userModel.findOne({ phoneNumber: phoneNumber})
     if (!validation.isValidPhone(phoneNumber)) return res.status(400).send({ status: false, message: `This PhoneNumber is Invalid` })
 
     if (uniquePhone) return res.status(400).send({ status: false, message: `This PhoneNumber  has already registered Please Sign In`, })
@@ -39,13 +42,14 @@ const signUp = async (req, res) => {
     let  UID = latestUID+1;
    
     
-    if (!UID) return res.status(404).send({ status: false, message: "udi is not available" })
+    if (!UID) return res.status(404).send({ status: false, message: "UID is not available" })
     const createUser = await userModel.create({
       phoneNumber: phoneNumber,
       password: hashedPassword,
       parentReferralCode: referralCode,
       referralCode: await generateUniqueReferralCode()+UID,
-      UID:UID
+      UID: UID,
+      name:userName
     })
    
     if (referralCode) {
@@ -256,11 +260,12 @@ const updateUserProfile = async (req, res) => {
   try {
 
 
-    const { nickName } = req.body;
+    const { userName} = req.body;
 
-    if (!nickName) {
-      return res.status(400).json({ status:false,message: 'No nickname provided' });
+    if (!userName) {
+      return res.status(400).json({ status:false,message: 'No Name provided' });
     }
+    if (!validation.isValidName(userName)) return res.status(400).json({ status: false, message: "invalid name  provided" })
 
     const user = await userModel.findById(req.decodedToken.userId);
 
@@ -268,9 +273,8 @@ const updateUserProfile = async (req, res) => {
       return res.status(404).json({status:false, message: 'User not found' });
     }
 
-    user.nickName = nickName;
+    user.name = userName;
   
-
     await user.save();
 
     res.status(400).json({status:true, message: 'Profile updated successfully', data:user._doc });

@@ -1,4 +1,4 @@
-.desktop, .login-container{max-width:450px; margin: 0 auto; background: #003d69;}
+.desktop, .login-container{max-width:500px; margin: 0 auto; background: #003d69;}
 .forgotPage{min-height: 100vh; background:#003D69;}
 .forgotPage .container-fluid {padding:40px 20px; padding-top:20px;}
 .forgotPage .wrapper .logo-container {position: relative;}
@@ -19,7 +19,7 @@ input::-webkit-inner-spin-button {
 .inputBox input {color: #fff;font-family: "Montserrat";font-size: 16px;font-style: normal;font-weight: 500;line-height: normal;letter-spacing: 0.9px;background-color: transparent;border: 0;outline: none;}
 .otp p {color: #579DD0;text-align: center;font-family: "Montserrat";font-size: 13px;font-style: normal;font-weight: 400;line-height: normal;}
 .wrapper{position: relative;}
-.top .row{background: url('../../images/banner-forgotpwd.svg'); height:240px; margin: 0;}
+.top .row{background: url('../../images/banner-forgotpwd.svg') top center no-repeat; background-size: cover; height:240px; margin: 0;}
 .back{padding-top: 1rem; padding-left: 1rem;}
 .head{padding-top: 1rem; padding-right: 1rem;}
 .title{margin-top: 1rem !important;text-align: center;}

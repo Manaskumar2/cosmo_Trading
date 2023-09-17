@@ -34,7 +34,7 @@ a{text-decoration: none;}
 .passwordChange-btn{margin-top: 3rem;}
 .back-btn{outline: none; border: 0; background-color: transparent;}
 .top .row .col-8{padding-top: 1rem;}
-
+.logo{width:7rem; height:7rem;}
 ::-webkit-input-placeholder { /* Edge */
   color: #3592D3;
   font-family: Montserrat;
@@ -87,9 +87,7 @@ input[type="number"]::-ms-outer-spin-button {
 
 @media (min-width:500px){
   .back-icon{margin-left: 2rem;}
-  .forgotPage{
-    width:450px;
-  }
+  /* .forgotPage{width:450px;} */
   .passwordChange-btn{margin-top: 2rem;}
   .btn-container{margin-top: 2rem;}
 }

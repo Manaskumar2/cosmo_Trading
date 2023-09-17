@@ -31,9 +31,6 @@ const userSchema = new mongoose.Schema({
   profilePhoto: {
     type: String,
   },
-  nickName: {
-    type: String,
-  },
   level: {
     type: Number,
     default: 0,

@@ -9,7 +9,7 @@
 .promotion .out .in svg{font-size: 2rem; color: #ffffff;}
 .pro-txt{ padding-top: 1.4rem;} */
 
-.navBar{padding: 0; position: fixed; bottom:0; max-width: 450px;}
+.navBar{padding: 0; position: fixed; bottom:0; max-width:500px;}
 .link-container{background: linear-gradient(180deg, #00406F 0%, #2B62A5 100%); box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.20);}
 .link-container .col-3 a{color: #8BBCDF; text-align: center; font-family: 'Montserrat'; font-size: 0.75rem; font-style: normal; font-weight: 500;}
 .nav-Link{display: flex; flex-direction: column; justify-content: center; align-items: center; padding:10px 12px; gap:4px; margin: .5rem 0;color: #8BBCDF;font-family: Montserrat;font-size: 12px;font-weight: 500;}
@@ -26,5 +26,5 @@
 .link-container .link i{font-size: 20px;}
 
 @media(min-width:500px){
-    .navBar{width:450px;}
+    .navBar{max-width:500px;}
 }

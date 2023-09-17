@@ -1,4 +1,4 @@
-.desktop, .login-container{max-width:450px; margin: 0 auto; background: #003d69;}
+.desktop, .login-container{max-width:500px; margin: 0 auto; background: #003d69;}
 .login {min-height:100vh;}
 .login .container-fluid{padding:40px 20px; padding-top:20px}
 .login .container-fluid div a{text-decoration: none; color:#3b9be0; font-family: 'Montserrat';font-size: 14px;}
@@ -10,7 +10,7 @@
 .login-container h3{padding-top: 1.5rem; text-align: center;}
 .login-container p{ margin-bottom: 1rem; font-family: 'Montserrat';color: #445D9D;}
 .login-container p span a{ text-decoration: none; color: #299DEA; font-weight: 550;}
-.logo-container{background: url('../../images/Game-Banner.svg') top center no-repeat; height:240px;}
+.logo-container{background: url('../../images/Game-Banner.svg') top center no-repeat; background-size: cover; height:220px;}
 .logo-container img{height: 5rem;}
 .wrapper{position: relative;}
 .logo-container{display: flex; justify-content: center;}

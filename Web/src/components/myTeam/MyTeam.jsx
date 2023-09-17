@@ -129,12 +129,12 @@ function MyTeam() {
                     <div className="col-4"><button>Inquiries</button></div>
                 </div>
             </div>
-            <div className='container '>
+            {/* <div className='container '>
                 <div className='row total-bet-row'>
                     {userData && <div className="col-6" style={{ borderRight: '1px solid #1E5D81' }}>Total Winning Amount : &nbsp;<span style={{ color: "#FBB040" }}>{userData.data.data.userDetails.winningAmount}</span></div>}
                     <div className="col-6">Total Commission Amount : &nbsp;{commission && <span style={{ color: "#FBB040" }}>{commission.data.totalCommissionAmount}</span>}</div>
                 </div>
-            </div>
+            </div> */}
 
             <div className="table-responsive">
                 <table className="table table-striped">
@@ -157,7 +157,8 @@ function MyTeam() {
                                     <td>{item.name}</td>
                                     <td style={{ paddingLeft: 0 }}>{maskedPhoneNumber}</td>
                                     <td style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                        <button className='details-btn' onClick={() => handleUserdata(item.UID)}>Details</button>
+                                        <button className='details-btn' >Details</button>
+                                        {/* onClick={() => handleUserdata(item.UID)} */}
                                     </td>
                                 </tr>
                             );

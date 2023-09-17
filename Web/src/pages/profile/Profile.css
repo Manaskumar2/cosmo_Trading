@@ -2,7 +2,7 @@
 .ProNav .row .col-8{color: #FFF;text-align: center;font-family: 'Montserrat';font-size: 1.1rem;font-weight: 500;letter-spacing: 0.00688rem;text-transform: capitalize;}
 .profile-card{border-radius: 0rem 0rem 1.25rem 1.25rem;
     background: linear-gradient(180deg, #06355E 0%, rgba(9, 137, 156, 0.00) 100%); padding: 2rem 1.5rem;}
-.profileContainer{background: #001C3E; min-height: 100vh; max-width: 450px; margin: 0 auto;}
+.profileContainer{background: #001C3E; min-height: 100vh; max-width:500px; margin: 0 auto;}
 .profile-card .img-cover img{border-radius: 50%; border: 10px solid #184567;}
 .userData{margin: 1rem 0 0 .5rem;}
 .userData p{color: #FFF;font-family: 'Poppins';font-size: 1rem;font-weight: 400;}
@@ -18,7 +18,7 @@ border: 1px solid #FFF;
 background: linear-gradient(143deg, #296DAC 0%, #2FB0E7 100%);width: 100%;}
 .wr-btns {border-top: 1px solid #2EACBD; padding-top: 1.5rem;}
 .wr-btns .col-6 button{color: #FFF;font-family: 'Montserrat';padding: 0.625rem 12px;font-size: 0.875rem;font-style: normal;font-weight: 500;line-height: normal;letter-spacing: 0.7px;}
-.promotion-btn{background: url('./colorBtn.svg'); width: 100%; border: 0; outline: none; padding:10px; margin-top: 1.5rem; border-radius: 2rem; border: 2px solid white;}
+.promotion-btn{background: url('./colorBtn.svg') center center no-repeat; background-size: cover; width: 100%; border: 0; outline: none; padding:10px; margin-top: 1.5rem; border-radius: 2rem; border: 2px solid white;}
 .promotion{display: flex;align-items: center;color:#fff; font-size: 1.1rem; font-weight: 500;justify-content: center;gap: 1rem;}
 .profileIcons .row .col-4 .icon{display: flex; justify-content: center; align-items: center; border-radius: 6.25rem;border: 1px solid rgba(255, 255, 255, 0.50);background: #002652; height: 4.5rem; width: 4.5rem;}
 .profileIcons .row .col-4 .icon img{width: 2.2rem;height: 2.2rem; }
@@ -33,3 +33,4 @@ justify-content: center;align-items: center;border-radius: 6.25rem;background: #
 .lvl{border-radius:5px; background:linear-gradient(180deg, #CF433B 0%, #FDD754 100%); display:flex; padding:6px 8px; justify-content: space-between; align-items: center; font-size: 14px; font-weight: 500;}
 .lvlContainer{display: flex; justify-content: space-between;align-items: center; padding-right: 0 !important;}
 
+.profileContainer .listing-wrapper{padding: 20px 0;}

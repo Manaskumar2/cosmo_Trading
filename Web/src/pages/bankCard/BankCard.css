@@ -18,6 +18,6 @@ font-weight: 400;letter-spacing: 0.02rem;}
     font-style: normal;
     font-weight: 600;margin:4rem 0 3rem 0;}
 
-    @media(min-width:768px){
-        .bankCard{width: 30vw;margin: auto;}
+    @media(min-width:500px){
+        .bankCard{max-width:500px; margin:0 auto;}
     }

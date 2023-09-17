@@ -21,10 +21,7 @@ const accountSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    email: {
-        type: String,
-        required: true
-    },
+  
     bankBranchAddress: {
         type: String,
         required: true

@@ -416,10 +416,8 @@ durationOptions.forEach((value) => {
 const betController = async (req, res) => {
   try {
     const { amount, group, duration } = req.body;
-    console.log(amount,group,duration);
 
     if (
-      !amount ||
       !group ||
       !duration 
   
@@ -429,7 +427,8 @@ const betController = async (req, res) => {
         .status(400)
         .json({ status: false, message: "Missing parameters" });
     }
-
+    if (!amount) return res.status(400).send({ status: false, message: "you cannot bet without bet amount" })
+    
     const user = await userModel.findById(req.decodedToken.userId);
     const game = await Game.findOne({ duration, isCompleted: false });
     
@@ -462,15 +461,15 @@ const betController = async (req, res) => {
     //   return res.status(400).json({ status: false, message: "User already placed a bet in this game" });
     // }
 
-    let walletAmount = user.walletAmount - amount;
+   
+    game.bets.push({ user: user._id, amount, group });
+ 
+
+     await game.save();
+
+     let walletAmount = user.walletAmount - amount;
     let bettingAmount = user.bettingAmount + amount;
     let rechargeAmount = user.rechargeAmount-amount;
-    game.bets.push({ user: user._id, amount, group });
-
-
-    await game.save(
-      
-    );
     await userModel.updateOne(
       { _id: user._id },
       {
@@ -558,7 +557,7 @@ const growUpUserBettingHistory = async (req, res) => {
 
     for (const game of games) {
       const userBet = game.bets.find((bet) => bet.user.toString() === userId);
-      console.log(userBet)
+       console.log(userBet)
 
       if (!userBet) {
         // User did not bet on this game, skip it.
@@ -668,7 +667,7 @@ const getGameHistory = async (req, res) => {
     
     const skip = (page - 1) * limit;
 
-    const gamesWithSuccessfulBets = await Game.find({ duration: duration })
+    const gamesWithSuccessfulBets = await Game.find({ duration: duration,isCompleted:true })
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
@@ -679,6 +678,86 @@ const getGameHistory = async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+const growUpBetamount = async (req, res) => {
+  try {
+    const today = new Date();
+    today.setUTCHours(0, 0, 0, 0);
+
+    
+    const result = await Game.aggregate([
+      {
+        $match: { isCompleted: false }
+      },
+      {
+        $unwind: "$bets"
+      },
+      {
+        $group: {
+          _id: "$bets.group",
+          totalBetAmount: { $sum: "$bets.amount" }
+        }
+      }
+    ]);
+
+    let totalBetAmounts = {
+      small: 0,
+      big: 0
+    };
+
+    result.forEach((group) => {
+      if (group._id === "small") {
+        totalBetAmounts.small = group.totalBetAmount;
+      } else if (group._id === "big") {
+        totalBetAmounts.big = group.totalBetAmount;
+      }
+    });
+
+    
+    const todayResult = await Game.aggregate([
+      {
+        $match: {
+          isCompleted: true,
+          startTime: { $gte: today }
+        }
+      },
+      {
+        $unwind: "$bets"
+      },
+      {
+        $group: {
+          _id: "$bets.group",
+          todayBetAmount: { $sum: "$bets.amount" }
+        }
+      }
+    ]);
+
+    let todayBetAmounts = {
+      small: 0,
+      big: 0
+    };
+
+    todayResult.forEach((group) => {
+      if (group._id === "small") {
+        todayBetAmounts.small = group.todayBetAmount;
+      } else if (group._id === "big") {
+        todayBetAmounts.big = group.todayBetAmount;
+      }
+    });
+
+    return res.status(200).send({
+      status: true,
+      message: "Success",
+      data: {
+        totalBetAmounts,
+        todayBetAmounts
+      }
+    });
+  } catch (error) {
+    console.error('Error calculating total bet amounts:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
 
 const deleteGames = async (req, res) => {
   try {
@@ -708,7 +787,8 @@ module.exports = {
   growUpUserBettingHistory ,
   getGame,
   getGameHistory,
-  deleteGames
+  deleteGames,
+  growUpBetamount
 
 };
 

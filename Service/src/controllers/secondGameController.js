@@ -4,6 +4,7 @@ const moment = require("moment");
 require("moment-timezone");
 const Wallet = require("../models/companywallet");
 let walletId = "64c4e1fefff409e9859e8216";
+const {generateUniqueNumber2} = require("../util/util")
 
 
 
@@ -22,32 +23,55 @@ async function calculatResult(gameId) {
         return;
     }
 
-    const ABets = game.bets.filter((bet) => {
-        return bet.group == "A";
-    });
-    const BBets = game.bets.filter((bet) => {
-        return bet.group == "B";
-    });
-    const CBets = game.bets.filter((bet) => {
-        return bet.group == "C";
-    });
+    const ABets = game.bets.filter((bet) => bet.group == "A");
+    const BBets = game.bets.filter((bet) => bet.group == "B");
+    const CBets = game.bets.filter((bet) => bet.group == "C");
 
-    const AUsers = ABets.map(bet => bet.user);
-    const BUsers = BBets.map(bet => bet.user);
-    const CUsers = CBets.map(bet => bet.user)
+    const AAmount = ABets.reduce((acc, bet) => acc + bet.amount, 0);
+    const BAmount = BBets.reduce((acc, bet) => acc + bet.amount, 0);
+    const CAmount = CBets.reduce((acc, bet) => acc + bet.amount, 0);
 
+    let winnerGroup = null;
+    let runnerUpGroup = null;
+    let losersGroup = null;
 
-    let AAmount = ABets.reduce((acc, res) => {
-        return acc + res.amount;
-    }, 0);
+    // Determine the winner and runner-up groups based on total bet amounts
+    if (AAmount > BAmount && AAmount > CAmount) {
+        winnerGroup = "A";
+        if (BAmount > CAmount) {
+            runnerUpGroup = "B";
+            losersGroup = "C";
+        } else {
+            runnerUpGroup = "C";
+            losersGroup = "B";
+        }
+    } else if (BAmount > AAmount && BAmount > CAmount) {
+        winnerGroup = "B";
+        if (AAmount > CAmount) {
+            runnerUpGroup = "A";
+            losersGroup = "C";
+        } else {
+            runnerUpGroup = "C";
+            losersGroup = "A";
+        }
+    } else if (CAmount > AAmount && CAmount > BAmount) {
+        winnerGroup = "C";
+        if (AAmount > BAmount) {
+            runnerUpGroup = "A";
+            losersGroup = "B";
+        } else {
+            runnerUpGroup = "B";
+            losersGroup = "A";
+        }
+    }
 
-    const BAmount = BBets.reduce((acc, res) => {
-        return acc + res.amount;
-    }, 0);
+   
+    game.winnerGroup = winnerGroup;
+    game.runnerUpGroup = runnerUpGroup;
+    game.losersGroup = losersGroup;
 
-    const CAmount = CBets.reduce((acc, res) => {
-        return acc + res.amount;
-    }, 0);
+    await game.save();
+
 
     let runners = [
         {
@@ -67,7 +91,7 @@ async function calculatResult(gameId) {
         }
     ]
     runners = runners.sort((a, b) => {
-        return b.amount - a.amount
+        return b.amount - a.amount 
     })
 
     if (AAmount != BAmount && BAmount != CAmount && CAmount != 0) {
@@ -113,116 +137,7 @@ async function calculatResult(gameId) {
             await distributeComissionToOneUser(winner, game);
         }
     }
-
-    // if (bigAmount > 0 && smallAmount > 0 && bigAmount != smallAmount) {
-    //     let winnerGroup = "big";
-    //     let totalAmount = bigAmount + smallAmount;
-    //     if (bigAmount - smallAmount > 0) {
-    //         winnerGroup = "small";
-    //     }
-
-    //     if (winnerGroup == "small") {
-    //         smallUsers.forEach(async (bet) => {
-    //             let winAmount = roundDown(bet.amount * 1.94, 2);
-    //             totalAmount = totalAmount - winAmount;
-    //             await userModel.updateOne(
-    //                 { _id: bet.user._id },
-    //                 { walletAmount: bet.user.walletAmount + winAmount }
-    //             );
-    //         });
-    //     } else if (winnerGroup == "big") {
-    //         bigUsers.forEach(async (bet) => {
-    //             let winAmount = roundDown(bet.amount * 1.94, 2);
-    //             totalAmount = totalAmount - winAmount;
-    //             await userModel.updateOne(
-    //                 { _id: bet.user._id },
-    //                 { walletAmount: bet.user.walletAmount + winAmount }
-    //             );
-    //         });
-    //     }
-
-    //     let distributedAmount = await distributeComissionToAll(game);
-    //     let compnayFund = totalAmount - distributedAmount;
-    //     const wallet = await Wallet.findOne({ _id: walletId });
-    //     wallet.amount = wallet.amount + compnayFund;
-    //     wallet.actions.push({
-    //         actions: "+",
-    //         date: new Date(),
-    //         amount: compnayFund,
-    //         wonFrom: "betting",
-    //         source: game._id,
-    //     });
-    //     await wallet.save();
-    //     console.log("remaining money is ", totalAmount - distributedAmount);
-    // } else if (bigAmount > 0 && smallAmount > 0 && bigAmount == smallAmount) {
-    //     let winnerGroup = "small";
-    //     let totalAmount = bigAmount + smallAmount;
-    //     if (bigUsers.length - smallUsers.length > 0) {
-    //         winnerGroup = "big";
-    //     } else if (bigUsers.length == smallUsers.length) {
-    //         winnerGroup = parseInt(Math.random() * 10000) % 2 == 0 ? "small" : "big";
-    //     }
-
-    //     if (winnerGroup == "small") {
-    //         smallUsers.forEach(async (bet) => {
-    //             let winAmount = roundDown(bet.amount * 1.94, 2);
-    //             totalAmount = totalAmount - winAmount;
-    //             await userModel.updateOne(
-    //                 { _id: bet.user._id },
-    //                 { walletAmount: bet.user.walletAmount + winAmount }
-    //             );
-    //         });
-    //     } else if (winnerGroup == "big") {
-    //         bigUsers.forEach(async (bet) => {
-    //             let winAmount = roundDown(bet.amount * 1.94, 2);
-    //             totalAmount = totalAmount - winAmount;
-    //             await userModel.updateOne(
-    //                 { _id: bet.user._id },
-    //                 { walletAmount: bet.user.walletAmount + winAmount }
-    //             );
-    //         });
-    //     }
-
-    //     let distributedAmount = await distributeComissionToAll(game);
-    //     let compnayFund = totalAmount - distributedAmount;
-    //     const wallet = await Wallet.findOne({ _id: walletId });
-    //     wallet.amount = wallet.amount + compnayFund;
-    //     wallet.actions.push({
-    //         actions: "+",
-    //         date: new Date(),
-    //         amount: compnayFund,
-    //         wonFrom: "betting",
-    //         source: game._id,
-    //     });
-    //     await wallet.save();
-    //     console.log("remaining money is ", totalAmount - distributedAmount);
-    // } else if (bigAmount == 0 || smallAmount == 0) {
-    //     let totalAmount = smallAmount + bigAmount;
-    //     game.bets.forEach((bet) => {
-    //         forEach(async (bet) => {
-    //             let winAmount = roundDown(bet.amount * 0.70, 2);
-    //             totalAmount = totalAmount - winAmount;
-    //             await userModel.updateOne(
-    //                 { _id: bet.user._id },
-    //                 { walletAmount: bet.user.walletAmount + winAmount }
-    //             );
-    //         });
-    //     });
-    //     let distributedAmount = await distributeComissionToAll(game);
-    //     let compnayFund = totalAmount - distributedAmount;
-    //     const wallet = await Wallet.findOne({ _id: walletId });
-    //     wallet.amount = wallet.amount + compnayFund;
-    //     wallet.actions.push({
-    //         actions: "+",
-    //         date: new Date(),
-    //         amount: compnayFund,
-    //         wonFrom: "betting",
-    //         source: game._id,
-    //     });
-    //     await wallet.save();
-    //     console.log("remaining money is ", totalAmount - distributedAmount);
-
-    // }
+ 
 }
 
 async function distributeComissionToThreeUsers(winner, runnerUp, losers, game) {
@@ -282,6 +197,7 @@ async function distributeComissionToThreeUsers(winner, runnerUp, losers, game) {
         source: game._id,
     });
     await wallet.save();
+
 
 }
 
@@ -575,6 +491,8 @@ const startAndCheckGame = async (duration) => {
                 duration: duration,
                 startTime: moment(new Date()).tz("Asia/Kolkata"),
                 endTime: moment(new Date()).tz("Asia/Kolkata").add(duration, "m"),
+                gameUID: await generateUniqueNumber2()
+                
             });
             // setTimeout(() => {
             //     startAndCheckGame(duration)
@@ -590,6 +508,7 @@ const startAndCheckGame = async (duration) => {
             duration: duration,
             startTime: moment(new Date()).tz("Asia/Kolkata"),
             endTime: moment(new Date()).tz("Asia/Kolkata").add(duration, "m"),
+            gameUID: await generateUniqueNumber2()
         });
         // setTimeout(() => {
         //   startAndCheckGame(duration);
@@ -601,7 +520,7 @@ const startAndCheckGame = async (duration) => {
 //     startAndCheckGame(value)
 // })
 
-const betController = async (req, res) => {
+const bet2ndController = async (req, res) => {
     try {
         const { amount, group, duration } = req.body;
 
@@ -670,7 +589,188 @@ const betController = async (req, res) => {
     }
 };
 
+const riseUpUserBettingHistory = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+
+    if (!userId) return res.status(400).send({ status: false, message: "please provide userId" });
+    
+    const user = await userModel.findOne({ _id: userId })
+    if (!user) return res.status(400).send({ status: false, message: "user not found" });
+
+    const games = await Game.find({ 'bets.user': userId })
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .exec();
+
+    const history = [];
+
+
+    for (const game of games) {
+      const userBet = game.bets.find((bet) => bet.user.toString() === userId);
+      console.log(userBet)
+
+      if (!userBet) {
+        
+        continue;
+      }
+
+      const startTime = moment(game.startTime);
+      const endTime = moment(game.endTime);
+      const duration = moment.duration(endTime.diff(startTime)).asMinutes();
+
+     
+      if (userBet.group === 'A' && game.winnerGroup === 'A') {
+        history.push({
+          gameId: game.gameUID,
+          startTime: startTime.format(),
+          endTime: endTime.format(),
+          duration: duration,
+          amount: userBet.amount,
+          group: userBet.group,
+          result: 'win',
+        });
+      }
+
+    
+      if (userBet.group === 'B' && game.winnerGroup === 'B') {
+        history.push({
+          gameId: game.gameUID,
+          startTime: startTime.format(),
+          endTime: endTime.format(),
+          duration: duration,
+          amount: userBet.amount,
+          group: userBet.group,
+          result: 'win',
+        });
+        }
+        if (userBet.group === 'C' && game.winnerGroup === 'C') {
+        history.push({
+          gameId: game.gameUID,
+          startTime: startTime.format(),
+          endTime: endTime.format(),
+          duration: duration,
+          amount: userBet.amount,
+          group: userBet.group,
+          result: 'win',
+        });
+        }
+
+     
+      if (userBet.group === 'A' && game.winnerGroup === 'B') {
+        history.push({
+          gameId: game.gameUID,
+          startTime: startTime.format(),
+          endTime: endTime.format(),
+          duration: duration,
+          amount: userBet.amount,
+          group: userBet.group,
+          result: 'lose', 
+        });
+      }
+
+    
+      if (userBet.group === 'B' && game.winnerGroup === 'A') {
+        history.push({
+          gameId: game.gameUID,
+          startTime: startTime.format(),
+          endTime: endTime.format(),
+          duration: duration,
+          amount: userBet.amount,
+          group: userBet.group,
+          result: 'lose', 
+        });
+      }
+    }
+
+    const count = await Game.countDocuments({ 'bets.user': userId });
+
+    res.status(200).json({
+      currentPage: page,
+      totalPages: Math.ceil(count / limit),
+      history: history,
+    });
+  } catch (error) {
+    console.error('Error fetching user gameplay history:', error);
+    res
+      .status(500)
+      .json({ error: 'An error occurred while fetching user gameplay history' });
+  }
+};
+
+
+const get2ndGame = async (req, res) => { 
+  try {
+    const currentDate = moment(new Date()).tz("Asia/Kolkata");
+    const duration = parseInt(req.params.duration)
+    console.log(duration)
+    if (!duration) return res.status(400).send({status: false, meessage:"please provide time duration for game"})
+
+
+    const game = await Game.findOne({ duration: duration, isCompleted: false }).select({ isCompleted: 1, endTime: 1, startTime: 1 ,gameUID:1})
+    if (!game) return res.status(404).send({ status: false, message: "Game was ended" })
+    
+  
+  
+    return res.status(200).send({status:true,meessage:"success",data:game,currentTime:currentDate})
+     
+
+  } catch (error) {
+    res.status(500).json({ error: 'An error occurred while fetching  gameplay' });
+  }
+}
+
+const get2ndGameHistory = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const duration = parseInt(req.params.duration);
+
+    
+    const skip = (page - 1) * limit;
+
+    const gamesWithSuccessfulBets = await Game.find({ duration: duration })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    return res.status(200).send({ status: true, message: "Success", data: gamesWithSuccessfulBets });
+  } catch (error) {
+    console.error('Error fetching games with successful bets:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+const delete2ndGames = async (req, res) => {
+  try {
+    const deletedGames = await Game.deleteMany({ 'bets': { $size: 0 } });
+
+    if (deletedGames.deletedCount > 0) {
+      return res.status(200).json({
+        status: true,
+        message: `${deletedGames.deletedCount} games with empty bets array deleted successfully.`,
+      });
+    } else {
+      return res.status(404).json({
+        status: false,
+        message: 'No games with empty bets array found.',
+      });
+    }
+  } catch (error) {
+    console.error('Error deleting games:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
 
 module.exports = {
-    betController
+    bet2ndController,
+    get2ndGame,
+    get2ndGameHistory,
+    delete2ndGames,
+    riseUpUserBettingHistory
+
 }
