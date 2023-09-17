@@ -1,0 +1,1 @@
+import{j as i}from"./index-bb96bddc.js";import{A as s,S as e}from"./Side-26c8f25e.js";function r(){return i.jsxs("div",{children:[i.jsx(s,{}),i.jsxs("div",{className:"flex-div",children:[i.jsx(e,{}),i.jsx("div",{className:"admin-rightSection",children:"Home"})]})]})}export{r as default};
