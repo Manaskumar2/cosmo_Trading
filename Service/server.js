@@ -58,12 +58,21 @@ app.use("/api/admin", admin);
   //   res.sendFile(path.join(rootDir, "../Web/dist/index.html"));
   // });
 
-  app.use(express.static(path.join(__dirname, "../Web/dist")));
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname + "../Web/dist/index.html"));
-});
-//  }
+//   app.use(express.static(path.join(__dirname, "../Web/dist")));
+// app.get("*", (req, res) => {
+//   res.sendFile(path.join(__dirname + "../Web/dist/index.html"));
+// });
 
+
+//  }
+//  app.use(express.static(path.join(__dirname, "../Web/dist")));
+// app.get("*", (req, res) => {
+//   res.sendFile(path.join(__dirname + "../Web/dist/index.html"));
+// });
+  app.use(express.static(path.join(__dirname, "ui")));
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname + "..ui/index.html"));
+});
 app.use((req, res, next) => {
   const error = new Error("Path not found.");
   error.status = 404;
