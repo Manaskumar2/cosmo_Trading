@@ -282,8 +282,7 @@ async function distributeCommission(user, amount) {
         return distributedAmount;
       }
 
-      let dAmount = roundDown(amount * 0.97 * (downloadResult[i] / 100), 2);
-
+      let dAmount = roundDown(amount * (downloadResult[i] / 100), 2);
       
       let dailyCommission = {
         date: new Date(),

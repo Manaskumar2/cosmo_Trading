@@ -19,8 +19,8 @@ const signUp = async (req, res) => {
     if (!referralCode) return res.status(400).send({ status: false, message: "please provide refferal code" })
     const checkrefferalCode = await userModel.findOne({ referralCode: referralCode })
     if (!checkrefferalCode) return res.status(400).send({ status: false, message: "Invalid referral code" })
-    if (!userName) return res.status(404).send({ status: false, message: "please enter your Name" })
-    if (!validation.isValidName(userName)) return res.status(404).send({ status: false, messaage: "Please enter valid Name" })
+    // if (!userName) return res.status(404).send({ status: false, message: "please enter your Name" })
+    // if (!validation.isValidName(userName)) return res.status(404).send({ status: false, messaage: "Please enter valid Name" })
     
 
 
@@ -49,7 +49,7 @@ const signUp = async (req, res) => {
       parentReferralCode: referralCode,
       referralCode: await generateUniqueReferralCode()+UID,
       UID: UID,
-      name:userName
+      // name:userName
     })
    
     if (referralCode) {
