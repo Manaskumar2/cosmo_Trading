@@ -34,9 +34,7 @@ export const toastProps = {
 
 
 function Withdraw() {
-  const handleBackButtonClick = () => {
-    window.history.back(); 
-  };
+
   const auth = useRecoilValue(AuthState)
   const [withdrawAmount, setAmount] = useState(0);
   const [selectedRoute, setSelectedRouteButton] = useState(true);
@@ -86,7 +84,7 @@ function Withdraw() {
     <div className='recharge'>
       <div className="container-fluid PromoNav" >
         <div className="row">
-          <Link onClick={handleBackButtonClick} className="col-2">
+          <Link to='/' className="col-2">
             <img src={back} alt="" />
           </Link>
           <div className="col-8">

@@ -273,7 +273,7 @@ function RiseUp() {
 
                             {/* // animation // */}
                             {showCountDown === true ? <Timer /> :
-                                <div className='image-cover'>
+                                <div className='second-image-cover'>
                                     <div className="ani-container">
                                         <div className="animated-div" style={{ height: `${heights[0]}px` }}></div>
                                         <div className="animated-div" style={{ height: `${heights[1]}px`, backgroundColor: "#20CD1C" }}></div>

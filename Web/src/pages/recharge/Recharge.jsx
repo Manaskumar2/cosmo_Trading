@@ -17,7 +17,7 @@ import {RechargeAmount} from '../../Atoms/RechargeAmount'
 
 
 function Recharge() {
-  // const history = useHistory();
+
 
   const [selectedButton, setSelectedButton] = useState(null);
   const [selectedRoute, setSelectedRouteButton] = useState(null);
@@ -33,14 +33,12 @@ function Recharge() {
   };
   const navigate = useNavigate()
   const userData = useRecoilValue(UserDetails)
-  const handleBackButtonClick = () => {
-    window.history.back(); 
-  };
+
   return (
     <div className='recharge'>
       <div className="container-fluid PromoNav" >
         <div className="row">
-          <Link onClick={handleBackButtonClick} className="col-2">
+          <Link to='/' className="col-2">
             <img src={back} alt="" />
           </Link>
           <div className="col-8">
