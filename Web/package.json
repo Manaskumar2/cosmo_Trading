@@ -25,6 +25,7 @@
     "react-router-dom": "^6.15.0",
     "recoil": "^0.7.7",
     "socket.io-client": "^4.7.2",
+    "vite-plugin-compression": "^0.5.1",
     "vite-plugin-eslint": "^1.8.1"
   },
   "devDependencies": {
