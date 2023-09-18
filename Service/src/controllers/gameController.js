@@ -408,9 +408,9 @@ const startAndCheckGame = async (duration) => {
   }
 };
 
-durationOptions.forEach((value) => {
-    startAndCheckGame(value)
-})
+// durationOptions.forEach((value) => {
+//     startAndCheckGame(value)
+// })
 
 const betController = async (req, res) => {
   try {
@@ -787,7 +787,8 @@ module.exports = {
   getGame,
   getGameHistory,
   deleteGames,
-  growUpBetamount
+  growUpBetamount,
+  startAndCheckGame
 
 };
 

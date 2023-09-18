@@ -9,6 +9,7 @@ const server = require("http").Server(app)
 const mongoose = require('mongoose');
 const {initSocket}=require("./src/socket/socketio.js")
 const bodyParser = require('body-parser');
+const { startCron } = require("./src/util/cron");
 
 
 app.use(
@@ -48,7 +49,7 @@ app.use("/api/admin", admin);
 
 
 
-let start = Date.now();
+
 
 
 // if (
@@ -72,8 +73,6 @@ app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname + "../Web/dist/index.html"));
 });
 
-let timeTaken = Date.now() - start;
-console.log("Total time taken : " + timeTaken + " milliseconds");
 //   app.use(express.static(path.join(__dirname, "ui")));
 // app.get("/", (req, res) => {
 //   res.sendFile(path.join(__dirname + "ui/index.html"));
@@ -96,4 +95,5 @@ app.use((error, req, res, next) => {
 
 server.listen(process.env.PORT, function () {
   console.log(`Express app running on ${PORT}`);
+  startCron()
 });
