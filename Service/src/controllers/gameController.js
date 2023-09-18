@@ -373,7 +373,7 @@ const startAndCheckGame = async (duration) => {
   if (game) {
     if (game.endTime.unix() - currentDate.unix() <= 0) {
       game.isCompleted = true;
-      // await calculatResult(game._id);
+       await calculatResult(game._id);
       await game.save({
         duration: duration,
         startTime: currentDate, 
