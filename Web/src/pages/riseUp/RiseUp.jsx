@@ -254,8 +254,8 @@ function RiseUp() {
             </div>
             <div>
                 <div className="container-fluid">
-                    <div className='clock-btn-container row'>
-                        <button className={activeTab === 1 ? 'activeClock col-3' : 'clock-btn col-3'} onClick={() => { setDuration(1); handleMin(duration); handleTabClick(1); setTimeNo(1) }}>
+                    <div className='clock-btn-containerRaiseUp row'>
+                        <button className={activeTab === 1 ? 'activeClockRaiseUp col-3' : 'clock-btn col-3'} onClick={() => { setDuration(1); handleMin(duration); handleTabClick(1); setTimeNo(1) }}>
                             <div className='clock'><img src={clock} alt="" /></div>
                             <p>1 minute</p>
                         </button>
@@ -305,7 +305,7 @@ function RiseUp() {
                         >
                             <Modal.Header closeButton>
                                 <Modal.Title id="example-modal-sizes-title-lg modal-title">
-                                    Alpha
+                                    
                                     1 minute
                                     <div style={{ display: 'flex' , justifyContent:"center"}}><button className='alfa-beta-gama-button'  style={{ background: "radial-gradient(50% 50% at 50% 50%, #FF7562 0%, #E51616 100%)" }}>
                                             <img src={alfa} alt="" />
@@ -432,7 +432,7 @@ function RiseUp() {
                         >
                             <Modal.Header closeButton>
                                 <Modal.Title id="example-modal-sizes-title-lg">
-                                    Beta 1 minute
+                                    1 minute
                                     <div style={{ display: 'flex' , justifyContent:"center"}}><button className='alfa-beta-gama-button' style={{ background: "radial-gradient(50% 50% at 50% 50%, #8DFF8A 0%, #09BD05 100%)" }}>
                                             <img src={beta} alt="" />
                                             <p>Beta</p>
@@ -557,7 +557,7 @@ function RiseUp() {
                         >
                             <Modal.Header closeButton>
                                 <Modal.Title id="example-modal-sizes-title-lg">
-                                    Gama 1 minute
+                                    1 minute
                                     <div style={{ display: 'flex' , justifyContent:"center"}}><button className='alfa-beta-gama-button' style={{ background: "radial-gradient(50% 50% at 50% 50%, #FFF3C9 0%, #DEAF06 100%)" }}>
                                             <img src={gama} alt="" />
                                             <p>Gama</p>

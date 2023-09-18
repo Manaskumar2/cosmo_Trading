@@ -95,6 +95,21 @@ function Register() {
 
             <Toaster />
             <form onSubmit={handleSubmit} className="container-fluid">
+            <div className="inputBox">
+                <div className="inputBoxInner">
+                  <div className="front">
+                    <img src={comp} alt="" />
+                  </div>
+                  <div>
+                    <input
+                      type="text"
+                      placeholder="Name"
+                      onChange={(e) => setUserName(e.target.value)}
+                      value={userName}
+                    />
+                  </div>
+                </div>
+              </div>
               <div className="inputBox">
                 <div className="inputBoxInner">
                   <div className="front">+91</div>
@@ -147,21 +162,7 @@ function Register() {
                   </div>
                 </div>
               </div>
-              <div className="inputBox">
-                <div className="inputBoxInner">
-                  <div className="front">
-                    <img src={comp} alt="" />
-                  </div>
-                  <div>
-                    <input
-                      type="text"
-                      placeholder="Name"
-                      onChange={(e) => setUserName(e.target.value)}
-                      value={userName}
-                    />
-                  </div>
-                </div>
-              </div>
+              
               <div className="policy">
                 <label>
                   <input

@@ -106,7 +106,7 @@ function Growup() {
             );
 
             if (response.status === 200) {
-                console.log(response);
+
                 setUserData(response)
                 return response;
             }
@@ -118,12 +118,6 @@ function Growup() {
 
     const handleSubmit = async () => {
         let token = auth.authToken
-        console.log(group);
-        console.log(amount);
-        console.log(duration);
-        console.log(token);
-
-
         try {
             let token = auth.authToken
             const response = await axios.post(`${import.meta.env.VITE_API_URL}/bet`, {
@@ -137,6 +131,8 @@ function Growup() {
 
             if (response.status === 201) {
                 toast.success("Bet created Successfully!", { ...toastProps });
+                setSmShow(false)
+                setLgShow(false)
                 setGroup('');
                 setAmount(1);
                 console.log(response);
@@ -230,7 +226,7 @@ function Growup() {
                             <div className='clock'><img src={clock} alt="" /></div>
                             <p>1 minute</p>
                         </button>
-                        <button className={activeTab === 3 ? 'activeClock col-3' : 'clock-btn col-3'} onClick={() => { setDuration(3); handleMin(duration); handleTabClick(3); setTimeNo(3) }}>
+                        {/* <button className={activeTab === 3 ? 'activeClock col-3' : 'clock-btn col-3'} onClick={() => { setDuration(3); handleMin(duration); handleTabClick(3); setTimeNo(3) }}>
                             <div className='clock'><img src={clock} alt="" /></div>
                             <p>3 minute</p>
                         </button>
@@ -242,7 +238,7 @@ function Growup() {
                             <div className='clock'><img src={clock} alt="" /></div>
 
                             <p>10 minute</p>
-                        </button>
+                        </button> */}
                     </div>
                 </div>
 
@@ -398,7 +394,7 @@ function Growup() {
                             >
                                 <Modal.Header closeButton>
                                     <Modal.Title id="example-modal-sizes-title-lg">
-                                        Beta 1 minute
+                                        1 minute
                                         <div style={{ textAlign: 'center' }}><img src={bModal} alt="" /></div>
                                     </Modal.Title>
                                 </Modal.Header>

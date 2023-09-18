@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Login.css';
 import logo from '../../images/Cosmo Logo.svg';
@@ -16,6 +16,14 @@ export const toastProps = {
 };
 
 function Login() {
+  useEffect(() => {
+    const preloadBackgroundImage = () => {
+      const backgroundImage = new Image();
+      backgroundImage.src = '../../images/Game-Banner.svg';
+    };
+
+    preloadBackgroundImage();
+  }, []);
   const [loading, setLoading] = useState(false);
   const [phoneNumber, setPhone] = useState('');
   const [password, setPassword] = useState('');

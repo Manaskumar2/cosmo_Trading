@@ -140,10 +140,10 @@ backdrop-filter: blur(15px);}
         
     }
     .clock-btn-container .col-3{display: flex; gap: .5rem; flex-direction: column; justify-content: center; align-items: center;padding: .5rem;}
-    .clock-btn-container .col-3 p{color: #99EDFF;font-family: 'Montserrat';font-size: 0.875rem;font-style: normal;font-weight: 600;line-height: 1.25rem; /* 142.857% */}
+    .clock-btn-container .col-3 p{color: #99EDFF;font-family: 'Montserrat';font-size: 0.875rem;font-style: normal;font-weight: 600;line-height: 1.25rem; /* 142.857% */    width: 100%;}
     .clock-btn-container button{border: 0; outline: none; background-color: transparent;}
 
-    .activeClock{ background: linear-gradient(180deg, #C82F36 0%, #EC4E56 100%);}
+    .activeClock{ background: linear-gradient(180deg, #C82F36 0%, #EC4E56 100%);    width: 100%;}
     .activeClock .clock{ background: #fff !important;}
     .activeClock p{ color: #fff !important;}
     .fade , .modal , .show{padding: 0 !important;}
