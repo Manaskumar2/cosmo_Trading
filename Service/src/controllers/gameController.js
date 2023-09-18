@@ -387,14 +387,14 @@ const startAndCheckGame = async (duration) => {
         endTime: currentDate.clone().add(duration, "m"),
         gameUID: await generateUniqueNumber()
       });
-      setTimeout(() => {
-        startAndCheckGame(duration)
-      }, duration * 60 * 1000)
-    } else {
-      setTimeout(() => {
-        startAndCheckGame(duration);
-      }, (game.endTime.unix() - currentDate.unix()) * 1000);
-    }
+  //     setTimeout(() => {
+  //       startAndCheckGame(duration)
+  //     }, duration * 60 * 1000)
+  // } else {
+    //   setTimeout(() => {
+    //     startAndCheckGame(duration);
+    //   }, (game.endTime.unix() - currentDate.unix()) * 1000);
+     }
   } else {
     await Game.create({
       duration: duration,
@@ -402,9 +402,9 @@ const startAndCheckGame = async (duration) => {
       endTime: currentDate.clone().add(duration, "m"), 
       gameUID: await generateUniqueNumber()
     });
-    setTimeout(() => {
-      startAndCheckGame(duration);
-    }, duration * 60 * 1000);
+    // setTimeout(() => {
+    //   startAndCheckGame(duration);
+    // }, duration * 60 * 1000);
   }
 };
 
