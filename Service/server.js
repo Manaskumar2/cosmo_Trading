@@ -48,6 +48,8 @@ app.use("/api/admin", admin);
 
 
 
+let start = Date.now();
+
 
 // if (
 //    process.env.NODE_ENV === "production"||process.env.NODE_ENV === "development"
@@ -69,6 +71,9 @@ app.use("/api/admin", admin);
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname + "../Web/dist/index.html"));
 });
+
+let timeTaken = Date.now() - start;
+console.log("Total time taken : " + timeTaken + " milliseconds");
 //   app.use(express.static(path.join(__dirname, "ui")));
 // app.get("/", (req, res) => {
 //   res.sendFile(path.join(__dirname + "ui/index.html"));
