@@ -1,0 +1,23 @@
+<svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Isolation_Mode" clip-path="url(#clip0_953_1117)">
+<path id="Vector" d="M4.7901 24.3127L12.5135 19.7379L20.2368 24.3127L18.2589 15.5533L25 9.606L16.0657 8.78523L12.5 0.537109L8.94779 8.78523L0 9.61946L6.75458 15.5533L4.7901 24.3127Z" fill="url(#paint0_linear_953_1117)"/>
+</g>
+<defs>
+<linearGradient id="paint0_linear_953_1117" x1="-1.70883" y1="0.348735" x2="36.5447" y2="38.6157" gradientUnits="userSpaceOnUse">
+<stop stop-color="#B07515"/>
+<stop offset="0.09" stop-color="#E0BA5F"/>
+<stop offset="0.14" stop-color="#F5D77F"/>
+<stop offset="0.26" stop-color="#FFFFD7"/>
+<stop offset="0.36" stop-color="#F5D77F"/>
+<stop offset="0.49" stop-color="#B07515"/>
+<stop offset="0.57" stop-color="#E0BA5F"/>
+<stop offset="0.61" stop-color="#F5D77F"/>
+<stop offset="0.74" stop-color="#FFFFD7"/>
+<stop offset="0.84" stop-color="#F5D77F"/>
+<stop offset="1" stop-color="#B07515"/>
+</linearGradient>
+<clipPath id="clip0_953_1117">
+<rect width="25" height="23.7756" fill="white" transform="translate(0 0.537109)"/>
+</clipPath>
+</defs>
+</svg>
