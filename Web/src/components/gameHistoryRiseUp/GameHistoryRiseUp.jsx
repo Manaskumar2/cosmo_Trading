@@ -2,15 +2,15 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios';
 import toast, { Toaster } from "react-hot-toast";
 import { AuthState } from '../../Atoms/AuthState'
-import { GameHistoryList } from '../../Atoms/GameHistory';
+import { GameHistoryListRiseUp } from '../../Atoms/GameHistoryListRiseUp';
 import { useRecoilState, useRecoilValue } from 'recoil'
-import './GameHistory.css'
+import '../gameHistory/GameHistory.css'
 import left from '../../images/leftArr.svg'
 import right from '../../images/RightArr.svg'
 import Winner from '../../images/icon-winner.svg'
 import Alpha from '../../images/icon-alpha.svg'
 import Beta from '../../images/icon-beta.svg'
-
+import Gama from '../../images/Gamma.svg'
 export const toastProps = {
     position: "top-center",
     duration: 2000,
@@ -22,8 +22,6 @@ export const toastProps = {
 };
 
 function GameHistory({ duration }) {
-
-
     const [expandedRowIndex, setExpandedRowIndex] = useState(null);
 
     const toggleRow = (index) => {
@@ -33,10 +31,11 @@ function GameHistory({ duration }) {
             setExpandedRowIndex(index);
         }
     };
+    const iconSources = [Alpha, Beta, Gama]
     const randomWinnerGroup = Math.random() < 0.5 ? 'SMALL' : 'BIG';
     const [activeTab, setActiveTab] = useState(1);
     const auth = useRecoilValue(AuthState)
-    const [gameHistoryList, setGameHistoryList] = useRecoilState(GameHistoryList)
+    const [gameHistoryList, setGameHistoryList] = useRecoilState(GameHistoryListRiseUp)
     const [userGames, setUserGames] = useState(null)
     const [page, setPage] = useState(1)
 
@@ -46,7 +45,7 @@ function GameHistory({ duration }) {
             let userId = auth._id;
             let token = auth.authToken;
             console.log(token);
-            const response = await axios.get(`${import.meta.env.VITE_API_URL}/bettingHistory/${userId}`, {
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/get2ndgameUserHistory/${userId}`, {
                 params: { page },
                 headers: { Authorization: `Bearer ${token}` },
             });
@@ -68,7 +67,7 @@ function GameHistory({ duration }) {
         try {
             let token = auth.authToken;
             console.log(token);
-            const response = await axios.get(`${import.meta.env.VITE_API_URL}/getSuccessFullGameHistory/${duration}`, {
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/gameHistory/${duration}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             if (response.status === 200) {
@@ -143,6 +142,7 @@ function GameHistory({ duration }) {
                                                     : Math.random() < 0.5
                                                         ? 'SMALL'
                                                         : 'BIG';
+
                                             return (
                                                 <tr key={index}>
                                                     <td>{item.gameUID}</td>
@@ -151,10 +151,31 @@ function GameHistory({ duration }) {
                                                             <span className="icon_win">
                                                                 <img src={Winner} alt="Winner" />
                                                             </span>
-                                                            <p>{winnerGroup === 'SMALL' ? 'Alpha' : 'Beta'}</p>
+                                                            {/* <p>{item.winnerGroup === 'SMALL' ? 'Alpha' : 'Beta'}</p>
+                                                            <p>{item.duration}</p> */}
                                                             <span className="icon_rate">
-                                                                <img src={winnerGroup === 'SMALL' ? Alpha : Beta} alt="Alpha or Beta" />
+                                                                {item.winnerGroup === 'A' ? (
+                                                                    <img src={Alpha} alt="Alpha" />
+                                                                ) : item.winnerGroup === 'B' ? (
+                                                                    <img src={Beta} alt="Beta" />
+                                                                ) : item.winnerGroup === 'C' ? (
+                                                                    <img src={Gama} alt="Gamma" />
+                                                                ) :  (
+                                                                    <img src={iconSources[Math.floor(Math.random() * iconSources.length)]} alt="Random Icon" />
+                                                                )}
                                                             </span>
+                                                            {item.runnerUpGroup && <span className="icon_rate">
+                                                                {item.runnerUpGroup === 'A' ? (
+                                                                    <img src={Alpha} alt="Alpha" />
+                                                                ) : item.runnerUpGroup === 'B' ? (
+                                                                    <img src={Beta} alt="Beta" />
+                                                                ) : item.runnerUpGroup === 'C' ? (
+                                                                    <img src={Gama} alt="Gamma" />
+                                                                ) :  (
+                                                                    <img src={iconSources[Math.floor(Math.random() * iconSources.length)]} alt="Random Icon" />
+                                                                )}
+                                                            </span>}
+
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -183,8 +204,7 @@ function GameHistory({ duration }) {
                                     </tr>
                                 </thead>
                                 <tbody>
-
-                                    {userGames &&
+                                {userGames &&
                                         userGames.data &&
                                         userGames.data.history.map((item, index) => (
                                             <React.Fragment key={index}>
@@ -196,15 +216,31 @@ function GameHistory({ duration }) {
                                                             <span className="icon_win">
                                                                 <img src={Winner} alt="Winner" />
                                                             </span>
-                                                            <p style={{ textAlign: 'left' }}>
-                                                                {item.group === 'small' ? 'Alpha' : 'Beta'}
-                                                            </p>
+                                                            {/* <p style={{ textAlign: 'left' }}>
+                                                                {item.group === 'A' ? 'Alpha' : 'Beta'}
+                                                            </p> */}
                                                             <span className="icon_rate">
-                                                                <img
-                                                                    src={item.group === 'small' ? Alpha : Beta}
-                                                                    alt="Alpha or Beta"
-                                                                />
+                                                                {item.group === 'A' ? (
+                                                                    <img src={Alpha} alt="Alpha" />
+                                                                ) : item.group === 'B' ? (
+                                                                    <img src={Beta} alt="Beta" />
+                                                                ) : item.group === 'C' ? (
+                                                                    <img src={Gama} alt="Gamma" />
+                                                                ) :  (
+                                                                    <img src={iconSources[Math.floor(Math.random() * iconSources.length)]} alt="Random Icon" />
+                                                                )}
                                                             </span>
+                                                            {/* {item.runnerUpGroup && <span className="icon_rate">
+                                                                {item.runnerUpGroup === 'A' ? (
+                                                                    <img src={Alpha} alt="Alpha" />
+                                                                ) : item.runnerUpGroup === 'B' ? (
+                                                                    <img src={Beta} alt="Beta" />
+                                                                ) : item.runnerUpGroup === 'C' ? (
+                                                                    <img src={Gama} alt="Gamma" />
+                                                                ) :  (
+                                                                    <img src={iconSources[Math.floor(Math.random() * iconSources.length)]} alt="Random Icon" />
+                                                                )}
+                                                            </span>} */}
                                                         </div>
                                                     </td>
                                                 </tr>

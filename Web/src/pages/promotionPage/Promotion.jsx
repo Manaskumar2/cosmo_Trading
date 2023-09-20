@@ -174,8 +174,8 @@ function Promotion() {
                                 <div className="col-2">0</div>
                             </div>
                             {userData && <div className="row total-commission">
-                                <div className="col-10">Total Commission </div>
-                                <div className="col-2 text-center">{userData.data.data.userDetails.commissionAmount}</div>
+                                <div className="col-10 text-center">Total Commission </div>
+                                <div className="col-2 text-center">{userData.data.data.userDetails.commissionAmount.toFixed(2)}</div>
                             </div>}
                         </div>
                     </div>

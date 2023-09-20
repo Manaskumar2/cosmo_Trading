@@ -14,6 +14,7 @@ let durationOptions = [1];
 
 let downloadResult = [0.7, 0.5, 0.3, 0.2, 0.15, 0.1, 0.08, 0.06, 0.05, 0.04];
 
+
 async function calculatResult(gameId) {
     const game = await Game.findOne({ _id: gameId }).populate({
         path: "bets.user",
@@ -75,17 +76,17 @@ async function calculatResult(gameId) {
 
     let runners = [
         {
-            user: AUsers,
+
             amount: AAmount,
             bets: ABets
         },
         {
-            user: BUsers,
+
             amount: BAmount,
             bets: BBets
         },
         {
-            user: CUsers,
+
             amount: CAmount,
             bets: CBets
         }
@@ -352,7 +353,7 @@ function shuffleArray(array) {
     return array;
 }
 
-function findResultOfTwoEqualUsers(runners) {
+function  findResultOfTwoEqualUsers(runners) {
 
     let winner = {
         user: [],
@@ -417,7 +418,7 @@ async function distributeComission(user, amount) {
                 return distributedAmount;
             }
 
-            let dAmount = roundDown(amount * 0.97 * (downloadResult[i] / 100), 2);
+            let dAmount = roundDown(amount * (downloadResult[i] / 100), 2);
             let newWalletAmount = parentUser.walletAmount + dAmount;
             distributedAmount += dAmount;
             await userModel.updateOne(
@@ -494,14 +495,14 @@ const startAndCheckGame = async (duration) => {
                 gameUID: await generateUniqueNumber2()
                 
             });
-            // setTimeout(() => {
-            //     startAndCheckGame(duration)
-            // }, duration * 60 * 1000)
+            setTimeout(() => {
+                startAndCheckGame(duration)
+            }, duration * 60 * 1000)
         } else {
             let currentDate = moment(new Date()).tz("Asia/Kolkata");
-            //   setTimeout(() => {
-            //     startAndCheckGame(duration);
-            //   }, (game.endTime.unix() - currentDate.unix()) * 1000);
+              setTimeout(() => {
+                startAndCheckGame(duration);
+              }, (game.endTime.unix() - currentDate.unix()) * 1000);
         }
     } else {
         await Game.create({
@@ -510,15 +511,15 @@ const startAndCheckGame = async (duration) => {
             endTime: moment(new Date()).tz("Asia/Kolkata").add(duration, "m"),
             gameUID: await generateUniqueNumber2()
         });
-        // setTimeout(() => {
-        //   startAndCheckGame(duration);
-        // }, duration * 60 * 1000);
+        setTimeout(() => {
+          startAndCheckGame(duration);
+        }, duration * 60 * 1000);
     }
 };
 
-// durationOptions.forEach((value) => {
-//     startAndCheckGame(value)
-// })
+durationOptions.forEach((value) => {
+    startAndCheckGame(value)
+})
 
 const bet2ndController = async (req, res) => {
     try {
@@ -551,6 +552,7 @@ const bet2ndController = async (req, res) => {
         }
 
         const currentDate = moment(new Date()).tz("Asia/Kolkata");
+        console.log(` bet controller${currentDate}`)
 
         if (game.endTime.unix() - currentDate.unix() < 15) {
             return res
@@ -583,6 +585,7 @@ const bet2ndController = async (req, res) => {
     );
 
         res.status(201).json({ status: true, message: "Bet placed successfully" });
+        console.log("bet Placed ")
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: "An error occurred while placing the bet" });
@@ -611,7 +614,6 @@ const riseUpUserBettingHistory = async (req, res) => {
 
     for (const game of games) {
       const userBet = game.bets.find((bet) => bet.user.toString() === userId);
-      console.log(userBet)
 
       if (!userBet) {
         
@@ -705,8 +707,8 @@ const riseUpUserBettingHistory = async (req, res) => {
 const get2ndGame = async (req, res) => { 
   try {
     const currentDate = moment(new Date()).tz("Asia/Kolkata");
+    console.log(`get game ${currentDate}`)
     const duration = parseInt(req.params.duration)
-    console.log(duration)
     if (!duration) return res.status(400).send({status: false, meessage:"please provide time duration for game"})
 
 

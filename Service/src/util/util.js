@@ -13,7 +13,7 @@ const generateUniqueReferralCode = async () => {
     if (!user) {
         return referralCode;
     }
-    return await generateIniqueReferralCode() 
+    return await generateUniqueReferralCode() 
 }
 
 
@@ -64,9 +64,7 @@ const { generateUID, setCurrentNumber } = createUIDGenerator();
 
 
 
-
-
-
+let counter = 0;
 
 async function generateUniqueNumber() {
   const now = new Date();
@@ -74,17 +72,28 @@ async function generateUniqueNumber() {
   const year = now.getFullYear().toString().padStart(4, '0');
   const month = (now.getMonth() + 1).toString().padStart(2, '0');
   const day = now.getDate().toString().padStart(2, '0');
-  const hour = now.getHours().toString().padStart(2, '0');
-  const minute = now.getMinutes().toString().padStart(2, '0');
-  const second = now.getSeconds().toString().padStart(2, '0');
+  const uniqueNumber = `${year}${month}${day}${counter.toString().padStart(4, '0')}`;
+  counter++;
 
-  const uniqueNumber = `${year}${month}${day}${hour}${minute}${second}`;
   return uniqueNumber;
 }
+let counter2 = 0;
 
+async function generateUniqueNumber2() {
+  const now = new Date();
+
+  const year = now.getFullYear().toString().padStart(4, '0');
+  const month = (now.getMonth() + 1).toString().padStart(2, '0');
+  const day = now.getDate().toString().padStart(2, '0');
+  const uniqueNumber = `${year}${month}${day}${counter2.toString().padStart(4, '0')}`;
+  counter2++;
+
+  return uniqueNumber;
+}
 module.exports = {
    generateUniqueReferralCode ,
   generateUniqueNumber,
   generateUID,
-   setCurrentNumber
+  setCurrentNumber,
+   generateUniqueNumber2
   }

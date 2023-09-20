@@ -7,22 +7,22 @@ import Audio from '../../images/audio.svg'
 import rupee from '../../images/rupee.svg'
 import reload from '../../images/reload 1.svg'
 import './RiseUp.css'
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import alfa from '../../images/alfaBtn.svg'
 import beta from '../../images/betaBtn.svg'
 import gama from '../../images/gama.svg'
 import aModal from '../../images/A-modal.svg'
-import { TimeSection } from '../../components/ComponentExport'
+import { TimeSectionRiseUp } from '../../components/ComponentExport'
 import { UserDetails } from '../../Atoms/UserDetails'
 import axios from 'axios';
 import toast, { Toaster } from "react-hot-toast";
 import { AuthState } from '../../Atoms/AuthState'
-import { useRecoilState, useRecoilValue } from 'recoil'
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import { Link } from 'react-router-dom'
-import { useSetRecoilState } from 'recoil'
-import { TimeNo, OneMinute } from '../../Atoms/GameTime'
-import { GameHistory } from '../../components/ComponentExport'
+import { TimeNo } from '../../Atoms/GameTime'
+import { RiseUpTime } from '../../Atoms/GameTimeRiseup'
+import { GameHistoryRiseUp } from '../../components/ComponentExport'
 import { useNavigate } from 'react-router-dom'
 import { CountDown } from '../../Atoms/CountDown';
 import Timer from '../../components/timer/Timer'
@@ -44,7 +44,7 @@ function RiseUp() {
     const [activeTab, setActiveTab] = useState(1);
 
     const setTimeNo = useSetRecoilState(TimeNo)
-    const setMinute = useSetRecoilState(OneMinute)
+    const setMinute = useSetRecoilState(RiseUpTime)
 
     const auth = useRecoilValue(AuthState)
     const [amount, setAmount] = useState(1);
@@ -65,25 +65,6 @@ function RiseUp() {
     const handleTabClick = (tabIndex) => {
         setActiveTab(tabIndex);
     };
-
-    const handleMoneyButtonClick = (moneyToken) => {
-        setAmount(moneyToken);
-    };
-
-    const handlePlusButtonClick = () => {
-        setAmount(prevAmount => prevAmount + money);
-    };
-
-    const handleMinusButtonClick = () => {
-        setAmount(prevAmount => prevAmount - money);
-    };
-
-    const handleMultiplierClick = (multiplierValue) => {
-        setAmount(prevAmount => prevAmount * multiplierValue);
-    };
-
-
-
 
 
     ///////
@@ -111,15 +92,15 @@ function RiseUp() {
 
     const handleSubmit = async () => {
         let token = auth.authToken
-        console.log(group);
-        console.log(amount);
-        console.log(duration);
-        console.log(token);
+        // console.log(group);
+        // console.log(amount);
+        // console.log(duration);
+        // console.log(token);
 
 
         try {
             let token = auth.authToken
-            const response = await axios.post(`${import.meta.env.VITE_API_URL}/bet`, {
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}betSecondGame`, {
                 amount,
                 group,
                 duration
@@ -131,12 +112,11 @@ function RiseUp() {
             if (response.status === 201) {
                 toast.success("Bet created Successfully!", { ...toastProps });
                 setGroup('');
-                setAmount(0);
-
+                setAmount(1);
                 console.log(response);
                 console.log("Bapi")
                 toast.success("Bet created", { ...toastProps })
-                navigate('/growUp')
+                navigate('/riseUp')
                 return response;
             }
         } catch (error) {
@@ -150,7 +130,7 @@ function RiseUp() {
             let token = auth.authToken;
             console.log(duration);
             console.log(token);
-            const response = await axios.get(`${import.meta.env.VITE_API_URL}/getgame/${duration}`, {
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/getSecondGame/${duration}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
 
@@ -206,14 +186,14 @@ function RiseUp() {
 
     const handleMultiplierChange = (operation) => {
         if (operation === '+') {
-          setMultiplier((prevMultiplier) => prevMultiplier + 1);
+            setMultiplier((prevMultiplier) => prevMultiplier + 1);
         } else if (operation === '-') {
-          setMultiplier((prevMultiplier) => Math.max(prevMultiplier - 1, 1)); 
+            setMultiplier((prevMultiplier) => Math.max(prevMultiplier - 1, 1));
         } else {
-          setMultiplier(parseInt(operation));
+            setMultiplier(parseInt(operation));
         }
-      };
-      
+    };
+
 
 
     return (
@@ -267,7 +247,7 @@ function RiseUp() {
 
 
                 <>
-                    <TimeSection />
+                    <TimeSectionRiseUp />
                     <>
                         <div className="big-small-game-wrapper " >
 
@@ -280,17 +260,17 @@ function RiseUp() {
                                         <div className="animated-div" style={{ height: `${heights[2]}px`, backgroundColor: "#FBC70E" }}></div>
                                     </div>
                                     <div className=' alfa-beta-gama-button-container'>
-                                        <button className='alfa-beta-gama-button' onClick={() => setSmShow(true)} style={{ background: "radial-gradient(50% 50% at 50% 50%, #FF7562 0%, #E51616 100%)" }}>
+                                        <button className='alfa-beta-gama-button' onClick={() => {setSmShow(true);setGroup("A")}} style={{ background: "radial-gradient(50% 50% at 50% 50%, #FF7562 0%, #E51616 100%)" }}>
                                             <img src={alfa} alt="" />
                                             <p>ALPHA</p>
                                         </button>
-                                        <button className='alfa-beta-gama-button' onClick={() => setLgShow(true)} style={{ background: "radial-gradient(50% 50% at 50% 50%, #8DFF8A 0%, #09BD05 100%)" }}>
+                                        <button className='alfa-beta-gama-button' onClick={() => {setLgShow(true);setGroup("B")}} style={{ background: "radial-gradient(50% 50% at 50% 50%, #8DFF8A 0%, #09BD05 100%)" }}>
                                             <img src={beta} alt="" />
-                                            <p>Beta</p>
+                                            <p>BETA</p>
                                         </button>
-                                        <button className='alfa-beta-gama-button' onClick={() => setGmShow(true)} style={{ background: "radial-gradient(50% 50% at 50% 50%, #FFF3C9 0%, #DEAF06 100%)" }}>
+                                        <button className='alfa-beta-gama-button' onClick={() => {setGmShow(true),setGroup("C")}} style={{ background: "radial-gradient(50% 50% at 50% 50%, #FFF3C9 0%, #DEAF06 100%)" }}>
                                             <img src={gama} alt="" />
-                                            <p>Gama</p>
+                                            <p>GAMA</p>
                                         </button>
                                     </div>
                                 </div>
@@ -305,123 +285,123 @@ function RiseUp() {
                         >
                             <Modal.Header closeButton>
                                 <Modal.Title id="example-modal-sizes-title-lg modal-title">
-                                    
+
                                     1 minute
-                                    <div style={{ display: 'flex' , justifyContent:"center"}}><button className='alfa-beta-gama-button'  style={{ background: "radial-gradient(50% 50% at 50% 50%, #FF7562 0%, #E51616 100%)" }}>
-                                            <img src={alfa} alt="" />
-                                            <p>ALPHA</p>
-                                        </button></div>
+                                    <div style={{ display: 'flex', justifyContent: "center" }}><button className='alfa-beta-gama-button' style={{ background: "radial-gradient(50% 50% at 50% 50%, #FF7562 0%, #E51616 100%)" }}>
+                                        <img src={alfa} alt="" />
+                                        <p>ALPHA</p>
+                                    </button></div>
                                 </Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
 
-                            <div className=' money-container'>
-                                        <div className="money">
-                                            <div>
-                                                <p>Money</p>
-                                            </div>
-                                            <div className="x-row-section">
-                                                <button
-                                                    className={`x-section ${money === 1 ? 'active-btn' : ''}`}
-                                                    onClick={() => handleMoneyClick(1)}
-                                                >
-                                                    1
-                                                </button>
-                                                <button
-                                                    className={`x-section ${money === 10 ? 'active-btn' : ''}`}
-                                                    onClick={() => handleMoneyClick(10)}
-                                                >
-                                                    10
-                                                </button>
-                                                <button
-                                                    className={`x-section ${money === 100 ? 'active-btn' : ''}`}
-                                                    onClick={() => handleMoneyClick(100)}
-                                                >
-                                                    100
-                                                </button>
-                                                <button
-                                                    className={`x-section ${money === 1000 ? 'active-btn' : ''}`}
-                                                    onClick={() => handleMoneyClick(1000)}
-                                                >
-                                                    1000
-                                                </button>
-                                            </div>
+                                <div className=' money-container'>
+                                    <div className="money">
+                                        <div>
+                                            <p>Money</p>
                                         </div>
-                                        <div className="hrline"></div>
-                                        <div className="multiply">
-                                            <div>
-                                                <p>Multiply</p>
-                                            </div>
-                                            <div className='plus-minus'>
-                                                <button onClick={() => handleMultiplierChange('-')}>-</button>
-                                                <div>{multiplier}</div>
-                                                <button onClick={() => handleMultiplierChange('+')}>+</button>
-                                            </div>
-                                        </div>
-                                        <div className="multiply">
-                                            <div>
-                                                <p>Custom Amount</p>
-                                            </div>
-                                            <div className='plus-minus'>
-
-                                                <input className='plus-minus-input' type="number" value={amount} onChange={(e) => { setAmount(e.target.value) }} />
-
-                                            </div>
-                                        </div>
-                                        <div className="hrline"></div>
                                         <div className="x-row-section">
                                             <button
-                                                className={`x-section ${multiplier == 1 ? 'active-btn' : ''}`}
-
-                                                onClick={() => handleMultiplierChange('1')}
+                                                className={`x-section ${money === 1 ? 'active-btn' : ''}`}
+                                                onClick={() => handleMoneyClick(1)}
                                             >
-                                                x1
+                                                1
                                             </button>
                                             <button
-                                                className={`x-section ${multiplier == 2 ? 'active-btn' : ''}`}
-                                                onClick={() => handleMultiplierChange('2')}
+                                                className={`x-section ${money === 10 ? 'active-btn' : ''}`}
+                                                onClick={() => handleMoneyClick(10)}
                                             >
-                                                x2
+                                                10
                                             </button>
                                             <button
-                                                className={`x-section ${multiplier == 5 ? 'active-btn' : ''}`}
-                                                onClick={() => handleMultiplierChange('5')}
+                                                className={`x-section ${money === 100 ? 'active-btn' : ''}`}
+                                                onClick={() => handleMoneyClick(100)}
                                             >
-                                                x5
+                                                100
                                             </button>
                                             <button
-                                                className={`x-section ${multiplier == 10 ? 'active-btn' : ''}`}
-                                                onClick={() => handleMultiplierChange('10')}
+                                                className={`x-section ${money === 1000 ? 'active-btn' : ''}`}
+                                                onClick={() => handleMoneyClick(1000)}
                                             >
-                                                x10
-                                            </button>
-                                            <button
-                                                className={`x-section ${multiplier == 50 ? 'active-btn' : ''}`}
-                                                onClick={() => handleMultiplierChange('50')}
-                                            >
-                                                x50
-                                            </button>
-                                            <button
-                                                className={`x-section ${multiplier == 100 ? 'active-btn' : ''}`}
-                                                onClick={() => handleMultiplierChange('100')}
-                                            >
-                                                x100
+                                                1000
                                             </button>
                                         </div>
-                                        <div className="hrline"></div>
-                                        <div className="custom_checkbox">
-                                        <input
-        type="checkbox"
-        id="Agree"
-        checked={isChecked}
-
-      />
-                                            <label for="Agree">I Agree <Link>Privacy Policy</Link></label>
-                                        </div>
-
-                                        <div className="hrline"></div>
-                                        <button className='total-btn' onClick={handleSubmit}>Total Price: {amount}</button>
                                     </div>
+                                    <div className="hrline"></div>
+                                    <div className="multiply">
+                                        <div>
+                                            <p>Multiply</p>
+                                        </div>
+                                        <div className='plus-minus'>
+                                            <button onClick={() => handleMultiplierChange('-')}>-</button>
+                                            <div>{multiplier}</div>
+                                            <button onClick={() => handleMultiplierChange('+')}>+</button>
+                                        </div>
+                                    </div>
+                                    <div className="multiply">
+                                        <div>
+                                            <p>Custom Amount</p>
+                                        </div>
+                                        <div className='plus-minus'>
+
+                                            <input className='plus-minus-input' type="number" value={amount} onChange={(e) => { setAmount(e.target.value) }} />
+
+                                        </div>
+                                    </div>
+                                    <div className="hrline"></div>
+                                    <div className="x-row-section">
+                                        <button
+                                            className={`x-section ${multiplier == 1 ? 'active-btn' : ''}`}
+
+                                            onClick={() => handleMultiplierChange('1')}
+                                        >
+                                            x1
+                                        </button>
+                                        <button
+                                            className={`x-section ${multiplier == 2 ? 'active-btn' : ''}`}
+                                            onClick={() => handleMultiplierChange('2')}
+                                        >
+                                            x2
+                                        </button>
+                                        <button
+                                            className={`x-section ${multiplier == 5 ? 'active-btn' : ''}`}
+                                            onClick={() => handleMultiplierChange('5')}
+                                        >
+                                            x5
+                                        </button>
+                                        <button
+                                            className={`x-section ${multiplier == 10 ? 'active-btn' : ''}`}
+                                            onClick={() => handleMultiplierChange('10')}
+                                        >
+                                            x10
+                                        </button>
+                                        <button
+                                            className={`x-section ${multiplier == 50 ? 'active-btn' : ''}`}
+                                            onClick={() => handleMultiplierChange('50')}
+                                        >
+                                            x50
+                                        </button>
+                                        <button
+                                            className={`x-section ${multiplier == 100 ? 'active-btn' : ''}`}
+                                            onClick={() => handleMultiplierChange('100')}
+                                        >
+                                            x100
+                                        </button>
+                                    </div>
+                                    <div className="hrline"></div>
+                                    <div className="custom_checkbox">
+                                        <input
+                                            type="checkbox"
+                                            id="Agree"
+                                            checked={isChecked}
+
+                                        />
+                                        <label for="Agree">I Agree <Link>Privacy Policy</Link></label>
+                                    </div>
+
+                                    <div className="hrline"></div>
+                                    <button className='total-btn' onClick={handleSubmit}>Total Price: {amount}</button>
+                                </div>
                             </Modal.Body>
                         </Modal>
                         <Modal
@@ -433,120 +413,120 @@ function RiseUp() {
                             <Modal.Header closeButton>
                                 <Modal.Title id="example-modal-sizes-title-lg">
                                     1 minute
-                                    <div style={{ display: 'flex' , justifyContent:"center"}}><button className='alfa-beta-gama-button' style={{ background: "radial-gradient(50% 50% at 50% 50%, #8DFF8A 0%, #09BD05 100%)" }}>
-                                            <img src={beta} alt="" />
-                                            <p>Beta</p>
-                                        </button></div>
+                                    <div style={{ display: 'flex', justifyContent: "center" }}><button className='alfa-beta-gama-button' style={{ background: "radial-gradient(50% 50% at 50% 50%, #8DFF8A 0%, #09BD05 100%)" }}>
+                                        <img src={beta} alt="" />
+                                        <p>Beta</p>
+                                    </button></div>
                                 </Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
-                            <div className=' money-container'>
-                                        <div className="money">
-                                            <div>
-                                                <p>Money</p>
-                                            </div>
-                                            <div className="x-row-section">
-                                                <button
-                                                    className={`x-section ${money === 1 ? 'active-btn' : ''}`}
-                                                    onClick={() => handleMoneyClick(1)}
-                                                >
-                                                    1
-                                                </button>
-                                                <button
-                                                    className={`x-section ${money === 10 ? 'active-btn' : ''}`}
-                                                    onClick={() => handleMoneyClick(10)}
-                                                >
-                                                    10
-                                                </button>
-                                                <button
-                                                    className={`x-section ${money === 100 ? 'active-btn' : ''}`}
-                                                    onClick={() => handleMoneyClick(100)}
-                                                >
-                                                    100
-                                                </button>
-                                                <button
-                                                    className={`x-section ${money === 1000 ? 'active-btn' : ''}`}
-                                                    onClick={() => handleMoneyClick(1000)}
-                                                >
-                                                    1000
-                                                </button>
-                                            </div>
+                                <div className=' money-container'>
+                                    <div className="money">
+                                        <div>
+                                            <p>Money</p>
                                         </div>
-                                        <div className="hrline"></div>
-                                        <div className="multiply">
-                                            <div>
-                                                <p>Multiply</p>
-                                            </div>
-                                            <div className='plus-minus'>
-                                                <button onClick={() => handleMultiplierChange('-')}>-</button>
-                                                <div>{multiplier}</div>
-                                                <button onClick={() => handleMultiplierChange('+')}>+</button>
-                                            </div>
-                                        </div>
-                                        <div className="multiply">
-                                            <div>
-                                                <p>Custom Amount</p>
-                                            </div>
-                                            <div className='plus-minus'>
-
-                                                <input className='plus-minus-input' type="number" value={amount} onChange={(e) => { setAmount(e.target.value) }} />
-
-                                            </div>
-                                        </div>
-                                        <div className="hrline"></div>
                                         <div className="x-row-section">
                                             <button
-                                                className={`x-section ${multiplier == 1 ? 'active-btn' : ''}`}
-
-                                                onClick={() => handleMultiplierChange('1')}
+                                                className={`x-section ${money === 1 ? 'active-btn' : ''}`}
+                                                onClick={() => handleMoneyClick(1)}
                                             >
-                                                x1
+                                                1
                                             </button>
                                             <button
-                                                className={`x-section ${multiplier == 2 ? 'active-btn' : ''}`}
-                                                onClick={() => handleMultiplierChange('2')}
+                                                className={`x-section ${money === 10 ? 'active-btn' : ''}`}
+                                                onClick={() => handleMoneyClick(10)}
                                             >
-                                                x2
+                                                10
                                             </button>
                                             <button
-                                                className={`x-section ${multiplier == 5 ? 'active-btn' : ''}`}
-                                                onClick={() => handleMultiplierChange('5')}
+                                                className={`x-section ${money === 100 ? 'active-btn' : ''}`}
+                                                onClick={() => handleMoneyClick(100)}
                                             >
-                                                x5
+                                                100
                                             </button>
                                             <button
-                                                className={`x-section ${multiplier == 10 ? 'active-btn' : ''}`}
-                                                onClick={() => handleMultiplierChange('10')}
+                                                className={`x-section ${money === 1000 ? 'active-btn' : ''}`}
+                                                onClick={() => handleMoneyClick(1000)}
                                             >
-                                                x10
-                                            </button>
-                                            <button
-                                                className={`x-section ${multiplier == 50 ? 'active-btn' : ''}`}
-                                                onClick={() => handleMultiplierChange('50')}
-                                            >
-                                                x50
-                                            </button>
-                                            <button
-                                                className={`x-section ${multiplier == 100 ? 'active-btn' : ''}`}
-                                                onClick={() => handleMultiplierChange('100')}
-                                            >
-                                                x100
+                                                1000
                                             </button>
                                         </div>
-                                        <div className="hrline"></div>
-                                        <div className="custom_checkbox">
-                                        <input
-        type="checkbox"
-        id="Agree"
-        checked={isChecked}
-
-      />
-                                            <label for="Agree">I Agree <Link>Privacy Policy</Link></label>
-                                        </div>
-
-                                        <div className="hrline"></div>
-                                        <button className='total-btn' onClick={handleSubmit}>Total Price: {amount}</button>
                                     </div>
+                                    <div className="hrline"></div>
+                                    <div className="multiply">
+                                        <div>
+                                            <p>Multiply</p>
+                                        </div>
+                                        <div className='plus-minus'>
+                                            <button onClick={() => handleMultiplierChange('-')}>-</button>
+                                            <div>{multiplier}</div>
+                                            <button onClick={() => handleMultiplierChange('+')}>+</button>
+                                        </div>
+                                    </div>
+                                    <div className="multiply">
+                                        <div>
+                                            <p>Custom Amount</p>
+                                        </div>
+                                        <div className='plus-minus'>
+
+                                            <input className='plus-minus-input' type="number" value={amount} onChange={(e) => { setAmount(e.target.value) }} />
+
+                                        </div>
+                                    </div>
+                                    <div className="hrline"></div>
+                                    <div className="x-row-section">
+                                        <button
+                                            className={`x-section ${multiplier == 1 ? 'active-btn' : ''}`}
+
+                                            onClick={() => handleMultiplierChange('1')}
+                                        >
+                                            x1
+                                        </button>
+                                        <button
+                                            className={`x-section ${multiplier == 2 ? 'active-btn' : ''}`}
+                                            onClick={() => handleMultiplierChange('2')}
+                                        >
+                                            x2
+                                        </button>
+                                        <button
+                                            className={`x-section ${multiplier == 5 ? 'active-btn' : ''}`}
+                                            onClick={() => handleMultiplierChange('5')}
+                                        >
+                                            x5
+                                        </button>
+                                        <button
+                                            className={`x-section ${multiplier == 10 ? 'active-btn' : ''}`}
+                                            onClick={() => handleMultiplierChange('10')}
+                                        >
+                                            x10
+                                        </button>
+                                        <button
+                                            className={`x-section ${multiplier == 50 ? 'active-btn' : ''}`}
+                                            onClick={() => handleMultiplierChange('50')}
+                                        >
+                                            x50
+                                        </button>
+                                        <button
+                                            className={`x-section ${multiplier == 100 ? 'active-btn' : ''}`}
+                                            onClick={() => handleMultiplierChange('100')}
+                                        >
+                                            x100
+                                        </button>
+                                    </div>
+                                    <div className="hrline"></div>
+                                    <div className="custom_checkbox">
+                                        <input
+                                            type="checkbox"
+                                            id="Agree"
+                                            checked={isChecked}
+
+                                        />
+                                        <label for="Agree">I Agree <Link>Privacy Policy</Link></label>
+                                    </div>
+
+                                    <div className="hrline"></div>
+                                    <button className='total-btn' onClick={handleSubmit}>Total Price: {amount}</button>
+                                </div>
                             </Modal.Body>
                         </Modal>
                         <Modal
@@ -558,125 +538,125 @@ function RiseUp() {
                             <Modal.Header closeButton>
                                 <Modal.Title id="example-modal-sizes-title-lg">
                                     1 minute
-                                    <div style={{ display: 'flex' , justifyContent:"center"}}><button className='alfa-beta-gama-button' style={{ background: "radial-gradient(50% 50% at 50% 50%, #FFF3C9 0%, #DEAF06 100%)" }}>
-                                            <img src={gama} alt="" />
-                                            <p>Gama</p>
-                                        </button></div>
+                                    <div style={{ display: 'flex', justifyContent: "center" }}><button className='alfa-beta-gama-button' style={{ background: "radial-gradient(50% 50% at 50% 50%, #FFF3C9 0%, #DEAF06 100%)" }}>
+                                        <img src={gama} alt="" />
+                                        <p>Gama</p>
+                                    </button></div>
                                 </Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
-                            <div className=' money-container'>
-                                        <div className="money">
-                                            <div>
-                                                <p>Money</p>
-                                            </div>
-                                            <div className="x-row-section">
-                                                <button
-                                                    className={`x-section ${money === 1 ? 'active-btn' : ''}`}
-                                                    onClick={() => handleMoneyClick(1)}
-                                                >
-                                                    1
-                                                </button>
-                                                <button
-                                                    className={`x-section ${money === 10 ? 'active-btn' : ''}`}
-                                                    onClick={() => handleMoneyClick(10)}
-                                                >
-                                                    10
-                                                </button>
-                                                <button
-                                                    className={`x-section ${money === 100 ? 'active-btn' : ''}`}
-                                                    onClick={() => handleMoneyClick(100)}
-                                                >
-                                                    100
-                                                </button>
-                                                <button
-                                                    className={`x-section ${money === 1000 ? 'active-btn' : ''}`}
-                                                    onClick={() => handleMoneyClick(1000)}
-                                                >
-                                                    1000
-                                                </button>
-                                            </div>
+                                <div className=' money-container'>
+                                    <div className="money">
+                                        <div>
+                                            <p>Money</p>
                                         </div>
-                                        <div className="hrline"></div>
-                                        <div className="multiply">
-                                            <div>
-                                                <p>Multiply</p>
-                                            </div>
-                                            <div className='plus-minus'>
-                                                <button onClick={() => handleMultiplierChange('-')}>-</button>
-                                                <div>{multiplier}</div>
-                                                <button onClick={() => handleMultiplierChange('+')}>+</button>
-                                            </div>
-                                        </div>
-                                        <div className="multiply">
-                                            <div>
-                                                <p>Custom Amount</p>
-                                            </div>
-                                            <div className='plus-minus'>
-
-                                                <input className='plus-minus-input' type="number" value={amount} onChange={(e) => { setAmount(e.target.value) }} />
-
-                                            </div>
-                                        </div>
-                                        <div className="hrline"></div>
                                         <div className="x-row-section">
                                             <button
-                                                className={`x-section ${multiplier == 1 ? 'active-btn' : ''}`}
-
-                                                onClick={() => handleMultiplierChange('1')}
+                                                className={`x-section ${money === 1 ? 'active-btn' : ''}`}
+                                                onClick={() => handleMoneyClick(1)}
                                             >
-                                                x1
+                                                1
                                             </button>
                                             <button
-                                                className={`x-section ${multiplier == 2 ? 'active-btn' : ''}`}
-                                                onClick={() => handleMultiplierChange('2')}
+                                                className={`x-section ${money === 10 ? 'active-btn' : ''}`}
+                                                onClick={() => handleMoneyClick(10)}
                                             >
-                                                x2
+                                                10
                                             </button>
                                             <button
-                                                className={`x-section ${multiplier == 5 ? 'active-btn' : ''}`}
-                                                onClick={() => handleMultiplierChange('5')}
+                                                className={`x-section ${money === 100 ? 'active-btn' : ''}`}
+                                                onClick={() => handleMoneyClick(100)}
                                             >
-                                                x5
+                                                100
                                             </button>
                                             <button
-                                                className={`x-section ${multiplier == 10 ? 'active-btn' : ''}`}
-                                                onClick={() => handleMultiplierChange('10')}
+                                                className={`x-section ${money === 1000 ? 'active-btn' : ''}`}
+                                                onClick={() => handleMoneyClick(1000)}
                                             >
-                                                x10
-                                            </button>
-                                            <button
-                                                className={`x-section ${multiplier == 50 ? 'active-btn' : ''}`}
-                                                onClick={() => handleMultiplierChange('50')}
-                                            >
-                                                x50
-                                            </button>
-                                            <button
-                                                className={`x-section ${multiplier == 100 ? 'active-btn' : ''}`}
-                                                onClick={() => handleMultiplierChange('100')}
-                                            >
-                                                x100
+                                                1000
                                             </button>
                                         </div>
-                                        <div className="hrline"></div>
-                                        <div className="custom_checkbox">
-                                        <input
-        type="checkbox"
-        id="Agree"
-        checked={isChecked}
-
-      />
-                                            <label for="Agree">I Agree <Link>Privacy Policy</Link></label>
-                                        </div>
-
-                                        <div className="hrline"></div>
-                                        <button className='total-btn' onClick={handleSubmit}>Total Price: {amount}</button>
                                     </div>
+                                    <div className="hrline"></div>
+                                    <div className="multiply">
+                                        <div>
+                                            <p>Multiply</p>
+                                        </div>
+                                        <div className='plus-minus'>
+                                            <button onClick={() => handleMultiplierChange('-')}>-</button>
+                                            <div>{multiplier}</div>
+                                            <button onClick={() => handleMultiplierChange('+')}>+</button>
+                                        </div>
+                                    </div>
+                                    <div className="multiply">
+                                        <div>
+                                            <p>Custom Amount</p>
+                                        </div>
+                                        <div className='plus-minus'>
+
+                                            <input className='plus-minus-input' type="number" value={amount} onChange={(e) => { setAmount(e.target.value) }} />
+
+                                        </div>
+                                    </div>
+                                    <div className="hrline"></div>
+                                    <div className="x-row-section">
+                                        <button
+                                            className={`x-section ${multiplier == 1 ? 'active-btn' : ''}`}
+
+                                            onClick={() => handleMultiplierChange('1')}
+                                        >
+                                            x1
+                                        </button>
+                                        <button
+                                            className={`x-section ${multiplier == 2 ? 'active-btn' : ''}`}
+                                            onClick={() => handleMultiplierChange('2')}
+                                        >
+                                            x2
+                                        </button>
+                                        <button
+                                            className={`x-section ${multiplier == 5 ? 'active-btn' : ''}`}
+                                            onClick={() => handleMultiplierChange('5')}
+                                        >
+                                            x5
+                                        </button>
+                                        <button
+                                            className={`x-section ${multiplier == 10 ? 'active-btn' : ''}`}
+                                            onClick={() => handleMultiplierChange('10')}
+                                        >
+                                            x10
+                                        </button>
+                                        <button
+                                            className={`x-section ${multiplier == 50 ? 'active-btn' : ''}`}
+                                            onClick={() => handleMultiplierChange('50')}
+                                        >
+                                            x50
+                                        </button>
+                                        <button
+                                            className={`x-section ${multiplier == 100 ? 'active-btn' : ''}`}
+                                            onClick={() => handleMultiplierChange('100')}
+                                        >
+                                            x100
+                                        </button>
+                                    </div>
+                                    <div className="hrline"></div>
+                                    <div className="custom_checkbox">
+                                        <input
+                                            type="checkbox"
+                                            id="Agree"
+                                            checked={isChecked}
+
+                                        />
+                                        <label for="Agree">I Agree <Link>Privacy Policy</Link></label>
+                                    </div>
+
+                                    <div className="hrline"></div>
+                                    <button className='total-btn' onClick={handleSubmit}>Total Price: {amount}</button>
+                                </div>
                             </Modal.Body>
                         </Modal>
 
                     </>
-                    <GameHistory duration={duration} />
+                    <GameHistoryRiseUp duration={duration} />
                 </>
 
 

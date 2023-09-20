@@ -22,6 +22,7 @@ font-weight: 400;padding: 0.45rem 1.25rem;}
     justify-content: space-between;
     align-items: center;
 }
+.flex-div-space-Betn{display: flex;justify-content: space-between;}
 .winGroup{width: 35%;color: #FFF;font-family: 'Montserrat';font-size: 0.975rem;font-style: normal;
     font-weight: 400;padding: 0.45rem .9rem;}
 

@@ -9,6 +9,8 @@ import RunningTime from './runningTime/RunningTime'
 import TimeSection from './timeSection/TimeSection1'
 import WithdrawSection from './withdrawSection/WithdrawSection'
 import GameHistory from './gameHistory/GameHistory'
+import GameHistoryRiseUp from './gameHistoryRiseUp/GameHistoryRiseUp'
+import TimeSectionRiseUp from './timeSectionRiseUp/TimeSectionRiseUp'
 
 export {
   Accordian,
@@ -21,5 +23,7 @@ export {
   RunningTime,
   TimeSection,
   WithdrawSection,
-  GameHistory
+  GameHistory,
+  TimeSectionRiseUp,
+  GameHistoryRiseUp
 };

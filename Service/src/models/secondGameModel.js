@@ -8,10 +8,6 @@ const betSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
-  multiplier: {
-    type: Number,
-    required: true
-  },
   group: {
     type: String,
     enum: ["A", "B","C"],

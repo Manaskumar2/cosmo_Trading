@@ -4,7 +4,7 @@ import { Navigate, Route, Routes , useNavigate} from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { Login, Register, Forgot, OTP, Reset, Success, Home, Growup ,ProfileComponent, Promotion,Recharge, UPI, Withdraw, BankCard,Wallet,Gift,BeginnerTutorial,About,Customer,Message,Transection,Launch,Terms,SRegister,Premium,PremiumApply,Security,RiseUp,WidthdrawHistory,RechargeHistory} from "./importPages";
 import { AuthState } from "../Atoms/AuthState";
-// import Loader from '../components/loader/Loader'
+import Loader from '../components/loader/Loader'
 // import { PrivateRoute } from "./PrivateRoute";
 
 export const AppRoutes = () => {
@@ -22,16 +22,16 @@ export const AppRoutes = () => {
             <Route
                         path="/registered"
                         element={
-                            <Suspense >
+                            <Suspense fallback={<Loader/>}>
                                     <SRegister />
                             </Suspense>
                         }
                     />
 
-            <Route path="/signIn" element={<Suspense ><Login /></Suspense>} />
-            <Route path="/signUp" element={<Suspense ><Register /></Suspense>} />
-            <Route path="/forgotPassword" element={<Suspense ><Forgot /></Suspense>} />
-            <Route path="/terms&condition" element={<Suspense ><Terms /></Suspense>} />
+            <Route path="/signIn" element={<Suspense fallback={<Loader/>}><Login /></Suspense>} />
+            <Route path="/signUp" element={<Suspense fallback={<Loader/>}><Register /></Suspense>} />
+            <Route path="/forgotPassword" element={<Suspense fallback={<Loader/>}><Forgot /></Suspense>} />
+            <Route path="/terms&condition" element={<Suspense fallback={<Loader/>}><Terms /></Suspense>} />
 
             {!authData ? (
                 <Route path="/" element={<Navigate to="/signIn" replace />} />
@@ -40,7 +40,7 @@ export const AppRoutes = () => {
                     <Route
                         path="/"
                         element={
-                            <Suspense >
+                            <Suspense fallback={<Loader/>}>
                                     <Home />
                             </Suspense>
                         }
@@ -48,7 +48,7 @@ export const AppRoutes = () => {
                     <Route
                         path="/growUp"
                         element={
-                            <Suspense>
+                            <Suspense fallback={<Loader/>}>
                                     <Growup />
                             </Suspense>
                         }
@@ -56,7 +56,7 @@ export const AppRoutes = () => {
                     <Route
                         path="/promotion"
                         element={
-                            <Suspense >
+                            <Suspense fallback={<Loader/>}>
                                     <Promotion />
                             </Suspense>
                         }
@@ -64,7 +64,7 @@ export const AppRoutes = () => {
                     <Route
                         path="/recharge"
                         element={
-                            <Suspense >
+                            <Suspense fallback={<Loader/>}>
                                     <Recharge />
                             </Suspense>
                         }
@@ -72,7 +72,7 @@ export const AppRoutes = () => {
                     <Route
                         path="/message"
                         element={
-                            <Suspense >
+                            <Suspense fallback={<Loader/>}>
                                     <Message />
                             </Suspense>
                         }
@@ -80,7 +80,7 @@ export const AppRoutes = () => {
                     <Route
                         path="/beginnerTutorial"
                         element={
-                            <Suspense >
+                            <Suspense fallback={<Loader/>}>
                                     <BeginnerTutorial />
                             </Suspense>
                         }
@@ -88,7 +88,7 @@ export const AppRoutes = () => {
                     <Route
                         path="/upi"
                         element={
-                            <Suspense >
+                            <Suspense fallback={<Loader/>}>
                                     <UPI />
                             </Suspense>
                         }
@@ -96,7 +96,7 @@ export const AppRoutes = () => {
                     <Route
                         path="/withdraw"
                         element={
-                            <Suspense >
+                            <Suspense fallback={<Loader/>}>
                                     <Withdraw />
                             </Suspense>
                         }
@@ -104,7 +104,7 @@ export const AppRoutes = () => {
                     <Route
                         path="/customerCare"
                         element={
-                            <Suspense >
+                            <Suspense fallback={<Loader/>}>
                                     <Customer />
                             </Suspense>
                         }
@@ -112,7 +112,7 @@ export const AppRoutes = () => {
                     <Route
                         path="/bankCard"
                         element={
-                            <Suspense >
+                            <Suspense fallback={<Loader/>}>
                                     <BankCard />
                             </Suspense>
                         }
@@ -120,7 +120,7 @@ export const AppRoutes = () => {
                     <Route
                         path="/gift"
                         element={
-                            <Suspense >
+                            <Suspense fallback={<Loader/>}>
                                     <Gift />
                             </Suspense>
                         }
@@ -129,7 +129,7 @@ export const AppRoutes = () => {
                     <Route
                         path="/transaction"
                         element={
-                            <Suspense >
+                            <Suspense fallback={<Loader/>}>
                                     <Transection />
                             </Suspense>
                         }
@@ -137,7 +137,7 @@ export const AppRoutes = () => {
                     <Route
                         path="/wallet"
                         element={
-                            <Suspense >
+                            <Suspense fallback={<Loader/>}>
                                     <Wallet />
                             </Suspense>
                         }
@@ -145,7 +145,7 @@ export const AppRoutes = () => {
                     <Route
                         path="/about"
                         element={
-                            <Suspense >
+                            <Suspense fallback={<Loader/>}>
                                     <About/>
                             </Suspense>
                         }
@@ -153,7 +153,7 @@ export const AppRoutes = () => {
                     <Route
                         path="/premium"
                         element={
-                            <Suspense >
+                            <Suspense fallback={<Loader/>}>
                                     <Premium/>
                             </Suspense>
                         }
@@ -161,7 +161,7 @@ export const AppRoutes = () => {
                     <Route
                         path="/premiumApply"
                         element={
-                            <Suspense >
+                            <Suspense fallback={<Loader/>}>
                                     <PremiumApply/>
                             </Suspense>
                         }
@@ -169,7 +169,7 @@ export const AppRoutes = () => {
                     <Route
                         path="/security"
                         element={
-                            <Suspense>
+                            <Suspense fallback={<Loader/>}>
                                     <Security/>
                             </Suspense>
                         }
@@ -177,7 +177,7 @@ export const AppRoutes = () => {
                     <Route
                         path="/riseUp"
                         element={
-                            <Suspense >
+                            <Suspense fallback={<Loader/>}>
                                     <RiseUp/>
                             </Suspense>
                         }
@@ -185,7 +185,7 @@ export const AppRoutes = () => {
                     <Route
                         path="/withdrawRecord"
                         element={
-                            <Suspense >
+                            <Suspense fallback={<Loader/>}>
                                     <WidthdrawHistory/>
                             </Suspense>
                         }
@@ -193,7 +193,7 @@ export const AppRoutes = () => {
                     <Route
                         path="/rechargeRecord"
                         element={
-                            <Suspense >
+                            <Suspense fallback={<Loader/>}>
                                     <RechargeHistory/>
                             </Suspense>
                         }
@@ -202,11 +202,11 @@ export const AppRoutes = () => {
                 </>
             )}
 
-            <Route path="/verifyOtp" element={<Suspense ><OTP /></Suspense>} />
-            <Route path="/comingSoon" element={<Suspense ><Launch/></Suspense>} />
-            <Route path="/resetPassword" element={<Suspense ><Reset /></Suspense>} />
-            <Route path="/success" element={<Suspense ><Success /></Suspense>} />
-            <Route path="/profile" element={<Suspense ><ProfileComponent /></Suspense>} />
+            <Route path="/verifyOtp" element={<Suspense fallback={<Loader/>}><OTP /></Suspense>} />
+            <Route path="/comingSoon" element={<Suspense fallback={<Loader/>}><Launch/></Suspense>} />
+            <Route path="/resetPassword" element={<Suspense fallback={<Loader/>}><Reset /></Suspense>} />
+            <Route path="/success" element={<Suspense fallback={<Loader/>}><Success /></Suspense>} />
+            <Route path="/profile" element={<Suspense fallback={<Loader/>}><ProfileComponent /></Suspense>} />
         </Routes>
     );
 }

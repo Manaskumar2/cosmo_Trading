@@ -17,7 +17,8 @@
 .commission-bot-row .col-10{color: #0AE2FF;font-family: 'Montserrat';font-size: 1rem;}
 .commission-row .col-2{color: #FFF;font-family: 'Montserrat';font-size: 1rem;text-align: center;}
 .commission-bot-row .col-2{color: #FFF;font-family: 'Montserrat';font-size: 1rem;text-align: center;}
-.total-commission{color: #FFF; padding: .8rem 0; font-size: 1.2rem; font-weight: 480;font-family: 'Montserrat';border-top: 2px solid #DCB17F;}
+.total-commission{color: #FFF; padding: .8rem 0; font-size: 1rem; font-weight: 480;font-family: 'Montserrat';border-top: 2px solid #DCB17F; display: flex;flex-direction: column;justify-content: center;align-items: center;}
+
 .invitation-row{border-radius: 12.5rem; margin:0 0 30px;
     border: 1px solid #FFF;
     background: linear-gradient(143deg, #C82F36 0%, #EC4E55 100%);
