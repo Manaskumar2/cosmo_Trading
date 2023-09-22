@@ -37,27 +37,27 @@ async function calculatResult(gameId) {
     let losersGroup = null;
 
     // Determine the winner and runner-up groups based on total bet amounts
-    if (AAmount > BAmount && AAmount > CAmount) {
+    if (AAmount < BAmount && AAmount < CAmount) {
         winnerGroup = "A";
-        if (BAmount > CAmount) {
+        if (BAmount < CAmount) {
             runnerUpGroup = "B";
             losersGroup = "C";
         } else {
             runnerUpGroup = "C";
             losersGroup = "B";
         }
-    } else if (BAmount > AAmount && BAmount > CAmount) {
+    } else if (BAmount < AAmount && BAmount < CAmount) {
         winnerGroup = "B";
-        if (AAmount > CAmount) {
+        if (AAmount < CAmount) {
             runnerUpGroup = "A";
             losersGroup = "C";
         } else {
             runnerUpGroup = "C";
             losersGroup = "A";
         }
-    } else if (CAmount > AAmount && CAmount > BAmount) {
+    } else if (CAmount < AAmount && CAmount < BAmount) {
         winnerGroup = "C";
-        if (AAmount > BAmount) {
+        if (AAmount < BAmount) {
             runnerUpGroup = "A";
             losersGroup = "B";
         } else {
