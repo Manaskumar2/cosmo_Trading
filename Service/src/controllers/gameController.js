@@ -1,6 +1,6 @@
 const userModel = require("../models/userModel");
 const Game = require("../models/gameModel");
-const Wallet = require("../models/companywallet");
+// const Wallet = require("../models/companywallet");
 const { generateUniqueNumber } = require("../util/util");
 const moment = require("moment");
 const cron = require("node-cron");
@@ -50,8 +50,8 @@ async function calculatResult(gameId) {
     const distributedAmount = await distributeComissionToAll(game);
     const compnayFund = totalAmount - distributedAmount;
 
-    await updateCompanyWallet(walletId, compnayFund, game._id);
-    await updateWalletForEverydayBettingAmount(walletId, compnayFund, game);
+    // await updateCompanyWallet(walletId, compnayFund, game._id);
+    // await updateWalletForEverydayBettingAmount(walletId, compnayFund, game);
     game.winnerGroup = winnerGroup.toUpperCase();
     await game.save();
   } else if (bigAmount !== smallAmount) {
@@ -81,7 +81,7 @@ async function calculatResult(gameId) {
     const distributedAmount = await distributeComissionToAll(game);
     const compnayFund = totalAmount - distributedAmount;
 
-    await updateCompanyWallet(walletId, compnayFund, game._id);
+    // await updateCompanyWallet(walletId, compnayFund, game._id);
     game.winnerGroup = winnerGroup.toUpperCase();
     await game.save();
   } else {
@@ -111,7 +111,7 @@ async function calculatResult(gameId) {
     const distributedAmount = await distributeComissionToAll(game);
     const compnayFund = totalAmount - distributedAmount;
 
-    await updateCompanyWallet(walletId, compnayFund, game._id);
+    // await updateCompanyWallet(walletId, compnayFund, game._id);
     game.winnerGroup = winnerGroup.toUpperCase();
     await game.save();
   }
@@ -178,20 +178,20 @@ async function distributeCommission(user, amount) {
   return distributedAmount;
 }
 
-async function updateCompanyWallet(walletId, amount, gameId) {
-  const wallet = await Wallet.findOne({ _id: walletId });
+// async function updateCompanyWallet(walletId, amount, gameId) {
+//   const wallet = await Wallet.findOne({ _id: walletId });
 
-  wallet.amount += amount;
-  wallet.actions.push({
-    actions: "+",
-    date: new Date(),
-    amount,
-    wonFrom: "betting",
-    source: gameId,
-  });
+//   wallet.amount += amount;
+//   wallet.actions.push({
+//     actions: "+",
+//     date: new Date(),
+//     amount,
+//     wonFrom: "betting",
+//     source: gameId,
+//   });
 
-  await wallet.save();
-}
+//   await wallet.save();
+// }
 
 // async function updateWalletForEverydayBettingAmount(walletId, amount, game) {
 //   const wallet = await Wallet.findOne({ _id: walletId });
@@ -205,23 +205,23 @@ async function updateCompanyWallet(walletId, amount, gameId) {
 //   wallet.everydayBettingAmount += game.totalBettingAmount;
 //   await wallet.save();
 // }
-async function updateWalletForEverydayBettingAmount(walletId, amount, game) {
-  if (isNaN(amount)) {
-    console.error("Invalid amount:", amount);
-    return;
-  }
+// async function updateWalletForEverydayBettingAmount(walletId, amount, game) {
+//   if (isNaN(amount)) {
+//     console.error("Invalid amount:", amount);
+//     return;
+//   }
 
-  const wallet = await Wallet.findOne({ _id: walletId });
-  const today = new Date();
+//   const wallet = await Wallet.findOne({ _id: walletId });
+//   const today = new Date();
 
-  if (!moment(wallet.lastUpdatedDate).isSame(today, "day")) {
-    wallet.everydayBettingAmount = 0;
-    wallet.lastUpdatedDate = today;
-  }
+//   if (!moment(wallet.lastUpdatedDate).isSame(today, "day")) {
+//     wallet.everydayBettingAmount = 0;
+//     wallet.lastUpdatedDate = today;
+//   }
 
-  wallet.everydayBettingAmount += amount; // Update with valid amount
-  await wallet.save();
-}
+//   wallet.everydayBettingAmount += amount; // Update with valid amount
+//   await wallet.save();
+// }
 
 function roundDown(num, decimalPlaces = 2) {
   const factor = 10 ** decimalPlaces;

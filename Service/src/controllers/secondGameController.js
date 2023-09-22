@@ -104,6 +104,7 @@ async function calculatResult(gameId) {
     } else if (isOnlyTwoEqualAndNotZero(runners)) {
 
         let { winner, runnerUp, losers } = findResultOfTwoEqualUsers(runners)
+        
 
 
     } else if (AAmount == BAmount && BAmount == CAmount && AAmount != 0) {
@@ -123,21 +124,19 @@ async function calculatResult(gameId) {
     // } else if (runners[2].amount == 0 && runners[1].amount == 0 && runners[0].amount == 0) {
 
     // }
-     let winner = runners[2]
-        let runnerUp = runners[1]
-    let losers = runners[0]
+
     
-        if (winner && runnerUp && losers) {
-        if (game.bets.length === 3) {
+    //     if (winner && runnerUp && losers) {
+    //     if (game.bets.length === 3) {
             
-            await distributeComissionToThreeUsers(winner, runnerUp, losers, game);
-        } else if (game.bets.length === 2) {
+    //         await distributeComissionToThreeUsers(winner, runnerUp, losers, game);
+    //     } else if (game.bets.length === 2) {
             
-            await distributeComissionToTWoUsers(winner, losers, game);
-        } else if (game.bets.length === 1) {
-            await distributeComissionToOneUser(winner, game);
-        }
-    }
+    //         await distributeComissionToTWoUsers(winner, losers, game);
+    //     } else if (game.bets.length === 1) {
+    //         await distributeComissionToOneUser(winner, game);
+    //     }
+    // }
  
 }
 
@@ -486,7 +485,7 @@ const startAndCheckGame = async (duration) => {
     if (game) {
         if (game.endTime.unix() - currentDate.unix() <= 0) {
             game.isCompleted = true;
-            // calculatResult(game._id);
+            calculatResult(game._id);
             await game.save();
             await Game.create({
                 duration: duration,
