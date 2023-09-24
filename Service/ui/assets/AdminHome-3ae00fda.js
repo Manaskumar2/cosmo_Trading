@@ -1,0 +1,1 @@
+import{j as i}from"./index-ca1722cc.js";import{A as s,S as e}from"./Side-b99dabed.js";function r(){return i.jsxs("div",{children:[i.jsx(s,{}),i.jsxs("div",{className:"flex-div",children:[i.jsx(e,{}),i.jsx("div",{className:"admin-rightSection",children:"Home"})]})]})}export{r as default};
