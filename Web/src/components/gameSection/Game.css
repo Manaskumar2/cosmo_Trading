@@ -1,12 +1,5 @@
-/* .game .container  {margin-bottom: 50vh;} */
-/* .game .container .row .col-6  {overflow: hidden;}
-.game>button> img{width: 10rem; height: 10rem; border-radius: 50%;box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em, rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em, rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;}
-.game>button {outline: none; border: 0; background-color: transparent;}
-.game-banner{ background: url(../img/game-card-bg.22677281.png) no-repeat 50%,linear-gradient(135deg,#64bfff,#2b5dfe); display: flex; align-items: center; justify-content: center;width: 100%;height: 8rem;flex-direction: column;    border-radius: 0.4rem; margin-top: 1.2rem;}
-.game-banner h2{color: #252525;}
-.game-banner p{color: #fff; font-weight: 600;}
-.trx{    background: url(../img/game-card-bg.22677281.png) no-repeat 50%,linear-gradient(135deg,#64be57,#27704d);} */
-.game-banner img{width: 100%; margin-top: 1rem;}
+.game-banner{min-height: 200px;}
+.game-banner img{width: 100%; margin-top: 1rem;height: 100%;}
 
 .game-banner{position: relative;}
 

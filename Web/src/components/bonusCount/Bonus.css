@@ -1,4 +1,4 @@
-.bonus .container .txt{margin-top:1rem;background-image: url('../../images/bonus.svg');background-repeat: no-repeat; background-size: cover;}
+.bonus .container .txt{margin-top:1rem;background-image: url('../../images/bonus.svg');background-repeat: no-repeat; background-size: cover;min-height: 14rem;}
 .bonus .container .txt{width: 100%; text-align: center; padding: 35px 20px;border-radius: 20px;}
 .bonus .container .txt p{color: #FFEBEB;font-family: 'Montserrat';font-size: 1rem; margin-bottom: 5px;}
 .bonus .container .txt h3{color: #FFF;font-family: 'Montserrat';font-size: 1.5rem;font-style: normal;font-weight: 600;}

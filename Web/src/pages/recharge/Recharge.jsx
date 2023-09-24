@@ -38,7 +38,7 @@ function Recharge() {
     <div className='recharge'>
       <div className="container-fluid PromoNav" >
         <div className="row">
-          <Link to='/' className="col-2">
+          <Link to='/wallet' className="col-2">
             <img src={back} alt="" />
           </Link>
           <div className="col-8">
@@ -75,7 +75,7 @@ function Recharge() {
           <button
             className={`col-6 ${selectedRoute === 11 ? 'transaction' : ''}`}
             style={{ borderBottom: "1px solid #024672", borderRadius: "0 10px 0 0" }}
-            onClick={() => handleRouteButtonClick(11)}
+            // onClick={() => handleRouteButtonClick(11)}
           >
             <img src={qr} alt="" />
             <p>Fast UPI</p>
@@ -87,15 +87,15 @@ function Recharge() {
           <button
             className={`col-6 ${selectedRoute === 12 ? 'transaction' : ''}`}
             style={{ borderRight: "1px solid #024672", borderRadius: "0 0 0 10px " }}
-            onClick={() => handleRouteButtonClick(12)}
+            // onClick={() => handleRouteButtonClick(12)}
           >
             <img src={balance} alt="" />
-            <p>Bank Transfer</p>
+            <p style={{color:'blue'}}>Bank Transfer</p>
           </button>
           <button
             className={`col-6 ${selectedRoute === 13 ? 'transaction' : ''}`}
             style={{ borderRight: "1px solid #024672", borderRadius: "0 0 10px 0 " }}
-            onClick={() => handleRouteButtonClick(13)}
+            // onClick={() => handleRouteButtonClick(13)}
           >
             <img src={money} alt="" />
             <p>USDT</p>

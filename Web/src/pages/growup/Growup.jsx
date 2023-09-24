@@ -6,6 +6,7 @@ import ear from '../../images/earphone.svg'
 import Audio from '../../images/audio.svg'
 import rupee from '../../images/rupee.svg'
 import reload from '../../images/reload 1.svg'
+import mute from '../../images/mute.svg'
 import './Growup.css'
 import { useState, useMemo, useEffect } from 'react';
 import Modal from 'react-bootstrap/Modal';
@@ -27,6 +28,7 @@ import { GameHistory } from '../../components/ComponentExport'
 import { useNavigate } from 'react-router-dom'
 import { CountDown } from '../../Atoms/CountDown';
 import Timer from '../../components/timer/Timer'
+import { PlaySound } from '../../Atoms/PlaySound';
 export const toastProps = {
     position: "top-center",
     duration: 2000,
@@ -37,6 +39,7 @@ export const toastProps = {
     },
 };
 function Growup() {
+    const [playSound, setPlaySound] = useRecoilState(PlaySound)
     const [isChecked, setIsChecked] = useState(true);
 
     const navigate = useNavigate()
@@ -74,7 +77,7 @@ function Growup() {
 
 
 
-////////
+    ////////
     useEffect(() => {
         setAmount(money * multiplier);
     }, [money, multiplier]);
@@ -85,35 +88,42 @@ function Growup() {
 
     const handleMultiplierChange = (operation) => {
         if (operation === '+') {
-          setMultiplier((prevMultiplier) => prevMultiplier + 1);
+            setMultiplier((prevMultiplier) => prevMultiplier + 1);
         } else if (operation === '-') {
-          setMultiplier((prevMultiplier) => Math.max(prevMultiplier - 1, 1)); 
+            setMultiplier((prevMultiplier) => Math.max(prevMultiplier - 1, 1));
         } else {
-          setMultiplier(parseInt(operation));
+            setMultiplier(parseInt(operation));
         }
-      };
-      
-///////
+    };
+
+    ///////
 
 
     const handleUserMoney = async () => {
         try {
-            let token = auth.authToken
-            let UID = auth.UID
+            let token = auth.authToken;
+            let UID = auth.UID;
             const response = await axios.get(`${import.meta.env.VITE_API_URL}/getUserProfile/${UID}`, {
                 headers: { Authorization: `Bearer ${token}` }
-            }
-            );
-
+            });
+        
             if (response.status === 200) {
-
-                setUserData(response)
+                setUserData(response);
                 return response;
+            } else if (response.status === 404) {
+             
+                return null;
             }
         } catch (error) {
+            if (error.response && error.response.status === 404) {
+                
+                return null;
+            }
+        
             const errorMessage = error.response ? error.response.data.message : error.message;
             toast.error(errorMessage || "Something went wrong", { ...toastProps });
         }
+        
     }
 
     const handleSubmit = async () => {
@@ -195,8 +205,13 @@ function Growup() {
                     </div>
                     <div className="col-2">
                         <img src={ear} alt="" className="header_headphone" />
-                        <img src={Audio} alt="" />
+                        {playSound ? (
+                            <img src={Audio} alt="" onClick={() => { setPlaySound(false) }} />
+                        ) : (
+                            <img src={mute} alt="" onClick={() => { setPlaySound(true) }} />
+                        )}
                     </div>
+
                 </div>
             </div>
             <Toaster />
@@ -372,12 +387,12 @@ function Growup() {
                                         </div>
                                         <div className="hrline"></div>
                                         <div className="custom_checkbox">
-                                        <input
-        type="checkbox"
-        id="Agree"
-        checked={isChecked}
+                                            <input
+                                                type="checkbox"
+                                                id="Agree"
+                                                checked={isChecked}
 
-      />
+                                            />
                                             <label for="Agree">I Agree <Link>Privacy Policy</Link></label>
                                         </div>
 
@@ -494,12 +509,12 @@ function Growup() {
                                         </div>
                                         <div className="hrline"></div>
                                         <div className="custom_checkbox">
-                                        <input
-        type="checkbox"
-        id="Agree"
-        checked={isChecked}
+                                            <input
+                                                type="checkbox"
+                                                id="Agree"
+                                                checked={isChecked}
 
-      />
+                                            />
                                             <label for="Agree">I Agree <Link>Privacy Policy</Link></label>
                                         </div>
 
@@ -544,7 +559,7 @@ function Growup() {
                                     </Modal.Title>
                                 </Modal.Header>
                                 <Modal.Body>
-                                <div className=' money-container'>
+                                    <div className=' money-container'>
                                         <div className="money">
                                             <div>
                                                 <p>Money</p>
@@ -639,12 +654,12 @@ function Growup() {
                                         </div>
                                         <div className="hrline"></div>
                                         <div className="custom_checkbox">
-                                        <input
-        type="checkbox"
-        id="Agree"
-        checked={isChecked}
+                                            <input
+                                                type="checkbox"
+                                                id="Agree"
+                                                checked={isChecked}
 
-      />
+                                            />
                                             <label for="Agree">I Agree <Link>Privacy Policy</Link></label>
                                         </div>
 
@@ -666,7 +681,7 @@ function Growup() {
                                     </Modal.Title>
                                 </Modal.Header>
                                 <Modal.Body>
-                                <div className=' money-container'>
+                                    <div className=' money-container'>
                                         <div className="money">
                                             <div>
                                                 <p>Money</p>
@@ -761,12 +776,12 @@ function Growup() {
                                         </div>
                                         <div className="hrline"></div>
                                         <div className="custom_checkbox">
-                                        <input
-        type="checkbox"
-        id="Agree"
-        checked={isChecked}
+                                            <input
+                                                type="checkbox"
+                                                id="Agree"
+                                                checked={isChecked}
 
-      />
+                                            />
                                             <label for="Agree">I Agree <Link>Privacy Policy</Link></label>
                                         </div>
 
@@ -810,7 +825,7 @@ function Growup() {
                                     </Modal.Title>
                                 </Modal.Header>
                                 <Modal.Body>
-                                <div className=' money-container'>
+                                    <div className=' money-container'>
                                         <div className="money">
                                             <div>
                                                 <p>Money</p>
@@ -905,12 +920,12 @@ function Growup() {
                                         </div>
                                         <div className="hrline"></div>
                                         <div className="custom_checkbox">
-                                        <input
-        type="checkbox"
-        id="Agree"
-        checked={isChecked}
+                                            <input
+                                                type="checkbox"
+                                                id="Agree"
+                                                checked={isChecked}
 
-      />
+                                            />
                                             <label for="Agree">I Agree <Link>Privacy Policy</Link></label>
                                         </div>
 
@@ -932,7 +947,7 @@ function Growup() {
                                     </Modal.Title>
                                 </Modal.Header>
                                 <Modal.Body>
-                                <div className=' money-container'>
+                                    <div className=' money-container'>
                                         <div className="money">
                                             <div>
                                                 <p>Money</p>
@@ -1027,12 +1042,12 @@ function Growup() {
                                         </div>
                                         <div className="hrline"></div>
                                         <div className="custom_checkbox">
-                                        <input
-        type="checkbox"
-        id="Agree"
-        checked={isChecked}
+                                            <input
+                                                type="checkbox"
+                                                id="Agree"
+                                                checked={isChecked}
 
-      />
+                                            />
                                             <label for="Agree">I Agree <Link>Privacy Policy</Link></label>
                                         </div>
 
@@ -1076,7 +1091,7 @@ function Growup() {
                                     </Modal.Title>
                                 </Modal.Header>
                                 <Modal.Body>
-                                <div className=' money-container'>
+                                    <div className=' money-container'>
                                         <div className="money">
                                             <div>
                                                 <p>Money</p>
@@ -1171,12 +1186,12 @@ function Growup() {
                                         </div>
                                         <div className="hrline"></div>
                                         <div className="custom_checkbox">
-                                        <input
-        type="checkbox"
-        id="Agree"
-        checked={isChecked}
+                                            <input
+                                                type="checkbox"
+                                                id="Agree"
+                                                checked={isChecked}
 
-      />
+                                            />
                                             <label for="Agree">I Agree <Link>Privacy Policy</Link></label>
                                         </div>
 
@@ -1198,7 +1213,7 @@ function Growup() {
                                     </Modal.Title>
                                 </Modal.Header>
                                 <Modal.Body>
-                                <div className=' money-container'>
+                                    <div className=' money-container'>
                                         <div className="money">
                                             <div>
                                                 <p>Money</p>
@@ -1293,12 +1308,12 @@ function Growup() {
                                         </div>
                                         <div className="hrline"></div>
                                         <div className="custom_checkbox">
-                                        <input
-        type="checkbox"
-        id="Agree"
-        checked={isChecked}
+                                            <input
+                                                type="checkbox"
+                                                id="Agree"
+                                                checked={isChecked}
 
-      />
+                                            />
                                             <label for="Agree">I Agree <Link>Privacy Policy</Link></label>
                                         </div>
 

@@ -3,6 +3,7 @@ import axios from 'axios';
 import toast, { Toaster } from "react-hot-toast";
 import { AuthState } from '../../Atoms/AuthState'
 import { GameHistoryListRiseUp } from '../../Atoms/GameHistoryListRiseUp';
+import { UserGameHistoryRiseUp } from '../../Atoms/UserGameHistoryRiseUp';
 import { useRecoilState, useRecoilValue } from 'recoil'
 import '../gameHistory/GameHistory.css'
 import left from '../../images/leftArr.svg'
@@ -10,7 +11,7 @@ import right from '../../images/RightArr.svg'
 import Winner from '../../images/icon-winner.svg'
 import Alpha from '../../images/icon-alpha.svg'
 import Beta from '../../images/icon-beta.svg'
-import Gama from '../../images/Gamma.svg'
+import Gama from './gama.svg'
 export const toastProps = {
     position: "top-center",
     duration: 2000,
@@ -23,7 +24,6 @@ export const toastProps = {
 
 function GameHistory({ duration }) {
     const [expandedRowIndex, setExpandedRowIndex] = useState(null);
-
     const toggleRow = (index) => {
         if (expandedRowIndex === index) {
             setExpandedRowIndex(null);
@@ -32,11 +32,10 @@ function GameHistory({ duration }) {
         }
     };
     const iconSources = [Alpha, Beta, Gama]
-    const randomWinnerGroup = Math.random() < 0.5 ? 'SMALL' : 'BIG';
     const [activeTab, setActiveTab] = useState(1);
     const auth = useRecoilValue(AuthState)
     const [gameHistoryList, setGameHistoryList] = useRecoilState(GameHistoryListRiseUp)
-    const [userGames, setUserGames] = useState(null)
+    const [userGames, setUserGames] = useRecoilState(UserGameHistoryRiseUp)
     const [page, setPage] = useState(1)
 
     const getUserGameHistory = async () => {
@@ -49,7 +48,6 @@ function GameHistory({ duration }) {
                 params: { page },
                 headers: { Authorization: `Bearer ${token}` },
             });
-
             if (response.status === 200) {
                 console.log(response);
                 setUserGames(response)
@@ -61,9 +59,7 @@ function GameHistory({ duration }) {
             toast.error(errorMessage || "Something went wrong", { ...toastProps });
         }
     }
-
     const getGameHistory = async () => {
-
         try {
             let token = auth.authToken;
             console.log(token);
@@ -86,7 +82,7 @@ function GameHistory({ duration }) {
         getGameHistory();
         const interval = setInterval(() => {
             getGameHistory();
-        }, 10000);
+        }, 5000);
         return () => clearInterval(interval);
     }, [duration]);
 
@@ -94,7 +90,7 @@ function GameHistory({ duration }) {
         getUserGameHistory()
         const interval = setInterval(() => {
             getUserGameHistory()
-        }, 10000);
+        }, 4500);
         return () => clearInterval(interval);
     }, [page])
 
@@ -136,13 +132,6 @@ function GameHistory({ duration }) {
                                     gameHistoryList.data
                                         .filter((item) => item.isCompleted)
                                         .map((item, index) => {
-                                            const winnerGroup =
-                                                item.bets && item.bets.length > 0
-                                                    ? item.winnerGroup
-                                                    : Math.random() < 0.5
-                                                        ? 'SMALL'
-                                                        : 'BIG';
-
                                             return (
                                                 <tr key={index}>
                                                     <td>{item.gameUID}</td>
@@ -151,18 +140,21 @@ function GameHistory({ duration }) {
                                                             <span className="icon_win">
                                                                 <img src={Winner} alt="Winner" />
                                                             </span>
-                                                            {/* <p>{item.winnerGroup === 'SMALL' ? 'Alpha' : 'Beta'}</p>
-                                                            <p>{item.duration}</p> */}
                                                             <span className="icon_rate">
                                                                 {item.winnerGroup === 'A' ? (
-                                                                    <img src={Alpha} alt="Alpha" />
+                                                                    <img src={Alpha} alt="Alpha" style={{ height: "2rem", width: "2rem" }} />
                                                                 ) : item.winnerGroup === 'B' ? (
-                                                                    <img src={Beta} alt="Beta" />
+                                                                    <img src={Beta} alt="Beta" style={{ height: "2rem", width: "2rem" }} />
                                                                 ) : item.winnerGroup === 'C' ? (
-                                                                    <img src={Gama} alt="Gamma" />
-                                                                ) :  (
-                                                                    <img src={iconSources[Math.floor(Math.random() * iconSources.length)]} alt="Random Icon" />
-                                                                )}
+                                                                    <img src={Gama} alt="Gamma" style={{ height: "2rem", width: "2rem" }} />
+                                                                ) : item.winnerGroup === null && item.gameUID % 2 === 1 ? (
+                                                                    <img src={Alpha} alt="Alpha" style={{ height: "2rem", width: "2rem" }} />
+                                                                ) : item.winnerGroup === null && item.gameUID % 2 === 0 ? (
+                                                                    <img src={Beta} alt="Beta" style={{ height: "2rem", width: "2rem" }} />
+                                                                ) : item.winnerGroup === null && item.gameUID % 3 === 0 ? (
+                                                                    <img src={Gama} alt="Gamma" style={{ height: "2rem", width: "2rem" }} />
+                                                                ) : null}
+
                                                             </span>
                                                             {item.runnerUpGroup && <span className="icon_rate">
                                                                 {item.runnerUpGroup === 'A' ? (
@@ -171,23 +163,22 @@ function GameHistory({ duration }) {
                                                                     <img src={Beta} alt="Beta" />
                                                                 ) : item.runnerUpGroup === 'C' ? (
                                                                     <img src={Gama} alt="Gamma" />
-                                                                ) :  (
-                                                                    <img src={iconSources[Math.floor(Math.random() * iconSources.length)]} alt="Random Icon" />
-                                                                )}
+                                                                ) : item.runnerUpGroup === null && item.gameUID % 2 === 1 ? (
+                                                                    <img src={Alpha} alt="Alpha" />
+                                                                ) : item.runnerUpGroup === null && item.gameUID % 2 === 0 ? (
+                                                                    <img src={Beta} alt="Beta" />
+                                                                ) : item.runnerUpGroup === null && item.gameUID % 5 === 0 ? (
+                                                                    <img src={Gama} alt="Gamma" />
+                                                                ) : null}
                                                             </span>}
-
                                                         </div>
                                                     </td>
                                                 </tr>
                                             );
                                         })}
-
-
-
                             </tbody>
                         </table>
                     </div>
-
                 </div>
             }
             {activeTab === 2 &&
@@ -198,49 +189,50 @@ function GameHistory({ duration }) {
                                 <thead>
                                     <tr>
                                         <th>Period</th>
-                                        <th width="140">Result</th>
-                                        <th>Group</th>
+                                        <th width="140" style={{ textAlign: 'center' }}>Result</th>
+                                        <th style={{ textAlign: 'center' }}>Group</th>
 
                                     </tr>
                                 </thead>
                                 <tbody>
-                                {userGames &&
+                                    {userGames &&
                                         userGames.data &&
                                         userGames.data.history.map((item, index) => (
                                             <React.Fragment key={index}>
                                                 <tr onClick={() => toggleRow(index)}>
-                                                    <td>{item.gameId}</td>
-                                                    <td>{item.result}</td>
+                                                    <td>{item.gameUID}</td>
+                                                    <td style={{ textAlign: 'center' }}>{item.isCompleted
+                                                                        ? item.winnerGroup === item.group.toUpperCase()
+                                                                            ? 'Win'
+                                                                            : 'Lose'
+                                                                        : 'Pending'}</td>
                                                     <td>
                                                         <div className="winners_col_row">
                                                             <span className="icon_win">
                                                                 <img src={Winner} alt="Winner" />
                                                             </span>
-                                                            {/* <p style={{ textAlign: 'left' }}>
-                                                                {item.group === 'A' ? 'Alpha' : 'Beta'}
-                                                            </p> */}
                                                             <span className="icon_rate">
                                                                 {item.group === 'A' ? (
-                                                                    <img src={Alpha} alt="Alpha" />
+                                                                    <img src={Alpha} alt="Alpha" style={{ height: "2rem", width: "2rem" }} />
                                                                 ) : item.group === 'B' ? (
-                                                                    <img src={Beta} alt="Beta" />
+                                                                    <img src={Beta} alt="Beta" style={{ height: "2rem", width: "2rem" }} />
                                                                 ) : item.group === 'C' ? (
-                                                                    <img src={Gama} alt="Gamma" />
-                                                                ) :  (
+                                                                    <img src={Gama} alt="Gamma" style={{ height: "2rem", width: "2rem" }} />
+                                                                ) : (
                                                                     <img src={iconSources[Math.floor(Math.random() * iconSources.length)]} alt="Random Icon" />
                                                                 )}
                                                             </span>
-                                                            {/* {item.runnerUpGroup && <span className="icon_rate">
+                                                            {item.runnerUpGroup && <span className="icon_rate">
                                                                 {item.runnerUpGroup === 'A' ? (
                                                                     <img src={Alpha} alt="Alpha" />
                                                                 ) : item.runnerUpGroup === 'B' ? (
                                                                     <img src={Beta} alt="Beta" />
                                                                 ) : item.runnerUpGroup === 'C' ? (
                                                                     <img src={Gama} alt="Gamma" />
-                                                                ) :  (
+                                                                ) : (
                                                                     <img src={iconSources[Math.floor(Math.random() * iconSources.length)]} alt="Random Icon" />
                                                                 )}
-                                                            </span>} */}
+                                                            </span>}
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -249,17 +241,24 @@ function GameHistory({ duration }) {
                                                         <td colSpan="3">
 
                                                             <div className="expanded-content">
-                                                                <div className='flex-div-space-Betn'><p>Period :</p><p>  {item.gameId}</p></div>
-                                                                
+                                                                <div className='flex-div-space-Betn'><p>Period :</p><p>  {item.gameUID}</p></div>
+
                                                                 <div className='flex-div-space-Betn'><p>Amount :</p><p>  {item.amount}</p></div>
-                                                                
-                                                                <div className='flex-div-space-Betn'><p>Betting Placed :</p><p> {item.group === 'small' ? 'Alpha' : 'Beta'}</p></div>
+
+                                                                <div className='flex-div-space-Betn'><p>Betting Placed :</p><p> {item.group === 'A' ? 'Alpha' : item.group === 'B' ? 'Beta' : item.group === 'C' ? 'Gama' : 'Unknown'}</p></div>
                                                                 <div className='flex-div-space-Betn'>
-  <p>Betting Status :</p>
-  <p style={{ color: item.result === 'win' ? '#00B612' : 'red' }}>{item.result}</p>
-</div>
+                                                                    <p>Betting Status :</p>
+                                                                    <p style={{ textAlign: 'left' }}>
+                                                                        {item.isCompleted
+                                                                            ? item.winnerGroup === item.group.toUpperCase()
+                                                                                ? 'Win'
+                                                                                : 'Lose'
+                                                                            : 'Pending'}
+                                                                    </p>
+
+                                                                </div>
                                                                 <div className='flex-div-space-Betn' ><p>Order Time:</p><p>{new Date(item.startTime).toLocaleString()}</p></div>
-                                                                
+
 
 
                                                             </div>

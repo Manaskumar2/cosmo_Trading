@@ -1,10 +1,6 @@
 import React from 'react'; 
 import './Nav.css';
 import { NavLink } from 'react-router-dom';
-// import home from '../../images/home.svg';
-// import diamond from '../../images/diamond.svg';
-// import wallet from '../../images/wallet 1.svg';
-// import user from '../../images/user.svg';
 
 function Nav() {
     

@@ -12,7 +12,6 @@ import Modal from 'react-bootstrap/Modal';
 import alfa from '../../images/alfaBtn.svg'
 import beta from '../../images/betaBtn.svg'
 import gama from '../../images/gama.svg'
-import aModal from '../../images/A-modal.svg'
 import { TimeSectionRiseUp } from '../../components/ComponentExport'
 import { UserDetails } from '../../Atoms/UserDetails'
 import axios from 'axios';
@@ -26,6 +25,8 @@ import { GameHistoryRiseUp } from '../../components/ComponentExport'
 import { useNavigate } from 'react-router-dom'
 import { CountDown } from '../../Atoms/CountDown';
 import Timer from '../../components/timer/Timer'
+import { PlaySound } from '../../Atoms/PlaySound';
+import mute from '../../images/mute.svg'
 export const toastProps = {
     position: "top-center",
     duration: 2000,
@@ -36,6 +37,7 @@ export const toastProps = {
     },
 };
 function RiseUp() {
+    const [playSound, setPlaySound] = useRecoilState(PlaySound)
     const [isChecked, setIsChecked] = useState(true);
 
     const navigate = useNavigate()
@@ -57,7 +59,6 @@ function RiseUp() {
     const [gmShow, setGmShow] = useState(false);
 
 
-    const [activeMultiplier, setActiveMultiplier] = useState(1);
 
     const showCountDown = useRecoilValue(CountDown)
 
@@ -92,12 +93,6 @@ function RiseUp() {
 
     const handleSubmit = async () => {
         let token = auth.authToken
-        // console.log(group);
-        // console.log(amount);
-        // console.log(duration);
-        // console.log(token);
-
-
         try {
             let token = auth.authToken
             const response = await axios.post(`${import.meta.env.VITE_API_URL}betSecondGame`, {
@@ -113,13 +108,20 @@ function RiseUp() {
                 toast.success("Bet created Successfully!", { ...toastProps });
                 setGroup('');
                 setAmount(1);
+                setLgShow(false)
+                setGmShow(false)
                 console.log(response);
-                console.log("Bapi")
-                toast.success("Bet created", { ...toastProps })
                 navigate('/riseUp')
                 return response;
+            }else if (response.status === 404) {
+             
+                return null;
             }
         } catch (error) {
+            if (error.response && error.response.status === 404) {
+                
+                return null;
+            }
             const errorMessage = error.response ? error.response.data.message : error.message;
             toast.error(errorMessage || "Something went wrong", { ...toastProps });
         }
@@ -208,7 +210,11 @@ function RiseUp() {
                     </div>
                     <div className="col-2">
                         <img src={ear} alt="" className="header_headphone" />
-                        <img src={Audio} alt="" />
+                        {playSound ? (
+                            <img src={Audio} alt="" onClick={() => { setPlaySound(false) }} />
+                        ) : (
+                            <img src={mute} alt="" onClick={() => { setPlaySound(true) }} />
+                        )}
                     </div>
                 </div>
             </div>

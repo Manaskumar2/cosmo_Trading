@@ -41,7 +41,6 @@ function Wallet() {
             const errorMessage = error.response ? error.response.data.message : error.message;
 
         }
-        useEffect(()=>{handleUserdata()},[])
     }
     const handleWithdrawHistory = async () => {
         try {
@@ -63,7 +62,7 @@ function Wallet() {
         }
         
     }
-    useEffect(()=>{handleWithdrawHistory()},[])
+    useEffect(()=>{handleWithdrawHistory();handleUserdata()},[])
     return (
         <div className='WalletContainer'>
             
@@ -75,7 +74,7 @@ function Wallet() {
                     <div className="col-8">
                         Wallet
                     </div>
-                    <div className="col-2">
+                    <div className="col-2" style={{textAlign:"right"}} onClick={()=>{navigate('/customerCare')}}>
                         <img src={ear} alt="" className="header_headphone" />
                     </div>
                 </div>

@@ -1,1 +1,6 @@
 .comingSoon{text-align: center; color: aliceblue; margin-top: 20vh;}
+.page-count{display: flex;
+    width: 4.75rem;
+    height: 2.875rem;
+    justify-content: center;
+    align-items: center;color: #fff;}

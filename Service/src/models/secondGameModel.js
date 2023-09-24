@@ -50,7 +50,11 @@ const GameSchema = new mongoose.Schema({
     runnerUpGroup: {
     type: String,
     default: null
-  }
+  },
+  losersGroup: {
+    type: String,
+    default:null
+    }
 
 },{timestamps:true});
 module.exports = mongoose.model('SecondGame', GameSchema);

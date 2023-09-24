@@ -84,7 +84,7 @@ function Withdraw() {
     <div className='recharge'>
       <div className="container-fluid PromoNav" >
         <div className="row">
-          <Link to='/' className="col-2">
+          <Link to='/wallet' className="col-2">
             <img src={back} alt="" />
           </Link>
           <div className="col-8">

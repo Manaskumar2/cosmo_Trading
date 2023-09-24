@@ -6,15 +6,9 @@
     .wallet-pro-row{display: flex; flex-direction: column;justify-content: center;}
     .wallet-pro-row .col-4{display: flex;justify-content: center;width: 100%;margin-top: 1rem;}
     .wallet-pro-row .col-8{display: flex;justify-content: center;width: 100%; margin-top: 1rem;}
-    .wallet-pro-row .col-8 p{display: flex;justify-content: center;width: 100%;color: #FFF;
-font-family: Poppins;
-font-size: 1rem;
-font-style: normal;
-font-weight: 400;
-line-height: normal;}
+    .wallet-pro-row .col-8 p{display: flex;justify-content: center;width: 100%;color: #FFF;font-family: Poppins;font-size: 1rem;font-style: normal;font-weight: 400;line-height: normal;}
 .history-row{border-top: 1px solid #2EACBD;}
-.history-row .col-6 h6{color: #86F0FE;
-text-align: center;
+.history-row .col-6 h6{color: #86F0FE;text-align: center;
 font-family: Montserrat;
 font-size: .9rem;
 font-style: normal;

@@ -3,7 +3,10 @@ import audio from './count.mp3'; // Adjust the path based on your project struct
 import { useRecoilState } from 'recoil';
 import { CountDown } from '../../Atoms/CountDown';
 import './Timer.css'
+import { useRecoilValue } from 'recoil';
+import { PlaySound } from '../../Atoms/PlaySound';
 const Timer = () => {
+    const playTimerSound=useRecoilValue(PlaySound)
     const [countState, setCountState] = useRecoilState(CountDown);
     const [countdown, setCountdown] = useState(5);
 
@@ -11,7 +14,8 @@ const Timer = () => {
         const interval = setInterval(() => {
             setCountdown(prevCountdown => {
                 if (prevCountdown > 0) {
-                    playSound();
+                    if(playTimerSound===true){playSound();}
+                    
                     return prevCountdown - 1;
                 } else {
                     clearInterval(interval);
@@ -37,8 +41,7 @@ const Timer = () => {
     return (
         <div className='coutDown-container'>
                 <div id="timer" className="timer">
-                    <div className='digit'>{`0 : ${Math.max(countdown, 0)}`}</div>
-                     
+                    <div className='digit'>{`00:0${Math.max(countdown, 0)}`}</div>
                 </div>
         </div>
     );

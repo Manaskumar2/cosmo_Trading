@@ -9,7 +9,7 @@ const Wallet = require("../models/companywallet");
 let walletId = "650daaa42b2122794a524f24";
 
 let groupOptions = ["small", "big"];
-let durationOptions = [1];
+
 // let durationOptions = [1];
 
 let downloadResult = [0.7, 0.5, 0.3, 0.2, 0.15, 0.1, 0.08, 0.06, 0.05, 0.04];
@@ -34,8 +34,6 @@ async function calculatResult(gameId) {
   const smallAmount = smallUsers.reduce((acc, res) => {
     return acc + res.amount;
   }, 0);
-
-
   if (bigAmount > 0 && smallAmount > 0 && bigAmount != smallAmount) {
     let winnerGroup = "big";
     let totalAmount = bigAmount + smallAmount;
@@ -80,13 +78,6 @@ async function calculatResult(gameId) {
     let compnayFund = totalAmount - distributedAmount;
     const wallet = await Wallet.findOne({ _id: walletId });
     wallet.amount = wallet.amount + compnayFund;
-    // wallet.actions.push({
-    //   actions: "+",
-    //   date: new Date(),
-    //   amount: compnayFund,
-    //   wonFrom: "betting",
-    //   source: game._id,
-    // });
     await wallet.save();
   } else if (bigAmount > 0 && smallAmount > 0 && bigAmount == smallAmount) {
     let winnerGroup = "small";
@@ -132,16 +123,9 @@ async function calculatResult(gameId) {
     let compnayFund = totalAmount - distributedAmount;
     const wallet = await Wallet.findOne({ _id: walletId });
     wallet.amount = wallet.amount + compnayFund;
-    // wallet.actions.push({
-    //   actions: "+",
-    //   date: new Date(),
-    //   amount: compnayFund,
-    //   wonFrom: "betting",
-    //   source: game._id,
-    // });
+    
     await wallet.save();
-    // console.log("remaining money is ", totalAmount - distributedAmount);
-  } else if (bigAmount == 0 || smallAmount == 0) {
+  } else if ((bigAmount == 0 && smallAmount!=0) ||( smallAmount == 0 && bigAmount !==0)) {
     let winnerGroup = "small";
     if (bigAmount > 0) {
       winnerGroup = "big";
@@ -295,75 +279,27 @@ function roundDown(num, decimalPlaces = 2) {
   return Math.floor(num * factor) / factor;
 }
 
-calculatResult("64c32e7a488a94ffca2bdd2c");
 
-// const startAndCheckGame = async (duration) => {
-//   const currentDate = moment(new Date()).tz("Asia/Kolkata");
-//   const game = await Game.findOne({ isCompleted: false, duration: duration });
-
-//   if (game) {
-//     if (game.endTime.unix() - currentDate.unix() <= 0) {
-//       game.isCompleted = true;
-//       calculatResult(game._id);
-//       await game.save({
-//             duration: duration,
-//         startTime: moment(new Date()).tz("Asia/Kolkata"),
-//         endTime: moment(new Date()).tz("Asia/Kolkata").add(duration, "m"),
-//         gameUID: await generateUniqueNumber()
-//       }
-//       );
-//       await Game.create({
-//         duration: duration,
-//         startTime: moment(new Date()).tz("Asia/Kolkata"),
-//         endTime: moment(new Date()).tz("Asia/Kolkata").add(duration, "m"),
-//         gameUID: await generateUniqueNumber()
-//       });
-//       setTimeout(() => {
-//           startAndCheckGame(duration)
-//       }, duration * 60 * 1000)
-//     } else {
-//       let currentDate = moment(new Date()).tz("Asia/Kolkata");
-//         setTimeout(() => {
-//           startAndCheckGame(duration);
-//         }, (game.endTime.unix() - currentDate.unix()) * 1000);
-//     }
-//   } else {
-//     await Game.create({
-//       duration: duration,
-//       startTime: moment(new Date()).tz("Asia/Kolkata"),
-//       endTime: moment(new Date()).tz("Asia/Kolkata").add(duration, "m"),
-//       gameUID: await generateUniqueNumber()
-//     });
-//     setTimeout(() => {
-//       startAndCheckGame(duration);
-//     }, duration * 60 * 1000);
-//   }
-// };
-const  startAndCheckGame = async (duration) => {
+const startAndCheckGame = async (duration) => {
   const currentDate = moment(new Date()).tz("Asia/Kolkata");
   const game = await Game.findOne({ isCompleted: false, duration: duration });
 
   if (game) {
     if (game.endTime.unix() - currentDate.unix() <= 0) {
       game.isCompleted = true;
-      calculatResult(game._id);
-      await game.save({
-        duration: duration,
-        startTime: currentDate, 
-        endTime: currentDate.clone().add(duration, "m"), 
-        gameUID: await generateUniqueNumber(),
-
-      });
+     await calculatResult(game._id);
+      await game.save();
       await Game.create({
         duration: duration,
-        startTime: currentDate, 
-        endTime: currentDate.clone().add(duration, "m"),
+        startTime: moment(new Date()).tz("Asia/Kolkata"),
+        endTime: moment(new Date()).tz("Asia/Kolkata").add(duration, "m"),
         gameUID: await generateUniqueNumber()
       });
       setTimeout(() => {
-        startAndCheckGame(duration)
-      }, duration * 60 * 1000)
+        startAndCheckGame(duration);
+      }, duration * 60 * 1000);
     } else {
+      let currentDate = moment(new Date()).tz("Asia/Kolkata");
       setTimeout(() => {
         startAndCheckGame(duration);
       }, (game.endTime.unix() - currentDate.unix()) * 1000);
@@ -371,8 +307,8 @@ const  startAndCheckGame = async (duration) => {
   } else {
     await Game.create({
       duration: duration,
-      startTime: currentDate,
-      endTime: currentDate.clone().add(duration, "m"), 
+      startTime: moment(new Date()).tz("Asia/Kolkata"),
+      endTime: moment(new Date()).tz("Asia/Kolkata").add(duration, "m"),
       gameUID: await generateUniqueNumber()
     });
     setTimeout(() => {
@@ -381,9 +317,12 @@ const  startAndCheckGame = async (duration) => {
   }
 };
 
+const durationOptions = [1]; // You can add more duration options if needed.
+
 durationOptions.forEach((value) => {
-    startAndCheckGame(value)
-})
+  startAndCheckGame(value);
+});
+
 
 const betController = async (req, res) => {
   try {
@@ -508,7 +447,7 @@ const betController = async (req, res) => {
 
 // }
 const growUpUserBettingHistory = async (req, res) => {
-  try {
+ try {
     const userId = req.params.userId;
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
@@ -524,82 +463,32 @@ const growUpUserBettingHistory = async (req, res) => {
       .limit(limit)
       .exec();
 
-    const history = [];
+    const count = await Game.countDocuments({ 'bets.user': userId });
 
+    const response = {
+      currentPage: page,
+      totalPages: Math.ceil(count / limit),
+      history: [],
+    };
 
     for (const game of games) {
       const userBet = game.bets.find((bet) => bet.user.toString() === userId);
-       console.log(userBet)
-
-      if (!userBet) {
-        // User did not bet on this game, skip it.
-        continue;
-      }
-
-      const startTime = moment(game.startTime);
-      const endTime = moment(game.endTime);
-      const duration = moment.duration(endTime.diff(startTime)).asMinutes();
-
-      // Check if the user's bet was on the "small" group and the "small" group won.
-      if (userBet.group === 'small' && game.winnerGroup === 'SMALL') {
-        history.push({
-          gameId: game.gameUID,
-          startTime: startTime.format(),
-          endTime: endTime.format(),
-          duration: duration,
-          amount: userBet.amount,
-          group: userBet.group,
-          result: 'win',
-        });
-      }
-
-    
-      if (userBet.group === 'big' && game.winnerGroup === 'BIG') {
-        history.push({
-          gameId: game.gameUID,
-          startTime: startTime.format(),
-          endTime: endTime.format(),
-          duration: duration,
-          amount: userBet.amount,
-          group: userBet.group,
-          result: 'win',
-        });
-      }
-
-      // Check if the user's bet did not win.
-      if (userBet.group === 'small' && game.winnerGroup === 'BIG') {
-        history.push({
-          gameId: game.gameUID,
-          startTime: startTime.format(),
-          endTime: endTime.format(),
-          duration: duration,
-          amount: userBet.amount,
-          group: userBet.group,
-          result: 'lose', 
-        });
-      }
-
-      // Check if the user's bet did not win.
-      if (userBet.group === 'big' && game.winnerGroup === 'SMALL') {
-        history.push({
-          gameId: game.gameUID,
-          startTime: startTime.format(),
-          endTime: endTime.format(),
-          duration: duration,
-          amount: userBet.amount,
-          group: userBet.group,
-          result: 'lose', 
-        });
+      if (userBet) {
+        const gameDetails = {
+          _id: game._id,
+          duration: game.duration,
+          isCompleted: game.isCompleted,
+          startTime: game.startTime,
+          endTime: game.endTime,
+          gameUID: game.gameUID,
+          winnerGroup: game.winnerGroup,
+          amount: userBet.amount, 
+          group: userBet.group,   
+        };
+        response.history.push(gameDetails);
       }
     }
-
-    const count = await Game.countDocuments({ 'bets.user': userId });
-
-    res.status(200).json({
-      currentPage: page,
-      totalPages: Math.ceil(count / limit),
-      history: history,
-    });
+    res.status(200).json(response);
   } catch (error) {
     console.error('Error fetching user gameplay history:', error);
     res
@@ -613,7 +502,7 @@ const getGame = async (req, res) => {
   try {
     const currentDate = moment(new Date()).tz("Asia/Kolkata");
     const duration = parseInt(req.params.duration)
-    console.log(duration)
+   
     if (!duration) return res.status(400).send({status: false, meessage:"please provide time duration for game"})
 
 

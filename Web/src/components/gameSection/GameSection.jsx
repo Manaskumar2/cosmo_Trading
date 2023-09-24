@@ -37,7 +37,7 @@ function GameSection() {
                         </Link>
                         <Link to='/riseUp'>
                         <div className='game-banner trx'>
-                        <img src={game2} alt="" />
+                        <img src={game2} alt="" className='game-banner-image'/>
                         <div className="game_user_row">
                             <div className="game_user_col">
                                 <div className="game_user_img">

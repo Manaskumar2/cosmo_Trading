@@ -56,7 +56,13 @@ function Profile() {
         } catch (error) {
             const errorMessage = error.response ? error.response.data.message : error.message;
         }
-        useEffect(()=>{handleUserdata()},[])
+        useEffect(()=>{handleUserdata();
+            
+        },[])
+        useEffect(() => {
+            document.body.classList.remove('active-Chat');
+          }, []);
+        
     }
     return (
         <div className='profileContainer'>
@@ -69,7 +75,7 @@ function Profile() {
                     <div className="col-8">
                         Profile
                     </div>
-                    <div className="col-2">
+                    <div className="col-2" style={{textAlign:"right"}} onClick={()=>{navigate('/customerCare')}}>
                         <img src={ear} alt="" className="header_headphone" />
                     </div>
                 </div>

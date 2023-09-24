@@ -1,454 +1,399 @@
-const userModel = require("../models/userModel");
-const Game = require("../models/secondGameModel");
 const moment = require("moment");
 require("moment-timezone");
+const mongoose = require("mongoose");
+
+const userModel = require("../models/userModel");
+const Game = require("../models/secondGameModel");
 const Wallet = require("../models/companywallet");
-let walletId = "64c4e1fefff409e9859e8216";
-const {generateUniqueNumber2} = require("../util/util")
+const { generateUniqueNumber2 } = require("../util/util");
 
-
-
-let groupOptions = ["A", "B", "C"];
-// let durationOptions = [2, 0.3, 0.5, 0.7];
-let durationOptions = [1];
+let walletId = "650daaa42b2122794a524f24";
 
 let downloadResult = [0.7, 0.5, 0.3, 0.2, 0.15, 0.1, 0.08, 0.06, 0.05, 0.04];
 
+async function calculateResult(gameId) {
+  const game =  await Game.findOne({ _id: gameId }).populate({
+    path: "bets.user",
+    populate: { path: "downline" },
+  });
 
-async function calculatResult(gameId) {
-    const game = await Game.findOne({ _id: gameId }).populate({
-        path: "bets.user",
-        populate: { path: "downline" },
-    });
-    if (!game) {
-        return;
-    }
+  if (!game) {
+    return;
+  }
 
-    const ABets = game.bets.filter((bet) => bet.group == "A");
-    const BBets = game.bets.filter((bet) => bet.group == "B");
-    const CBets = game.bets.filter((bet) => bet.group == "C");
-
-    const AAmount = ABets.reduce((acc, bet) => acc + bet.amount, 0);
-    const BAmount = BBets.reduce((acc, bet) => acc + bet.amount, 0);
-    const CAmount = CBets.reduce((acc, bet) => acc + bet.amount, 0);
-
-    let winnerGroup = null;
-    let runnerUpGroup = null;
-    let losersGroup = null;
-
-    // Determine the winner and runner-up groups based on total bet amounts
-    if (AAmount < BAmount && AAmount < CAmount) {
-        winnerGroup = "A";
-        if (BAmount < CAmount) {
-            runnerUpGroup = "B";
-            losersGroup = "C";
-        } else {
-            runnerUpGroup = "C";
-            losersGroup = "B";
-        }
-    } else if (BAmount < AAmount && BAmount < CAmount) {
-        winnerGroup = "B";
-        if (AAmount < CAmount) {
-            runnerUpGroup = "A";
-            losersGroup = "C";
-        } else {
-            runnerUpGroup = "C";
-            losersGroup = "A";
-        }
-    } else if (CAmount < AAmount && CAmount < BAmount) {
-        winnerGroup = "C";
-        if (AAmount < BAmount) {
-            runnerUpGroup = "A";
-            losersGroup = "B";
-        } else {
-            runnerUpGroup = "B";
-            losersGroup = "A";
-        }
-    }
-
-   
-    game.winnerGroup = winnerGroup;
-    game.runnerUpGroup = runnerUpGroup;
-    game.losersGroup = losersGroup;
-
-    await game.save();
+  const groups = {
+    "A": { users: [], totalAmount: 0 },
+    "B": { users: [], totalAmount: 0 },
+    "C": { users: [], totalAmount: 0 },
+  };
 
 
-    let runners = [
-        {
+  game.bets.forEach((bet) => {
+    const group = bet.group;
+    groups[group].users.push(bet.user);
+    groups[group].totalAmount += bet.amount;
+  });
+  let winnerGroup = null;
+  let runnerUpGroup = null;
+  let loserGroup = null;
+  if (groups["A"].users.length === 0 && groups["B"].users.length === 0 && groups["C"].users.length !== 0) {
+    loserGroup = "C"
+  } else if (groups["A"].users.length !== 0 && groups["B"].users.length === 0 && groups["C"].users.length !== 0) {
+    loserGroup = "A"
+  
 
-            amount: AAmount,
-            bets: ABets
-        },
-        {
-
-            amount: BAmount,
-            bets: BBets
-        },
-        {
-
-            amount: CAmount,
-            bets: CBets
-        }
-    ]
-    runners = runners.sort((a, b) => {
-        return b.amount - a.amount 
-    })
-
-    if (AAmount != BAmount && BAmount != CAmount && CAmount != 0) {
-
-        let winner = runners[2]
-        let runnerUp = runners[1]
-        let losers = runners[0]
-
-    } else if (isOnlyTwoEqualAndNotZero(runners)) {
-
-        let { winner, runnerUp, losers } = findResultOfTwoEqualUsers(runners)
-        
+  } else if (groups["A"].users.length === 0 && groups["B"].users.length !== 0 && groups["C"].users.length == 0) {
+    loserGroup = "B"
 
 
-    } else if (AAmount == BAmount && BAmount == CAmount && AAmount != 0) {
-        runners = runners.sort((a, b) => {
-            return b.user.length - a.user.length
-        })
-        let { winner, runnerUp, losers } = findResultOfThreeEqualUsers(runners)
-
-    } else if (runners[2].amount == 0 && runners[1].amount != 0) {
-        let { winner, losers } = findResultOfOneZeroUsers(runners)
-
-    } else if (runners[2].amount == 0 && runners[1].amount == 0 && runners[0].amount != 0) {
-
-        let winner = runners[0].amount
-    }
-
-    // } else if (runners[2].amount == 0 && runners[1].amount == 0 && runners[0].amount == 0) {
-
-    // }
-
+  }
+  
+  if (groups["A"].users.length === 0 && groups["B"].users.length !=0 && groups["C"].users.length!==0) {
+    // If group A has no users, select a random winner and loser from groups B and C
+    const randomIndex = Math.floor(Math.random() * 2); // 0 or 1
+    if (randomIndex === 0) {
+      winnerGroup = "B";
+      loserGroup = "C";
+     
+    } else {
+      winnerGroup = "C";
+      loserGroup = "B";
     
-    //     if (winner && runnerUp && losers) {
-    //     if (game.bets.length === 3) {
-            
-    //         await distributeComissionToThreeUsers(winner, runnerUp, losers, game);
-    //     } else if (game.bets.length === 2) {
-            
-    //         await distributeComissionToTWoUsers(winner, losers, game);
-    //     } else if (game.bets.length === 1) {
-    //         await distributeComissionToOneUser(winner, game);
-    //     }
-    // }
- 
+    }
+  } else if (groups["B"].users.length === 0 && groups["C"].users.length !== 0 && groups["A"].users.length !== 0) {
+    // If group B has no users, select a random winner and loser from groups A and C
+    const randomIndex = Math.floor(Math.random() * 2); // 0 or 1
+    if (randomIndex === 0) {
+      winnerGroup = "A";
+      loserGroup = "C";
+  
+    } else {
+      winnerGroup = "C";
+      loserGroup = "A";
+
+    }
+  } else if (groups["C"].users.length === 0 && groups["A"].users.length !== 0 && groups["B"].users.length!==0) {
+    // If group C has no users, select a random winner and loser from groups A and B
+    const randomIndex = Math.floor(Math.random() * 2); // 0 or 1
+    if (randomIndex === 0) {
+      winnerGroup = "A";
+      loserGroup = "B";
+    } else {
+      winnerGroup = "B";
+      loserGroup = "A";
+    }
+  } else if (
+    groups["A"].totalAmount !== 0 &&
+    groups["B"].totalAmount !== 0 &&
+    groups["C"].totalAmount !== 0 &&
+    groups["A"].totalAmount === groups["B"].totalAmount &&
+    groups["A"].totalAmount === groups["C"].totalAmount &&
+    groups["A"].users.length !== 0 &&
+    groups["B"].users.length !== 0 &&
+    groups["C"].users.length !== 0 &&
+    groups["A"].users.length === groups["B"].users.length &&
+    groups["A"].users.length === groups["C"].users.length ) {
+    // Randomly select a winner, runner-up, and loser
+    const randomIndex = Math.floor(Math.random() * 3); // 0, 1, or 2
+
+    switch (randomIndex) {
+      case 0:
+        winnerGroup = "A";
+        break;
+      case 1:
+        winnerGroup = "B";
+        break;
+      case 2:
+        winnerGroup = "C";
+        break;
+    }
+
+    const remainingGroups = ["A", "B", "C"].filter((group) => group !== winnerGroup);
+    const randomIndex2 = Math.floor(Math.random() * 2); // 0 or 1
+
+    runnerUpGroup = remainingGroups[randomIndex2];
+    loserGroup = remainingGroups[1 - randomIndex2];
+  } else {
+    // If all groups have users, determine the winner based on your conditions
+    // (follows the previous logic)
+    if (groups["A"].totalAmount === groups["B"].totalAmount &&
+      groups["A"].totalAmount === groups["C"].totalAmount &&
+      groups["A"].totalAmount !== 0) {
+      // If amounts are equal, prioritize the group with more users
+      if (groups["A"].users.length > groups["B"].users.length && groups["A"].users.length > groups["C"].users.length) {
+        winnerGroup = "A";
+        if (groups["B"].users.length > groups["C"].users.length) {
+          runnerUpGroup = "B";
+          loserGroup = "C";
+        } else {
+          runnerUpGroup = "C";
+          loserGroup = "B";
+        }
+      } else if (groups["B"].users.length > groups["A"].users.length && groups["B"].users.length > groups["C"].users.length) {
+        winnerGroup = "B";
+        if (groups["A"].users.length > groups["C"].users.length) {
+          runnerUpGroup = "A";
+          loserGroup = "C";
+        } else {
+          runnerUpGroup = "C";
+          loserGroup = "A";
+        }
+      } else {
+        winnerGroup = "C";
+        if (groups["A"].users.length >= groups["B"].users.length) {
+          runnerUpGroup = "A";
+          loserGroup = "B";
+        } else {
+          runnerUpGroup = "B";
+          loserGroup = "A";
+        }
+      }
+    } else {
+      // If amounts are not equal, follow your previous logic
+      // (group with the least total amount is the winner, second least is the runner-up, and the remaining is the loser)
+      if (groups["A"].totalAmount < groups["B"].totalAmount && groups["A"].totalAmount < groups["C"].totalAmount) {
+        winnerGroup = "A";
+        if (groups["B"].totalAmount < groups["C"].totalAmount) {
+          runnerUpGroup = "B";
+          loserGroup = "C";
+        } else {
+          runnerUpGroup = "C";
+          loserGroup = "B";
+        }
+      } else if (groups["B"].totalAmount < groups["A"].totalAmount && groups["B"].totalAmount < groups["C"].totalAmount) {
+        winnerGroup = "B";
+        if (groups["A"].totalAmount < groups["C"].totalAmount) {
+          runnerUpGroup = "A";
+          loserGroup = "C";
+        } else {
+          runnerUpGroup = "C";
+          loserGroup = "A";
+        }
+      } else if (groups["C"].totalAmount < groups["A"].totalAmount && groups["C"].totalAmount < groups["B"].totalAmount) {
+        winnerGroup = "C";
+        if (groups["A"].totalAmount < groups["B"].totalAmount) {
+          runnerUpGroup = "A";
+          loserGroup = "B";
+        } else {
+          runnerUpGroup = "B";
+          loserGroup = "A";
+        }
+      }
+    }
+  }
+  if (groups["A"].users.length !== 0 && groups["B"].users.length !== 0 && groups["C"].users.length !== 0) {
+    const winner = groups[winnerGroup];
+    const runnerUp = groups[runnerUpGroup];
+    const losers = groups[loserGroup];
+    await distributeComissionToThreeUsers(winner, runnerUp, losers, game);
+  }
+  else if (runnerUpGroup == null && loserGroup !==null && winnerGroup !==null) {
+    const winner = groups[winnerGroup];
+    const losers = groups[loserGroup];
+    await distributeComissionToTwoUsers(winner, losers, game);
+  } else if (winnerGroup == null && runnerUpGroup == null && loserGroup !== null) {
+    const loser =  groups[loserGroup];
+    await distributeComissionToOneUser(loser, game)
+  }
+
+  game.winnerGroup = winnerGroup;
+  game.runnerUpGroup = runnerUpGroup;
+  game.losersGroup = loserGroup;
+
+  await game.save();
 }
 
 async function distributeComissionToThreeUsers(winner, runnerUp, losers, game) {
+  let totalAmount = winner.totalAmount + runnerUp.totalAmount + losers.totalAmount;
+  let directCompanyProfit = (totalAmount * 0.97) * 0.05;
+  let remainingLosersAmount = (losers.totalAmount * 0.97) - directCompanyProfit;
+  totalAmount = totalAmount - directCompanyProfit;
+  let winnerRatio = (remainingLosersAmount * 0.70) / (winner.totalAmount * 0.97);
+  let runnerUpRatio = (remainingLosersAmount * 0.30) / (runnerUp.totalAmount * 0.97);
 
-    let totalAmount = winner.amount + runnerUp.amount + losers.amount
+  for (let i = 0; i < winner.users.length; i++) {
+    let winAmount = roundDown(winner.totalAmount * 0.97 + (winner.users[i].walletAmount * 0.97 * winnerRatio), 2);
+    totalAmount = totalAmount - winAmount;
+    await userModel.updateOne(
+      { _id: winner.users[i]._id },
+      { $inc: { walletAmount: winAmount, winningAmount: winAmount } }
+    );
+  }
 
-    let directCompanyProfit = (totalAmount * 0.97) * 0.05;
-    let remainingLosersAmount = (losers.amount * 0.97) - directCompanyProfit
+  for (let i = 0; i < runnerUp.users.length; i++) {
+    let winAmount = roundDown(runnerUp.users[i].walletAmount * 0.97 + (runnerUp.users[i].walletAmount * 0.97 * runnerUpRatio), 2);
+    totalAmount = totalAmount - winAmount;
+    await userModel.updateOne(
+      { _id: runnerUp.users[i]._id },
+      { $inc: { walletAmount: winAmount, winningAmount: winAmount } }
+    );
+  }
 
-    totalAmount = totalAmount - directCompanyProfit
+   let distributedAmount = await distributeComissionToAll(game);
+  
+  const wallet = await Wallet.findOne({ _id: walletId });
+  if (!wallet) {
+    console.error('Wallet not found');
+    return;
+  }
 
-    let winnerRatio = (remainingLosersAmount * 0.70) / (winner.amount * 0.97)
-    let runnerUpRatio = (remainingLosersAmount * 0.30) / (runnerUp.amount * 0.97)
+  let compnayFund = totalAmount - distributedAmount;
+  wallet.amount = wallet.amount + compnayFund;
 
-    for (let i = 0; i < winner.bets.length; i++) {
-        let winAmount = roundDown(winner.bets[i].amount * 0.97 + (winner.bets[i].amount * 0.97 * winnerRatio), 2)
-        totalAmount = totalAmount - winAmount
-        await userModel.updateOne(
-            { _id: winner.bets[i].user._id },
-            { walletAmount: winner.bets[i].user.walletAmount + winAmount },
-            {winningAmount: bet.user.winningAmount + winAmount}
-        );
-    }
+   const today = new Date();
+  if (!moment(wallet.lastUpdatedDate).isSame(today, 'day')) {
+  
+    wallet.everydayBettingAmount = 0;
+    
+    wallet.lastUpdatedDate = today;
+  }
 
-    for (let i = 0; i < runnerUp.bets.length; i++) {
-        let winAmount = roundDown(runnerUp.bets[i].amount * 0.97 + (runnerUp.bets[i].amount * 0.97 * runnerUpRatio), 2)
-        totalAmount = totalAmount - winAmount
-        await userModel.updateOne(
-            { _id: runnerUp.bets[i].user._id },
-            { walletAmount: runnerUp.bets[i].user.walletAmount + winAmount },
-            {winningAmount: bet.user.winningAmount + winAmount}
-        );
-    }
+  wallet.everydayBettingAmount += totalAmount; 
+  await wallet.save();
+}
 
-    //distributing premium users their money
-    // for (let i = 0; i < game.bets.length; i++) {
-    //     if (game.bets[i].user.isPremiumUser) {
-    //         let winAmount = roundDown((game.bets[i].amount * 0.5), 2)
-    //         totalAmount = totalAmount - winAmount
-    //         await userModel.updateOne(
-    //             { _id: game.bets[i].user._id },
-    //             { walletAmount: game.bets[i].user.walletAmount + winAmount },
-    //             {winningAmount: bet.user.winningAmount + winAmount}
-    //         );
-    //     }
-    // }
+async function distributeComissionToTwoUsers(winner, losers, game) {
+  let totalAmount = winner.totalAmount + losers.totalAmount;
+  let distributableAmount = losers.totalAmount * 0.70;
+  let winnerRatio = distributableAmount / winner.totalAmount;
+
+  for (let i = 0; i < winner.users.length; i++) {
+    let winAmount = roundDown(winner.totalAmount * 0.97 + (winner.users[i].walletAmount * 0.97 * winnerRatio), 2);
+    totalAmount = totalAmount - winAmount;
+    await userModel.updateOne(
+      { _id: winner.users[i]._id },
+      { $inc: { walletAmount: winAmount, winningAmount: winAmount } }
+    );
+  }
 
     let distributedAmount = await distributeComissionToAll(game);
-    totalAmount = totalAmount - distributedAmount
-    const wallet = await Wallet.findOne({ _id: walletId });
-    wallet.amount = wallet.amount + totalAmount;
-    wallet.actions.push({
-        actions: "+",
-        date: new Date(),
-        amount: totalAmount,
-        wonFrom: "betting",
-        source: game._id,
-    });
-    await wallet.save();
+  
+  // Load the wallet from the database
+  const wallet = await Wallet.findOne({ _id: walletId });
+  if (!wallet) {
+    // Handle the case where the wallet is not found
+    console.error('Wallet not found');
+    return;
+  }
 
+  let compnayFund = totalAmount - distributedAmount;
+  wallet.amount = wallet.amount + compnayFund;
 
+   const today = new Date();
+  if (!moment(wallet.lastUpdatedDate).isSame(today, 'day')) {
+  
+    wallet.everydayBettingAmount = 0;
+    
+    wallet.lastUpdatedDate = today;
+  }
+
+  wallet.everydayBettingAmount += totalAmount;
+  await wallet.save();
 }
 
-async function distributeComissionToTWoUsers(winner, losers, game) {
+async function distributeComissionToOneUser(loser, game) {
+  let totalAmount = loser.totalAmount;
 
-    let totalAmount = winner.amount + losers.amount;
-    let distributableAmount = losers.amount * 0.70
+  for (let i = 0; i < loser.users.length; i++) {
+    let winAmount = roundDown(loser.totalAmount * 0.70, 2);
+    totalAmount = totalAmount - winAmount;
+    await userModel.updateOne(
+      { _id: loser.users[i]._id },
+      { $inc: { walletAmount: winAmount, winningAmount: winAmount } }
+    );
+  }
 
-    let winnerRatio = distributableAmount / winner.amount
+  let distributedAmount = await distributeComissionToAll(game);
+  
+  // Load the wallet from the database
+  const wallet = await Wallet.findOne({ _id: walletId });
+  if (!wallet) {
+    // Handle the case where the wallet is not found
+    console.error('Wallet not found');
+    return;
+  }
 
+  let compnayFund = totalAmount - distributedAmount;
+  wallet.amount = wallet.amount + compnayFund;
 
-    for (let i = 0; i < winner.bets.length; i++) {
-        let winAmount = roundDown(winner.bets[i].amount * 0.97 + (winner.bets[i].amount * 0.97 * winnerRatio), 2)
-        totalAmount = totalAmount - winAmount
-        await userModel.updateOne(
-            { _id: winner.bets[i].user._id },
-            { walletAmount: winner.bets[i].user.walletAmount + winAmount },
-            {winningAmount: bet.user.winningAmount + winAmount}
-        );
-    }
+   const today = new Date();
+  if (!moment(wallet.lastUpdatedDate).isSame(today, 'day')) {
+  
+    wallet.everydayBettingAmount = 0;
+    
+    wallet.lastUpdatedDate = today;
+  }
 
-    // let subscriptionRatio = (losers.amount * 0.03) / (winner.amount + losers.amount)
-    // //distributing premium users their money
-    // for (let i = 0; i < game.bets.length; i++) {
-    //     if (game.bets[i].user.isPremiumUser) {
-    //         let winAmount = roundDown((game.bets[i].amount * subscriptionRatio), 2)
-    //         totalAmount = totalAmount - winAmount
-    //         await userModel.updateOne(
-    //             { _id: game.bets[i].user._id },
-    //             { walletAmount: game.bets[i].user.walletAmount + winAmount },
-    //             {winningAmount: bet.user.winningAmount + winAmount}
-    //         );
-    //     }
-    // }
-
-    let distributedAmount = await distributeComissionToAll(game);
-    totalAmount = totalAmount - distributedAmount
-    const wallet = await Wallet.findOne({ _id: walletId });
-    wallet.amount = wallet.amount + totalAmount;
-    wallet.actions.push({
-        actions: "+",
-        date: new Date(),
-        amount: totalAmount,
-        wonFrom: "betting",
-        source: game._id,
-    });
-    await wallet.save();
-
-}
-
-async function distributeComissionToOneUser(winner, game) {
-
-    let totalAmount = winner.amount
-
-    for (let i = 0; i < winner.bets.length; i++) {
-        let winAmount = roundDown(winner.bets[i].amount * 0.70, 2)
-        totalAmount = totalAmount - winAmount
-        await userModel.updateOne(
-            { _id: winner.bets[i].user._id },
-            { walletAmount: winner.bets[i].user.walletAmount + winAmount },
-            {winningAmount: bet.user.winningAmount + winAmount}
-        );
-    }
-
-
-     //distributing premium users their money
-    //  for (let i = 0; i < game.bets.length; i++) {
-    //     if (game.bets[i].user.isPremiumUser) {
-    //         let winAmount = roundDown((game.bets[i].amount * 0.5), 2)
-    //         totalAmount = totalAmount - winAmount
-    //         await userModel.updateOne(
-    //             { _id: game.bets[i].user._id },
-    //             { walletAmount: game.bets[i].user.walletAmount + winAmount },
-    //             {winningAmount: bet.user.winningAmount + winAmount}
-    //         );
-    //     }
-    // }
-
-    let distributedAmount = await distributeComissionToAll(game);
-    totalAmount = totalAmount - distributedAmount
-    const wallet = await Wallet.findOne({ _id: walletId });
-    wallet.amount = wallet.amount + totalAmount;
-    wallet.actions.push({
-        actions: "+",
-        date: new Date(),
-        amount: totalAmount,
-        wonFrom: "betting",
-        source: game._id,
-    });
-    await wallet.save();
-}
-
-function isOnlyTwoEqualAndNotZero(runners) {
-    let a = runners[0].amount == runners[1].amount && runners[1].amount != runners[2].amount && runners[2].amount != 0 && runners[0].amount != 0
-    let b = runners[1].amount == runners[2].amount && runners[1].amount != runners[0].amount && runners[0].amount != 0 && runners[1].amount != 0
-    return a && b
-}
-
-function findResultOfOneZeroUsers(runners) {
-    let winner, losers;
-    if (runners[1].amount != runners[0].amount) {
-        winner = runners[1].amount < runners[0].amount ? runners[1] : runners[0]
-        losers = runners[1].amount > runners[0].amount ? runners[1] : runners[0]
-    } else if (runners[1].user.length != runners[0].user.length) {
-        winner = runners[1].user.length > runners[0].user.length ? runners[1] : runners[0]
-        losers = runners[1].user.length < runners[0].user.length ? runners[1] : runners[0]
-    } else {
-        let random = parseInt(Math.random() * 100000)
-        winner = random % 2 == 0 ? runners[1] : runners[0]
-        losers = random % 2 != 0 ? runners[1] : runners[0]
-    }
-    return {
-        winner,
-        losers
-    }
-}
-
-function findResultOfThreeEqualUsers(runners) {
-    let winner, runnerUp, losers;
-
-    if (runners[1].user.length != runners[2].user.length && runners[0].user.length != runners[1].user.length) {
-        winner = runners[0]
-        runnerUp = runners[1]
-        losers = runners[2]
-    } else if (runners[0].user.length == runners[1].user.length && runners[1].user.length != runners[2].user.length) {
-        let random = parseInt(Math.random() * 10000)
-        winner = random % 2 == 0 ? runners[0] : runners[1]
-        runnerUp = random % 2 != 0 ? runners[0] : runners[1]
-        losers = runners[2]
-    } else if (runners[1].user.length == runners[2].user.length && runners[0].user.length != runners[1].user.length) {
-        winner = runners[0]
-        let random = parseInt(Math.random() * 10000)
-        runnerUp = random % 2 == 0 ? runners[1] : runners[2]
-        losers = random % 2 != 0 ? runners[1] : runners[2]
-    } else {
-        let newRunners = shuffleArray(runners)
-        winner = newRunners[0]
-        runnerUp = newRunners[1]
-        losers = newRunners[2]
-    }
-    return {
-        winner, runnerUp, losers
-    }
-}
-
-//need to understand
-function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]]; // Swap the elements
-    }
-    return array;
-}
-
-function  findResultOfTwoEqualUsers(runners) {
-
-    let winner = {
-        user: [],
-        bets: []
-    }
-
-    let runnerUp = {
-        user: [],
-        bets: []
-    }
-    let losers = {
-        user: [],
-        bets: []
-    }
-
-    if (runners[0].amount == runners[1].amount) {
-        winner = runners[2]
-        if (runners[0].user.length != runners[1].user.length) {
-            runnerUp = runners[0].user.length > runners[1].user.length ? runners[0] : runners[1]
-            losers = runners[0].user.length < runners[1].user.length ? runners[0] : runners[1]
-        } else {
-            let random = parseInt(Math.random() * 100000)
-            runnerUp = random % 2 == 0 ? runners[0] : runners[1]
-            losers = random % 2 != 0 ? runners[0] : runners[1]
-        }
-    } else if (runners[1].amount == runners[2].amount) {
-        if (runners[1].user.length != runners[2].user.length) {
-            winner = runners[1].user.length > runners[2].user.length ? runners[1] : runners[2]
-            runnerUp = runners[1].user.length < runners[2].user.length ? runners[1] : runners[2]
-        } else {
-            let random = parseInt(Math.random() * 100000)
-            winner = random % 2 == 0 ? runners[1] : runners[2]
-            runnerUp = random % 2 != 0 ? runners[1] : runners[2]
-        }
-    }
-    return {
-        winner, runnerUp, losers
-    }
+  wallet.everydayBettingAmount += totalAmount;
+  await wallet.save();
 }
 
 async function distributeComissionToAll(game) {
-    return new Promise(async function (resolve, reject) {
-        let distributedAmount = 0;
-        for (let i = 0; i < game.bets.length; i++) {
-            let bet = game.bets[i];
-            let dAmount = await distributeComission(bet.user, bet.amount);
-            distributedAmount += dAmount;
-        }
-        resolve(distributedAmount);
-    });
+  return new Promise(async function (resolve, reject) {
+    let distributedAmount = 0;
+    for (let i = 0; i < game.bets.length; i++) {
+      let bet = game.bets[i];
+      let dAmount = await distributeComission(bet.user, bet.amount);
+      distributedAmount += dAmount;
+    }
+    resolve(distributedAmount);
+  });
 }
 
 async function distributeComission(user, amount) {
-    let currentUser = user;
-    let distributedAmount = 0;
-    for (let i = 0; i < 10; i++) {
-        if (currentUser.parentReferralCode != null) {
-            let parentUser = await userModel.findOne({
-                referralCode: currentUser.parentReferralCode,
-            });
-            if (!parentUser) {
-                return distributedAmount;
-            }
+  let currentUser = user;
+  let distributedAmount = 0;
 
-            let dAmount = roundDown(amount * (downloadResult[i] / 100), 2);
-            let newWalletAmount = parentUser.walletAmount + dAmount;
-            distributedAmount += dAmount;
-            await userModel.updateOne(
-                { _id: parentUser._id },
-                {
-                    walletAmount: newWalletAmount,
-                    commissionAmount:newWalletAmount
-                }
-            );
-            currentUser = parentUser;
-            if (i == 9) {
-                return distributedAmount;
-            }
-        } else {
-            return distributedAmount;
+  for (let i = 0; i < 10; i++) {
+    if (currentUser.parentReferralCode != null) {
+      let parentUser = await userModel.findOne({
+        referralCode: currentUser.parentReferralCode,
+      });
+
+      if (!parentUser) {
+        return distributedAmount;
+      }
+
+      let dAmount = roundDown(amount * (downloadResult[i] / 100), 2);
+      
+      let dailyCommission = {
+        date: new Date(),
+        amount: dAmount,
+      };
+
+      parentUser.commissions.push(dailyCommission);
+
+      let newWalletAmount = parentUser.walletAmount + dAmount;
+      let newCommissionAmount = parentUser.commissionAmount + dAmount;
+      distributedAmount += dAmount;
+
+      await userModel.updateOne(
+        { _id: parentUser._id },
+        {
+          walletAmount: newWalletAmount,
+          commissionAmount: newCommissionAmount,
+          $push: { commissions: dailyCommission }, 
         }
+      );
+
+      currentUser = parentUser;
+
+      if (i == 9) {
+        return distributedAmount;
+      }
+    } else {
+      return distributedAmount;
     }
-    return distributedAmount;
+  }
+
+  return distributedAmount;
 }
-
-
-
-
-
-
-
 
 function roundDown(num, decimalPlaces = 2) {
-    const factor = 10 ** decimalPlaces;
-    return Math.floor(num * factor) / factor;
+  const factor = 10 ** decimalPlaces;
+  return Math.floor(num * factor) / factor;
 }
+
 async function calculateTotalBettingAmountForTheDay() {
   try {
     const today = moment().tz("Asia/Kolkata");
@@ -476,49 +421,49 @@ async function calculateTotalBettingAmountForTheDay() {
   }
 }
 
-
-
 const startAndCheckGame = async (duration) => {
-    const currentDate = moment(new Date()).tz("Asia/Kolkata");
-    const game = await Game.findOne({ isCompleted: false, duration: duration });
+  const currentDate = moment(new Date()).tz("Asia/Kolkata");
+  const game = await Game.findOne({ isCompleted: false, duration: duration });
 
-    if (game) {
-        if (game.endTime.unix() - currentDate.unix() <= 0) {
-            game.isCompleted = true;
-            calculatResult(game._id);
-            await game.save();
-            await Game.create({
-                duration: duration,
-                startTime: moment(new Date()).tz("Asia/Kolkata"),
-                endTime: moment(new Date()).tz("Asia/Kolkata").add(duration, "m"),
-                gameUID: await generateUniqueNumber2()
-                
-            });
-            setTimeout(() => {
-                startAndCheckGame(duration)
-            }, duration * 60 * 1000)
-        } else {
-            let currentDate = moment(new Date()).tz("Asia/Kolkata");
-              setTimeout(() => {
-                startAndCheckGame(duration);
-              }, (game.endTime.unix() - currentDate.unix()) * 1000);
-        }
+  if (game) {
+    if (game.endTime.unix() - currentDate.unix() <= 0) {
+      game.isCompleted = true;
+      calculateResult(game._id);
+      await game.save();
+      await Game.create({
+        duration: duration,
+        startTime: moment(new Date()).tz("Asia/Kolkata"),
+        endTime: moment(new Date()).tz("Asia/Kolkata").add(duration, "m"),
+        gameUID: await generateUniqueNumber2()
+      });
+      setTimeout(() => {
+        startAndCheckGame(duration);
+      }, duration * 60 * 1000);
     } else {
-        await Game.create({
-            duration: duration,
-            startTime: moment(new Date()).tz("Asia/Kolkata"),
-            endTime: moment(new Date()).tz("Asia/Kolkata").add(duration, "m"),
-            gameUID: await generateUniqueNumber2()
-        });
-        setTimeout(() => {
-          startAndCheckGame(duration);
-        }, duration * 60 * 1000);
+      let currentDate = moment(new Date()).tz("Asia/Kolkata");
+      setTimeout(() => {
+        startAndCheckGame(duration);
+      }, (game.endTime.unix() - currentDate.unix()) * 1000);
     }
+  } else {
+    await Game.create({
+      duration: duration,
+      startTime: moment(new Date()).tz("Asia/Kolkata"),
+      endTime: moment(new Date()).tz("Asia/Kolkata").add(duration, "m"),
+      gameUID: await generateUniqueNumber2()
+    });
+    setTimeout(() => {
+      startAndCheckGame(duration);
+    }, duration * 60 * 1000);
+  }
 };
 
+const durationOptions = [1]; // You can add more duration options if needed.
+
 durationOptions.forEach((value) => {
-    startAndCheckGame(value)
-})
+  startAndCheckGame(value);
+});
+
 
 const bet2ndController = async (req, res) => {
     try {
@@ -530,7 +475,7 @@ const bet2ndController = async (req, res) => {
             !duration ||
             isNaN(duration) ||
             isNaN(amount) ||
-            !groupOptions.includes(group) ||
+            // !groupOptions.includes(group) ||
             !durationOptions.includes(duration)
         ) {
             return res
@@ -553,7 +498,7 @@ const bet2ndController = async (req, res) => {
         const currentDate = moment(new Date()).tz("Asia/Kolkata");
         console.log(` bet controller${currentDate}`)
 
-        if (game.endTime.unix() - currentDate.unix() < 15) {
+        if (game.endTime.unix() - currentDate.unix() < 0) {
             return res
                 .status(400)
                 .json({ status: false, message: "Wait for Next Game" });
@@ -608,92 +553,35 @@ const riseUpUserBettingHistory = async (req, res) => {
       .limit(limit)
       .exec();
 
-    const history = [];
+    const count = await Game.countDocuments({ 'bets.user': userId });
 
+    const response = {
+      currentPage: page,
+      totalPages: Math.ceil(count / limit),
+      history: [],
+    };
 
     for (const game of games) {
       const userBet = game.bets.find((bet) => bet.user.toString() === userId);
-
-      if (!userBet) {
-        
-        continue;
-      }
-
-      const startTime = moment(game.startTime);
-      const endTime = moment(game.endTime);
-      const duration = moment.duration(endTime.diff(startTime)).asMinutes();
-
-     
-      if (userBet.group === 'A' && game.winnerGroup === 'A') {
-        history.push({
-          gameId: game.gameUID,
-          startTime: startTime.format(),
-          endTime: endTime.format(),
-          duration: duration,
-          amount: userBet.amount,
-          group: userBet.group,
-          result: 'win',
-        });
-      }
-
-    
-      if (userBet.group === 'B' && game.winnerGroup === 'B') {
-        history.push({
-          gameId: game.gameUID,
-          startTime: startTime.format(),
-          endTime: endTime.format(),
-          duration: duration,
-          amount: userBet.amount,
-          group: userBet.group,
-          result: 'win',
-        });
-        }
-        if (userBet.group === 'C' && game.winnerGroup === 'C') {
-        history.push({
-          gameId: game.gameUID,
-          startTime: startTime.format(),
-          endTime: endTime.format(),
-          duration: duration,
-          amount: userBet.amount,
-          group: userBet.group,
-          result: 'win',
-        });
-        }
-
-     
-      if (userBet.group === 'A' && game.winnerGroup === 'B') {
-        history.push({
-          gameId: game.gameUID,
-          startTime: startTime.format(),
-          endTime: endTime.format(),
-          duration: duration,
-          amount: userBet.amount,
-          group: userBet.group,
-          result: 'lose', 
-        });
-      }
-
-    
-      if (userBet.group === 'B' && game.winnerGroup === 'A') {
-        history.push({
-          gameId: game.gameUID,
-          startTime: startTime.format(),
-          endTime: endTime.format(),
-          duration: duration,
-          amount: userBet.amount,
-          group: userBet.group,
-          result: 'lose', 
-        });
+      if (userBet) {
+        const gameDetails = {
+          _id: game._id,
+          duration: game.duration,
+          isCompleted: game.isCompleted,
+          startTime: game.startTime,
+          endTime: game.endTime,
+          gameUID: game.gameUID,
+          winnerGroup: game.winnerGroup,
+          runnerUpGroup: game.runnerUpGroup,
+          losersGroup: game.losersGroup,
+          amount: userBet.amount, 
+          group: userBet.group,   
+        };
+        response.history.push(gameDetails);
       }
     }
-
-    const count = await Game.countDocuments({ 'bets.user': userId });
-
-    res.status(200).json({
-      currentPage: page,
-      totalPages: Math.ceil(count / limit),
-      history: history,
-    });
+ 
+    res.status(200).json(response);
   } catch (error) {
     console.error('Error fetching user gameplay history:', error);
     res
@@ -701,6 +589,8 @@ const riseUpUserBettingHistory = async (req, res) => {
       .json({ error: 'An error occurred while fetching user gameplay history' });
   }
 };
+
+
 
 
 const get2ndGame = async (req, res) => { 
