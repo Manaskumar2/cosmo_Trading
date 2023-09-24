@@ -9,7 +9,6 @@ const server = require("http").Server(app)
 const mongoose = require('mongoose');
 const {initSocket}=require("./src/socket/socketio.js")
 const bodyParser = require('body-parser');
-const { startCron } = require("./src/util/cron");
 
 
 app.use(
@@ -95,5 +94,4 @@ app.use((error, req, res, next) => {
 
 server.listen(process.env.PORT, function () {
   console.log(`Express app running on ${PORT}`);
-  startCron()
 });
