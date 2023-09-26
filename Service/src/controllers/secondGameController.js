@@ -88,39 +88,81 @@ for (const key in groups) {
         }
 
   
-      if (groups["A"].users.length === 0 && groups["B"].users.length == groups["C"].users.length !== 0) {
-    
-        const randomIndex = Math.floor(Math.random() * 2); // 0 or 1
-        if (randomIndex === 0) {
-          winnerGroup = "B";
-          loserGroup = "C";
+      if (groups["A"].users.length === 0 && groups["B"].users.length == groups["C"].users.length !== 0 && groups["B"].totalAmount == groups["C"].totalAmount) {
+        if (!groups["B"].totalAmount && !groups["c"].totalAmount) {
+          const randomIndex = Math.floor(Math.random() * 2); // 0 or 1
+          if (randomIndex === 0) {
+            winnerGroup = "B";
+            loserGroup = "C";
      
-        } else {
-          winnerGroup = "C";
-          loserGroup = "B";
+          } else {
+            winnerGroup = "C";
+            loserGroup = "B";
     
+          }
+        }
+      } else if (groups["B"].users.length === 0 && groups["A"].users.length == groups["C"].users.length !== 0 && groups["C"].totalAmount && groups["A"].totalAmoun) {
+        if (!groups["A"].totalAmount && !groups["C"].totalAmount) {
+          const randomIndex = Math.floor(Math.random() * 2); // 0 or 1
+          if (randomIndex === 0) {
+            winnerGroup = "A";
+            loserGroup = "C";
+  
+          } else {
+            winnerGroup = "C";
+            loserGroup = "A";
+
+          }
+        }
+      } else if (groups["C"].users.length === 0 && groups["B"].users.length == groups["A"].users.length !== 0 && groups["B"].totalAmount==groups["A"].totalAmount) {
+        if (!groups["B"].totalAmount && !groups["A"].totalAmount) {
+          const randomIndex = Math.floor(Math.random() * 2); // 0 or 1
+          if (randomIndex === 0) {
+            winnerGroup = "A";
+            loserGroup = "B";
+          } else {
+            winnerGroup = "B";
+            loserGroup = "A";
+          }
+        }
+      }
+            if (groups["A"].users.length === 0 && groups["B"].users.length == groups["C"].users.length !== 0 && groups["B"].totalAmount==groups["C"].totalAmount) {
+        if (!groups["B"].totalAmount && !groups["C"].totalAmount) {
+    
+          const randomIndex = Math.floor(Math.random() * 2); // 0 or 1
+          if (randomIndex === 0) {
+            winnerGroup = "B";
+            loserGroup = "C";
+     
+          } else {
+            winnerGroup = "C";
+            loserGroup = "B";
+    
+          }
         }
       } else if (groups["B"].users.length === 0 && groups["A"].users.length == groups["C"].users.length !== 0) {
-        // If group B has no users, select a random winner and loser from groups A and C
-        const randomIndex = Math.floor(Math.random() * 2); // 0 or 1
-        if (randomIndex === 0) {
-          winnerGroup = "A";
-          loserGroup = "C";
+        if (groups["A"].totalAmount == groups["C"].totalAmount !== 0) {
+          const randomIndex = Math.floor(Math.random() * 2); // 0 or 1
+          if (randomIndex === 0) {
+            winnerGroup = "A";
+            loserGroup = "C";
   
-        } else {
-          winnerGroup = "C";
-          loserGroup = "A";
+          } else {
+            winnerGroup = "C";
+            loserGroup = "A";
 
+          }
         }
       } else if (groups["C"].users.length === 0 && groups["B"].users.length == groups["A"].users.length !== 0) {
-        // If group C has no users, select a random winner and loser from groups A and B
-        const randomIndex = Math.floor(Math.random() * 2); // 0 or 1
-        if (randomIndex === 0) {
-          winnerGroup = "A";
-          loserGroup = "B";
-        } else {
-          winnerGroup = "B";
-          loserGroup = "A";
+        if (groups["B"].totalAmount == groups["A"].totalAmount !== 0) {
+          const randomIndex = Math.floor(Math.random() * 2); // 0 or 1
+          if (randomIndex === 0) {
+            winnerGroup = "A";
+            loserGroup = "B";
+          } else {
+            winnerGroup = "B";
+            loserGroup = "A";
+          }
         }
       }
     }
@@ -242,7 +284,7 @@ for (const key in groups) {
        await distributeComissionToOneUser(loser, game)
     }
 
-    console.log(winnerGroup,runnerUpGroup,loserGroup)
+    
     game.winnerGroup = winnerGroup;
     game.runnerUpGroup = runnerUpGroup;
     game.losersGroup = loserGroup;
@@ -496,10 +538,11 @@ async function calculateTotalBettingAmountForTheDay() {
 
 
 const startAndCheckGame = async (duration) => {
-  const currentDate = moment(new Date()).tz("Asia/Kolkata");
+  
   const game = await Game.findOne({ isCompleted: false, duration: duration });
-
+  const currentDate = moment(new Date()).tz("Asia/Kolkata");
   if (game) {
+    
     if (game.endTime.unix() - currentDate.unix() <= 0) {
       game.isCompleted = true;
      await calculateResult(game._id);
@@ -514,10 +557,10 @@ const startAndCheckGame = async (duration) => {
         startAndCheckGame(duration);
       }, duration * 60 * 1000);
     } else {
-      let currentDate = moment(new Date()).tz("Asia/Kolkata");
-      setTimeout(() => {
+      // let currentDate = moment(new Date()).tz("Asia/Kolkata");
+      // setTimeout(() => {
         startAndCheckGame(duration);
-      }, (game.endTime.unix() - currentDate.unix()) * 1000);
+      // }, (game.endTime.unix() - currentDate.unix()) * 1000);
     }
   } else {
     await Game.create({

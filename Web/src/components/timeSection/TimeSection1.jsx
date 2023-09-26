@@ -6,7 +6,7 @@ import { AuthState } from '../../Atoms/AuthState';
 import toast, { Toaster } from "react-hot-toast";
 import axios from 'axios';
 import { CountDown } from '../../Atoms/CountDown';
-
+import { DateTime } from 'luxon';
 
 
 
@@ -35,6 +35,29 @@ function TimeSection1() {
 
     const endTime = timeData?.data?.data?.endTime || null;
 
+    const [currentTime, setCurrentTime] = useState(DateTime.now().setZone('Asia/Kolkata'));
+    const [countdown, setCountdown] = useState(59);
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+            const updatedTime = DateTime.now().setZone('Asia/Kolkata');
+            setCurrentTime(updatedTime);
+
+            const remainingSeconds = 59 - updatedTime.second;
+            setCountdown(remainingSeconds);
+            if (remainingSeconds === 0) {
+                handleGameData();
+            }
+            else if (remainingSeconds === 59) {
+                handleGameData();
+            }
+        }, 1000);
+
+        return () => {
+            clearInterval(intervalId);
+        };
+    }, []);
+
+
     const handleGameData = async () => {
         try {
             let token = auth.authToken;
@@ -53,51 +76,45 @@ function TimeSection1() {
         }
     };
 
-    useEffect(() => {
-        if (endTime) {
-            const startMillis = new Date(startTime).getTime();
-            const endMillis = new Date(endTime).getTime();
-            const intervalMillis = endMillis - startMillis;
+    // useEffect(() => {
+    //     if (endTime) {
+    //         const startMillis = new Date(startTime).getTime();
+    //         const endMillis = new Date(endTime).getTime();
+    //         const intervalMillis = endMillis - startMillis;
+    //         if (intervalMillis > 0) {
+    //             const intervalSeconds = Math.floor(intervalMillis / 1000);
+    //             setRemainingTime(intervalSeconds);
+    //             const interval = setInterval(() => {
+    //                 setRemainingTime(prevTime => {
+    //                     if (prevTime > 0) {
+    //                         if (Math.floor(prevTime / 60) === 0 && prevTime % 60 === 6) {
+    //                             setCountDown(true);
+    //                         }
+    //                         return prevTime - 1;
+    //                     } else {
+    //                         clearInterval(interval);
+    //                         if (prevTime === 0) {
+    //                             handleGameData();
+    //                         }
+    //                         return 0;
+    //                     }
+    //                 });
+    //             }, 1000);
 
-            if (intervalMillis > 0) {
-                const intervalSeconds = Math.floor(intervalMillis / 1000);
-                setRemainingTime(intervalSeconds);
+    //             return () => clearInterval(interval);
+    //         }
+    //     }
+    // }, [endTime, setCountDown]);
 
-                const interval = setInterval(() => {
-                    setRemainingTime(prevTime => {
-                        if (prevTime > 0) {
-                            if (Math.floor(prevTime / 60) === 0 && prevTime % 60 === 6) {
-                                setCountDown(true);
+    // useEffect(() => {
+    //     const intervalId = setInterval(handleGameData, 1200);
+    //     return () => {
+    //         clearInterval(intervalId);
+    //     };
+    // }, []);
 
-                            }
-                            return prevTime - 1;
-                        } else {
-                            clearInterval(interval);
-
-                            if (prevTime === 0) {
-                                handleGameData();
-                            }
-
-
-                            return 0;
-                        }
-                    });
-                }, 1000);
-
-                return () => clearInterval(interval);
-            }
-        }
-    }, [endTime, setCountDown]);
-
-    useEffect(() => {
-        const intervalId = setInterval(handleGameData, 1200);
-        return () => {
-            clearInterval(intervalId);
-        };
-    }, []);
-
-    const minutes = Math.floor(remainingTime / 60);
-    const seconds = remainingTime % 60;
+    // const minutes = Math.floor(remainingTime / 60);
+    // const seconds = remainingTime % 60;
 
     return (
         <div>
@@ -116,7 +133,7 @@ function TimeSection1() {
                         <p style={{ color: '#97E2F2', textAlign: 'center', marginBottom: '0' }}>Left time to buy</p>
                         <div className="end-time">
                             <div className="row">
-                                <div className="time_minute">{minutes}</div> <div className="time_colon">:</div> <div className="time_seconds">{seconds < 10 ? `0${seconds}` : seconds}</div>
+                                <div className="time_minute">00</div> <div className="time_colon">:</div> <div className="time_seconds">{countdown}</div>
                             </div>
                         </div>
                     </div>
