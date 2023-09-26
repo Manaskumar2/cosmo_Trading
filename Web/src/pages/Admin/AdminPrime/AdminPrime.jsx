@@ -7,6 +7,16 @@ import { PremiumState } from '../../../Atoms/Premium';
 import { AuthState } from '../../../Atoms/AuthState';
 import './AdminPrime.css';
 import Accordion from 'react-bootstrap/Accordion';
+import toast, { Toaster } from "react-hot-toast";
+export const toastProps = {
+    position: "top-center",
+    duration: 2000,
+    style: {
+        fontSize: "1rem",
+        background: "#fff",
+        color: "#333",
+    },
+};
 
 function AdminPrime() {
   const [user, setUser] = useState(null);
@@ -58,6 +68,7 @@ function AdminPrime() {
         }
       );
       if (response.status === 200) {
+        toast.success("Premium Activated !", { ...toastProps });
         console.log(response);
         setTransactionId("")
         return response;
@@ -77,6 +88,7 @@ function AdminPrime() {
       <div className='flex-div'>
         <Side />
         <div className='admin-rightSection'>
+        <Toaster/>
           {premiumState && premiumState.data && premiumState.data.map((item, index) => (
             <Accordion key={index}>
               <Accordion.Item eventKey="0">

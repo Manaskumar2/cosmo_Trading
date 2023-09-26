@@ -1,9 +1,10 @@
 import React from 'react'
 import { useState } from 'react'
 import './AdminLogin.css'
-import toast, { Toaster } from "react-hot-toast";
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom';
+
+import toast, { Toaster } from "react-hot-toast";
 export const toastProps = {
     position: "top-center",
     duration: 2000,

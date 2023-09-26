@@ -49,7 +49,7 @@ function PromotionHistory() {
             let token = auth.authToken;
             console.log(token);
             const response = await axios.get(`${import.meta.env.VITE_API_URL}/get2ndgameUserHistory/${userId}`, {
-                params: { page:page2 },
+                params: { page: page2 },
                 headers: { Authorization: `Bearer ${token}` },
             });
 
@@ -124,8 +124,8 @@ function PromotionHistory() {
                                     <thead>
                                         <tr>
                                             <th>Period</th>
-                                            <th width="140">Result</th>
-                                            <th>Group</th>
+                                            <th width="140" style={{ textAlign: 'center' }}>Result</th>
+                                            <th style={{ textAlign: 'center' }}>Group</th>
 
                                         </tr>
                                     </thead>
@@ -136,8 +136,14 @@ function PromotionHistory() {
                                             userGames.data.history.map((item, index) => (
                                                 <React.Fragment key={index}>
                                                     <tr onClick={() => toggleRow(index)}>
-                                                        <td>{item.gameId}</td>
-                                                        <td>{item.result}</td>
+                                                        <td>{item.gameUID}</td>
+                                                        <td style={{ textAlign: 'center' }}>
+                                                            {item.isCompleted
+                                                                ? item.winnerGroup === item.group.toUpperCase()
+                                                                    ? 'Win'
+                                                                    : 'Lose'
+                                                                : 'Pending'}
+                                                        </td>
                                                         <td>
                                                             <div className="winners_col_row">
                                                                 <span className="icon_win">
@@ -160,14 +166,18 @@ function PromotionHistory() {
                                                             <td colSpan="3">
 
                                                                 <div className="expanded-content">
-                                                                    <div className='flex-div-space-Betn'><p>Period :</p><p>  {item.gameId}</p></div>
+                                                                    <div className='flex-div-space-Betn'><p>Period :</p><p>  {item.gameUID}</p></div>
 
                                                                     <div className='flex-div-space-Betn'><p>Amount :</p><p>  {item.amount}</p></div>
 
                                                                     <div className='flex-div-space-Betn'><p>Betting Placed :</p><p> {item.group === 'small' ? 'Alpha' : 'Beta'}</p></div>
                                                                     <div className='flex-div-space-Betn'>
                                                                         <p>Betting Status :</p>
-                                                                        <p style={{ color: item.result === 'win' ? '#00B612' : 'red' }}>{item.result}</p>
+                                                                        <p >{item.isCompleted
+                                                                            ? item.winnerGroup === item.group.toUpperCase()
+                                                                                ? 'Win'
+                                                                                : 'Lose'
+                                                                            : 'Pending'}</p>
                                                                     </div>
                                                                     <div className='flex-div-space-Betn' ><p>Order Time:</p><p>{new Date(item.startTime).toLocaleString()}</p></div>
 
@@ -205,102 +215,114 @@ function PromotionHistory() {
                 }
                 {activeTab === 2 &&
                     <div>
-                        <div className='period-heading'>
-                            <div className="table-responsive game_history_table">
-                                <table class="table table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th>Period</th>
-                                            <th width="140">Result</th>
-                                            <th>Group</th>
+                    <div className='period-heading'>
+                        <div className="table-responsive game_history_table">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Period</th>
+                                        <th width="140" style={{ textAlign: 'center' }}>Result</th>
+                                        <th style={{ textAlign: 'center' }}>Group</th>
 
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {userSecondGames &&
-                                            userSecondGames.data &&
-                                            userSecondGames.data.history.map((item, index) => (
-                                                <React.Fragment key={index}>
-                                                    <tr onClick={() => toggleRow(index)}>
-                                                        <td>{item.gameId}</td>
-                                                        <td>{item.result}</td>
-                                                        <td>
-                                                            <div className="winners_col_row">
-                                                                <span className="icon_win">
-                                                                    <img src={Winner} alt="Winner" />
-                                                                </span>
-                                                                <span className="icon_rate">
-                                                                    {item.group === 'A' ? (
-                                                                        <img src={Alpha} alt="Alpha" />
-                                                                    ) : item.group === 'B' ? (
-                                                                        <img src={Beta} alt="Beta" />
-                                                                    ) : item.group === 'C' ? (
-                                                                        <img src={Gama} alt="Gamma" />
-                                                                    ) : (
-                                                                        <img src={iconSources[Math.floor(Math.random() * iconSources.length)]} alt="Random Icon" />
-                                                                    )}
-                                                                </span>
-                                                                {/* {item.runnerUpGroup && <span className="icon_rate">
-                                                                 {item.runnerUpGroup === 'A' ? (
-                                                                     <img src={Alpha} alt="Alpha" />
-                                                                 ) : item.runnerUpGroup === 'B' ? (
-                                                                     <img src={Beta} alt="Beta" />
-                                                                 ) : item.runnerUpGroup === 'C' ? (
-                                                                     <img src={Gama} alt="Gamma" />
-                                                                 ) :  (
-                                                                     <img src={iconSources[Math.floor(Math.random() * iconSources.length)]} alt="Random Icon" />
-                                                                 )}
-                                                             </span>} */}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {userSecondGames &&
+                                        userSecondGames.data &&
+                                        userSecondGames.data.history.map((item, index) => (
+                                            <React.Fragment key={index}>
+                                                <tr onClick={() => toggleRow(index)}>
+                                                    <td>{item.gameUID}</td>
+                                                    <td style={{ textAlign: 'center' }}>{item.isCompleted
+                                                                        ? item.winnerGroup === item.group.toUpperCase()
+                                                                            ? 'Win'
+                                                                            : 'Lose'
+                                                                        : 'Pending'}</td>
+                                                    <td>
+                                                        <div className="winners_col_row">
+                                                            <span className="icon_win">
+                                                                <img src={Winner} alt="Winner" />
+                                                            </span>
+                                                            <span className="icon_rate">
+                                                                {item.winnerGroup === 'A' ? (
+                                                                    <img src={Alpha} alt="Alpha" style={{ height: "2rem", width: "2rem" }} />
+                                                                ) : item.winnerGroup === 'B' ? (
+                                                                    <img src={Beta} alt="Beta" style={{ height: "2rem", width: "2rem" }} />
+                                                                ) : item.winnerGroup === 'C' ? (
+                                                                    <img src={Gama} alt="Gamma" style={{ height: "2rem", width: "2rem" }} />
+                                                                ) : (
+                                                                    <img src={iconSources[Math.floor(Math.random() * iconSources.length)]} alt="Random Icon" />
+                                                                )}
+                                                            </span>
+                                                            {item.runnerUpGroup && <span className="icon_rate">
+                                                                {item.runnerUpGroup === 'A' ? (
+                                                                    <img src={Alpha} alt="Alpha" />
+                                                                ) : item.runnerUpGroup === 'B' ? (
+                                                                    <img src={Beta} alt="Beta" />
+                                                                ) : item.runnerUpGroup === 'C' ? (
+                                                                    <img src={Gama} alt="Gamma" />
+                                                                ) : (
+                                                                    <img src={iconSources[Math.floor(Math.random() * iconSources.length)]} alt="Random Icon" />
+                                                                )}
+                                                            </span>}
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                {expandedRowIndex === index && (
+                                                    <tr>
+                                                        <td colSpan="3">
+
+                                                            <div className="expanded-content">
+                                                                <div className='flex-div-space-Betn'><p>Period :</p><p>  {item.gameUID}</p></div>
+
+                                                                <div className='flex-div-space-Betn'><p>Amount :</p><p>  {item.amount}</p></div>
+
+                                                                <div className='flex-div-space-Betn'><p>Betting Placed :</p><p> {item.group === 'A' ? 'Alpha' : item.group === 'B' ? 'Beta' : item.group === 'C' ? 'Gama' : 'Unknown'} , </p></div>
+                                                                <div className='flex-div-space-Betn'><p>Runner Up :</p><p>{item.runnerUpGroup && item.runnerUpGroup=== 'A' ? 'Alpha' : item.runnerUpGroup === 'B' ? 'Beta' : item.runnerUpGroup === 'C' ? 'Gama' : 'None'}</p></div>
+                                                                <div className='flex-div-space-Betn'>
+                                                                    <p>Betting Status :</p>
+                                                                    <p style={{ textAlign: 'left' }}>
+                                                                        {item.isCompleted
+                                                                            ? item.winnerGroup === item.group.toUpperCase()
+                                                                                ? 'Win'
+                                                                                : 'Lose'
+                                                                            : 'Pending'}
+                                                                    </p>
+
+                                                                </div>
+                                                                <div className='flex-div-space-Betn' ><p>Order Time:</p><p>{new Date(item.startTime).toLocaleString()}</p></div>
+
+
+
                                                             </div>
                                                         </td>
                                                     </tr>
-                                                    {expandedRowIndex === index && (
-                                                        <tr>
-                                                            <td colSpan="3">
+                                                )}
+                                            </React.Fragment>
+                                        ))}
 
-                                                                <div className="expanded-content">
-                                                                    <div className='flex-div-space-Betn'><p>Period :</p><p>  {item.gameId}</p></div>
-
-                                                                    <div className='flex-div-space-Betn'><p>Amount :</p><p>  {item.amount}</p></div>
-
-                                                                    <div className='flex-div-space-Betn'><p>Betting Placed :</p><p> {item.group === 'small' ? 'Alpha' : 'Beta'}</p></div>
-                                                                    <div className='flex-div-space-Betn'>
-                                                                        <p>Betting Status :</p>
-                                                                        <p style={{ color: item.result === 'win' ? '#00B612' : 'red' }}>{item.result}</p>
-                                                                    </div>
-                                                                    <div className='flex-div-space-Betn' ><p>Order Time:</p><p>{new Date(item.startTime).toLocaleString()}</p></div>
-
-
-
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    )}
-                                                </React.Fragment>
-                                            ))}
-
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            <div className='pagination-buttons-container'>
-                                <div className='pagination-buttons'>
-                                    <button className='decreaseBtn' onClick={() => { setPage(Math.max(page2 - 1, 1)); }}>
-                                        <img src={right} alt="" />
-                                    </button>
-
-                                    {userSecondGames && <div className='page-count'>  {page2}/{userSecondGames.data.totalPages} </div>}
-                                    
-
-                                    <button className='increaseBtn' onClick={() => { setPage(Math.min(page2 + 1, userSecondGames.data.totalPages)); }}>
-                                        <img src={left} alt="" />
-                                    </button>
-
-                                </div>
-                            </div>
-
+                                </tbody>
+                            </table>
                         </div>
+
+                        <div className='pagination-buttons-container'>
+                            <div className='pagination-buttons'>
+                                <button className='decreaseBtn' onClick={() => { setPage2(Math.max(page2 - 1, 1)); }}>
+                                    <img src={right} alt="" />
+                                </button>
+
+                                {userSecondGames && <div className='page-count'>  {page2}/{userSecondGames.data.totalPages} </div>}
+                                {/* {page}/{item.totalPage} */}
+
+                                <button className='increaseBtn' onClick={() => { setPage2(Math.min(page + 1, userSecondGames.data.totalPages)); }}>
+                                    <img src={left} alt="" />
+                                </button>
+
+                            </div>
+                        </div>
+
                     </div>
+                </div>
                 }
             </div>
         </div>

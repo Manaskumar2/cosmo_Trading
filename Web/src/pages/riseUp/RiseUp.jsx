@@ -111,7 +111,7 @@ function RiseUp() {
                 setLgShow(false)
                 setGmShow(false)
                 console.log(response);
-                navigate('/riseUp')
+                handleUserMoney()
                 return response;
             }else if (response.status === 404) {
              
@@ -163,20 +163,20 @@ function RiseUp() {
     }, [auth, duration]);
 
 
-    const [heights, setHeights] = useState([50, 150, 150]);
-    const [activeIndex, setActiveIndex] = useState(0);
+    // const [heights, setHeights] = useState([50, 150, 150]);
+    // const [activeIndex, setActiveIndex] = useState(0);
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            const newHeights = [...heights];
-            newHeights[activeIndex] += 100;
-            const nextIndex = (activeIndex + 1) % 3;
-            newHeights[nextIndex] -= 100;
-            setHeights(newHeights);
-            setActiveIndex(nextIndex);
-        }, 500);
-        return () => clearInterval(interval);
-    }, [heights, activeIndex]);
+    // useEffect(() => {
+    //     const interval = setInterval(() => {
+    //         const newHeights = [...heights];
+    //         newHeights[activeIndex] += 100;
+    //         const nextIndex = (activeIndex + 1) % 3;
+    //         newHeights[nextIndex] -= 100;
+    //         setHeights(newHeights);
+    //         setActiveIndex(nextIndex);
+    //     }, 500);
+    //     return () => clearInterval(interval);
+    // }, [heights, activeIndex]);
 
     useEffect(() => {
         setAmount(money * multiplier);
@@ -260,11 +260,11 @@ function RiseUp() {
                             {/* // animation // */}
                             {showCountDown === true ? <Timer /> :
                                 <div className='second-image-cover'>
-                                    <div className="ani-container">
+                                    {/* <div className="ani-container">
                                         <div className="animated-div" style={{ height: `${heights[0]}px` }}></div>
                                         <div className="animated-div" style={{ height: `${heights[1]}px`, backgroundColor: "#20CD1C" }}></div>
                                         <div className="animated-div" style={{ height: `${heights[2]}px`, backgroundColor: "#FBC70E" }}></div>
-                                    </div>
+                                    </div> */}
                                     <div className=' alfa-beta-gama-button-container'>
                                         <button className='alfa-beta-gama-button' onClick={() => {setSmShow(true);setGroup("A")}} style={{ background: "radial-gradient(50% 50% at 50% 50%, #FF7562 0%, #E51616 100%)" }}>
                                             <img src={alfa} alt="" />

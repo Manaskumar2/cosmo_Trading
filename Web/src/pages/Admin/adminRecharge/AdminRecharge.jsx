@@ -7,6 +7,16 @@ import { useRecoilValue, useRecoilState } from 'recoil'
 import { AuthState } from '../../../Atoms/AuthState'
 import './ARecharge.css'
 import Accordion from 'react-bootstrap/Accordion';
+import toast, { Toaster } from "react-hot-toast";
+export const toastProps = {
+    position: "top-center",
+    duration: 2000,
+    style: {
+        fontSize: "1rem",
+        background: "#fff",
+        color: "#333",
+    },
+};
 
 function AdminRecharge() {
   const authData = useRecoilValue(AuthState)
@@ -28,6 +38,7 @@ function AdminRecharge() {
         },
       );
       if (response.status === 201) {
+        toast.success("Qr code uploaded!", { ...toastProps });
         setUpiId("")
         setQrCode("")
         console.log(response);
@@ -79,6 +90,7 @@ function AdminRecharge() {
         },
       );
       if (response.status === 200) {
+        toast.success("Recharge request confirmed", { ...toastProps });
         console.log(response);
         return response;
       }
@@ -95,6 +107,7 @@ function AdminRecharge() {
       <div className='flex-div'>
         <Side />
         <div className='admin-rightSection'>
+          <Toaster/>
           <form onSubmit={handleQr} className='form-rechrge' >
             <h3 className='text-centre'>Submit Qr Code</h3>
             <label >Enter Qr Code Link</label>

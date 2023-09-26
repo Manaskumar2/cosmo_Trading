@@ -145,9 +145,7 @@ function Growup() {
                 setLgShow(false)
                 setGroup('');
                 setAmount(1);
-                console.log(response);
-                console.log("Bapi")
-                navigate('/growUp')
+                handleUserMoney()
                 return response;
             }
         } catch (error) {

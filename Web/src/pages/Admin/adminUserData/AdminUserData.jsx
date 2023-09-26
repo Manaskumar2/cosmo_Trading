@@ -8,6 +8,17 @@ import { AuthState } from '../../../Atoms/AuthState'
 import { AllUserData } from '../../../AdminAtom/AllUserData'
 import Accordion from 'react-bootstrap/Accordion';
 import './User.css'
+import toast, { Toaster } from "react-hot-toast";
+export const toastProps = {
+    position: "top-center",
+    duration: 2000,
+    style: {
+        fontSize: "1rem",
+        background: "#fff",
+        color: "#333",
+    },
+};
+
 function AdminUserData() {
   const authData = useRecoilValue(AuthState)
   const [queryPageIndex, setQueryPageIndex] = useState(1)
@@ -45,6 +56,7 @@ function AdminUserData() {
         }
       );
       if (response.status === 200) {
+        toast.success("User Activated", { ...toastProps });
         console.log(response);
         return response;
       }
@@ -70,6 +82,7 @@ function AdminUserData() {
         }
       );
       if (response.status === 200) {
+        toast.success("User Deactivated", { ...toastProps });
         console.log(response);
         return response;
       }
@@ -106,6 +119,7 @@ function AdminUserData() {
       <div className='flex-div'>
         <Side />
         <div className='admin-rightSection'>
+        <Toaster/>
           <input type="number" className='user-input' value={queryPageFilter} onChange={(e)=>{setqueryPageFilter(e.target.value)}} placeholder='Search Number'/>
           
           <table>

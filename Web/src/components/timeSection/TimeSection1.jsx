@@ -58,44 +58,44 @@ function TimeSection1() {
             const startMillis = new Date(startTime).getTime();
             const endMillis = new Date(endTime).getTime();
             const intervalMillis = endMillis - startMillis;
-    
+
             if (intervalMillis > 0) {
                 const intervalSeconds = Math.floor(intervalMillis / 1000);
                 setRemainingTime(intervalSeconds);
-    
+
                 const interval = setInterval(() => {
                     setRemainingTime(prevTime => {
                         if (prevTime > 0) {
                             if (Math.floor(prevTime / 60) === 0 && prevTime % 60 === 6) {
                                 setCountDown(true);
-                                
+
                             }
                             return prevTime - 1;
                         } else {
                             clearInterval(interval);
-    
+
                             if (prevTime === 0) {
                                 handleGameData();
                             }
-                            
-    
+
+
                             return 0;
                         }
                     });
                 }, 1000);
-    
+
                 return () => clearInterval(interval);
             }
         }
-    }, [endTime, setCountDown]);  
-    
+    }, [endTime, setCountDown]);
+
     useEffect(() => {
-        const intervalId = setInterval(handleGameData, 4000);
+        const intervalId = setInterval(handleGameData, 1200);
         return () => {
-          clearInterval(intervalId);
+            clearInterval(intervalId);
         };
-      }, []); 
-    
+    }, []);
+
     const minutes = Math.floor(remainingTime / 60);
     const seconds = remainingTime % 60;
 

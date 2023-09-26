@@ -239,13 +239,11 @@ function GameHistory({ duration }) {
                                                 {expandedRowIndex === index && (
                                                     <tr>
                                                         <td colSpan="3">
-
                                                             <div className="expanded-content">
                                                                 <div className='flex-div-space-Betn'><p>Period :</p><p>  {item.gameUID}</p></div>
-
                                                                 <div className='flex-div-space-Betn'><p>Amount :</p><p>  {item.amount}</p></div>
-
                                                                 <div className='flex-div-space-Betn'><p>Betting Placed :</p><p> {item.group === 'A' ? 'Alpha' : item.group === 'B' ? 'Beta' : item.group === 'C' ? 'Gama' : 'Unknown'}</p></div>
+                                                                <div className='flex-div-space-Betn'><p>Runner Up :</p><p>{item.runnerUpGroup && item.runnerUpGroup=== 'A' ? 'Alpha' : item.runnerUpGroup === 'B' ? 'Beta' : item.runnerUpGroup === 'C' ? 'Gama' : 'None'}</p></div>
                                                                 <div className='flex-div-space-Betn'>
                                                                     <p>Betting Status :</p>
                                                                     <p style={{ textAlign: 'left' }}>
@@ -255,12 +253,8 @@ function GameHistory({ duration }) {
                                                                                 : 'Lose'
                                                                             : 'Pending'}
                                                                     </p>
-
                                                                 </div>
                                                                 <div className='flex-div-space-Betn' ><p>Order Time:</p><p>{new Date(item.startTime).toLocaleString()}</p></div>
-
-
-
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -280,7 +274,6 @@ function GameHistory({ duration }) {
 
                                 {userGames && <div className='page-count'>  {page}/{userGames.data.totalPages} </div>}
                                 {/* {page}/{item.totalPage} */}
-
                                 <button className='increaseBtn' onClick={() => { setPage(Math.min(page + 1, userGames.data.totalPages)); }}>
                                     <img src={left} alt="" />
                                 </button>

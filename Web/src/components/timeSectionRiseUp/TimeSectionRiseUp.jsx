@@ -90,12 +90,12 @@ function TimeSection1() {
         }
     }, [endTime, setCountDown]);  
     
-    // useEffect(() => {
-    //     const intervalId = setInterval(handleGameData, 5000);
-    //     return () => {
-    //       clearInterval(intervalId);
-    //     };
-    //   }, []); 
+    useEffect(() => {
+        const intervalId = setInterval(handleGameData, 1500);
+        return () => {
+          clearInterval(intervalId);
+        };
+      }, []); 
     
     const minutes = Math.floor(remainingTime / 60);
     const seconds = remainingTime % 60;

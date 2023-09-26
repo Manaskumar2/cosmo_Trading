@@ -7,6 +7,16 @@ import { useEffect, useState } from 'react'
 import { useRecoilValue, useRecoilState } from 'recoil'
 import { AuthState } from '../../../Atoms/AuthState'
 import Accordion from 'react-bootstrap/Accordion';
+import toast, { Toaster } from "react-hot-toast";
+export const toastProps = {
+    position: "top-center",
+    duration: 2000,
+    style: {
+        fontSize: "1rem",
+        background: "#fff",
+        color: "#333",
+    },
+};
 
 function AdminWithdraw() {
   const [user, setUser] = useState(null)
@@ -73,6 +83,7 @@ function AdminWithdraw() {
         },
       );
       if (response.status === 200) {
+        toast.success("Withdraw request confirmed", { ...toastProps });
         console.log(response);
         return response;
       }
@@ -87,6 +98,7 @@ function AdminWithdraw() {
       <div className='flex-div'>
         <Side />
         <div className='admin-rightSection'>
+        <Toaster/>
           {withDrawdata && withDrawdata.data.map((item, index) => (
             <Accordion key={index}>
               <Accordion.Item eventKey={index}>
