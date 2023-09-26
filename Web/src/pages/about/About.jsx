@@ -1,6 +1,6 @@
 import React from 'react'
 import back from '../../images/back-button 1.svg'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import logo from './Logo.svg'
 import row from './Row.svg'
 import shield from '../../../../SVG/shield 1.svg'
@@ -8,6 +8,7 @@ import next from '../../../../SVG/next.svg'
 import './About.css'
 import second from './second.svg'
 function About() {
+    const navigate = useNavigate()
     return (
         <div className='about'>
             <div className="container ProNav">
@@ -29,16 +30,16 @@ function About() {
 
 
                 <div className="container chart">
-                    <div className='row'>
+                    <div className='row' onClick={()=>{navigate('/terms&condition')}}>
                         <div className='col-2'><div className='profile-logo-Wrapper'><img src={shield} alt="" /></div></div>
                         <div className='col-8 lvlContainer'>Privacy Policy </div>
                         <div className='col-2 backImg'><img src={next} alt="" /></div>
                     </div>
-                    <div className='row'>
+                    {/* <div className='row'>
                         <div className='col-2'><div className='profile-logo-Wrapper'><img src={second} alt="" /></div></div>
                         <div className='col-8 lvlContainer'>Risk Disclosure Agreement </div>
                         <div className='col-2 backImg'><img src={next} alt="" /></div>
-                    </div>
+                    </div> */}
                 </div>
 
 

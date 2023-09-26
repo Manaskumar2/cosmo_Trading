@@ -33,7 +33,7 @@ import('../pages/wallet/Wallet'))
 const Gift= lazy(()=>
 import('../pages/gift/Gift'))
 const BeginnerTutorial= lazy(()=>
-import('../pages/beginnerTutorial/BeginnerTutorial'))
+import('../pages/tutorial/Tutorial'))
 const About= lazy(()=>
 import('../pages/about/About'))
 const Customer= lazy(()=>

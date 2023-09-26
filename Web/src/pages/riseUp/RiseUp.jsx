@@ -81,7 +81,7 @@ function RiseUp() {
             );
 
             if (response.status === 200) {
-                console.log(response);
+                // console.log(response);
                 setUserData(response)
                 return response;
             }
@@ -95,7 +95,7 @@ function RiseUp() {
         let token = auth.authToken
         try {
             let token = auth.authToken
-            const response = await axios.post(`${import.meta.env.VITE_API_URL}betSecondGame`, {
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/betSecondGame`, {
                 amount,
                 group,
                 duration
@@ -138,7 +138,7 @@ function RiseUp() {
 
             if (response.status === 200) {
                 // toast.success('growup', { ...toastProps });
-                console.log(response);
+                // console.log(response);
                 setTimeNo(duration)
                 setMinute(response)
                 return response;
@@ -208,8 +208,8 @@ function RiseUp() {
                     <div className="col-8">
                         <img src={logo} alt="" />
                     </div>
-                    <div className="col-2">
-                        <img src={ear} alt="" className="header_headphone" />
+                    <div className="col-2" >
+                        <img src={ear} alt="" className="header_headphone" onClick={()=>{navigate('/customerCare')}}/>
                         {playSound ? (
                             <img src={Audio} alt="" onClick={() => { setPlaySound(false) }} />
                         ) : (

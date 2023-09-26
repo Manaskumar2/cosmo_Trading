@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import './Withdraw.css'
 import { UserDetails } from '../../Atoms/UserDetails'
 import { useRecoilValue } from 'recoil'
@@ -14,8 +14,6 @@ import withdrawIcon from '../../../../SVG/withdraw 1.svg'
 import walleticon from '../../../../SVG/wallet 2.svg'
 import  notification from '../../../../SVG/notification-2 1.svg'
 import coins from '../../../../SVG/coins 1.svg'
-import { useRecoilState } from 'recoil'
-import { RechargeAmount } from '../../Atoms/RechargeAmount'
 import add from './add.svg'
 import axios from 'axios'
 import toast, { Toaster } from "react-hot-toast";
@@ -34,16 +32,33 @@ export const toastProps = {
 
 
 function Withdraw() {
-
+  const [userData, setUserData] = useState(null);
   const auth = useRecoilValue(AuthState)
   const [withdrawAmount, setAmount] = useState(0);
   const [selectedRoute, setSelectedRouteButton] = useState(true);
 
-  // const [rechargeAmount, setRechargeAmount] = useRecoilState(RechargeAmount)
-  // const handleButtonClick = (buttonIndex) => {
-  //   setSelectedButton(buttonIndex);
+  const handleUserdata = async () => {
+    try {
+      let token = auth.authToken
+      let UID = auth.UID
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/getUserProfile/${UID}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      }
+      );
+      if (response.status === 200) {
+        console.log(response);
+        setUserData(response)
+        return response;
+      }
+    } catch (error) {
+      const errorMessage = error.response ? error.response.data.message : error.message;
 
-  // };
+    }
+  }
+  useEffect(() => {
+    handleUserdata()
+  }, []);
+
   const handleRouteButtonClick = (buttonIndex) => {
 
     setSelectedRouteButton(buttonIndex)
@@ -79,7 +94,6 @@ function Withdraw() {
 // React.useEffect(()=>{handleUPI()},[])
 
 
-  const userData = useRecoilValue(UserDetails)
   return (
     <div className='recharge'>
       <div className="container-fluid PromoNav" >

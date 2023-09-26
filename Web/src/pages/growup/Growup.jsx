@@ -198,13 +198,13 @@ function Growup() {
             <div className="container winNav">
                 <div className="row">
                     <Link to='/' className="col-2">
-                        <img src={back} alt="" />
+                        <img src={back} alt=""/>
                     </Link>
                     <div className="col-8">
                         <img src={logo} alt="" />
                     </div>
-                    <div className="col-2">
-                        <img src={ear} alt="" className="header_headphone" />
+                    <div className="col-2" >
+                        <img src={ear} alt="" className="header_headphone" onClick={()=>{navigate('/customerCare')}}/>
                         {playSound ? (
                             <img src={Audio} alt="" onClick={() => { setPlaySound(false) }} />
                         ) : (

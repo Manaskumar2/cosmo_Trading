@@ -59,11 +59,13 @@ function Profile() {
         useEffect(()=>{handleUserdata();
             
         },[])
-        useEffect(() => {
-            document.body.classList.remove('active-Chat');
-          }, []);
-        
     }
+
+        
+        
+
+        
+    
     return (
         <div className='profileContainer'>
             

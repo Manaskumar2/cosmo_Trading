@@ -280,7 +280,7 @@ function roundDown(num, decimalPlaces = 2) {
 }
 
 
-const startAndCheckGame = async (duration) => {
+const startAndCheckGame =async (duration) => {
   const currentDate = moment(new Date()).tz("Asia/Kolkata");
   const game = await Game.findOne({ isCompleted: false, duration: duration });
 

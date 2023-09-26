@@ -8,11 +8,14 @@
   padding-left: 15px !important;
   padding-right: 15px !important;
 }
+.winNav .col-2 img {
+  max-width: 30px !important;
+  max-height: 30px !important;
+}
 .PromoNav {
   padding-left: 15px !important;
 }
-#HTML-body.HTML-body .widget-visible{display: none !important;}
-#HTML-body.HTML-body.active-Chat .widget-visible{display: block !important;}
+
 .admin-rightSection{padding: 1.5rem;background-color:#001C3E;width: 100%;}
 .activate{background-color: rgb(43, 224, 43);color: #fff; padding: .3rem 1rem;border: 0;outline: none;width: 8rem;}
 .deactivate{background-color: rgb(200, 59, 44);color: #fff; padding: .3rem 1rem;border: 0;outline: none;width: 8rem;}

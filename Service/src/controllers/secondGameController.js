@@ -1,209 +1,260 @@
 const moment = require("moment");
 require("moment-timezone");
-const mongoose = require("mongoose");
-
 const userModel = require("../models/userModel");
 const Game = require("../models/secondGameModel");
 const Wallet = require("../models/companywallet");
-const { generateUniqueNumber2 } = require("../util/util");
 
+const { generateUniqueNumber2 } = require("../util/util");
 let walletId = "650daaa42b2122794a524f24";
 
 let downloadResult = [0.7, 0.5, 0.3, 0.2, 0.15, 0.1, 0.08, 0.06, 0.05, 0.04];
 
 async function calculateResult(gameId) {
-  const game =  await Game.findOne({ _id: gameId }).populate({
-    path: "bets.user",
-    populate: { path: "downline" },
-  });
 
-  if (!game) {
-    return;
-  }
+  try {
+    const game = await Game.findOne({ _id: gameId }).populate({
+      path: "bets.user",
+      populate: { path: "downline" },
+    });
 
-  const groups = {
-    "A": { users: [], totalAmount: 0 },
-    "B": { users: [], totalAmount: 0 },
-    "C": { users: [], totalAmount: 0 },
-  };
+    if (!game) {
+      return;
+    }
 
-
-  game.bets.forEach((bet) => {
-    const group = bet.group;
-    groups[group].users.push(bet.user);
-    groups[group].totalAmount += bet.amount;
-  });
-  let winnerGroup = null;
-  let runnerUpGroup = null;
-  let loserGroup = null;
-  if (groups["A"].users.length === 0 && groups["B"].users.length === 0 && groups["C"].users.length !== 0) {
-    loserGroup = "C"
-  } else if (groups["A"].users.length !== 0 && groups["B"].users.length === 0 && groups["C"].users.length !== 0) {
-    loserGroup = "A"
+    const groups = {
+      "A": { users: [], totalAmount: 0 },
+      "B": { users: [], totalAmount: 0 },
+      "C": { users: [], totalAmount: 0 },
+    };
   
 
-  } else if (groups["A"].users.length === 0 && groups["B"].users.length !== 0 && groups["C"].users.length == 0) {
-    loserGroup = "B"
 
+    game.bets.forEach((bet) => {
+      const group = bet.group;
+      groups[group].users.push(bet.user);
+      groups[group].totalAmount += bet.amount;
+    });
+    let winnerGroup = null;
+    let runnerUpGroup = null;
+    let loserGroup = null;
+   let numberOfGroups = 0;
 
-  }
-  
-  if (groups["A"].users.length === 0 && groups["B"].users.length !=0 && groups["C"].users.length!==0) {
-    // If group A has no users, select a random winner and loser from groups B and C
-    const randomIndex = Math.floor(Math.random() * 2); // 0 or 1
-    if (randomIndex === 0) {
-      winnerGroup = "B";
-      loserGroup = "C";
-     
-    } else {
-      winnerGroup = "C";
-      loserGroup = "B";
-    
-    }
-  } else if (groups["B"].users.length === 0 && groups["C"].users.length !== 0 && groups["A"].users.length !== 0) {
-    // If group B has no users, select a random winner and loser from groups A and C
-    const randomIndex = Math.floor(Math.random() * 2); // 0 or 1
-    if (randomIndex === 0) {
-      winnerGroup = "A";
-      loserGroup = "C";
-  
-    } else {
-      winnerGroup = "C";
-      loserGroup = "A";
-
-    }
-  } else if (groups["C"].users.length === 0 && groups["A"].users.length !== 0 && groups["B"].users.length!==0) {
-    // If group C has no users, select a random winner and loser from groups A and B
-    const randomIndex = Math.floor(Math.random() * 2); // 0 or 1
-    if (randomIndex === 0) {
-      winnerGroup = "A";
-      loserGroup = "B";
-    } else {
-      winnerGroup = "B";
-      loserGroup = "A";
-    }
-  } else if (
-    groups["A"].totalAmount !== 0 &&
-    groups["B"].totalAmount !== 0 &&
-    groups["C"].totalAmount !== 0 &&
-    groups["A"].totalAmount === groups["B"].totalAmount &&
-    groups["A"].totalAmount === groups["C"].totalAmount &&
-    groups["A"].users.length !== 0 &&
-    groups["B"].users.length !== 0 &&
-    groups["C"].users.length !== 0 &&
-    groups["A"].users.length === groups["B"].users.length &&
-    groups["A"].users.length === groups["C"].users.length ) {
-    // Randomly select a winner, runner-up, and loser
-    const randomIndex = Math.floor(Math.random() * 3); // 0, 1, or 2
-
-    switch (randomIndex) {
-      case 0:
-        winnerGroup = "A";
-        break;
-      case 1:
-        winnerGroup = "B";
-        break;
-      case 2:
-        winnerGroup = "C";
-        break;
-    }
-
-    const remainingGroups = ["A", "B", "C"].filter((group) => group !== winnerGroup);
-    const randomIndex2 = Math.floor(Math.random() * 2); // 0 or 1
-
-    runnerUpGroup = remainingGroups[randomIndex2];
-    loserGroup = remainingGroups[1 - randomIndex2];
-  } else {
-    // If all groups have users, determine the winner based on your conditions
-    // (follows the previous logic)
-    if (groups["A"].totalAmount === groups["B"].totalAmount &&
-      groups["A"].totalAmount === groups["C"].totalAmount &&
-      groups["A"].totalAmount !== 0) {
-      // If amounts are equal, prioritize the group with more users
-      if (groups["A"].users.length > groups["B"].users.length && groups["A"].users.length > groups["C"].users.length) {
-        winnerGroup = "A";
-        if (groups["B"].users.length > groups["C"].users.length) {
-          runnerUpGroup = "B";
-          loserGroup = "C";
-        } else {
-          runnerUpGroup = "C";
-          loserGroup = "B";
-        }
-      } else if (groups["B"].users.length > groups["A"].users.length && groups["B"].users.length > groups["C"].users.length) {
-        winnerGroup = "B";
-        if (groups["A"].users.length > groups["C"].users.length) {
-          runnerUpGroup = "A";
-          loserGroup = "C";
-        } else {
-          runnerUpGroup = "C";
-          loserGroup = "A";
-        }
-      } else {
-        winnerGroup = "C";
-        if (groups["A"].users.length >= groups["B"].users.length) {
-          runnerUpGroup = "A";
-          loserGroup = "B";
-        } else {
-          runnerUpGroup = "B";
-          loserGroup = "A";
-        }
-      }
-    } else {
-      // If amounts are not equal, follow your previous logic
-      // (group with the least total amount is the winner, second least is the runner-up, and the remaining is the loser)
-      if (groups["A"].totalAmount < groups["B"].totalAmount && groups["A"].totalAmount < groups["C"].totalAmount) {
-        winnerGroup = "A";
-        if (groups["B"].totalAmount < groups["C"].totalAmount) {
-          runnerUpGroup = "B";
-          loserGroup = "C";
-        } else {
-          runnerUpGroup = "C";
-          loserGroup = "B";
-        }
-      } else if (groups["B"].totalAmount < groups["A"].totalAmount && groups["B"].totalAmount < groups["C"].totalAmount) {
-        winnerGroup = "B";
-        if (groups["A"].totalAmount < groups["C"].totalAmount) {
-          runnerUpGroup = "A";
-          loserGroup = "C";
-        } else {
-          runnerUpGroup = "C";
-          loserGroup = "A";
-        }
-      } else if (groups["C"].totalAmount < groups["A"].totalAmount && groups["C"].totalAmount < groups["B"].totalAmount) {
-        winnerGroup = "C";
-        if (groups["A"].totalAmount < groups["B"].totalAmount) {
-          runnerUpGroup = "A";
-          loserGroup = "B";
-        } else {
-          runnerUpGroup = "B";
-          loserGroup = "A";
-        }
-      }
-    }
-  }
-  if (groups["A"].users.length !== 0 && groups["B"].users.length !== 0 && groups["C"].users.length !== 0) {
-    const winner = groups[winnerGroup];
-    const runnerUp = groups[runnerUpGroup];
-    const losers = groups[loserGroup];
-    await distributeComissionToThreeUsers(winner, runnerUp, losers, game);
-  }
-  else if (runnerUpGroup == null && loserGroup !==null && winnerGroup !==null) {
-    const winner = groups[winnerGroup];
-    const losers = groups[loserGroup];
-    await distributeComissionToTwoUsers(winner, losers, game);
-  } else if (winnerGroup == null && runnerUpGroup == null && loserGroup !== null) {
-    const loser =  groups[loserGroup];
-    await distributeComissionToOneUser(loser, game)
-  }
-
-  game.winnerGroup = winnerGroup;
-  game.runnerUpGroup = runnerUpGroup;
-  game.losersGroup = loserGroup;
-
-  await game.save();
+for (const key in groups) {
+  if (groups[key].users.length > 0) {
+    numberOfGroups++;
+  }
 }
+    if (numberOfGroups === 1) {
+      if (groups["A"].users.length === 0 && groups["B"].users.length === 0 && groups["C"].users.length !== 0) {
+        loserGroup = "C"
+      } else if (groups["A"].users.length !== 0 && groups["B"].users.length === 0 && groups["C"].users.length !== 0) {
+        loserGroup = "A"
+  
 
-async function distributeComissionToThreeUsers(winner, runnerUp, losers, game) {
+      } else if (groups["A"].users.length === 0 && groups["B"].users.length !== 0 && groups["C"].users.length == 0) {
+        loserGroup = "B"
+
+
+      }
+    } else if (numberOfGroups == 2) {
+
+        if (groups["A"].users.length === 0 && groups["B"].totalAmount < groups["C"].totalAmount) {
+           winnerGroup = "B" 
+          loserGroup = "C"
+        } else if (groups["B"].users.length ==0 && groups["A"].totalAmount< groups["C"].totalAmount) {
+          loserGroup = "C"
+          winnerGroup= "A"
+  
+
+        } else if (groups["C"].users.length === 0 && groups["B"].totalAmount< 0 && groups["A"].totalAmount) {
+          loserGroup = "A"
+          winnerGroup = "B"
+
+
+        }
+       else if (groups["A"].users.length === 0 && groups["B"].totalAmount > groups["C"].totalAmount) {
+           winnerGroup = "C" 
+          loserGroup = "B"
+        } else if (groups["B"].users.length ==0 && groups["A"].totalAmount> groups["C"].totalAmount) {
+          loserGroup = "A"
+          winnerGroup= "C"
+  
+
+        } else if (groups["C"].users.length === 0 && groups["B"].totalAmount> 0 && groups["A"].totalAmount) {
+          loserGroup = "B"
+          winnerGroup = "A"
+
+
+        }
+
+  
+      if (groups["A"].users.length === 0 && groups["B"].users.length == groups["C"].users.length !== 0) {
+    
+        const randomIndex = Math.floor(Math.random() * 2); // 0 or 1
+        if (randomIndex === 0) {
+          winnerGroup = "B";
+          loserGroup = "C";
+     
+        } else {
+          winnerGroup = "C";
+          loserGroup = "B";
+    
+        }
+      } else if (groups["B"].users.length === 0 && groups["A"].users.length == groups["C"].users.length !== 0) {
+        // If group B has no users, select a random winner and loser from groups A and C
+        const randomIndex = Math.floor(Math.random() * 2); // 0 or 1
+        if (randomIndex === 0) {
+          winnerGroup = "A";
+          loserGroup = "C";
+  
+        } else {
+          winnerGroup = "C";
+          loserGroup = "A";
+
+        }
+      } else if (groups["C"].users.length === 0 && groups["B"].users.length == groups["A"].users.length !== 0) {
+        // If group C has no users, select a random winner and loser from groups A and B
+        const randomIndex = Math.floor(Math.random() * 2); // 0 or 1
+        if (randomIndex === 0) {
+          winnerGroup = "A";
+          loserGroup = "B";
+        } else {
+          winnerGroup = "B";
+          loserGroup = "A";
+        }
+      }
+    }
+    else if (numberOfGroups === 3) {
+      if (
+        groups["A"].totalAmount !== 0 &&
+        groups["B"].totalAmount !== 0 &&
+        groups["C"].totalAmount !== 0 &&
+        groups["A"].totalAmount === groups["B"].totalAmount &&
+        groups["A"].totalAmount === groups["C"].totalAmount &&
+        groups["A"].users.length !== 0 &&
+        groups["B"].users.length !== 0 &&
+        groups["C"].users.length !== 0 &&
+        groups["A"].users.length === groups["B"].users.length &&
+        groups["A"].users.length === groups["C"].users.length) {
+        // Randomly select a winner, runner-up, and loser
+        const randomIndex = Math.floor(Math.random() * 3); // 0, 1, or 2
+
+        switch (randomIndex) {
+          case 0:
+            winnerGroup = "A";
+            break;
+          case 1:
+            winnerGroup = "B";
+            break;
+          case 2:
+            winnerGroup = "C";
+            break;
+        }
+
+        const remainingGroups = ["A", "B", "C"].filter((group) => group !== winnerGroup);
+        const randomIndex2 = Math.floor(Math.random() * 2); // 0 or 1
+
+        runnerUpGroup = remainingGroups[randomIndex2];
+        loserGroup = remainingGroups[1 - randomIndex2];
+      } else {
+     
+        if (groups["A"].totalAmount === groups["B"].totalAmount &&
+          groups["A"].totalAmount === groups["C"].totalAmount &&
+          groups["A"].totalAmount !== 0) {
+          // If amounts are equal, prioritize the group with more users
+          if (groups["A"].users.length > groups["B"].users.length && groups["A"].users.length > groups["C"].users.length) {
+            winnerGroup = "A";
+            if (groups["B"].users.length > groups["C"].users.length) {
+              runnerUpGroup = "B";
+              loserGroup = "C";
+            } else {
+              runnerUpGroup = "C";
+              loserGroup = "B";
+            }
+          } else if (groups["B"].users.length > groups["A"].users.length && groups["B"].users.length > groups["C"].users.length) {
+            winnerGroup = "B";
+            if (groups["A"].users.length > groups["C"].users.length) {
+              runnerUpGroup = "A";
+              loserGroup = "C";
+            } else {
+              runnerUpGroup = "C";
+              loserGroup = "A";
+            }
+          } else {
+            winnerGroup = "C";
+            if (groups["A"].users.length >= groups["B"].users.length) {
+              runnerUpGroup = "A";
+              loserGroup = "B";
+            } else {
+              runnerUpGroup = "B";
+              loserGroup = "A";
+            }
+          }
+        } else {
+          // If amounts are not equal, follow your previous logic
+          // (group with the least total amount is the winner, second least is the runner-up, and the remaining is the loser)
+          if (groups["A"].totalAmount < groups["B"].totalAmount && groups["A"].totalAmount < groups["C"].totalAmount) {
+            winnerGroup = "A";
+            if (groups["B"].totalAmount < groups["C"].totalAmount) {
+              runnerUpGroup = "B";
+              loserGroup = "C";
+            } else {
+              runnerUpGroup = "C";
+              loserGroup = "B";
+            }
+          } else if (groups["B"].totalAmount < groups["A"].totalAmount && groups["B"].totalAmount < groups["C"].totalAmount) {
+            winnerGroup = "B";
+            if (groups["A"].totalAmount < groups["C"].totalAmount) {
+              runnerUpGroup = "A";
+              loserGroup = "C";
+            } else {
+              runnerUpGroup = "C";
+              loserGroup = "A";
+            }
+          } else if (groups["C"].totalAmount < groups["A"].totalAmount && groups["C"].totalAmount < groups["B"].totalAmount) {
+            winnerGroup = "C";
+            if (groups["A"].totalAmount < groups["B"].totalAmount) {
+              runnerUpGroup = "A";
+              loserGroup = "B";
+            } else {
+              runnerUpGroup = "B";
+              loserGroup = "A";
+            }
+          }
+        }
+      }
+    }
+    if (runnerUpGroup !== null && loserGroup !== null && winnerGroup !== null) {
+      const winner = groups[winnerGroup];
+      const runnerUp = groups[runnerUpGroup];
+      const losers = groups[loserGroup];
+      console.log("3rd distribution")
+       await distributeComissionToThreeUsers(winner, runnerUp, losers, game);
+    }
+    else if (runnerUpGroup == null && loserGroup !== null && winnerGroup !== null) {
+      const winner = groups[winnerGroup];
+      const losers = groups[loserGroup];
+      console.log("2nd distribution")
+       await distributeComissionToTwoUsers(winner, losers, game,winnerGroup,);
+    } else if (winnerGroup == null && runnerUpGroup == null && loserGroup !== null) {
+      const loser = groups[loserGroup];
+      console.log("1nd distribution")
+       await distributeComissionToOneUser(loser, game)
+    }
+
+    console.log(winnerGroup,runnerUpGroup,loserGroup)
+    game.winnerGroup = winnerGroup;
+    game.runnerUpGroup = runnerUpGroup;
+    game.losersGroup = loserGroup;
+
+    await game.save();
+  } catch (error) {
+    console.log(error)
+    return res.status({status:false,message:error.message})
+  }
+} 
+
+async function distributeComissionToThreeUsers(winner, runnerUp, losers, game,winnerGroup,losersGroup) {
   let totalAmount = winner.totalAmount + runnerUp.totalAmount + losers.totalAmount;
   let directCompanyProfit = (totalAmount * 0.97) * 0.05;
   let remainingLosersAmount = (losers.totalAmount * 0.97) - directCompanyProfit;
@@ -252,18 +303,29 @@ async function distributeComissionToThreeUsers(winner, runnerUp, losers, game) {
   await wallet.save();
 }
 
-async function distributeComissionToTwoUsers(winner, losers, game) {
-  let totalAmount = winner.totalAmount + losers.totalAmount;
+async function distributeComissionToTwoUsers(winner, losers, game,winnerGroup) {
+   let totalAmount = winner.totalAmount + losers.totalAmount;
   let distributableAmount = losers.totalAmount * 0.70;
   let winnerRatio = distributableAmount / winner.totalAmount;
 
-  for (let i = 0; i < winner.users.length; i++) {
-    let winAmount = roundDown(winner.totalAmount * 0.97 + (winner.users[i].walletAmount * 0.97 * winnerRatio), 2);
-    totalAmount = totalAmount - winAmount;
-    await userModel.updateOne(
-      { _id: winner.users[i]._id },
-      { $inc: { walletAmount: winAmount, winningAmount: winAmount } }
-    );
+  for (const bet of game.bets) {
+    if (bet.group === winnerGroup) {
+      // Calculate the win amount for each winner user based on their bet amount
+      let winAmount = roundDown(bet.amount * winnerRatio, 2);
+      const returnAmount = bet.amount + winAmount
+      totalAmount -= returnAmount;
+
+      // Update the user's wallet with the win amount
+      await userModel.updateOne(
+        { _id: bet.user._id },
+        {
+          $inc: {
+            walletAmount: returnAmount,
+            winningAmount: returnAmount
+          }
+        }
+      );
+    }
   }
 
     let distributedAmount = await distributeComissionToAll(game);
@@ -288,20 +350,31 @@ async function distributeComissionToTwoUsers(winner, losers, game) {
   }
 
   wallet.everydayBettingAmount += totalAmount;
+
+  
   await wallet.save();
 }
 
 async function distributeComissionToOneUser(loser, game) {
   let totalAmount = loser.totalAmount;
 
-  for (let i = 0; i < loser.users.length; i++) {
-    let winAmount = roundDown(loser.totalAmount * 0.70, 2);
-    totalAmount = totalAmount - winAmount;
+  // for (let i = 0; i < loser.users.length; i++) {
+  //   let winAmount = roundDown(loser.totalAmount * 0.70, 2);
+  //   totalAmount = totalAmount - winAmount;
+  //   await userModel.updateOne(
+  //     { _id: loser.users[i]._id },
+  //     { $inc: { walletAmount: winAmount, winningAmount: winAmount } }
+  //   );
+  // }
+   for (const bet of game.bets) {
+    let winAmount = roundDown(bet.amount * 0.70, 2);
+    totalAmount -= winAmount;
     await userModel.updateOne(
-      { _id: loser.users[i]._id },
-      { $inc: { walletAmount: winAmount, winningAmount: winAmount } }
+      { _id: bet.user._id },
+       { walletAmount: bet.user.walletAmount + winAmount },
+       {winningAmount: bet.user.winningAmount + winAmount}
     );
-  }
+    }
 
   let distributedAmount = await distributeComissionToAll(game);
   
@@ -421,6 +494,7 @@ async function calculateTotalBettingAmountForTheDay() {
   }
 }
 
+
 const startAndCheckGame = async (duration) => {
   const currentDate = moment(new Date()).tz("Asia/Kolkata");
   const game = await Game.findOne({ isCompleted: false, duration: duration });
@@ -428,7 +502,7 @@ const startAndCheckGame = async (duration) => {
   if (game) {
     if (game.endTime.unix() - currentDate.unix() <= 0) {
       game.isCompleted = true;
-      calculateResult(game._id);
+     await calculateResult(game._id);
       await game.save();
       await Game.create({
         duration: duration,
@@ -457,14 +531,14 @@ const startAndCheckGame = async (duration) => {
     }, duration * 60 * 1000);
   }
 };
-
-const durationOptions = [1]; // You can add more duration options if needed.
+const durationOptions = [1];
 
 durationOptions.forEach((value) => {
   startAndCheckGame(value);
 });
 
 
+const groupOptions =["A", "B", "C"]
 const bet2ndController = async (req, res) => {
     try {
         const { amount, group, duration } = req.body;
@@ -475,14 +549,15 @@ const bet2ndController = async (req, res) => {
             !duration ||
             isNaN(duration) ||
             isNaN(amount) ||
-            // !groupOptions.includes(group) ||
+            !groupOptions.includes(group) ||
             !durationOptions.includes(duration)
         ) {
             return res
                 .status(400)
                 .json({ status: false, message: "Missing parameters" });
         }
-        if(duration !=1) return res.status(400).send({status:false,message:"duration must be 1min"})
+      if (duration != 1) return res.status(400).send({ status: false, message: "duration must be 1min" })
+      
 
         const user = await userModel.findById(req.decodedToken.userId);
         const game = await Game.findOne({ duration, isCompleted: false });
@@ -496,7 +571,7 @@ const bet2ndController = async (req, res) => {
         }
 
         const currentDate = moment(new Date()).tz("Asia/Kolkata");
-        console.log(` bet controller${currentDate}`)
+
 
         if (game.endTime.unix() - currentDate.unix() < 0) {
             return res
@@ -662,6 +737,7 @@ module.exports = {
     get2ndGame,
     get2ndGameHistory,
     delete2ndGames,
-    riseUpUserBettingHistory
+  riseUpUserBettingHistory,
+    calculateResult
 
 }

@@ -1,6 +1,6 @@
 .announcement{padding: 0 1.5rem;}
 .announcement .title{margin-bottom: 12px;}
-.carousel-item img{width: 100%;}
+.carousel-item img{width: 100%; min-height: 100px;}
 .carousel-item {width: 100%;min-height: 185px;}
 .announcement .title{margin-top: 2rem;}
 .marquee-wrapper{border-radius: 100px; display: flex; align-items: center;
@@ -15,7 +15,7 @@
     display: flex;
 }
 .carousel-indicators [data-bs-target]{border-radius: 100px;background: #024A73; width: 8px;height: 8px;border:0;}
-
+.banner .carousel-inner .active{background: transparent !important;}
 /* .carousel-indicators{bottom: -30px;} */
 
 .carousel-indicators .active{border-radius: 100px;background: #0BA3C5;box-shadow: 0px 0px 5px 0px #21CACA;}

@@ -1,4 +1,4 @@
-// import bCircle from '../../images/belips.png'
+import { useEffect } from 'react'
 import logo from '../../images/Cosmo Logo.svg'
 import './Home.css'
 import telegram from '../../images/telegram.svg'
@@ -10,9 +10,11 @@ import BonusCount from '../../components/bonusCount/BonusCount'
 import RunningTime from '../../components/runningTime/RunningTime'
 import WithdrawSection from '../../components/withdrawSection/WithdrawSection'
 import Accordian from '../../components/accordian/Accordian'
-import Timer from '../../components/timer/Timer'
+
 function Home() {
+
   return (
+    
     <div className='main-background'>
     <div className='home'> 
     <div className='container'>

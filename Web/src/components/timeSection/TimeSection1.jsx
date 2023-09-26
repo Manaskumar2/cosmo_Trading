@@ -43,6 +43,7 @@ function TimeSection1() {
             });
 
             if (response.status === 200) {
+                console.log(response)
                 setTimeData(response);
                 return response;
             }
@@ -89,7 +90,7 @@ function TimeSection1() {
     }, [endTime, setCountDown]);  
     
     useEffect(() => {
-        const intervalId = setInterval(handleGameData, 5000);
+        const intervalId = setInterval(handleGameData, 4000);
         return () => {
           clearInterval(intervalId);
         };

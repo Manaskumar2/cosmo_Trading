@@ -43,7 +43,7 @@ function GameHistory({ duration }) {
         try {
             let userId = auth._id;
             let token = auth.authToken;
-            console.log(token);
+            // console.log(token);
             const response = await axios.get(`${import.meta.env.VITE_API_URL}/get2ndgameUserHistory/${userId}`, {
                 params: { page },
                 headers: { Authorization: `Bearer ${token}` },
@@ -51,7 +51,7 @@ function GameHistory({ duration }) {
             if (response.status === 200) {
                 console.log(response);
                 setUserGames(response)
-                console.log(userGames)
+                // console.log(userGames)
                 return response;
             }
         } catch (error) {
@@ -62,14 +62,14 @@ function GameHistory({ duration }) {
     const getGameHistory = async () => {
         try {
             let token = auth.authToken;
-            console.log(token);
+            // console.log(token);
             const response = await axios.get(`${import.meta.env.VITE_API_URL}/gameHistory/${duration}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             if (response.status === 200) {
-                console.log(response);
+                // console.log(response);
                 setGameHistoryList(response.data)
-                console.log(gameHistoryList);
+                // console.log(gameHistoryList);
                 return response;
             }
         } catch (error) {
