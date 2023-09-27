@@ -22,7 +22,7 @@ function Reset() {
 
     const [newPassword, setNewPassword] = useState('');
     const [confirm, setConfirm] = useState('');
-    const [showPassword, setShowPassword] = useState(false); // Added state for showing password
+    const [showPassword, setShowPassword] = useState(false); 
 
     const handleSubmit = async (event) => {
         event.preventDefault();

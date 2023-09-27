@@ -277,7 +277,7 @@ function PromotionHistory() {
 
                                                                 <div className='flex-div-space-Betn'><p>Amount :</p><p>  {item.amount}</p></div>
 
-                                                                <div className='flex-div-space-Betn'><p>Betting Placed :</p><p> {item.group === 'A' ? 'Alpha' : item.group === 'B' ? 'Beta' : item.group === 'C' ? 'Gama' : 'Unknown'} , </p></div>
+                                                                <div className='flex-div-space-Betn'><p>Betting Placed :</p><p> {item.group === 'A' ? 'Alpha' : item.group === 'B' ? 'Beta' : item.group === 'C' ? 'Gama' : 'Unknown'}  </p></div>
                                                                 <div className='flex-div-space-Betn'><p>Runner Up :</p><p>{item.runnerUpGroup && item.runnerUpGroup=== 'A' ? 'Alpha' : item.runnerUpGroup === 'B' ? 'Beta' : item.runnerUpGroup === 'C' ? 'Gama' : 'None'}</p></div>
                                                                 <div className='flex-div-space-Betn'>
                                                                     <p>Betting Status :</p>

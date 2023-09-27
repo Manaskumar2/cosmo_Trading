@@ -11,6 +11,8 @@ import Winner from '../../images/icon-winner.svg'
 import Alpha from '../../images/icon-alpha.svg'
 import Beta from '../../images/icon-beta.svg'
 import { UserGameHistory } from '../../Atoms/UserGameHistory';
+// import { useRecoilValue } from 'recoil';
+import { CountDownGrowup } from '../../Atoms/CountDownGrowup';
 export const toastProps = {
     position: "top-center",
     duration: 2000,
@@ -21,8 +23,9 @@ export const toastProps = {
     },
 };
 
-function GameHistory({ duration }) {
+function GameHistory({ duration  }) {
 
+    const countDownGrowup = useRecoilValue(CountDownGrowup)
 
     const [expandedRowIndex, setExpandedRowIndex] = useState(null);
 
@@ -44,16 +47,15 @@ function GameHistory({ duration }) {
         try {
             let userId = auth._id;
             let token = auth.authToken;
-            console.log(token);
+
             const response = await axios.get(`${import.meta.env.VITE_API_URL}/bettingHistory/${userId}`, {
                 params: { page },
                 headers: { Authorization: `Bearer ${token}` },
             });
 
             if (response.status === 200) {
-                console.log(response);
+                
                 setUserGames(response)
-                console.log(userGames)
                 return response;
             }
         } catch (error) {
@@ -66,14 +68,12 @@ function GameHistory({ duration }) {
 
         try {
             let token = auth.authToken;
-            console.log(token);
             const response = await axios.get(`${import.meta.env.VITE_API_URL}/getSuccessFullGameHistory/${duration}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             if (response.status === 200) {
-                console.log(response);
+                console.log(response.data)
                 setGameHistoryList(response.data)
-                console.log(gameHistoryList);
                 return response;
             }
         } catch (error) {
@@ -83,20 +83,22 @@ function GameHistory({ duration }) {
     }
 
     useEffect(() => {
-        getGameHistory();
-        const interval = setInterval(() => {
+        if (countDownGrowup===59){
             getGameHistory();
-        }, 4500);
-        return () => clearInterval(interval);
-    }, [duration]);
+        }
+        
+    }, [countDownGrowup]);
 
     useEffect(() => {
-        getUserGameHistory()
-        const interval = setInterval(() => {
-            getUserGameHistory()
-        }, 5000);
-        return () => clearInterval(interval);
-    }, [page])
+        const intervalId = setInterval(() => {
+            getUserGameHistory();
+        }, 3000); 
+
+        return () => {
+            clearInterval(intervalId);
+        };
+    }, [page]);
+    
 
 
     const handleTabClick = (tabIndex) => {

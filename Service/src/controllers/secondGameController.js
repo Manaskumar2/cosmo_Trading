@@ -270,21 +270,19 @@ for (const key in groups) {
       const winner = groups[winnerGroup];
       const runnerUp = groups[runnerUpGroup];
       const losers = groups[loserGroup];
-      console.log("3rd distribution")
-       await distributeComissionToThreeUsers(winner, runnerUp, losers, game);
+      // console.log("3rd distribution")
+       await distributeComissionToThreeUsers(winner, runnerUp, losers,winnerGroup,runnerUpGroup, game);
     }
     else if (runnerUpGroup == null && loserGroup !== null && winnerGroup !== null) {
       const winner = groups[winnerGroup];
       const losers = groups[loserGroup];
-      console.log("2nd distribution")
+      // console.log("2nd distribution")
        await distributeComissionToTwoUsers(winner, losers, game,winnerGroup,);
     } else if (winnerGroup == null && runnerUpGroup == null && loserGroup !== null) {
       const loser = groups[loserGroup];
-      console.log("1nd distribution")
+      // console.log("1nd distribution")
        await distributeComissionToOneUser(loser, game)
     }
-
-    
     game.winnerGroup = winnerGroup;
     game.runnerUpGroup = runnerUpGroup;
     game.losersGroup = loserGroup;
@@ -296,7 +294,7 @@ for (const key in groups) {
   }
 } 
 
-async function distributeComissionToThreeUsers(winner, runnerUp, losers, game,winnerGroup,losersGroup) {
+async function distributeComissionToThreeUsers(winner, runnerUp, losers, game,winnerGroup,runnerUpGroup) {
   let totalAmount = winner.totalAmount + runnerUp.totalAmount + losers.totalAmount;
   let directCompanyProfit = (totalAmount * 0.97) * 0.05;
   let remainingLosersAmount = (losers.totalAmount * 0.97) - directCompanyProfit;
@@ -304,22 +302,59 @@ async function distributeComissionToThreeUsers(winner, runnerUp, losers, game,wi
   let winnerRatio = (remainingLosersAmount * 0.70) / (winner.totalAmount * 0.97);
   let runnerUpRatio = (remainingLosersAmount * 0.30) / (runnerUp.totalAmount * 0.97);
 
-  for (let i = 0; i < winner.users.length; i++) {
-    let winAmount = roundDown(winner.totalAmount * 0.97 + (winner.users[i].walletAmount * 0.97 * winnerRatio), 2);
-    totalAmount = totalAmount - winAmount;
-    await userModel.updateOne(
-      { _id: winner.users[i]._id },
-      { $inc: { walletAmount: winAmount, winningAmount: winAmount } }
-    );
-  }
+  // for (let i = 0; i < winner.users.length; i++) {
+  //   let winAmount = roundDown(winner.totalAmount * 0.97 + (winner.users[i].walletAmount * 0.97 * winnerRatio), 2);
+  //   totalAmount = totalAmount - winAmount;
+  //   await userModel.updateOne(
+  //     { _id: winner.users[i]._id },
+  //     { $inc: { walletAmount: winAmount, winningAmount: winAmount } }
+  //   );
+  // }
+  for (const bet of game.bets) {
+    if (bet.group === winnerGroup) {
+      // Calculate the win amount for each winner user based on their bet amount
+      let winAmount = roundDown(bet.amount * winnerRatio, 2);
+      const returnAmount = bet.amount + winAmount
+      totalAmount -= returnAmount;
 
-  for (let i = 0; i < runnerUp.users.length; i++) {
-    let winAmount = roundDown(runnerUp.users[i].walletAmount * 0.97 + (runnerUp.users[i].walletAmount * 0.97 * runnerUpRatio), 2);
-    totalAmount = totalAmount - winAmount;
-    await userModel.updateOne(
-      { _id: runnerUp.users[i]._id },
-      { $inc: { walletAmount: winAmount, winningAmount: winAmount } }
-    );
+      // Update the user's wallet with the win amount
+      await userModel.updateOne(
+        { _id: bet.user._id },
+        {
+          $inc: {
+            walletAmount: returnAmount,
+            winningAmount: returnAmount
+          }
+        }
+      );
+    }
+  }
+  // for (let i = 0; i < runnerUp.users.length; i++) {
+  //   let winAmount = roundDown(runnerUp.users[i].walletAmount * 0.97 + (runnerUp.users[i].walletAmount * 0.97 * runnerUpRatio), 2);
+  //   totalAmount = totalAmount - winAmount;
+  //   await userModel.updateOne(
+  //     { _id: runnerUp.users[i]._id },
+  //     { $inc: { walletAmount: winAmount, winningAmount: winAmount } }
+  //   );
+  // }
+    for (const bet of game.bets) {
+    if (bet.group === runnerUpGroup) {
+      // Calculate the win amount for each winner user based on their bet amount
+      let runnerUpAmount = roundDown(bet.amount * runnerUpRatio, 2);
+      const returnAmount = bet.amount + runnerUpAmount
+      totalAmount -= returnAmount;
+
+      // Update the user's wallet with the win amount
+      await userModel.updateOne(
+        { _id: bet.user._id },
+        {
+          $inc: {
+            walletAmount: returnAmount,
+            winningAmount: returnAmount
+          }
+        }
+      );
+    }
   }
 
    let distributedAmount = await distributeComissionToAll(game);
@@ -581,9 +616,10 @@ durationOptions.forEach((value) => {
 });
 
 
-const groupOptions =["A", "B", "C"]
+
 const bet2ndController = async (req, res) => {
-    try {
+  try {
+      const groupOptions =["A", "B", "C"]
         const { amount, group, duration } = req.body;
 
         if (
@@ -611,16 +647,27 @@ const bet2ndController = async (req, res) => {
 
         if (!game) {
             return res.status(404).json({ status: false, message: "Game not found" });
-        }
+    }
+    
+     const userBets = game.bets.filter(bet => bet.user.toString() === user._id.toString());
+    const userGroups = new Set();
 
-        const currentDate = moment(new Date()).tz("Asia/Kolkata");
+    for (const bet of userBets) {
+      userGroups.add(bet.group);
+    }
+
+    if (userGroups.size >= 2 && !userGroups.has(group)) {
+      return res.status(400).json({ status: false, message: "User cannot bet on a third group" });
+    }
+
+        // const currentDate = moment(new Date()).tz("Asia/Kolkata");
 
 
-        if (game.endTime.unix() - currentDate.unix() < 0) {
-            return res
-                .status(400)
-                .json({ status: false, message: "Wait for Next Game" });
-        }
+        // if (game.endTime.unix() - currentDate.unix() < 0) {
+        //     return res
+        //         .status(400)
+        //         .json({ status: false, message: "Wait for Next Game" });
+        // }
 
         if (user.walletAmount <= amount) {
             return res
@@ -714,7 +761,7 @@ const riseUpUserBettingHistory = async (req, res) => {
 const get2ndGame = async (req, res) => { 
   try {
     const currentDate = moment(new Date()).tz("Asia/Kolkata");
-    console.log(`get game ${currentDate}`)
+    // console.log(`get game ${currentDate}`)
     const duration = parseInt(req.params.duration)
     if (!duration) return res.status(400).send({status: false, meessage:"please provide time duration for game"})
 
@@ -773,7 +820,42 @@ const delete2ndGames = async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+let counter = 1
+const update2ndGameUid = async (req, res) => {
+ try {
+    
+    const { gameUID } = req.body;
 
+    console.log(gameUID+" updated")
+    const parsedGameUID = parseInt(gameUID);
+
+    if (isNaN(parsedGameUID)) {
+      return res.status(400).json({ message: 'Invalid gameUID' });
+    }
+
+   
+    const game = await Game.findOne({ isCompleted: false });
+
+    if (!game) {
+      return res.status(404).json({ message: 'No incomplete games found' });
+    }
+
+    const newGameUID = `${parsedGameUID}${counter.toString().padStart(5, '0')}`;
+
+    counter++;
+
+  
+    game.gameUID = newGameUID;
+
+    
+    await game.save();
+
+    return res.status(200).json({ message: 'GameUID updated successfully', newGameUID });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+}
 
 module.exports = {
     bet2ndController,
@@ -781,6 +863,6 @@ module.exports = {
     get2ndGameHistory,
     delete2ndGames,
   riseUpUserBettingHistory,
-    calculateResult
+  update2ndGameUid
 
 }

@@ -29,6 +29,10 @@ import { useNavigate } from 'react-router-dom'
 import { CountDown } from '../../Atoms/CountDown';
 import Timer from '../../components/timer/Timer'
 import { PlaySound } from '../../Atoms/PlaySound';
+// import {  } from '../../Atoms/CountDownRiseup'
+import { CountDownGrowup } from '../../Atoms/CountDownGrowup'
+import { GameHistoryList } from '../../Atoms/GameHistory'
+
 export const toastProps = {
     position: "top-center",
     duration: 2000,
@@ -39,6 +43,11 @@ export const toastProps = {
     },
 };
 function Growup() {
+    // const [duration , setDuration]=useState(1)
+    const [gameHistoryList, setGameHistoryList] = useRecoilState(GameHistoryList)
+
+    const countDownGrowup = useRecoilValue(CountDownGrowup)
+
     const [playSound, setPlaySound] = useRecoilState(PlaySound)
     const [isChecked, setIsChecked] = useState(true);
 
@@ -99,6 +108,74 @@ function Growup() {
     ///////
 
 
+
+
+    const getCurrentDateNumber = () => {
+        const currentDate = new Date();
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth() + 1;
+        const date = currentDate.getDate();
+        const dateNumber = year * 10000 + month * 100 + date;
+        return dateNumber;
+    };
+    const [currentDateNumber, setCurrentDateNumber] = useState(getCurrentDateNumber());
+    // useEffect(() => {
+    //     getCurrentDateNumber()
+        
+    // }, [])
+
+    useEffect(() => {
+        handleMin()
+        setCurrentDateNumber(getCurrentDateNumber());
+        handleUserMoney()
+        // console.log(gameHistoryList.data[0].gameUID);
+        // setTimeout(() => {
+        //     sendUID();
+        // }, 1000);
+    }, []);
+ 
+
+    // const [uid, setUid] = useState(gameHistoryList.data[0].gameUID);
+    
+
+
+    // const sendUID = async () => {
+    //     let token = auth.authToken;
+
+    //     try {
+    //         const response = await axios.post(
+    //             `${import.meta.env.VITE_API_URL}/updateGameUID`,
+    //             {
+    //                 gameUID: currentDateNumber
+    //             },
+    //             {
+    //                 headers: { Authorization: `Bearer ${token}` }
+    //             }
+    //         );
+    //         if (response.status === 200) {
+    //             setUid(response.data.newGameUID)
+    //             console.log(response);
+    //             return response;
+    //         } else if (response.status === 404) {
+    //             return null;
+    //         }
+    //     } catch (error) {
+    //         if (error.response && error.response.status === 404) {
+    //             return null;
+    //         }
+    //         const errorMessage = error.response ? error.response.data.message : error.message;
+    //         toast.error(errorMessage || 'Something went wrong', { ...toastProps });
+    //     }
+    // }
+    useEffect(() => {
+        
+        if (countDownGrowup === 59) {
+            handleMin()
+        }
+    }, [countDownGrowup])
+
+
+
     const handleUserMoney = async () => {
         try {
             let token = auth.authToken;
@@ -106,28 +183,31 @@ function Growup() {
             const response = await axios.get(`${import.meta.env.VITE_API_URL}/getUserProfile/${UID}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-        
+
             if (response.status === 200) {
                 setUserData(response);
                 return response;
             } else if (response.status === 404) {
-             
                 return null;
             }
         } catch (error) {
             if (error.response && error.response.status === 404) {
-                
+
                 return null;
             }
-        
+
             const errorMessage = error.response ? error.response.data.message : error.message;
             toast.error(errorMessage || "Something went wrong", { ...toastProps });
         }
-        
+
     }
 
     const handleSubmit = async () => {
         let token = auth.authToken
+        if (countDownGrowup < 10) {
+            toast.error("Wait for the next game", { ...toastProps });
+            return null;
+        }
         try {
             let token = auth.authToken
             const response = await axios.post(`${import.meta.env.VITE_API_URL}/bet`, {
@@ -154,7 +234,7 @@ function Growup() {
         }
     }
 
-    const handleMin = async (duration) => {
+    const handleMin = async () => {
         try {
             let token = auth.authToken;
             console.log(duration);
@@ -164,10 +244,9 @@ function Growup() {
             });
 
             if (response.status === 200) {
-                // toast.success('growup', { ...toastProps });
-                console.log(response);
                 setTimeNo(duration)
                 setMinute(response)
+                console.log(response)
                 return response;
             }
         } catch (error) {
@@ -176,18 +255,16 @@ function Growup() {
         }
     };
 
-    useEffect(() => {
-        console.log(duration);
-        if (auth.authToken && auth.UID) {
-            handleMin(duration);
-            const timer = setTimeout(async () => {
-                await handleUserMoney();
-            }, 3000);
-            return () => {
-                clearTimeout(timer);
-            };
-        }
-    }, [auth, duration]);
+    // useEffect(() => {
+    //     if (auth.authToken && auth.UID) {
+    //         const timer = setTimeout(async () => {
+    //             await handleUserMoney();
+    //         }, 3000);
+    //         return () => {
+    //             clearTimeout(timer);
+    //         };
+    //     }
+    // }, [auth, duration]);
 
 
 
@@ -196,13 +273,13 @@ function Growup() {
             <div className="container winNav">
                 <div className="row">
                     <Link to='/' className="col-2">
-                        <img src={back} alt=""/>
+                        <img src={back} alt="" />
                     </Link>
                     <div className="col-8">
-                        <img src={logo} alt="" />
+                        <img src={logo} alt="" onClick={() => { sendUID() }} />
                     </div>
                     <div className="col-2" >
-                        <img src={ear} alt="" className="header_headphone" onClick={()=>{navigate('/customerCare')}}/>
+                        <img src={ear} alt="" className="header_headphone" onClick={() => { navigate('/customerCare') }} />
                         {playSound ? (
                             <img src={Audio} alt="" onClick={() => { setPlaySound(false) }} />
                         ) : (

@@ -7,7 +7,7 @@ import toast, { Toaster } from "react-hot-toast";
 import axios from 'axios';
 import { CountDown } from '../../Atoms/CountDown';
 import { DateTime } from 'luxon';
-
+import { CountDownGrowup } from '../../Atoms/CountDownGrowup';
 
 
 export const toastProps = {
@@ -20,7 +20,7 @@ export const toastProps = {
     },
 };
 
-function TimeSection1() {
+function TimeSection1({uid}) {
     const [coutDown, setCountDown] = useRecoilState(CountDown)
 
     const [timeData, setTimeData] = useRecoilState(OneMinute);
@@ -29,14 +29,8 @@ function TimeSection1() {
 
     const timeNo = useRecoilValue(TimeNo);
 
-    const [remainingTime, setRemainingTime] = useState(0);
-
-    const startTime = timeData?.data?.currentTime || null;
-
-    const endTime = timeData?.data?.data?.endTime || null;
-
     const [currentTime, setCurrentTime] = useState(DateTime.now().setZone('Asia/Kolkata'));
-    const [countdown, setCountdown] = useState(59);
+    const [countdown, setCountdown] = useRecoilState(CountDownGrowup);
     useEffect(() => {
         const intervalId = setInterval(() => {
             const updatedTime = DateTime.now().setZone('Asia/Kolkata');
@@ -44,17 +38,15 @@ function TimeSection1() {
 
             const remainingSeconds = 59 - updatedTime.second;
             setCountdown(remainingSeconds);
-            if (remainingSeconds === 0) {
-                handleGameData();
-            }
-            else if (remainingSeconds === 59) {
-                handleGameData();
+            if (remainingSeconds === 5) {
+                setCountDown(true)
             }
         }, 1000);
 
         return () => {
             clearInterval(intervalId);
         };
+        // handleGameData()
     }, []);
 
 
@@ -122,12 +114,11 @@ function TimeSection1() {
             <div className="container">
                 <div className="row time-play">
                     <div className="col-6 left">
-                        {timeData && timeNo ? (
-                            <>
-                                <div className='selected-mint'>{timeNo} minute</div>
-                                <h3>{timeData?.data?.data?.gameUID}</h3>
-                            </>
-                        ) : null}
+                                
+                                <div className='selected-mint'>1 minute</div>
+                                {timeData && timeData.data.data.gameUID}
+                                {/* <h3>{uid}</h3> */}
+                      
                     </div>
                     <div className="col-6 right">
                         <p style={{ color: '#97E2F2', textAlign: 'center', marginBottom: '0' }}>Left time to buy</p>

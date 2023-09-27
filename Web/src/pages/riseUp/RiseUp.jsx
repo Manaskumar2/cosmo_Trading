@@ -27,6 +27,7 @@ import { CountDown } from '../../Atoms/CountDown';
 import Timer from '../../components/timer/Timer'
 import { PlaySound } from '../../Atoms/PlaySound';
 import mute from '../../images/mute.svg'
+import { CountDownRiseup } from '../../Atoms/CountDownRiseup'
 export const toastProps = {
     position: "top-center",
     duration: 2000,
@@ -37,6 +38,7 @@ export const toastProps = {
     },
 };
 function RiseUp() {
+    const countDownRiseup = useRecoilValue(CountDownRiseup)
     const [playSound, setPlaySound] = useRecoilState(PlaySound)
     const [isChecked, setIsChecked] = useState(true);
 
@@ -67,6 +69,23 @@ function RiseUp() {
         setActiveTab(tabIndex);
     };
 
+    const [currentDateNumber, setCurrentDateNumber] = useState(null);
+
+
+    const getCurrentDateNumber = () => {
+      const currentDate = new Date();
+      const year = currentDate.getFullYear();
+      const month = currentDate.getMonth() + 1;
+      const date = currentDate.getDate();
+      const dateNumber = year * 10000 + month * 100 + date;
+      return dateNumber;
+    };
+  
+
+    useEffect(() => {
+        handleUserMoney()
+    }, []);
+
 
     ///////
 
@@ -79,9 +98,7 @@ function RiseUp() {
                 headers: { Authorization: `Bearer ${token}` }
             }
             );
-
             if (response.status === 200) {
-                // console.log(response);
                 setUserData(response)
                 return response;
             }
@@ -92,91 +109,78 @@ function RiseUp() {
     }
 
     const handleSubmit = async () => {
-        let token = auth.authToken
-        try {
-            let token = auth.authToken
-            const response = await axios.post(`${import.meta.env.VITE_API_URL}/betSecondGame`, {
-                amount,
-                group,
-                duration
-            }, {
-                headers: { Authorization: `Bearer ${token}` }
-            }
-            );
+        let token = auth.authToken;
 
+        if (countDownRiseup < 5) {
+            toast.error("Wait for the next game", { ...toastProps });
+            return null;
+        }
+        try {
+            const response = await axios.post(
+                `${import.meta.env.VITE_API_URL}/betSecondGame`,
+                {
+                    amount,
+                    group,
+                    duration
+                },
+                {
+                    headers: { Authorization: `Bearer ${token}` }
+                }
+            );
             if (response.status === 201) {
                 toast.success("Bet created Successfully!", { ...toastProps });
                 setGroup('');
                 setAmount(1);
-                setLgShow(false)
-                setGmShow(false)
+                setSmShow(false);
+                setLgShow(false);
+                setGmShow(false);
                 console.log(response);
-                handleUserMoney()
+                handleUserMoney();
                 return response;
-            }else if (response.status === 404) {
-             
+            } else if (response.status === 404) {
                 return null;
             }
         } catch (error) {
             if (error.response && error.response.status === 404) {
-                
                 return null;
             }
             const errorMessage = error.response ? error.response.data.message : error.message;
             toast.error(errorMessage || "Something went wrong", { ...toastProps });
         }
     }
+    // const [uid,setUid]=useState(0)
+    // const sendUID = async () => {
+    //     let token = auth.authToken;
 
-    const handleMin = async (duration) => {
-        try {
-            let token = auth.authToken;
-            console.log(duration);
-            console.log(token);
-            const response = await axios.get(`${import.meta.env.VITE_API_URL}/getSecondGame/${duration}`, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-
-            if (response.status === 200) {
-                // toast.success('growup', { ...toastProps });
-                // console.log(response);
-                setTimeNo(duration)
-                setMinute(response)
-                return response;
-            }
-        } catch (error) {
-            const errorMessage = error.response ? error.response.data.message : error.message;
-            toast.error(errorMessage || 'Something went wrong', { ...toastProps });
-        }
-    };
-
-    useEffect(() => {
-        console.log(duration);
-        if (auth.authToken && auth.UID) {
-            handleMin(duration);
-            const timer = setTimeout(async () => {
-                await handleUserMoney();
-            }, 3000);
-            return () => {
-                clearTimeout(timer);
-            };
-        }
-    }, [auth, duration]);
+    //     try {
+    //         const response = await axios.post(
+    //             `${import.meta.env.VITE_API_URL}/update2ndGameUID`,
+    //             {
+    //                 gameUID:currentDateNumber
+    //             },
+    //             {
+    //                 headers: { Authorization: `Bearer ${token}` }
+    //             }
+    //         );
+    //         if (response.status === 200) {
+    //             setUid(response.data.newGameUID)
+    //             return response;
+    //         } else if (response.status === 404) {
+    //             return null;
+    //         }
+    //     } catch (error) {
+    //         if (error.response && error.response.status === 404) {
+    //             return null;
+    //         }
+    //         const errorMessage = error.response ? error.response.data.message : error.message;
+    //         toast.error(errorMessage || 'Something went wrong', { ...toastProps });
+    //     }
+    // }
 
 
-    // const [heights, setHeights] = useState([50, 150, 150]);
-    // const [activeIndex, setActiveIndex] = useState(0);
 
-    // useEffect(() => {
-    //     const interval = setInterval(() => {
-    //         const newHeights = [...heights];
-    //         newHeights[activeIndex] += 100;
-    //         const nextIndex = (activeIndex + 1) % 3;
-    //         newHeights[nextIndex] -= 100;
-    //         setHeights(newHeights);
-    //         setActiveIndex(nextIndex);
-    //     }, 500);
-    //     return () => clearInterval(interval);
-    // }, [heights, activeIndex]);
+
+    
 
     useEffect(() => {
         setAmount(money * multiplier);
@@ -195,6 +199,29 @@ function RiseUp() {
             setMultiplier(parseInt(operation));
         }
     };
+
+    const handleMin = async () => {
+        try {
+            let token = auth.authToken;
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/getSecondGame/${duration}`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+
+            if (response.status === 200) {
+                setTimeNo(duration)
+                setMinute(response)
+                return response;
+            }
+        } catch (error) {
+            const errorMessage = error.response ? error.response.data.message : error.message;
+            toast.error(errorMessage || 'Something went wrong', { ...toastProps });
+        }
+    };
+    useEffect(() => {
+        if (countDownRiseup === 59) {
+            handleMin();
+        }
+    }, [countDownRiseup])
 
 
 
@@ -260,11 +287,11 @@ function RiseUp() {
                             {/* // animation // */}
                             {showCountDown === true ? <Timer /> :
                                 <div className='second-image-cover'>
-                                    {/* <div className="ani-container">
-                                        <div className="animated-div" style={{ height: `${heights[0]}px` }}></div>
-                                        <div className="animated-div" style={{ height: `${heights[1]}px`, backgroundColor: "#20CD1C" }}></div>
-                                        <div className="animated-div" style={{ height: `${heights[2]}px`, backgroundColor: "#FBC70E" }}></div>
-                                    </div> */}
+                                    <div className="ani-container">
+                                        <div className="animated-div animated-alphaBar "></div>
+                                        <div className="animated-div animated-betaBar"></div>
+                                        <div className="animated-div animated-gammaBar"></div>
+                                    </div>
                                     <div className=' alfa-beta-gama-button-container'>
                                         <button className='alfa-beta-gama-button' onClick={() => {setSmShow(true);setGroup("A")}} style={{ background: "radial-gradient(50% 50% at 50% 50%, #FF7562 0%, #E51616 100%)" }}>
                                             <img src={alfa} alt="" />

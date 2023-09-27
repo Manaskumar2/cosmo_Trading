@@ -8,7 +8,7 @@ const { createRecharge, getRechargeHistory } = require("../controllers/rechargeC
 const { createBankAccount } = require("../controllers/withdrawAccountController");
 const { applyPremiumUser, getpremiumRequest } = require("../controllers/premiumController");
 const { withdrawrequest, withdrawalHistory } = require("../controllers/userWithdrawController");
-const { get2ndGame, bet2ndController, get2ndGameHistory, riseUpUserBettingHistory } = require("../controllers/secondGameController");
+const { get2ndGame, bet2ndController, get2ndGameHistory, riseUpUserBettingHistory,update2ndGameUid } = require("../controllers/secondGameController");
 // const multer = require('multer');
 // const path = require('path');
 
@@ -78,10 +78,12 @@ router.post("/applyPremium", authentication, applyPremiumUser)
 router.get("/getPremiumUser", authentication,getpremiumRequest)
 
 
+//...............................................2nd game ********************************//
 
+router.post("/update2ndGameUID",update2ndGameUid)
 
+//...............................................1st game ********************************//
 
-
-
+router.post("/updateGameUID",gameController.updateGameUid)
 
 module.exports =router

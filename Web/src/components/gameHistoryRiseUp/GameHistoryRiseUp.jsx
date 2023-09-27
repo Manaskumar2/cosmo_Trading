@@ -12,6 +12,8 @@ import Winner from '../../images/icon-winner.svg'
 import Alpha from '../../images/icon-alpha.svg'
 import Beta from '../../images/icon-beta.svg'
 import Gama from './gama.svg'
+import { CountDownRiseup } from '../../Atoms/CountDownRiseup';
+
 export const toastProps = {
     position: "top-center",
     duration: 2000,
@@ -23,6 +25,7 @@ export const toastProps = {
 };
 
 function GameHistory({ duration }) {
+    const countDownRiseup = useRecoilValue(CountDownRiseup)
     const [expandedRowIndex, setExpandedRowIndex] = useState(null);
     const toggleRow = (index) => {
         if (expandedRowIndex === index) {
@@ -79,18 +82,16 @@ function GameHistory({ duration }) {
     }
 
     useEffect(() => {
-        getGameHistory();
-        const interval = setInterval(() => {
-            getGameHistory();
-        }, 5000);
-        return () => clearInterval(interval);
-    }, [duration]);
+        if(countDownRiseup===59){
+            getGameHistory()
+        }
+    }, [countDownRiseup]);
 
     useEffect(() => {
         getUserGameHistory()
         const interval = setInterval(() => {
             getUserGameHistory()
-        }, 4500);
+        }, 3000);
         return () => clearInterval(interval);
     }, [page])
 

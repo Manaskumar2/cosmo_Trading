@@ -352,13 +352,13 @@ const betController = async (req, res) => {
       return res.status(404).json({ status: false, message: "Game not found" });
     }
 
-    const currentDate = moment(new Date()).tz("Asia/Kolkata");
+    // const currentDate = moment(new Date()).tz("Asia/Kolkata");
 
-    if (game.endTime.unix() - currentDate.unix() < 15) {
-      return res
-        .status(400)
-        .json({ status: false, message: "Wait for Next Game" });
-    }
+    // if (game.endTime.unix() - currentDate.unix() < 15) {
+    //   return res
+    //     .status(400)
+    //     .json({ status: false, message: "Wait for Next Game" });
+    // }
 
     if (user.walletAmount <= amount) {
       return res
@@ -640,7 +640,42 @@ const deleteGames = async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+let counter = 1
+const updateGameUid = async (req, res) => {
+ try {
+    
+    const { gameUID } = req.body;
 
+    console.log(gameUID+" updated")
+    const parsedGameUID = parseInt(gameUID);
+
+    if (isNaN(parsedGameUID)) {
+      return res.status(400).json({ message: 'Invalid gameUID' });
+    }
+
+   
+    const game = await Game.findOne({ isCompleted: false });
+
+    if (!game) {
+      return res.status(404).json({ message: 'No incomplete games found' });
+    }
+
+    const newGameUID = `${parsedGameUID}${counter.toString().padStart(5, '0')}`;
+
+    counter++;
+
+  
+    game.gameUID = newGameUID;
+
+    
+    await game.save();
+
+    return res.status(200).json({ message: 'GameUID updated successfully', newGameUID });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+}
 
 module.exports = {
   betController,
@@ -649,6 +684,7 @@ module.exports = {
   getGame,
   getGameHistory,
   deleteGames,
-  growUpBetamount
+  growUpBetamount,
+  updateGameUid
 
 };
