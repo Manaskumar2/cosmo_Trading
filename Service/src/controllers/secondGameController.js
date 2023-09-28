@@ -292,7 +292,7 @@ else if (
       const runnerUp = groups[runnerUpGroup];
       const losers = groups[loserGroup];
       // console.log("3rd distribution")
-       await distributeComissionToThreeUsers(winner, runnerUp, losers,winnerGroup,runnerUpGroup, game);
+       await distributeComissionToThreeUsers(winner, runnerUp, losers,game,winnerGroup,runnerUpGroup);
     }
     else if (runnerUpGroup == null && loserGroup !== null && winnerGroup !== null) {
       const winner = groups[winnerGroup];
@@ -312,7 +312,6 @@ else if (
     await game.save();
   } catch (error) {
     console.log(error)
-    return res.status({status:false,message:error.message})
   }
 } 
 
@@ -332,7 +331,7 @@ async function distributeComissionToThreeUsers(winner, runnerUp, losers, game,wi
   //     { $inc: { walletAmount: winAmount, winningAmount: winAmount } }
   //   );
   // }
-  for (const bet of game.bets) {
+  for (const bet of winner.users) {
     if (bet.group === winnerGroup) {
       // Calculate the win amount for each winner user based on their bet amount
       let winAmount = roundDown(bet.amount * winnerRatio, 2);
@@ -359,7 +358,7 @@ async function distributeComissionToThreeUsers(winner, runnerUp, losers, game,wi
   //     { $inc: { walletAmount: winAmount, winningAmount: winAmount } }
   //   );
   // }
-    for (const bet of game.bets) {
+    for (const bet of runnerUp.users) {
     if (bet.group === runnerUpGroup) {
       // Calculate the win amount for each winner user based on their bet amount
       let runnerUpAmount = roundDown(bet.amount * runnerUpRatio, 2);
@@ -724,9 +723,6 @@ const riseUpUserBettingHistory = async (req, res) => {
 
     const games = await Game.find({ 'bets.user': userId })
       .sort({ createdAt: -1 })
-      .skip((page - 1) * limit)
-      .limit(limit)
-      .exec();
 
     const count = await Game.countDocuments({ 'bets.user': userId });
 
@@ -737,25 +733,24 @@ const riseUpUserBettingHistory = async (req, res) => {
     };
 
     for (const game of games) {
-      const userBet = game.bets.find((bet) => bet.user.toString() === userId);
-      if (userBet) {
-        const gameDetails = {
-          _id: game._id,
-          duration: game.duration,
-          isCompleted: game.isCompleted,
-          startTime: game.startTime,
-          endTime: game.endTime,
-          gameUID: game.gameUID,
-          winnerGroup: game.winnerGroup,
-          runnerUpGroup: game.runnerUpGroup,
-          losersGroup: game.losersGroup,
-          amount: userBet.amount, 
-          group: userBet.group,   
-        };
-        response.history.push(gameDetails);
+      const userBets = game.bets.filter((bet) => bet.user.toString() === userId);
+      if (userBets.length > 0) {
+        for (const userBet of userBets) {
+          const gameDetails = {
+            _id: game._id,
+            duration: game.duration,
+            isCompleted: game.isCompleted,
+            startTime: game.startTime,
+            endTime: game.endTime,
+            gameUID: game.gameUID,
+            winnerGroup: game.winnerGroup,
+            amount: userBet.amount, 
+            group: userBet.group,   
+          };
+          response.history.push(gameDetails);
+        }
       }
     }
- 
     res.status(200).json(response);
   } catch (error) {
     console.error('Error fetching user gameplay history:', error);

@@ -473,7 +473,7 @@ const betController = async (req, res) => {
 
 // }
 const growUpUserBettingHistory = async (req, res) => {
- try {
+  try {
     const userId = req.params.userId;
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
@@ -485,9 +485,6 @@ const growUpUserBettingHistory = async (req, res) => {
 
     const games = await Game.find({ 'bets.user': userId })
       .sort({ createdAt: -1 })
-      .skip((page - 1) * limit)
-      .limit(limit)
-      .exec();
 
     const count = await Game.countDocuments({ 'bets.user': userId });
 
@@ -498,20 +495,22 @@ const growUpUserBettingHistory = async (req, res) => {
     };
 
     for (const game of games) {
-      const userBet = game.bets.find((bet) => bet.user.toString() === userId);
-      if (userBet) {
-        const gameDetails = {
-          _id: game._id,
-          duration: game.duration,
-          isCompleted: game.isCompleted,
-          startTime: game.startTime,
-          endTime: game.endTime,
-          gameUID: game.gameUID,
-          winnerGroup: game.winnerGroup,
-          amount: userBet.amount, 
-          group: userBet.group,   
-        };
-        response.history.push(gameDetails);
+      const userBets = game.bets.filter((bet) => bet.user.toString() === userId);
+      if (userBets.length > 0) {
+        for (const userBet of userBets) {
+          const gameDetails = {
+            _id: game._id,
+            duration: game.duration,
+            isCompleted: game.isCompleted,
+            startTime: game.startTime,
+            endTime: game.endTime,
+            gameUID: game.gameUID,
+            winnerGroup: game.winnerGroup,
+            amount: userBet.amount, 
+            group: userBet.group,   
+          };
+          response.history.push(gameDetails);
+        }
       }
     }
     res.status(200).json(response);
@@ -522,6 +521,7 @@ const growUpUserBettingHistory = async (req, res) => {
       .json({ error: 'An error occurred while fetching user gameplay history' });
   }
 };
+
 
 
 const getGame = async (req, res) => { 
