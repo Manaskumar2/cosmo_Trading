@@ -223,6 +223,7 @@ function Growup() {
                 toast.success("Bet created Successfully!", { ...toastProps });
                 setSmShow(false)
                 setLgShow(false)
+                setMoney(1)
                 setGroup('');
                 setAmount(1);
                 handleUserMoney()

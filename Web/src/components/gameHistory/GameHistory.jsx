@@ -54,7 +54,7 @@ function GameHistory({ duration  }) {
             });
 
             if (response.status === 200) {
-                
+                console.log(response)
                 setUserGames(response)
                 return response;
             }
@@ -72,7 +72,7 @@ function GameHistory({ duration  }) {
                 headers: { Authorization: `Bearer ${token}` },
             });
             if (response.status === 200) {
-                console.log(response.data)
+                // console.log(response.data)
                 setGameHistoryList(response.data)
                 return response;
             }

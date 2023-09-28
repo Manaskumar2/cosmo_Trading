@@ -27,6 +27,7 @@ import { CountDown } from '../../Atoms/CountDown';
 import Timer from '../../components/timer/Timer'
 import { PlaySound } from '../../Atoms/PlaySound';
 import mute from '../../images/mute.svg'
+import { ShowCountDown } from '../../Atoms/ShowCountDown'
 import { CountDownRiseup } from '../../Atoms/CountDownRiseup'
 export const toastProps = {
     position: "top-center",
@@ -62,9 +63,9 @@ function RiseUp() {
 
 
 
-    const showCountDown = useRecoilValue(CountDown)
+    const showCountDown = useRecoilValue(ShowCountDown)
 
-    const [money, setMoney] = useState(0)
+    const [money, setMoney] = useState(1)
     const handleTabClick = (tabIndex) => {
         setActiveTab(tabIndex);
     };
@@ -110,7 +111,7 @@ function RiseUp() {
         let token = auth.authToken;
 
         if (countDownRiseup < 5) {
-            toast.error("Wait for the next game", { ...toastProps });
+            toast.error("Wait for the next game jhfhhf", { ...toastProps });
             return null;
         }
         try {
@@ -132,6 +133,7 @@ function RiseUp() {
                 setSmShow(false);
                 setLgShow(false);
                 setGmShow(false);
+                setMoney(1)
                 console.log(response);
                 handleUserMoney();
                 return response;

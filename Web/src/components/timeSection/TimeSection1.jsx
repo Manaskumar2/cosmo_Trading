@@ -57,39 +57,40 @@ function TimeSection1() {
             const startMillis = new Date(startTime).getTime();
             const endMillis = new Date(endTime).getTime();
             const intervalMillis = endMillis - startMillis;
-
+    
             if (intervalMillis > 0) {
                 const intervalSeconds = Math.floor(intervalMillis / 1000);
                 setRemainingTime(intervalSeconds);
-                // setCountDown(intervalSeconds)
-                setSeconds(intervalSeconds)
-
+                setSeconds(intervalSeconds);
+    
                 const interval = setInterval(() => {
                     setRemainingTime(prevTime => {
                         if (prevTime > 0) {
-                            if (Math.floor(prevTime / 60) === 0 && prevTime % 60 === 6) {
-                                console.log(showCountDown)
-                                setShowCountDown(true);
-                                console.log(showCountDown)
+                            if (prevTime === 6) {
+                                if (!showCountDown) {
+                                    setShowCountDown(true);
+                                }
                             }
                             return prevTime - 1;
                         } else {
-                            if ( prevTime === 0 || prevTime === 59 || prevTime === 58 || prevTime === 57) {
-                                    handleGameData();
-                            } 
-                            
+                            if (prevTime === 0 || prevTime === 59 || prevTime === 58 || prevTime === 57) {
+                                handleGameData();
+                            }
                             return 0;
                         }
                     });
                 }, 1000);
-
+    
                 return () => clearInterval(interval);
             }
         }
-        if(second===5){
-            setCountDown(true);
-        }
-    }, [startTime,second]);
+    }, [startTime, showCountDown]); 
+    
+    // ...
+    
+    if (remainingTime === 5 && !showCountDown) {
+        setShowCountDown(true);
+    }
 
     const minutes = Math.floor(remainingTime / 60);
     const seconds = remainingTime % 60;

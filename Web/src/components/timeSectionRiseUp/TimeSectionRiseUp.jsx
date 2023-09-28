@@ -6,8 +6,8 @@ import { useState, useEffect } from 'react';
 import { AuthState } from '../../Atoms/AuthState';
 import toast, { Toaster } from "react-hot-toast";
 import axios from 'axios';
-import { CountDown } from '../../Atoms/CountDown';
-import { DateTime } from 'luxon';
+// import { CountDown } from '../../Atoms/CountDown';
+import { ShowCountDown } from '../../Atoms/ShowCountDown';
 import { CountDownRiseup } from '../../Atoms/CountDownRiseup';
 import { Second } from '../../Atoms/Second';
 
@@ -24,9 +24,10 @@ export const toastProps = {
 };
 
 function TimeSection1({ uid }) {
+
     const [time , setTime]=useRecoilState(Second)
     const [remainingTime, setRemainingTime] = useState(0);
-    const [coutDown, setCountDown] = useRecoilState(CountDown)
+    const [showCountDown, setShowCountDown] = useRecoilState(ShowCountDown )
 
     const [timeData, setTimeData] = useRecoilState(RiseUpTime);
 
@@ -95,29 +96,39 @@ function TimeSection1({ uid }) {
             const startMillis = new Date(startTime).getTime();
             const endMillis = new Date(endTime).getTime();
             const intervalMillis = endMillis - startMillis;
-
+    
             if (intervalMillis > 0) {
                 const intervalSeconds = Math.floor(intervalMillis / 1000);
                 setRemainingTime(intervalSeconds);
-                setTime(intervalSeconds)
-                setSecond(intervalSeconds)
+                setSecond(intervalSeconds);
+    
                 const interval = setInterval(() => {
                     setRemainingTime(prevTime => {
                         if (prevTime > 0) {
-                            // if (Math.floor(prevTime / 60) === 0 && prevTime % 60 === 6) {
-                            //     setCountDown(true);
-                            // }
+                            if (prevTime === 6) {
+                                
+                                    setShowCountDown(true);
+                                
+                            }
                             return prevTime - 1;
-                        } else{return 0}
+                        } else {
+                            if (prevTime === 0 || prevTime === 59 || prevTime === 58 || prevTime === 57) {
+                                handleGameData();
+                            }
+                            return 0;
+                        }
                     });
                 }, 1000);
+    
                 return () => clearInterval(interval);
             }
         }
-        // if(second===5){
-        //     setCountDown(true);
-        // }
-    }, [startTime]);  
+    }, [startTime, showCountDown]); 
+
+    
+    if (remainingTime === 5 && !showCountDown) {
+        setShowCountDown(true);
+    }
 
     useEffect(()=>{const fetchData=setInterval(handleGameData,1500)
         return ()=>{clearInterval(fetchData)}},[])

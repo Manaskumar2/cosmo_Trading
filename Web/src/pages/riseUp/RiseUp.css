@@ -94,24 +94,24 @@ border:1px solid #295992}
             font-weight: 600;
             line-height: normal;}
 
-.animated-alphaBar{position: relative; animation: alphaBar 2s infinite;height: 10px;}
-@keyframes alphaBar{
+.animated-alphaBar{position: relative; animation: alphaBar 2s infinite;height: 200px;}
+/* @keyframes alphaBar{
     0%{height: 10px;}
     50%{height: 200px;}
     100%{height: 10px;}
-  }
-.animated-betaBar{position: relative; animation: betaBar 2s infinite;height: 10px;background: #20CD1C;animation-delay: 0.5s;}
-@keyframes betaBar{
+  } */
+.animated-betaBar{position: relative; animation: betaBar 2s infinite;height: 200px;background: #20CD1C;animation-delay: 0.5s;}
+/* @keyframes betaBar{
     0%{height: 10px;}
     50%{height: 200px;}
     100%{height: 10px;}
-  }
-.animated-gammaBar{position: relative; animation: gammaBar 2s infinite;height: 10px;background: #FBC70E;animation-delay: 1s;}
-@keyframes gammaBar{
+  } */
+.animated-gammaBar{position: relative; animation: gammaBar 2s infinite;height: 200px;background: #FBC70E;animation-delay: 1s;}
+/* @keyframes gammaBar{
     0%{height: 10px;}
     50%{height: 200px;}
     100%{height: 10px;}
-  }
+  } */
 
 /* /////// Modal ///////// */
 .modal{--bs-modal-margin:0;} 
