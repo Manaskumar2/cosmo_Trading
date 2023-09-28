@@ -26,7 +26,8 @@ import { useSetRecoilState } from 'recoil'
 import { TimeNo, OneMinute } from '../../Atoms/GameTime'
 import { GameHistory } from '../../components/ComponentExport'
 import { useNavigate } from 'react-router-dom'
-import { CountDown } from '../../Atoms/CountDown';
+// import { CountDown } from '../../Atoms/CountDown';
+import { ShowCountDown } from '../../Atoms/ShowCountDown' 
 import Timer from '../../components/timer/Timer'
 import { PlaySound } from '../../Atoms/PlaySound';
 // import {  } from '../../Atoms/CountDownRiseup'
@@ -44,7 +45,6 @@ export const toastProps = {
 };
 function Growup() {
     // const [duration , setDuration]=useState(1)
-    const [gameHistoryList, setGameHistoryList] = useRecoilState(GameHistoryList)
 
     const countDownGrowup = useRecoilValue(CountDownGrowup)
 
@@ -76,7 +76,7 @@ function Growup() {
     const [lgShow3, setLgShow3] = useState(false);
 
 
-    const showCountDown = useRecoilValue(CountDown)
+    const showCountDown = useRecoilValue(ShowCountDown)
 
 
     const handleTabClick = (tabIndex) => {
@@ -255,16 +255,16 @@ function Growup() {
         }
     };
 
-    // useEffect(() => {
-    //     if (auth.authToken && auth.UID) {
-    //         const timer = setTimeout(async () => {
-    //             await handleUserMoney();
-    //         }, 3000);
-    //         return () => {
-    //             clearTimeout(timer);
-    //         };
-    //     }
-    // }, [auth, duration]);
+    useEffect(() => {
+        
+            const timer = setTimeout(async () => {
+                await handleMin();
+            }, 5000);
+            return () => {
+                clearTimeout(timer);
+            };
+            handleMin()
+    }, []);
 
 
 

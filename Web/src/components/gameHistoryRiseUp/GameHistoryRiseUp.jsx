@@ -25,7 +25,7 @@ export const toastProps = {
 };
 
 function GameHistory({ duration }) {
-    const countDownRiseup = useRecoilValue(CountDownRiseup)
+    const [second, setSecond] = useRecoilState(CountDownRiseup)
     const [expandedRowIndex, setExpandedRowIndex] = useState(null);
     const toggleRow = (index) => {
         if (expandedRowIndex === index) {
@@ -52,7 +52,7 @@ function GameHistory({ duration }) {
                 headers: { Authorization: `Bearer ${token}` },
             });
             if (response.status === 200) {
-                console.log(response);
+                // console.log(response);
                 setUserGames(response)
                 // console.log(userGames)
                 return response;
@@ -80,12 +80,14 @@ function GameHistory({ duration }) {
             toast.error(errorMessage || "Something went wrong", { ...toastProps });
         }
     }
+    useEffect(()=>{const fetchData=setInterval(getGameHistory,3500)
+        return ()=>{clearInterval(fetchData)}},[])
 
-    useEffect(() => {
-        if(countDownRiseup===59){
-            getGameHistory()
-        }
-    }, [countDownRiseup]);
+    // useEffect(() => {
+    //     if(countDownRiseup===59){
+    //         getGameHistory()
+    //     }
+    // }, [countDownRiseup]);
 
     useEffect(() => {
         getUserGameHistory()

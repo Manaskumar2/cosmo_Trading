@@ -73,20 +73,18 @@ function RiseUp() {
 
 
     const getCurrentDateNumber = () => {
-      const currentDate = new Date();
-      const year = currentDate.getFullYear();
-      const month = currentDate.getMonth() + 1;
-      const date = currentDate.getDate();
-      const dateNumber = year * 10000 + month * 100 + date;
-      return dateNumber;
+        const currentDate = new Date();
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth() + 1;
+        const date = currentDate.getDate();
+        const dateNumber = year * 10000 + month * 100 + date;
+        return dateNumber;
     };
-  
+
 
     useEffect(() => {
         handleUserMoney()
     }, []);
-
-
     ///////
 
 
@@ -180,7 +178,7 @@ function RiseUp() {
 
 
 
-    
+
 
     useEffect(() => {
         setAmount(money * multiplier);
@@ -208,6 +206,7 @@ function RiseUp() {
             });
 
             if (response.status === 200) {
+                console.log(response);
                 setTimeNo(duration)
                 setMinute(response)
                 return response;
@@ -222,6 +221,7 @@ function RiseUp() {
             handleMin();
         }
     }, [countDownRiseup])
+    useEffect(() => { handleMin() }, [])
 
 
 
@@ -230,13 +230,13 @@ function RiseUp() {
             <div className="container winNav">
                 <div className="row">
                     <Link to='/' className="col-2">
-                        <img src={back} alt="" />
+                        <img src={back} alt="" onClick={() => { handleMin() }} />
                     </Link>
                     <div className="col-8">
                         <img src={logo} alt="" />
                     </div>
                     <div className="col-2" >
-                        <img src={ear} alt="" className="header_headphone" onClick={()=>{navigate('/customerCare')}}/>
+                        <img src={ear} alt="" className="header_headphone" onClick={() => { navigate('/customerCare') }} />
                         {playSound ? (
                             <img src={Audio} alt="" onClick={() => { setPlaySound(false) }} />
                         ) : (
@@ -293,15 +293,15 @@ function RiseUp() {
                                         <div className="animated-div animated-gammaBar"></div>
                                     </div>
                                     <div className=' alfa-beta-gama-button-container'>
-                                        <button className='alfa-beta-gama-button' onClick={() => {setSmShow(true);setGroup("A")}} style={{ background: "radial-gradient(50% 50% at 50% 50%, #FF7562 0%, #E51616 100%)" }}>
+                                        <button className='alfa-beta-gama-button' onClick={() => { setSmShow(true); setGroup("A") }} style={{ background: "radial-gradient(50% 50% at 50% 50%, #FF7562 0%, #E51616 100%)" }}>
                                             <img src={alfa} alt="" />
                                             <p>ALPHA</p>
                                         </button>
-                                        <button className='alfa-beta-gama-button' onClick={() => {setLgShow(true);setGroup("B")}} style={{ background: "radial-gradient(50% 50% at 50% 50%, #8DFF8A 0%, #09BD05 100%)" }}>
+                                        <button className='alfa-beta-gama-button' onClick={() => { setLgShow(true); setGroup("B") }} style={{ background: "radial-gradient(50% 50% at 50% 50%, #8DFF8A 0%, #09BD05 100%)" }}>
                                             <img src={beta} alt="" />
                                             <p>BETA</p>
                                         </button>
-                                        <button className='alfa-beta-gama-button' onClick={() => {setGmShow(true),setGroup("C")}} style={{ background: "radial-gradient(50% 50% at 50% 50%, #FFF3C9 0%, #DEAF06 100%)" }}>
+                                        <button className='alfa-beta-gama-button' onClick={() => { setGmShow(true), setGroup("C") }} style={{ background: "radial-gradient(50% 50% at 50% 50%, #FFF3C9 0%, #DEAF06 100%)" }}>
                                             <img src={gama} alt="" />
                                             <p>GAMA</p>
                                         </button>

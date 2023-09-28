@@ -82,12 +82,14 @@ function GameHistory({ duration  }) {
         }
     }
 
-    useEffect(() => {
-        if (countDownGrowup===59){
-            getGameHistory();
-        }
+    useEffect(()=>{const fetchData=setInterval(getGameHistory,3500)
+        return ()=>{clearInterval(fetchData)}},[])
+    // useEffect(() => {
+    //     if (countDownGrowup===59){
+    //         getGameHistory();
+    //     }
         
-    }, [countDownGrowup]);
+    // }, [countDownGrowup]);
 
     useEffect(() => {
         const intervalId = setInterval(() => {
