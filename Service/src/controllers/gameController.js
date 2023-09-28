@@ -280,47 +280,78 @@ function roundDown(num, decimalPlaces = 2) {
 }
 
 
-const startAndCheckGame =async (duration) => {
-  const currentDate = moment(new Date()).tz("Asia/Kolkata");
-  const game = await Game.findOne({ isCompleted: false, duration: duration });
+// const startAndCheckGame =async (duration) => {
+//   const currentDate = moment(new Date()).tz("Asia/Kolkata");
+//   const game = await Game.findOne({ isCompleted: false, duration: duration });
 
-  if (game) {
-    if (game.endTime.unix() - currentDate.unix() <= 0) {
-      game.isCompleted = true;
-     await calculatResult(game._id);
-      await game.save();
-      await Game.create({
-        duration: duration,
-        startTime: moment(new Date()).tz("Asia/Kolkata"),
-        endTime: moment(new Date()).tz("Asia/Kolkata").add(duration, "m"),
-        gameUID: await generateUniqueNumber()
-      });
-      setTimeout(() => {
-        startAndCheckGame(duration);
-      }, duration * 60 * 1000);
-    } else {
-      let currentDate = moment(new Date()).tz("Asia/Kolkata");
-      setTimeout(() => {
-        startAndCheckGame(duration);
-      }, (game.endTime.unix() - currentDate.unix()) * 1000);
-    }
-  } else {
-    await Game.create({
-      duration: duration,
-      startTime: moment(new Date()).tz("Asia/Kolkata"),
-      endTime: moment(new Date()).tz("Asia/Kolkata").add(duration, "m"),
-      gameUID: await generateUniqueNumber()
-    });
-    setTimeout(() => {
-      startAndCheckGame(duration);
-    }, duration * 60 * 1000);
+//   if (game) {
+//     if (game.endTime.unix() - currentDate.unix() <= 0) {
+//       game.isCompleted = true;
+//      await calculatResult(game._id);
+//       await game.save();
+//       await Game.create({
+//         duration: duration,
+//         startTime: moment(new Date()).tz("Asia/Kolkata"),
+//         endTime: moment(new Date()).tz("Asia/Kolkata").add(duration, "m"),
+//         gameUID: await generateUniqueNumber()
+//       });
+//       setTimeout(() => {
+//         startAndCheckGame(duration);
+//       }, duration * 60 * 1000);
+//     } else {
+//       let currentDate = moment(new Date()).tz("Asia/Kolkata");
+//       setTimeout(() => {
+//         startAndCheckGame(duration);
+//       }, (game.endTime.unix() - currentDate.unix()) * 1000);
+//     }
+//   } else {
+//     await Game.create({
+//       duration: duration,
+//       startTime: moment(new Date()).tz("Asia/Kolkata"),
+//       endTime: moment(new Date()).tz("Asia/Kolkata").add(duration, "m"),
+//       gameUID: await generateUniqueNumber()
+//     });
+//     setTimeout(() => {
+//       startAndCheckGame(duration);
+//     }, duration * 60 * 1000);
+//   }
+// };
+
+// const durationOptions = [1]; // You can add more duration options if needed.
+
+// durationOptions.forEach((value) => {
+//   startAndCheckGame(value);
+// });
+
+const createGame = async (duration) => {
+  const newGame = await Game.create({
+    duration: duration,
+    startTime: moment(new Date()).tz("Asia/Kolkata"),
+    endTime: moment(new Date()).tz("Asia/Kolkata").add(duration, "m"),
+    gameUID: await generateUniqueNumber(),
+    isCompleted: false,
+  });
+
+
+  await new Promise((resolve) => setTimeout(resolve, duration * 60 * 1000));
+
+  await calculatResult(newGame._id);
+
+  newGame.isCompleted = true;
+  await newGame.save();
+};
+
+const startGameLoop = async (duration) => {
+  while (true) {
+  
+    await createGame(duration);
   }
 };
 
-const durationOptions = [1]; // You can add more duration options if needed.
+const durationOptions = [1];
 
 durationOptions.forEach((value) => {
-  startAndCheckGame(value);
+  startGameLoop(value);
 });
 
 
@@ -341,7 +372,7 @@ const betController = async (req, res) => {
     if (!amount) return res.status(400).send({ status: false, message: "you cannot bet without bet amount" })
     
     const user = await userModel.findById(req.decodedToken.userId);
-    const game = await Game.findOne({ duration, isCompleted: false });
+    const game = await Game.findOne({ duration, isCompleted: false }).sort({createdAt: -1});
     
 
     if (!user) {
@@ -366,11 +397,6 @@ const betController = async (req, res) => {
         .json({ status: false, message: "Insufficient funds" });
     }
 
-    //     const hasBet = game.bets.some(bet => bet.user.toString() === user._id.toString());
-
-    // if (hasBet) {
-    //   return res.status(400).json({ status: false, message: "User already placed a bet in this game" });
-    // }
 
    
     game.bets.push({ user: user._id, amount, group });
@@ -500,13 +526,13 @@ const growUpUserBettingHistory = async (req, res) => {
 
 const getGame = async (req, res) => { 
   try {
-    const currentDate = moment(new Date()).tz("Asia/Kolkata");
+    const currentDate = moment(new Date()).tz("Asia/Kolkata")
     const duration = parseInt(req.params.duration)
    
     if (!duration) return res.status(400).send({status: false, meessage:"please provide time duration for game"})
 
 
-    const game = await Game.findOne({ duration: duration, isCompleted: false }).select({ isCompleted: 1, endTime: 1, startTime: 1 ,gameUID:1})
+    const game = await Game.findOne({ duration: duration, isCompleted: false }).sort({createdAt:-1}).select({ isCompleted: 1, endTime: 1, startTime: 1 ,gameUID:1})
     if (!game) return res.status(404).send({ status: false, message: "Game was ended" })
     
   

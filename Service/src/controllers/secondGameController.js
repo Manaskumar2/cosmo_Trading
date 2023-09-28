@@ -167,7 +167,28 @@ for (const key in groups) {
       }
     }
     else if (numberOfGroups === 3) {
-      if (
+const groupNames = Object.keys(groups);
+const totalAmounts = groupNames.map(groupName => groups[groupName].totalAmount);
+
+const minAmount = Math.min(...totalAmounts);
+
+if (totalAmounts.filter(amount => amount === minAmount).length === 1) {
+  winnerGroup = groupNames[totalAmounts.indexOf(minAmount)];
+  const remainingGroups = groupNames.filter(groupName => groupName !== winnerGroup);
+  const usersInRemainingGroups = remainingGroups.map(groupName => groups[groupName].users.length);
+  const maxUsers = Math.max(...usersInRemainingGroups);
+
+  if (usersInRemainingGroups.filter(users => users === maxUsers).length === 1) {
+    runnerUpGroup = remainingGroups[usersInRemainingGroups.indexOf(maxUsers)];
+    loserGroup = remainingGroups.find(groupName => groupName !== runnerUpGroup);
+  } else {
+    // If both remaining groups have the same number of users, randomly select one as runner-up and the other as loser
+    const randomIndex = Math.floor(Math.random() * 2);
+    runnerUpGroup = remainingGroups[randomIndex];
+    loserGroup = remainingGroups[1 - randomIndex];
+  }
+}
+else if (
         groups["A"].totalAmount !== 0 &&
         groups["B"].totalAmount !== 0 &&
         groups["C"].totalAmount !== 0 &&
@@ -232,7 +253,7 @@ for (const key in groups) {
               loserGroup = "A";
             }
           }
-        } else {
+        } else{
           // If amounts are not equal, follow your previous logic
           // (group with the least total amount is the winner, second least is the runner-up, and the remaining is the loser)
           if (groups["A"].totalAmount < groups["B"].totalAmount && groups["A"].totalAmount < groups["C"].totalAmount) {
@@ -283,6 +304,7 @@ for (const key in groups) {
       // console.log("1nd distribution")
        await distributeComissionToOneUser(loser, game)
     }
+    console.log(winnerGroup + " " + runnerUpGroup + "" + loserGroup)
     game.winnerGroup = winnerGroup;
     game.runnerUpGroup = runnerUpGroup;
     game.losersGroup = loserGroup;
@@ -571,49 +593,37 @@ async function calculateTotalBettingAmountForTheDay() {
   }
 }
 
+const createGame = async (duration) => {
+  const newGame = await Game.create({
+    duration: duration,
+    startTime: moment(new Date()).tz("Asia/Kolkata"),
+    endTime: moment(new Date()).tz("Asia/Kolkata").add(duration, "m"),
+    gameUID: await generateUniqueNumber2(),
+    isCompleted: false,
+  });
 
-const startAndCheckGame = async (duration) => {
+
+  await new Promise((resolve) => setTimeout(resolve, duration * 60 * 1000));
+
+  await calculateResult(newGame._id);
+
+  newGame.isCompleted = true;
+  await newGame.save();
+};
+
+const startGameLoop = async (duration) => {
+  while (true) {
   
-  const game = await Game.findOne({ isCompleted: false, duration: duration });
-  const currentDate = moment(new Date()).tz("Asia/Kolkata");
-  if (game) {
-    
-    if (game.endTime.unix() - currentDate.unix() <= 0) {
-      game.isCompleted = true;
-     await calculateResult(game._id);
-      await game.save();
-      await Game.create({
-        duration: duration,
-        startTime: moment(new Date()).tz("Asia/Kolkata"),
-        endTime: moment(new Date()).tz("Asia/Kolkata").add(duration, "m"),
-        gameUID: await generateUniqueNumber2()
-      });
-      setTimeout(() => {
-        startAndCheckGame(duration);
-      }, duration * 60 * 1000);
-    } else {
-      // let currentDate = moment(new Date()).tz("Asia/Kolkata");
-      // setTimeout(() => {
-        startAndCheckGame(duration);
-      // }, (game.endTime.unix() - currentDate.unix()) * 1000);
-    }
-  } else {
-    await Game.create({
-      duration: duration,
-      startTime: moment(new Date()).tz("Asia/Kolkata"),
-      endTime: moment(new Date()).tz("Asia/Kolkata").add(duration, "m"),
-      gameUID: await generateUniqueNumber2()
-    });
-    setTimeout(() => {
-      startAndCheckGame(duration);
-    }, duration * 60 * 1000);
+    await createGame(duration);
   }
 };
+
 const durationOptions = [1];
 
 durationOptions.forEach((value) => {
-  startAndCheckGame(value);
+  startGameLoop(value);
 });
+
 
 
 
@@ -639,7 +649,7 @@ const bet2ndController = async (req, res) => {
       
 
         const user = await userModel.findById(req.decodedToken.userId);
-        const game = await Game.findOne({ duration, isCompleted: false });
+        const game = await Game.findOne({ duration, isCompleted: false }).sort({createdAt: -1});
 
         if (!user) {
             return res.status(404).json({ status: false, message: "User not found" });
@@ -766,7 +776,7 @@ const get2ndGame = async (req, res) => {
     if (!duration) return res.status(400).send({status: false, meessage:"please provide time duration for game"})
 
 
-    const game = await Game.findOne({ duration: duration, isCompleted: false }).select({ isCompleted: 1, endTime: 1, startTime: 1 ,gameUID:1})
+    const game = await Game.findOne({ duration: duration, isCompleted: false }).sort({createdAt: -1}).select({ isCompleted: 1, endTime: 1, startTime: 1 ,gameUID:1})
     if (!game) return res.status(404).send({ status: false, message: "Game was ended" })
     
   
