@@ -209,7 +209,7 @@ if (totalAmounts.filter(amount => amount === minAmount).length === 1) {
     if (groupsWithSameUsersAndAmount.length === 2) {
       const randomIndex = Math.floor(Math.random() * 2);
       runnerUpGroup = remainingGroups[randomIndex];
-      loserGroup = remainingGroups[1 - randomIndex];
+      winnerGroup = remainingGroups[1 - randomIndex];
     }
   }
 }
@@ -329,7 +329,7 @@ else if (
       // console.log("1nd distribution")
        await distributeComissionToOneUser(loser, game)
     }
-    console.log(winnerGroup + " " + runnerUpGroup + "" + loserGroup)
+    console.log(winnerGroup + " " + runnerUpGroup + " " + loserGroup)
     game.winnerGroup = winnerGroup;
     game.runnerUpGroup = runnerUpGroup;
     game.losersGroup = loserGroup;
