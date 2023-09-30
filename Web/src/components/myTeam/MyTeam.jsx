@@ -157,8 +157,8 @@ function MyTeam() {
                                     <td>{item.name}</td>
                                     <td style={{ paddingLeft: 0 }}>{maskedPhoneNumber}</td>
                                     <td style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                        <button className='details-btn' >Details</button>
-                                        {/* onClick={() => handleUserdata(item.UID)} */}
+                                        <button className='details-btn' onClick={() => handleUserdata(item.UID)} >Details</button>
+                                        
                                     </td>
                                 </tr>
                             );

@@ -175,11 +175,11 @@ function Profile() {
                                 <div className='col-8' >Customer Service</div>
                                 <div className='col-2 backImg'><img src={next} alt="" /></div>
                             </div>
-                            {/* <div className='row'onClick={()=>{navigate("/walletTransfer")}}>
+                            <div className='row'onClick={()=>{navigate("/walletTransfer")}}>
                                 <div className='col-2'><div className='profile-logo-Wrapper'><img src={customer} alt="" /></div></div>
                                 <div className='col-8' >Wallet to Wallet Transfer</div>
                                 <div className='col-2 backImg'><img src={next} alt="" /></div>
-                            </div> */}
+                            </div>
                             {/* <div className='row'onClick={()=>{navigate('/admin/home')}}>
                                 <div className='col-2'><div className='profile-logo-Wrapper'><img src={customer} alt="" /></div></div>
                                 <div className='col-8' >Admin Panel</div>

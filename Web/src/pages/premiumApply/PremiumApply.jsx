@@ -15,7 +15,6 @@ function PremiumApply() {
     const authData=useRecoilValue(AuthState)
     const premium = useRecoilValue(PremiumState);
     const [amount, setPremiumMoney] = useState(null);
-    const [transactionId, settransactionId] = useState('');
 
     useEffect(() => {
         if (premium && premium.data && premium.data.data) {
@@ -34,7 +33,7 @@ function PremiumApply() {
     const handlePrimeRequest = async () => {
         try {
             let token = authData.authToken;
-            const response = await axios.post(`${import.meta.env.VITE_API_URL}/applyPremium`,{amount,transactionId},
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/applyPremium`,{amount},
                 {
                     headers: { Authorization: `Bearer ${token}` },
                 },
@@ -69,8 +68,7 @@ function PremiumApply() {
             <div className='Premium-Body'>
                 <p>Transaction Amount</p>
                 <input type="text" value={amount} disabled />
-                <p>Transaction Id</p>
-                <input type="text" placeholder='Enter Transaction Id' onChange={(e)=>{settransactionId(e.target.value)}}/>
+                
                 <button onClick={handlePrimeRequest}>Submit</button>
 
 

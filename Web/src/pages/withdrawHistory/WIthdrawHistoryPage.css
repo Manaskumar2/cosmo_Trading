@@ -3,7 +3,7 @@
 .withdrawHistoryPage{background: #001C3E;min-height: 100vh;}
 .withdrawalHistory-body{padding: 1rem;}
 .withdrawalHistory-body .container .row{border-bottom: 1px solid #2C6E9E;color: #fff;padding: 1rem 0;font-family: Montserrat;}
-.withdrawalHistory-body .container .row .col-4{text-align: center;}
+.withdrawalHistory-body .container .row .col-8{text-align:right}
 
 
 

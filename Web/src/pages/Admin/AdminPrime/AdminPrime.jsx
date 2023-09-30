@@ -8,6 +8,7 @@ import { AuthState } from '../../../Atoms/AuthState';
 import './AdminPrime.css';
 import Accordion from 'react-bootstrap/Accordion';
 import toast, { Toaster } from "react-hot-toast";
+
 export const toastProps = {
     position: "top-center",
     duration: 2000,
@@ -19,8 +20,8 @@ export const toastProps = {
 };
 
 function AdminPrime() {
+  
   const [user, setUser] = useState(null);
-  const [transactionId, setTransactionId] = useState('');
   const [adminStatus, setAdminStatus] = useState('');
   const authData = useRecoilValue(AuthState);
   const [premiumState, setPremiumState] = useRecoilState(PremiumState);
@@ -28,7 +29,7 @@ function AdminPrime() {
   const handlePrimeRequest = async () => {
     try {
       let token = authData.authToken;
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/getPremiumRequest`, {
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}admin/getPremiumRequest`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (response.status === 200) {
@@ -44,7 +45,7 @@ function AdminPrime() {
   const handleUser = async (userId) => {
     try {
       let token = authData.authToken;
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/getUserDetails/${userId}`, {
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}admin/getUserDetails/${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (response.status === 200) {
@@ -62,7 +63,7 @@ function AdminPrime() {
       let token = authData.authToken;
       const response = await axios.put(
         `${import.meta.env.VITE_API_URL}/admin/updatePremiumRequest/${userId}`,
-        { transactionId, adminStatus: status },
+        {  adminStatus: status },
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -95,13 +96,12 @@ function AdminPrime() {
                 <Accordion.Header onClick={() => { handleUser(item.userId) }} className='admin-prime-head'>
                   <div>user Id: {item.userId}</div>
                   <div>Amount: {item.amount}</div>
-                  <div>Transaction Id: {item.transactionId}</div>
                   <div>Status: {item.status}</div>
                 </Accordion.Header>
                 <Accordion.Body>
                   <p>UID: {user && user.data.data.userDetails.UID}</p>
                   <p>Phone: {user && user.data.data.userDetails.phoneNumber}</p>
-                  <div><input type="text" placeholder='Enter Transaction Id' value={transactionId} onChange={(e) => { setTransactionId(e.target.value) }} /></div>
+                  
 
                   <button className='prime-approve-btn' onClick={() => { handlePrimeApprove(item.userId, 'approved') }}>Approve</button>
                   <button className='prime-reject-btn' onClick={() => { handlePrimeApprove(item.userId, 'rejected') }}>Reject</button>

@@ -1,6 +1,6 @@
 .inc-dec-btns{display: flex;gap: 1.2rem; margin-top: 2rem;}
 .inc-dec-btns button{display: flex;justify-content: center;align-items: center;padding: .3rem;}
-.user-input{border: 0; outline: none; padding: .4rem;box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;margin-bottom: 2rem;}
+.user-input{border: 0; outline: none; padding: .4rem;box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;margin-bottom: 2rem; width: 20rem;}
 .admin-rightSection{padding: 1.5rem;background-color:#001C3E;width: 100%;}
 .table-row th{margin-left: 4rem;text-align: center;}
 .table-row td{margin-left: 5rem;text-align: center;}
@@ -10,23 +10,23 @@ table th {
     color: #FFF;
 text-align: center;
 font-family: Montserrat;
-font-size: 1.25rem;
+font-size: 1rem;
 font-style: normal;
 font-weight: 600;
 line-height: normal;
-    padding: 1rem 1.5rem; 
+    padding: 1rem 1rem; 
     text-align: left; 
   }
   
 
   table td {
-    padding: 1rem 1.5rem; 
+    padding: .5rem 1rem; 
     text-align: left;
     color: #fff;
     font-family: Montserrat;
-    font-size: 1rem;
+    font-size: .8rem;
     font-style: normal;
-    font-weight: 500;
+    font-weight: 400;
     line-height: 1.875rem;
 
   }

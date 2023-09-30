@@ -28,7 +28,7 @@ function AdminUserData() {
   const handleUser = async () => {
     try {
       let token = authData.authToken;
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/getAllUsers`,
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}admin/getAllUsers`,
         {
           headers: { Authorization: `Bearer ${token}` },
           params: { queryPageIndex ,queryPageFilter}
@@ -120,7 +120,7 @@ function AdminUserData() {
         <Side />
         <div className='admin-rightSection'>
         <Toaster/>
-          <input type="number" className='user-input' value={queryPageFilter} onChange={(e)=>{setqueryPageFilter(e.target.value)}} placeholder='Search Number'/>
+          <input type="number" className='user-input' value={queryPageFilter} onChange={(e)=>{setqueryPageFilter(e.target.value)}} placeholder='Search Number / UID'/>
           
           <table>
   <thead>
@@ -144,8 +144,8 @@ function AdminUserData() {
           <td>{user.downline.length}</td>
           <td>{user.commissionAmount}</td>
           <td>{user.level}</td>
-          <td>{user.walletAmount}</td>
-          <td>{user.winningAmount}</td>
+          <td>{(user.walletAmount).toFixed(2)}</td>
+          <td>{(user.winningAmount).toFixed(2)}</td>
           <td>
             <button onClick={() => handleActive(user._id)} className='activate'>Activate</button>
             <button onClick={() => handleDeactive(user._id)} className='deactivate'>Deactivate</button>

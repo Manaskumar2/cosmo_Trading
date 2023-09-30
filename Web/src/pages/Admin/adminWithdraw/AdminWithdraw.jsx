@@ -19,6 +19,7 @@ export const toastProps = {
 };
 
 function AdminWithdraw() {
+  const [status,setStatus]=useState('confirmed')
   const [user, setUser] = useState(null)
   const [withDrawdata, setWithdrawData] = useState(null)
   const [bankData, setBankData] = useState(null)
@@ -28,7 +29,7 @@ function AdminWithdraw() {
   const handleUser = async (userId) => {
     try {
       let token = authData.authToken;
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/getUserDetails/${userId}`, {
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}admin/getUserDetails/${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (response.status === 200) {
@@ -43,7 +44,7 @@ function AdminWithdraw() {
   const handlePaymentRequest = async () => {
     try {
       let token = authData.authToken;
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/getWithdrawRequest`,
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}admin/getWithdrawRequest?status=${status}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         },
@@ -60,7 +61,7 @@ function AdminWithdraw() {
   const handleBankData = async (userId) => {
     try {
       let token = authData.authToken;
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/getbankDetails/${userId}`,
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}admin/getbankDetails/${userId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         },
@@ -77,7 +78,7 @@ function AdminWithdraw() {
   const handleConfirm = async (requestId, status) => {
     try {
       let token = authData.authToken;
-      const response = await axios.put(`${import.meta.env.VITE_API_URL}/admin/conformWithdrawRequest/${requestId}`, { newStatus: status },
+      const response = await axios.put(`${import.meta.env.VITE_API_URL}admin/conformWithdrawRequest/${requestId}`, { newStatus: status },
         {
           headers: { Authorization: `Bearer ${token}` },
         },
@@ -91,13 +92,22 @@ function AdminWithdraw() {
       const errorMessage = error.response ? error.response.data.message : error.message;
     }
   }
-  useEffect(() => { handlePaymentRequest() }, [])
+  useEffect(() => { handlePaymentRequest() }, [status])
   return (
     <div>
       <AdminNav />
       <div className='flex-div'>
         <Side />
         <div className='admin-rightSection'>
+        <div className='row tab-btns'>
+            
+            {/* 'pending', 'confirmed','cancelled' */}
+              
+            <button className='col-4' onClick={()=>{setStatus('confirmed')}}>Approved List</button>
+              <button className='col-4' onClick={()=>{setStatus('pending')}}>Pending List</button>
+              <button className='col-4' onClick={()=>{setStatus('cancelled')}}>Reject List</button>
+  
+            </div>
         <Toaster/>
           {withDrawdata && withDrawdata.data.map((item, index) => (
             <Accordion key={index}>

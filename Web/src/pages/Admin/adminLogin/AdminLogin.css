@@ -12,13 +12,15 @@ font-style: normal;
 font-weight: 500;
 
 }
+.admin-form .text-center{margin-bottom: 2rem;}
+.admin-form .text-center img{width: 10rem;}
 .admin-login-btn {
   margin: 3rem 0;
   padding: 0.2rem 1rem;
 }
 .admin-form {
   border: 4px solid #FFDD54;
-  padding: 4rem;
+  padding: 2rem 4rem 4rem 4rem;
   border-radius: 1.2rem;
 }
 .admin-form input{

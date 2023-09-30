@@ -27,18 +27,18 @@ const createRecharge = async (req, res) => {
     return res.status(500).send({ status: false, message: error.message });
   }
 }
-const getPaymentList = async (req, res) => { 
-  try {
-
-    
-  } catch (error) {
-    return res.status(500).send({ status: false, message: error.message });
-  }
-}
 
 const getPaymentRequest = async (req, res) => {
   try {
-    const  paymentId  = req.query.paymentId;
+    const paymentId = req.query.paymentId;
+    const status = req.query.status;
+    
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+
+
+    
+    const skip = (page - 1) * limit;
 
 
     if (paymentId) {
@@ -46,12 +46,14 @@ const getPaymentRequest = async (req, res) => {
       return res.status(200).json(getPayentDetails)
     }
     else {
-      const pendingPayments = await rechargeModel.find({ status: 'pending' }).exec();
+      const paymentsRequest = await rechargeModel.find({ status:status }) .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);;
 
-      if (!pendingPayments || pendingPayments.length === 0) {
-        return res.status(404).json({ error: 'No pending payments found' });
+      if (! paymentsRequest || paymentsRequest.length === 0) {
+        return res.status(404).json({ error: 'No request found' });
       }
-      res.status(200).json(pendingPayments);
+      res.status(200).json( paymentsRequest);
     }
   } catch (error) {
     console.error(error);

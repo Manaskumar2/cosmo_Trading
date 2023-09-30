@@ -170,7 +170,8 @@ for (const key in groups) {
 const groupNames = Object.keys(groups);
 const totalAmounts = groupNames.map(groupName => groups[groupName].totalAmount);
 
-const minAmount = Math.min(...totalAmounts);
+      const minAmount = Math.min(...totalAmounts);
+      const maxAmount = Math.max(...totalAmounts);
 
 if (totalAmounts.filter(amount => amount === minAmount).length === 1) {
   winnerGroup = groupNames[totalAmounts.indexOf(minAmount)];
@@ -183,9 +184,33 @@ if (totalAmounts.filter(amount => amount === minAmount).length === 1) {
     loserGroup = remainingGroups.find(groupName => groupName !== runnerUpGroup);
   } else {
     // If both remaining groups have the same number of users, randomly select one as runner-up and the other as loser
-    const randomIndex = Math.floor(Math.random() * 2);
+    const groupsWithSameUsersAndAmount = remainingGroups.filter(groupName =>
+      groups[groupName].users.length === maxUsers && groups[groupName].totalAmount === maxAmount
+    );
+    if (groupsWithSameUsersAndAmount.length === 2){
+      const randomIndex = Math.floor(Math.random() * 2);
     runnerUpGroup = remainingGroups[randomIndex];
     loserGroup = remainingGroups[1 - randomIndex];
+  }
+  }
+}
+ else if (totalAmounts.filter(amount => amount === maxAmount).length === 1) {
+  loserGroup = groupNames[totalAmounts.indexOf(maxAmount)];
+  const remainingGroups = groupNames.filter(groupName => groupName !== loserGroup);
+  const usersInRemainingGroups = remainingGroups.map(groupName => groups[groupName].users.length);
+  const maxUsers = Math.max(...usersInRemainingGroups);
+
+  if (usersInRemainingGroups.filter(users => users === maxUsers).length === 1) {
+    winnerGroup = remainingGroups[usersInRemainingGroups.indexOf(maxUsers)];
+    runnerUpGroup = remainingGroups.find(groupName => groupName !== winnerGroup);
+  } else {
+     const groupsWithSameUsersAndAmount = remainingGroups.filter(groupName =>
+       groups[groupName].users.length === maxUsers && groups[groupName].totalAmount === minAmount);
+    if (groupsWithSameUsersAndAmount.length === 2) {
+      const randomIndex = Math.floor(Math.random() * 2);
+      runnerUpGroup = remainingGroups[randomIndex];
+      loserGroup = remainingGroups[1 - randomIndex];
+    }
   }
 }
 else if (
@@ -308,8 +333,27 @@ else if (
     game.winnerGroup = winnerGroup;
     game.runnerUpGroup = runnerUpGroup;
     game.losersGroup = loserGroup;
-
     await game.save();
+    const totalAmount = groups["A"].totalAmount + groups["B"].totalAmount + groups["C"].totalAmount 
+    if (totalAmount > 0) {
+      const wallet = await Wallet.findOne({ _id: walletId });
+      if (!wallet) {
+        console.error('Wallet not found');
+        return;
+      }
+      const today = new Date();
+      if (!moment(wallet.lastUpdatedDate).isSame(today, 'day')) {
+  
+        wallet.everydayBettingAmount = 0;
+    
+        wallet.lastUpdatedDate = today;
+      }
+
+      wallet.everydayBettingAmount += totalAmount;
+      wallet.totalBettingAmount += totalAmount
+      await wallet.save();
+    }
+    
   } catch (error) {
     console.log(error)
   }
@@ -388,16 +432,6 @@ async function distributeComissionToThreeUsers(winner, runnerUp, losers, game,wi
 
   let compnayFund = totalAmount - distributedAmount;
   wallet.amount = wallet.amount + compnayFund;
-
-   const today = new Date();
-  if (!moment(wallet.lastUpdatedDate).isSame(today, 'day')) {
-  
-    wallet.everydayBettingAmount = 0;
-    
-    wallet.lastUpdatedDate = today;
-  }
-
-  wallet.everydayBettingAmount += totalAmount; 
   await wallet.save();
 }
 
@@ -438,18 +472,6 @@ async function distributeComissionToTwoUsers(winner, losers, game,winnerGroup) {
 
   let compnayFund = totalAmount - distributedAmount;
   wallet.amount = wallet.amount + compnayFund;
-
-   const today = new Date();
-  if (!moment(wallet.lastUpdatedDate).isSame(today, 'day')) {
-  
-    wallet.everydayBettingAmount = 0;
-    
-    wallet.lastUpdatedDate = today;
-  }
-
-  wallet.everydayBettingAmount += totalAmount;
-
-  
   await wallet.save();
 }
 
@@ -486,16 +508,6 @@ async function distributeComissionToOneUser(loser, game) {
 
   let compnayFund = totalAmount - distributedAmount;
   wallet.amount = wallet.amount + compnayFund;
-
-   const today = new Date();
-  if (!moment(wallet.lastUpdatedDate).isSame(today, 'day')) {
-  
-    wallet.everydayBettingAmount = 0;
-    
-    wallet.lastUpdatedDate = today;
-  }
-
-  wallet.everydayBettingAmount += totalAmount;
   await wallet.save();
 }
 
@@ -666,24 +678,19 @@ const bet2ndController = async (req, res) => {
     }
 
     if (userGroups.size >= 2 && !userGroups.has(group)) {
-      return res.status(400).json({ status: false, message: "User cannot bet on a third group" });
+      return res.status(400).json({ status: false});
     }
-
         // const currentDate = moment(new Date()).tz("Asia/Kolkata");
-
-
         // if (game.endTime.unix() - currentDate.unix() < 0) {
         //     return res
         //         .status(400)
         //         .json({ status: false, message: "Wait for Next Game" });
         // }
-
         if (user.walletAmount <= amount) {
             return res
                 .status(400)
                 .json({ status: false, message: "Insufficient funds" });
         }
-
     let walletAmount = user.walletAmount - amount;
     let bettingAmount = user.bettingAmount + amount;
     let rechargeAmount = user.rechargeAmount-amount;
@@ -744,6 +751,8 @@ const riseUpUserBettingHistory = async (req, res) => {
             endTime: game.endTime,
             gameUID: game.gameUID,
             winnerGroup: game.winnerGroup,
+            runnerUpGroup: game.runnerUpGroup,
+            loserGroup:game.losersGroup,
             amount: userBet.amount, 
             group: userBet.group,   
           };
@@ -861,13 +870,100 @@ const update2ndGameUid = async (req, res) => {
     return res.status(500).json({ message: 'Internal server error' });
   }
 }
+const riseUpBetamount = async (req, res) => {
+  try {
+    const today = new Date();
+    today.setUTCHours(0, 0, 0, 0);
 
+    
+    const result = await Game.aggregate([
+      {
+        $match: { isCompleted: false }
+      },
+      {
+        $unwind: "$bets"
+      },
+      {
+        $group: {
+          _id: "$bets.group",
+          totalBetAmount: { $sum: "$bets.amount" }
+        }
+      }
+    ]);
+
+    let totalBetAmounts = {
+      A: 0,
+      B: 0,
+      C: 0,
+    };
+
+    result.forEach((group) => {
+      if (group._id === "A") {
+        totalBetAmounts.A = group.totalBetAmount;
+      } else if (group._id === "B") {
+        totalBetAmounts.B = group.totalBetAmount;
+      }
+      else if (group._id === "C") { 
+        totalBetAmounts.C = group.totalBetAmount;
+      }
+    });
+
+    
+    const todayResult = await Game.aggregate([
+      {
+        $match: {
+          isCompleted: true,
+          startTime: { $gte: today }
+        }
+      },
+      {
+        $unwind: "$bets"
+      },
+      {
+        $group: {
+          _id: "$bets.group",
+          todayBetAmount: { $sum: "$bets.amount" }
+        }
+      }
+    ]);
+
+    let todayBetAmounts = {
+      A: 0,
+      B: 0,
+      C: 0,
+    };
+
+    todayResult.forEach((group) => {
+      if (group._id === "A") {
+        todayBetAmounts.A = group.todayBetAmount;
+      } else if (group._id === "B") {
+        todayBetAmounts.B = group.todayBetAmount;
+      }
+      else if (group._id === "C") { 
+        todayBetAmounts.C = group.todayBetAmount;
+      }
+    });
+
+    return res.status(200).send({
+      status: true,
+      message: "Success",
+      data: {
+        totalBetAmounts,
+        todayBetAmounts
+      }
+    });
+  } catch (error) {
+    console.error('Error calculating total bet amounts:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
 module.exports = {
     bet2ndController,
     get2ndGame,
     get2ndGameHistory,
     delete2ndGames,
   riseUpUserBettingHistory,
-  update2ndGameUid
+  update2ndGameUid,
+  riseUpBetamount
 
 }

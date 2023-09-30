@@ -29,7 +29,6 @@ function WIthdrawHistoryPage() {
       }
       );
       if (response.status === 200) {
-        // toast.success("got user money data", { ...toastProps });
         console.log(response);
         setRechargeHistory(response)
         return response;
@@ -60,14 +59,23 @@ function WIthdrawHistoryPage() {
         {rechargeHistory && rechargeHistory.data.data.map((item, index) => (
           <div key={index} className='container'>
             <div className='row'>
-              <div className="col-8">{item.upiReferenceNo}
-                <div >Amount: {item.amount}</div>
-                <div >Upi Id: {item.upiId}</div>
+              <div className="col-4">
+                <div >Transaction Id</div>
+                <div >Amount:</div>
+                <div >Upi Id:</div>
+                <div >Status</div>
+                <div> Time:</div>
               </div>
 
-              <div className="col-4" style={{ color: getStatusColor(item.status) }}>
-                <p>Status:</p>
-                {item.status}
+              <div className="col-8" >
+                <div>{item.upiReferenceNo}</div>
+                <div>{item.amount}</div>
+              
+              
+              <div >{item.upiId}</div>
+              <div style={{ color: getStatusColor(item.status) }}>{item.status}</div>
+              <div><p>{new Date(item.createdAt).toLocaleString()}</p></div>
+                
               </div>
 
             </div>

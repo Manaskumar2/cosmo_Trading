@@ -7,22 +7,41 @@ import axios from 'axios'
 import {useRecoilValue} from 'recoil'
 import { AuthState } from '../../Atoms/AuthState'
 import { useNavigate } from 'react-router-dom'
+import toast, { Toaster } from "react-hot-toast";
+export const toastProps = {
+  position: "top-center",
+  duration: 2000,
+  style: {
+      fontSize: "1rem",
+      background: "#fff",
+      color: "#333",
+  },
+};
 function BankCard() {
   const navigate =useNavigate()
   const [bankName, setbankName] = useState('')
   const [accountHolderName, setaccountHolderName] = useState('')
-  const [bankAccountNo, setbankAccountNo] = useState(0)
+  const [bankAccountNo, setbankAccountNo] = useState('')
   const [city, setcity] = useState('')
   const [ifscCode, setifscCode] = useState('')
-  const [email, setemail] = useState('')
-  const [phone, setphone] = useState(0)
+  const [confirmBankAccountNo, setconfirmBankAccountNo] = useState('')
+  const [phone, setphone] = useState('')
   const [bankBranchAddress, setbankBranchAddress] = useState('')
 
   const auth = useRecoilValue(AuthState)
+  const handleAccountNumberChange = (e) => {
+    const confirmAccountNo = e.target.value;
+    setConfirmBankAccountNo(confirmAccountNo);
+    setAccountNumbersMatch(bankAccountNo === confirmAccountNo);
+  };
 
   const handleBankData = async (e) => {
     e.preventDefault();
     try {
+      if (!accountNumbersMatch) {
+        toast.error('Account numbers do not match!', { ...toastProps });
+        return;
+      }
       let token = auth.authToken
       const response = await axios.post(`${import.meta.env.VITE_API_URL}/createbankAccount`, {
         bankName,
@@ -30,20 +49,29 @@ function BankCard() {
         bankAccountNo,
         city,
         ifscCode,
-        email,
+        confirmBankAccountNo,
         bankBranchAddress,
       }, {
         headers: { Authorization: `Bearer ${token}` }
       }
       );
       if (response.status === 201) {
+        setbankName("")
+        setaccountHolderName("")
+        setbankAccountNo("")
+        setcity("")
+        setifscCode("")
+        setconfirmBankAccountNo("")
+        setbankBranchAddress("")
         console.log(response);
+        toast.success('Bank Card Created Successfully!', { ...toastProps });
         return response;
       }
     } catch (error) {
       const errorMessage = error.response ? error.response.data.message : error.message;
-      console.log(errorMessage);
-    }
+      toast.error(errorMessage || "Something went wrong", { ...toastProps });
+  }
+
   }
 
   return (
@@ -66,7 +94,7 @@ function BankCard() {
             <div className="col-10">Add Bank Account</div>
           </div>
         </div>
-
+<Toaster/>
 
         <div className="form-container">
           <form onSubmit={handleBankData}>
@@ -82,7 +110,12 @@ function BankCard() {
 
             <div className='bank-Card-box'>
               <label className='label'>Bank Account Number</label>
-              <input type="number" placeholder='It is required' value={bankAccountNo} onChange={(e) => { setbankAccountNo(e.target.value) }} />
+              <input type="text" placeholder='It is required' value={bankAccountNo} onChange={(e) => { setbankAccountNo(e.target.value) }} />
+            </div>
+
+            <div className='bank-Card-box'>
+              <label className='label'>Confirm Bank AccountNo</label>
+              <input type="password" placeholder='It is required' value={confirmBankAccountNo} onChange={(e) => { setconfirmBankAccountNo(e.target.value) }} />
             </div>
 
             <div className='bank-Card-box'>
@@ -95,10 +128,7 @@ function BankCard() {
               <input type="text" placeholder='It is required' value={ifscCode} onChange={(e) => { setifscCode(e.target.value) }} />
             </div>
 
-            <div className='bank-Card-box'>
-              <label className='label'>Email Address</label>
-              <input type="email" placeholder='It is required' value={email} onChange={(e) => { setemail(e.target.value) }} />
-            </div>
+            
 
             <div className='bank-Card-box'>
               <label className='label'>Phone Number</label>

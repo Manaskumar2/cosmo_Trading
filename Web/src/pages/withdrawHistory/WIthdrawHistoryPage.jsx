@@ -34,17 +34,49 @@ function WIthdrawHistoryPage() {
         </div>
       </div>
       <div className='withdrawalHistory-body'>
-        {withdrawHistory && withdrawHistory.data.withdrawalHistory.map((item , index)=>(
+        {withdrawHistory && withdrawHistory.data.withdrawalHistory.map((item, index) => (
           <div key={index} className='container'>
             <div className='row'>
-              <div className="col-8">{item._id}
-              <div >Amount: {item.withdrawAmount}</div>
+              <div className="col-4">
+                <div >Order Id:</div>
               </div>
-              
-              <div className="col-4" style={{ color: getStatusColor(item.status) }}> 
-              <p>Status:</p>
-      {item.status}
-    </div>
+
+              <div className="col-8" >
+
+                {item._id}
+              </div>
+              <div className="col-4">
+                <div >Amount: </div>
+              </div>
+
+              <div className="col-8" >
+                
+                {item.withdrawAmount}
+              </div>
+              <div className="col-4">
+                <div ><p>Status:</p></div>
+              </div>
+
+              <div className="col-8" style={{ color: getStatusColor(item.status) }}>
+                
+                {item.status}
+              </div>
+              <div className="col-4">
+                <div ><p>Type:</p></div>
+              </div>
+
+              <div className="col-8" >
+                
+                <p> Bank Card</p>
+              </div>
+              <div className="col-4">
+                <div ><p>Time:</p></div>
+              </div>
+
+              <div className="col-8" >
+                
+              <p>{new Date(item.createdAt).toLocaleString()}</p>
+              </div>
 
             </div>
 

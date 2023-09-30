@@ -43,8 +43,17 @@ const withdrawrequest = async (req, res) => {
 }
 
 const getWithdrawRequest = async (req, res) => {
-    try {
-        const pendingWithdrawRequests = await withdrawModel.find({ status: "pending" });
+  try {
+      const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+    const status = req.query.status
+
+    
+    const skip = (page - 1) * limit;
+     
+        const pendingWithdrawRequests = await withdrawModel.find({ status:status }) .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
         return res.status(200).send({ status: true, data: pendingWithdrawRequests });
     } catch (error) {
         return res.status(500).send({ status: false, message: error.message });

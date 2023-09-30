@@ -80,8 +80,10 @@ function GameHistory({ duration }) {
             toast.error(errorMessage || "Something went wrong", { ...toastProps });
         }
     }
-    useEffect(()=>{const fetchData=setInterval(getGameHistory,3500)
-        return ()=>{clearInterval(fetchData)}},[])
+    useEffect(() => {
+        const fetchData = setInterval(getGameHistory, 3500)
+        return () => { clearInterval(fetchData) }
+    }, [])
 
     // useEffect(() => {
     //     if(countDownRiseup===59){
@@ -204,11 +206,17 @@ function GameHistory({ duration }) {
                                             <React.Fragment key={index}>
                                                 <tr onClick={() => toggleRow(index)}>
                                                     <td>{item.gameUID}</td>
-                                                    <td style={{ textAlign: 'center' }}>{item.isCompleted
-                                                                        ? item.winnerGroup === item.group.toUpperCase()
-                                                                            ? 'Win'
-                                                                            : 'Lose'
-                                                                        : 'Pending'}</td>
+                                                    <td style={{ textAlign: 'center' }}> {
+                                                                            item.isCompleted
+                                                                                ? item.group === item.winnerGroup
+                                                                                    ? 'Win'
+                                                                                    : item.group === item.loserGroup
+                                                                                        ? 'Lose'
+                                                                                        : item.group === item.runnerUpGroup
+                                                                                            ? 'Runner Up'
+                                                                                            : 'Pending'
+                                                                                : 'Pending'
+                                                                        }</td>
                                                     <td>
                                                         <div className="winners_col_row">
                                                             <span className="icon_win">
@@ -246,15 +254,22 @@ function GameHistory({ duration }) {
                                                                 <div className='flex-div-space-Betn'><p>Period :</p><p>  {item.gameUID}</p></div>
                                                                 <div className='flex-div-space-Betn'><p>Amount :</p><p>  {item.amount}</p></div>
                                                                 <div className='flex-div-space-Betn'><p>Betting Placed :</p><p> {item.group === 'A' ? 'Alpha' : item.group === 'B' ? 'Beta' : item.group === 'C' ? 'Gama' : 'Unknown'}</p></div>
-                                                                <div className='flex-div-space-Betn'><p>Runner Up :</p><p>{item.runnerUpGroup && item.runnerUpGroup=== 'A' ? 'Alpha' : item.runnerUpGroup === 'B' ? 'Beta' : item.runnerUpGroup === 'C' ? 'Gama' : 'None'}</p></div>
+                                                                
                                                                 <div className='flex-div-space-Betn'>
                                                                     <p>Betting Status :</p>
                                                                     <p style={{ textAlign: 'left' }}>
-                                                                        {item.isCompleted
-                                                                            ? item.winnerGroup === item.group.toUpperCase()
-                                                                                ? 'Win'
-                                                                                : 'Lose'
-                                                                            : 'Pending'}
+                                                                        {
+                                                                            item.isCompleted
+                                                                                ? item.group === item.winnerGroup
+                                                                                    ? 'Win'
+                                                                                    : item.group === item.loserGroup
+                                                                                        ? 'Lose'
+                                                                                        : item.group === item.runnerUpGroup
+                                                                                            ? 'Runner Up'
+                                                                                            : 'Pending'
+                                                                                : 'Pending'
+                                                                        }
+
                                                                     </p>
                                                                 </div>
                                                                 <div className='flex-div-space-Betn' ><p>Order Time:</p><p>{new Date(item.startTime).toLocaleString()}</p></div>

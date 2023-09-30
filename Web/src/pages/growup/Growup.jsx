@@ -27,7 +27,7 @@ import { TimeNo, OneMinute } from '../../Atoms/GameTime'
 import { GameHistory } from '../../components/ComponentExport'
 import { useNavigate } from 'react-router-dom'
 // import { CountDown } from '../../Atoms/CountDown';
-import { ShowCountDown } from '../../Atoms/ShowCountDown' 
+import { ShowCountDown } from '../../Atoms/ShowCountDown'
 import Timer from '../../components/timer/Timer'
 import { PlaySound } from '../../Atoms/PlaySound';
 // import {  } from '../../Atoms/CountDownRiseup'
@@ -84,6 +84,11 @@ function Growup() {
     };
 
 
+    useEffect(() => {
+        handleUserMoney()
+        const intervalId = setInterval(handleUserMoney, 4500);
+        return () => clearInterval(intervalId);
+    }, []);
 
 
     ////////
@@ -106,8 +111,11 @@ function Growup() {
     };
 
     ///////
-
-
+    useEffect(() => {
+        handleUserMoney()
+        const intervalId = setInterval(handleUserMoney, 4500);
+        return () => clearInterval(intervalId);
+    }, []);
 
 
     const getCurrentDateNumber = () => {
@@ -121,22 +129,17 @@ function Growup() {
     const [currentDateNumber, setCurrentDateNumber] = useState(getCurrentDateNumber());
     // useEffect(() => {
     //     getCurrentDateNumber()
-        
+
     // }, [])
 
     useEffect(() => {
         handleMin()
         setCurrentDateNumber(getCurrentDateNumber());
-        handleUserMoney()
-        // console.log(gameHistoryList.data[0].gameUID);
-        // setTimeout(() => {
-        //     sendUID();
-        // }, 1000);
     }, []);
- 
+
 
     // const [uid, setUid] = useState(gameHistoryList.data[0].gameUID);
-    
+
 
 
     // const sendUID = async () => {
@@ -168,7 +171,7 @@ function Growup() {
     //     }
     // }
     useEffect(() => {
-        
+
         if (countDownGrowup === 59) {
             handleMin()
         }
@@ -226,6 +229,7 @@ function Growup() {
                 setMoney(1)
                 setGroup('');
                 setAmount(1);
+                setMultiplier(1)
                 handleUserMoney()
                 return response;
             }
@@ -257,14 +261,15 @@ function Growup() {
     };
 
     useEffect(() => {
-        
-            const timer = setTimeout(async () => {
-                await handleMin();
-            }, 5000);
-            return () => {
-                clearTimeout(timer);
-            };
-            handleMin()
+
+        const timer = setTimeout(async () => {
+
+            await handleMin();
+        }, 5000);
+        return () => {
+            clearTimeout(timer);
+        };
+        handleMin()
     }, []);
 
 

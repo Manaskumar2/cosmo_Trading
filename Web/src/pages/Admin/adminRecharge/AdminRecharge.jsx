@@ -9,21 +9,22 @@ import './ARecharge.css'
 import Accordion from 'react-bootstrap/Accordion';
 import toast, { Toaster } from "react-hot-toast";
 export const toastProps = {
-    position: "top-center",
-    duration: 2000,
-    style: {
-        fontSize: "1rem",
-        background: "#fff",
-        color: "#333",
-    },
+  position: "top-center",
+  duration: 2000,
+  style: {
+    fontSize: "1rem",
+    background: "#fff",
+    color: "#333",
+  },
 };
 
 function AdminRecharge() {
+  const [status, setStatus] = useState('confirmed')
   const authData = useRecoilValue(AuthState)
   const [user, setUser] = useState(null)
   const [upiId, setUpiId] = useState('')
   const [qrCode, setQrCode] = useState('')
-  const[withdrawData ,  setWithdrawData] = useState(null)
+  const [withdrawData, setWithdrawData] = useState(null)
 
 
 
@@ -32,7 +33,7 @@ function AdminRecharge() {
     try {
       let uploadedBy = authData._id
       let token = authData.authToken;
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/admin/uploadQrcode/${uploadedBy}`, { upiId, qrCode },
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}admin/uploadQrcode/${uploadedBy}`, { upiId, qrCode },
         {
           headers: { Authorization: `Bearer ${token}` },
         },
@@ -52,7 +53,7 @@ function AdminRecharge() {
   const handleUser = async (userId) => {
     try {
       let token = authData.authToken;
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/getUserDetails/${userId}`, {
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}admin/getUserDetails/${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (response.status === 200) {
@@ -67,7 +68,7 @@ function AdminRecharge() {
   const handlePaymentRequest = async () => {
     try {
       let token = authData.authToken;
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/payment-request`,
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}admin/payment-request?status=${status}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         },
@@ -81,10 +82,10 @@ function AdminRecharge() {
       const errorMessage = error.response ? error.response.data.message : error.message;
     }
   }
-  const handlePayment = async (paymentId,status) => {
+  const handlePayment = async (paymentId, status) => {
     try {
       let token = authData.authToken;
-      const response = await axios.patch(`${import.meta.env.VITE_API_URL}/admin/confirm-payment/${paymentId}`,{status},
+      const response = await axios.patch(`${import.meta.env.VITE_API_URL}admin/confirm-payment/${paymentId}`, { status },
         {
           headers: { Authorization: `Bearer ${token}` },
         },
@@ -98,7 +99,7 @@ function AdminRecharge() {
       const errorMessage = error.response ? error.response.data.message : error.message;
     }
   }
-  useEffect(() => { handlePaymentRequest() }, [])
+  useEffect(() => { handlePaymentRequest() }, [status])
 
 
   return (
@@ -107,7 +108,7 @@ function AdminRecharge() {
       <div className='flex-div'>
         <Side />
         <div className='admin-rightSection'>
-          <Toaster/>
+          <Toaster />
           <form onSubmit={handleQr} className='form-rechrge' >
             <h3 className='text-centre'>Submit Qr Code</h3>
             <label >Enter Qr Code Link</label>
@@ -120,21 +121,30 @@ function AdminRecharge() {
 
             <button type='submit'>Submit</button>
           </form>
-{withdrawData && withdrawData.map((item,i)=>(
-          <Accordion key={i}>
+          <div className='row tab-btns'>
+
+            {/* 'pending', 'confirmed','cancelled' */}
+
+            <button className='col-4' onClick={() => { setStatus('confirmed') }}>Approved List</button>
+            <button className='col-4' onClick={() => { setStatus('pending') }}>Pending List</button>
+            <button className='col-4' onClick={() => { setStatus('cancelled') }}>Reject List</button>
+
+          </div>
+          {withdrawData && withdrawData.map((item, i) => (
+            <Accordion key={i}>
               <Accordion.Item eventKey={i}>
                 <Accordion.Header onClick={() => { handleUser(item.userId) }}>
-                  <p style={{marginRight:"1.3rem"}}>User Id: {item.userId}</p>
-                  <p style={{marginRight:"1.3rem"}}>Amount: {item.amount}</p>
-                  <p style={{marginRight:"1.3rem"}}>Status: {item.status}</p>
+                  <p style={{ marginRight: "1.3rem" }}>User Id: {item.userId}</p>
+                  <p style={{ marginRight: "1.3rem" }}>Amount: {item.amount}</p>
+                  <p style={{ marginRight: "1.3rem" }}>Status: {item.status}</p>
 
                 </Accordion.Header>
                 <Accordion.Body>
-                <p>UID: {user && user.data.data.userDetails.UID}</p>
+                  <p>UID: {user && user.data.data.userDetails.UID}</p>
                   <p>Phone: {user && user.data.data.userDetails.phoneNumber}</p>
                   <p>Upi ReferenceNo: {item.upiReferenceNo}</p>
                   <p>Upi Id: {item.upiId}</p>
-                  <button onClick={()=>{handlePayment(item._id,'confirm')}}>Approve</button><button onClick={()=>{handlePayment(item._id,'cancel')}}>Reject</button>
+                  <button className='prime-approve-btn' onClick={() => { handlePayment(item._id, 'confirm') }}>Approve</button><button onClick={() => { handlePayment(item._id, 'cancel') }} className='prime-reject-btn'>Reject</button>
                 </Accordion.Body>
               </Accordion.Item>
             </Accordion>))}

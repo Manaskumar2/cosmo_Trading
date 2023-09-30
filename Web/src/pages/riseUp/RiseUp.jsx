@@ -29,6 +29,8 @@ import { PlaySound } from '../../Atoms/PlaySound';
 import mute from '../../images/mute.svg'
 import { ShowCountDown } from '../../Atoms/ShowCountDown'
 import { CountDownRiseup } from '../../Atoms/CountDownRiseup'
+import animation from './RiseUP-Animation.gif'
+
 export const toastProps = {
     position: "top-center",
     duration: 2000,
@@ -85,8 +87,10 @@ function RiseUp() {
 
     useEffect(() => {
         handleUserMoney()
+        const intervalId = setInterval(handleUserMoney, 4500);
+        return () => clearInterval(intervalId);
     }, []);
-    ///////
+
 
 
     const handleUserMoney = async () => {
@@ -111,7 +115,7 @@ function RiseUp() {
         let token = auth.authToken;
 
         if (countDownRiseup < 5) {
-            toast.error("Wait for the next game jhfhhf", { ...toastProps });
+            toast.error("Please wait for the next game ", { ...toastProps });
             return null;
         }
         try {
@@ -127,25 +131,47 @@ function RiseUp() {
                 }
             );
             if (response.status === 201) {
-                toast.success("Bet created Successfully!", { ...toastProps });
+                let message;
+                if (group === 'A') {
+                    message = 'Alpha';
+                } else if (group === 'B') {
+                    message = 'Beta';
+                } else if (group === 'C') {
+                    message = 'Gamma';
+                } else {
+                    message = 'Unknown Group';
+                }
+                toast.success(`Bet created Successfully! on ${message}`, { ...toastProps });
                 setGroup('');
                 setAmount(1);
                 setSmShow(false);
                 setLgShow(false);
                 setGmShow(false);
+                setMultiplier(1)
                 setMoney(1)
                 console.log(response);
                 handleUserMoney();
                 return response;
-            } else if (response.status === 404) {
-                return null;
             }
         } catch (error) {
+            let message;
+                if (group === 'A') {
+                    message = 'Alpha';
+                } else if (group === 'B') {
+                    message = 'Beta';
+                } else if (group === 'C') {
+                    message = 'Gamma';
+                } else {
+                    message = 'Unknown Group';
+                }
+            if (error.response && error.response.status === 400) {
+                toast.error(`You can't bet on ${message} now!`, { ...toastProps });
+            }
             if (error.response && error.response.status === 404) {
                 return null;
             }
-            const errorMessage = error.response ? error.response.data.message : error.message;
-            toast.error(errorMessage || "Something went wrong", { ...toastProps });
+            // const errorMessage = error.response ? error.response.data.message : error.message;
+            // toast.error(errorMessage || "Something went wrong", { ...toastProps });
         }
     }
     // const [uid,setUid]=useState(0)
@@ -206,8 +232,7 @@ function RiseUp() {
             const response = await axios.get(`${import.meta.env.VITE_API_URL}/getSecondGame/${duration}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
-
-            if (response.status === 200) {
+            if (response.status === 200){
                 console.log(response);
                 setTimeNo(duration)
                 setMinute(response)
@@ -290,9 +315,10 @@ function RiseUp() {
                             {showCountDown === true ? <Timer /> :
                                 <div className='second-image-cover'>
                                     <div className="ani-container">
-                                        <div className="animated-div animated-alphaBar "></div>
+                                        <img src={animation} alt="animation" />
+                                        {/* <div className="animated-div animated-alphaBar "></div>
                                         <div className="animated-div animated-betaBar"></div>
-                                        <div className="animated-div animated-gammaBar"></div>
+                                        <div className="animated-div animated-gammaBar"></div> */}
                                     </div>
                                     <div className=' alfa-beta-gama-button-container'>
                                         <button className='alfa-beta-gama-button' onClick={() => { setSmShow(true); setGroup("A") }} style={{ background: "radial-gradient(50% 50% at 50% 50%, #FF7562 0%, #E51616 100%)" }}>

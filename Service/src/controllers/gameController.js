@@ -128,10 +128,10 @@ async function calculatResult(gameId) {
   } else if ((bigAmount == 0 && smallAmount!=0) ||( smallAmount == 0 && bigAmount !==0)) {
     let winnerGroup = "small";
     if (bigAmount > 0) {
-      winnerGroup = "big";
+      winnerGroup = "small";
     }
     else if (smallAmount > 0) { 
-      winnerGroup = "small";
+      winnerGroup = "big";
     }
   let totalAmount = smallAmount + bigAmount;
   for (const bet of game.bets) {

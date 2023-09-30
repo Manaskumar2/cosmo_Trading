@@ -3,7 +3,7 @@ import { useState } from 'react'
 import './AdminLogin.css'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom';
-
+import logo from './Logo-22.png'
 import toast, { Toaster } from "react-hot-toast";
 export const toastProps = {
     position: "top-center",
@@ -22,7 +22,7 @@ function Adminlogin() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post(`${import.meta.env.VITE_API_URL}/admin/signIn`, {
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}admin/signIn`, {
                 phoneNumber, password
             }
             );
@@ -43,8 +43,11 @@ function Adminlogin() {
     }
     return (
         <div className='admin-login'>
+            
+            
             <Toaster />
             <form onSubmit={handleSubmit} className='admin-form'>
+            <div className='text-center'><img src={logo} alt="" /></div>
                 <h2>Welcome Admin</h2>
                 <p>Phone No</p>
                 <input type="number" placeholder='Enter Number' value={phoneNumber} onChange={(e) => { setPhone(e.target.value) }} />
