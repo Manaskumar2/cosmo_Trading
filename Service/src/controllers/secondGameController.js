@@ -47,11 +47,11 @@ for (const key in groups) {
     if (numberOfGroups === 1) {
       if (groups["A"].users.length === 0 && groups["B"].users.length === 0 && groups["C"].users.length !== 0) {
         loserGroup = "C"
-      } else if (groups["A"].users.length !== 0 && groups["B"].users.length === 0 && groups["C"].users.length !== 0) {
+      } else if (groups["A"].users.length !== 0 && groups["B"].users.length === 0 && groups["C"].users.length === 0) {
         loserGroup = "A"
   
 
-      } else if (groups["A"].users.length === 0 && groups["B"].users.length !== 0 && groups["C"].users.length == 0) {
+      } else if (groups["A"].users.length === 0 && groups["B"].users.length !== 0 && groups["C"].users.length === 0) {
         loserGroup = "B"
 
 
