@@ -233,7 +233,7 @@ function GameHistory({ duration }) {
                                                                     <img src={iconSources[Math.floor(Math.random() * iconSources.length)]} alt="Random Icon" />
                                                                 )}
                                                             </span>
-                                                            {item.runnerUpGroup && <span className="icon_rate">
+                                                            {/* {item.runnerUpGroup && <span className="icon_rate">
                                                                 {item.runnerUpGroup === 'A' ? (
                                                                     <img src={Alpha} alt="Alpha" />
                                                                 ) : item.runnerUpGroup === 'B' ? (
@@ -243,7 +243,7 @@ function GameHistory({ duration }) {
                                                                 ) : (
                                                                     <img src={iconSources[Math.floor(Math.random() * iconSources.length)]} alt="Random Icon" />
                                                                 )}
-                                                            </span>}
+                                                            </span>} */}
                                                         </div>
                                                     </td>
                                                 </tr>

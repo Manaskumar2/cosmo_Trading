@@ -58,10 +58,18 @@ function AdminHome() {
   };
 
   useEffect(() => {
-    handleCosmoData()
-    handleGrowUp()
-    handleRiseUp()
-  }, [])
+    const callFunctions = () => {
+      handleCosmoData();
+      handleGrowUp();
+      handleRiseUp();
+    };
+    callFunctions();
+    const intervalId = setInterval(callFunctions, 5000);
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
+
 
   return (
     <div>
@@ -78,7 +86,7 @@ function AdminHome() {
               <div className="row">
                 <div className="col-4">
                   <div className='admin-home-box'>
-                    <h5>Company Amount</h5>
+                    <h5>Company Profit</h5>
                     <p>{cosmo.data.data[0].amount.toFixed(2)}</p>
                   </div>
                 </div>
@@ -103,6 +111,12 @@ function AdminHome() {
               <div className='col-12'><h2 className='heading'>Grow Up</h2></div>
             </div>
               <div className="row">
+              <div className="col-3 ">
+                <div className='admin-home-box'>
+                  <h5>Today Betting Amount on Alpha</h5>
+                  <p>{growUp.data.data.todayBetAmounts.small.toFixed(2)}</p>
+                </div>
+                </div>
                 <div className="col-3">
                   <div className='admin-home-box'>
                   <h5>Today Betting Amount on Beta</h5>
@@ -111,25 +125,19 @@ function AdminHome() {
                 </div>
                 <div className="col-3 ">
                 <div className='admin-home-box'>
-                  <h5>Today Betting Amount on Alpha</h5>
-                  <p>{growUp.data.data.todayBetAmounts.small.toFixed(2)}</p>
-
-                </div>
-                </div>
-                <div className="col-3 ">
-                <div className='admin-home-box'>
-                  <h5>Today Betting Amount on Beta</h5>
-                  <p>{growUp.data.data.totalBetAmounts.big.toFixed(2)}</p>
-                </div>
-                </div>
-                <div className="col-3 ">
-                <div className='admin-home-box'>
-                  <h5>Today Betting Amount on Alpha</h5>
+                  <h5>Current Betting Amount on Alpha</h5>
                   <p>{growUp.data.data.totalBetAmounts.small.toFixed(2)}</p>
                 </div>
                 </div>
               </div>
-              </div>}
+              <div className="col-3 ">
+                <div className='admin-home-box'>
+                  <h5>Current Betting Amount on Beta</h5>
+                  <p>{growUp.data.data.totalBetAmounts.big.toFixed(2)}</p>
+                </div>
+                </div>
+              </div>
+              }
             {riseUp &&
             <>  <div className="row">
             <div className='col-12'><h2 className='heading'>Rise Up</h2></div>
@@ -137,21 +145,21 @@ function AdminHome() {
               <div className="row">
                 <div className="col-4 ">
                   <div className='admin-home-box'>
-                  <h5>Total Betting Amount on Alpha</h5>
+                  <h5>Current Betting Amount on Alpha</h5>
                   <p>{riseUp.data.data.totalBetAmounts.A.toFixed(2)}</p>
 
                 </div>
                 </div>
                 <div className="col-4 ">
                   <div className='admin-home-box'>
-                  <h5>Total Betting Amount on Beta</h5>
+                  <h5>Current Betting Amount on Beta</h5>
                   <p>{riseUp.data.data.totalBetAmounts.B.toFixed(2)}</p>
 
                 </div>
                 </div>
                 <div className="col-4 ">
                   <div className='admin-home-box'>
-                  <h5>Total Betting Amount on Gamma</h5>
+                  <h5>Current Betting Amount on Gamma</h5>
                   <p>{riseUp.data.data.totalBetAmounts.C.toFixed(2)}</p>
                 </div>
                 </div>
