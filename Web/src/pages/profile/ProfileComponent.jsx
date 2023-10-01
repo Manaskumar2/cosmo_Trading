@@ -1,7 +1,7 @@
 import './Profile.css'
 import back from '../../images/back-button 1.svg'
 import ear from '../../images/earphone.svg'
-import {Link} from  'react-router-dom'
+import { Link } from 'react-router-dom'
 import profileImg from '../../../../SVG/profile 2.svg'
 import wallet from '../../images/green-wallet.svg'
 import rupee from '../../images/rupee.svg'
@@ -22,28 +22,31 @@ import Nav from '../../components/Nav/Nav'
 import { AuthState } from '../../Atoms/AuthState'
 import { UserDetails } from '../../Atoms/UserDetails'
 import { useRecoilValue, useRecoilState } from 'recoil'
+import {AiOutlineEdit} from 'react-icons/ai'
+import {ImCheckmark} from 'react-icons/im'
 import axios from 'axios'
- import { useEffect } from 'react'
- import { useNavigate } from 'react-router-dom'
+import { useEffect,useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 function Profile() {
+    const [edit , setEdit]=useState(true)
+    const [userName , setuserName]=useState('')
     const navigate = useNavigate()
-    const [auth,setAuth]= useRecoilState(AuthState )
-    const [userData , setUserData]=useRecoilState(UserDetails )
+    const [auth, setAuth] = useRecoilState(AuthState)
+    const [userData, setUserData] = useRecoilState(UserDetails)
 
-     const logout = () => {
+    const logout = () => {
 
         sessionStorage.removeItem('authToken');
         setAuth(null)
 
         navigate('/signIn')
-      };
-    
-    const handleUserdata = async () => {
+    };
 
+    const handleUserdata = async () => {
         try {
             let token = auth.authToken
             let UID = auth.UID
-            const response = await axios.get(`${import.meta.env.VITE_API_URL}/getUserProfile/${UID}`,  {
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/getUserProfile/${UID}`, {
                 headers: { Authorization: `Bearer ${token}` }
             }
             );
@@ -56,19 +59,35 @@ function Profile() {
         } catch (error) {
             const errorMessage = error.response ? error.response.data.message : error.message;
         }
-        useEffect(()=>{handleUserdata();
-            
-        },[])
+
     }
+    const handleUserName = async () => {
+        try {
+            let token = auth.authToken
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/updateUserProfile`, { userName } , {
+                headers: { Authorization: `Bearer ${token}` }
+            }
+            );
+            if (response.status === 200) {
+                handleUserdata()
+                setEdit(!edit)
+                console.log(response);
+                handleUserdata()
+                return response;
+            }
+        } catch (error) {
+            const errorMessage = error.response ? error.response.data.message : error.message;
+        }
 
-        
-        
+    }
+    useEffect(() => {
+        handleUserdata();
+    }, [])
 
-        
-    
+
     return (
         <div className='profileContainer'>
-            
+
             <div className="container ProNav">
                 <div className="row">
                     <Link to='/' className="col-2">
@@ -77,7 +96,7 @@ function Profile() {
                     <div className="col-8">
                         Profile
                     </div>
-                    <div className="col-2" style={{textAlign:"right"}} onClick={()=>{navigate('/customerCare')}}>
+                    <div className="col-2" style={{ textAlign: "right" }} onClick={() => { navigate('/customerCare') }}>
                         <img src={ear} alt="" className="header_headphone" />
                     </div>
                 </div>
@@ -88,16 +107,25 @@ function Profile() {
                         <div className='col-4'><div className='img-cover'><img src={profileImg} alt="" /></div></div>
                         <div className='col-8'>
                             <div className='userData'>
-                            
-                        <p>ID : {auth.UID}</p>
-                        <p>Mobile :{auth.phoneNumber}</p>
+                            {!edit ? (
+        <div>
+            <p>Name : <input type="text" value={userName} onChange={(e)=>{setuserName(e.target.value)}} className='name-input'/>  <span onClick={handleUserName}><ImCheckmark style={{color:'#1B92AC',fontSize:"1rem"}}/></span></p>
+        </div>
+    ) : (
+        <div>
+            <p>Name : {userData && userData.data.data.userDetails.name}  <span onClick={() => setEdit(!edit)}><AiOutlineEdit style={{color:'#1B92AC',fontSize:"1.4rem"}}/></span></p>
+        </div>
+    )}
+
+                                <p>ID : {auth.UID}</p>
+                                <p>Mobile :{auth.phoneNumber}</p>
                             </div>
-                        
+
                         </div>
                     </div>
                 </div>
                 <div className="wallet listing-wrapper">
-                {/* <div className="container winWallet">
+                    {/* <div className="container winWallet">
                     <div className="row">
                         <div className="col-8" style={{ marginBottom: "10px" }}>
                             <h4 style={{marginBottom:3, color: '#6FC0EE',fontFamily: 'Montserrat',letterSpacing: 0.09, fontWeight:600, }}>Total</h4>
@@ -116,12 +144,12 @@ function Profile() {
                         
                     </div> */}
                     <div className="container">
-                            <div className="color-btn">
-                                <button className='promotion-btn' onClick={()=>{navigate("/promotion")}}><div className='promotion'><img src={mic} alt="" />Promotion<img src={next} alt="" /></div></button>
-                            </div>
+                        <div className="color-btn">
+                            <button className='promotion-btn' onClick={() => { navigate("/promotion") }}><div className='promotion'><img src={mic} alt="" />Promotion<img src={next} alt="" /></div></button>
                         </div>
+                    </div>
 
-                        {/* <div className="container profileIcons">
+                    {/* <div className="container profileIcons">
                             <div className="row">
                                 <div className="col-4">
                                     <div className='icon'><img src={document} alt="" /></div>
@@ -139,62 +167,62 @@ function Profile() {
                                 </div>
                             </div>
                         </div> */}
-                        <div className="container chart">
-                            <div className='row' onClick={()=>{navigate("/premium")}}>
-                                <div className='col-2'><div className='profile-logo-Wrapper'><img src={premium} alt="" /></div></div>
-                                <div className='col-8 lvlContainer'>Prime Membership <div className='lvl'>LV1</div></div>
-                                <div className='col-2 backImg'><img src={next} alt="" /></div>
-                            </div>
-                            <div className='row'>
-                                <div className='col-2'><div className='profile-logo-Wrapper'><img src={shield} alt="" /></div></div>
-                                <div className='col-8' onClick={()=>{navigate("/security")}}>Account Security</div>
-                                <div className='col-2 backImg'><img src={next} alt="" /></div>
-                            </div>
-                            <div className='row' onClick={()=>{navigate("/promotion")}}>
-                                <div className='col-2'><div className='profile-logo-Wrapper'><img src={marketing} alt="" /></div></div>
-                                <div className='col-8 '>Promotion Mission </div>
-                                <div className='col-2 backImg'><img src={next} alt="" /></div>
-                            </div>
-                            <div className='row' onClick={()=>{navigate('/gift')}}>
-                                <div className='col-2'><div className='profile-logo-Wrapper'><img src={gift} alt="" /></div></div>
-                                <div className='col-8'>Gift Code</div>
-                                <div className='col-2 backImg'><img src={next} alt="" /></div>
-                            </div>
-                            <div className='row' onClick={()=>{navigate("/beginnerTutorial")}}>
-                                <div className='col-2'><div className='profile-logo-Wrapper'><img src={video} alt="" /></div></div>
-                                <div className='col-8' >Beginner Tutorial</div>
-                                <div className='col-2 backImg'><img src={next} alt="" /></div>
-                            </div>
-                            <div className='row' onClick={()=>{navigate("/about")}}>
-                                <div className='col-2'><div className='profile-logo-Wrapper'><img src={info} alt="" /></div></div>
-                                <div className='col-8' >About</div>
-                                <div className='col-2 backImg'><img src={next} alt="" /></div>
-                            </div>
-                            <div className='row'onClick={()=>{navigate("/customerCare")}}>
-                                <div className='col-2'><div className='profile-logo-Wrapper'><img src={customer} alt="" /></div></div>
-                                <div className='col-8' >Customer Service</div>
-                                <div className='col-2 backImg'><img src={next} alt="" /></div>
-                            </div>
-                            <div className='row'onClick={()=>{navigate("/walletTransfer")}}>
-                                <div className='col-2'><div className='profile-logo-Wrapper'><img src={customer} alt="" /></div></div>
-                                <div className='col-8' >Wallet to Wallet Transfer</div>
-                                <div className='col-2 backImg'><img src={next} alt="" /></div>
-                            </div>
-                            {/* <div className='row'onClick={()=>{navigate('/admin/home')}}>
+                    <div className="container chart">
+                        <div className='row' onClick={() => { navigate("/premium") }}>
+                            <div className='col-2'><div className='profile-logo-Wrapper'><img src={premium} alt="" /></div></div>
+                            <div className='col-8 lvlContainer'>Prime Membership <div className='lvl'>LV1</div></div>
+                            <div className='col-2 backImg'><img src={next} alt="" /></div>
+                        </div>
+                        <div className='row'>
+                            <div className='col-2'><div className='profile-logo-Wrapper'><img src={shield} alt="" /></div></div>
+                            <div className='col-8' onClick={() => { navigate("/security") }}>Account Security</div>
+                            <div className='col-2 backImg'><img src={next} alt="" /></div>
+                        </div>
+                        <div className='row' onClick={() => { navigate("/promotion") }}>
+                            <div className='col-2'><div className='profile-logo-Wrapper'><img src={marketing} alt="" /></div></div>
+                            <div className='col-8 '>Promotion Mission </div>
+                            <div className='col-2 backImg'><img src={next} alt="" /></div>
+                        </div>
+                        <div className='row' onClick={() => { navigate('/gift') }}>
+                            <div className='col-2'><div className='profile-logo-Wrapper'><img src={gift} alt="" /></div></div>
+                            <div className='col-8'>Gift Code</div>
+                            <div className='col-2 backImg'><img src={next} alt="" /></div>
+                        </div>
+                        <div className='row' onClick={() => { navigate("/beginnerTutorial") }}>
+                            <div className='col-2'><div className='profile-logo-Wrapper'><img src={video} alt="" /></div></div>
+                            <div className='col-8' >Beginner Tutorial</div>
+                            <div className='col-2 backImg'><img src={next} alt="" /></div>
+                        </div>
+                        <div className='row' onClick={() => { navigate("/about") }}>
+                            <div className='col-2'><div className='profile-logo-Wrapper'><img src={info} alt="" /></div></div>
+                            <div className='col-8' >About</div>
+                            <div className='col-2 backImg'><img src={next} alt="" /></div>
+                        </div>
+                        <div className='row' onClick={() => { navigate("/customerCare") }}>
+                            <div className='col-2'><div className='profile-logo-Wrapper'><img src={customer} alt="" /></div></div>
+                            <div className='col-8' >Customer Service</div>
+                            <div className='col-2 backImg'><img src={next} alt="" /></div>
+                        </div>
+                        <div className='row' onClick={() => { navigate("/walletTransfer") }}>
+                            <div className='col-2'><div className='profile-logo-Wrapper'><img src={customer} alt="" /></div></div>
+                            <div className='col-8' >Wallet to Wallet Transfer</div>
+                            <div className='col-2 backImg'><img src={next} alt="" /></div>
+                        </div>
+                        {/* <div className='row'onClick={()=>{navigate('/admin/home')}}>
                                 <div className='col-2'><div className='profile-logo-Wrapper'><img src={customer} alt="" /></div></div>
                                 <div className='col-8' >Admin Panel</div>
                                 <div className='col-2 backImg'><img src={next} alt="" /></div>
                             </div> */}
-                        </div>
+                    </div>
                 </div>
                 <div className="container">
-                            <div className="color-btn">
-                                <button className='promotion-btn' style={{background: 'linear-gradient(140deg, #C82F36 0%, #EC4E56 100%)', marginTop:"3rem",marginBottom:'8rem'}} onClick={logout}><div className='promotion'>Log Out</div></button>
-                            </div>
-                        </div>
-                
+                    <div className="color-btn">
+                        <button className='promotion-btn' style={{ background: 'linear-gradient(140deg, #C82F36 0%, #EC4E56 100%)', marginTop: "3rem", marginBottom: '8rem' }} onClick={logout}><div className='promotion'>Log Out</div></button>
+                    </div>
+                </div>
+
             </div>
-            <Nav/>
+            <Nav />
         </div>
     )
 }

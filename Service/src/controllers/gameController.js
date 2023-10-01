@@ -406,7 +406,16 @@ const betController = async (req, res) => {
 
      let walletAmount = user.walletAmount - amount;
     let bettingAmount = user.bettingAmount + amount;
-    let rechargeAmount = user.rechargeAmount-amount;
+    let rechargeAmount = user.rechargeAmount
+      if (rechargeAmount > 0) {
+      if (amount <= rechargeAmount) {
+        rechargeAmount -= amount;
+      } else if (rechargeAmount <= amount) {
+        const remainingAmount = amount - rechargeAmount
+        const deductAmount =amount - remainingAmount
+        rechargeAmount -=deductAmount;
+      }
+    }
     await userModel.updateOne(
       { _id: user._id },
       {

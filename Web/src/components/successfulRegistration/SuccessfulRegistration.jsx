@@ -3,12 +3,15 @@ import './SuccessfulRegistration.css'
 import { Uid } from '../../Atoms/Uid'
 import { useRecoilValue } from 'recoil'
 import { useNavigate } from 'react-router-dom'
+import logo from '../../images/Cosmo Logo.svg'
 function SuccessfulRegistration() {
     const auth=useRecoilValue(Uid)
     const navigate=useNavigate()
   return (
     <div className='s-register'>
-      <h2 className='text-center'>Associate Registered Successfully</h2>
+      <div className='text-center'><img src={logo} alt="" /></div>
+      <h3 className='text-center'>Welcome to Cosmo Trade.</h3>
+      <h5 className='text-center' >Associate Registration is Successful!</h5>
       {auth &&<p>You are successfully registered. Your UID is {auth.data.data.UID} . Team Cosmotrade.live</p>}
       <div className='gotoLogin'><button class="cta" onClick={()=>{navigate('/signIn')}}>
     <span class="span">Login Here</span>

@@ -38,6 +38,7 @@ function MyTeam() {
             });
 
             if (response.status === 200) {
+                console.log(response.data.downlineDetails)
                 setDownline(response.data.downlineDetails);
                 return response;
             }
@@ -73,6 +74,7 @@ function MyTeam() {
 
             if (response.status === 200) {
                 setSelectedUserData(response.data);
+                console.log(response.data)
                 setShowPopup(true);
                 return response;
             }
@@ -176,6 +178,7 @@ function MyTeam() {
                             <div className='down-details'>
                                 <h2>User Details</h2>
                                 <p>UID: {selectedUserData.data.userDetails.UID}</p>
+                                <p>User Name: {selectedUserData.data.userDetails.name}</p>
                                 <p>commissionAmount: {selectedUserData.data.userDetails.commissionAmount}</p>
                                 <p>winningAmount: {selectedUserData.data.userDetails.winningAmount}</p>
                                 

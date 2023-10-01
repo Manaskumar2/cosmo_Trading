@@ -167,6 +167,9 @@ function RiseUp() {
             if (error.response && error.response.status === 400) {
                 toast.error(`You can't bet on ${message} now!`, { ...toastProps });
             }
+            if (error.response && error.response.status === 401) {
+                toast.error(`Insufficient Fund Recharge now!`, { ...toastProps });
+            }
             if (error.response && error.response.status === 404) {
                 return null;
             }
@@ -299,26 +302,20 @@ function RiseUp() {
                             <div className='clock'><img src={clock} alt="" /></div>
                             <p>1 minute</p>
                         </button>
-
                     </div>
                 </div>
-
-
-
-
                 <>
                     <TimeSectionRiseUp />
                     <>
                         <div className="big-small-game-wrapper " >
-
                             {/* // animation // */}
                             {showCountDown === true ? <Timer /> :
                                 <div className='second-image-cover'>
                                     <div className="ani-container">
-                                        <img src={animation} alt="animation" />
-                                        {/* <div className="animated-div animated-alphaBar "></div>
+                                        {/* <img src={animation} alt="animation" /> */}
+                                        <div className="animated-div animated-alphaBar "></div>
                                         <div className="animated-div animated-betaBar"></div>
-                                        <div className="animated-div animated-gammaBar"></div> */}
+                                        <div className="animated-div animated-gammaBar"></div>
                                     </div>
                                     <div className=' alfa-beta-gama-button-container'>
                                         <button className='alfa-beta-gama-button' onClick={() => { setSmShow(true); setGroup("A") }} style={{ background: "radial-gradient(50% 50% at 50% 50%, #FF7562 0%, #E51616 100%)" }}>

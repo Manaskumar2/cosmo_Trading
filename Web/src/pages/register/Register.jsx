@@ -7,6 +7,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import axios from 'axios';
 import { useRecoilState } from 'recoil';
 import { Uid } from '../../Atoms/Uid';
+import user from './user.svg'
 export const toastProps = {
   position: "top-center",
   duration: 2000,
@@ -53,6 +54,7 @@ function Register() {
 
     try {
       const response = await axios.post(`${import.meta.env.VITE_API_URL}/SignUp`, {
+        userName,
         phoneNumber,
         password,
         referralCode,
@@ -98,7 +100,7 @@ function Register() {
             <div className="inputBox">
                 <div className="inputBoxInner">
                   <div className="front">
-                    <img src={comp} alt="" />
+                    <img src={user} alt="" />
                   </div>
                   <div>
                     <input

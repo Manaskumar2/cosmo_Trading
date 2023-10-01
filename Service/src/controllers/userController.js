@@ -19,8 +19,8 @@ const signUp = async (req, res) => {
     if (!referralCode) return res.status(400).send({ status: false, message: "please provide refferal code" })
     const checkrefferalCode = await userModel.findOne({ referralCode: referralCode })
     if (!checkrefferalCode) return res.status(400).send({ status: false, message: "Invalid referral code" })
-    // if (!userName) return res.status(404).send({ status: false, message: "please enter your Name" })
-    // if (!validation.isValidName(userName)) return res.status(404).send({ status: false, messaage: "Please enter valid Name" })
+    if (!userName) return res.status(404).send({ status: false, message: "please enter your Name" })
+   if (!validation.isValidName(userName)) return res.status(404).send({ status: false, messaage: "Please enter valid Name" })
     
 
 
@@ -49,7 +49,7 @@ const signUp = async (req, res) => {
       parentReferralCode: referralCode,
       referralCode: await generateUniqueReferralCode()+UID,
       UID: UID,
-      // name:userName
+      name: userName
     })
    
     if (referralCode) {
@@ -277,7 +277,7 @@ const updateUserProfile = async (req, res) => {
   
     await user.save();
 
-    res.status(400).json({status:true, message: 'Profile updated successfully', data:user._doc });
+    res.status(200).json({status:true, message: 'Profile updated successfully', data:user._doc });
   } catch (error) {
     console.error(error);
     res.status(500).json({status:false, message: 'An error occurred while updating the profile' });
@@ -466,6 +466,7 @@ const getDownlineDetails = async (req, res) => {
             phoneNumber: user.phoneNumber || null,
             UID: user.UID || null,
             referralDate: user.createdAt || null,
+            name: user.name || null,
             downline: [],
           }
         ];

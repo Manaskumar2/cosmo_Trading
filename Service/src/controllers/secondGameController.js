@@ -590,7 +590,6 @@ async function calculateTotalBettingAmountForTheDay() {
       },
     });
     let totalBettingAmountForTheDay = 0;
-
     for (const game of games) {
       for (const bet of game.bets) {
         totalBettingAmountForTheDay += bet.amount;
@@ -688,12 +687,22 @@ const bet2ndController = async (req, res) => {
         // }
         if (user.walletAmount <= amount) {
             return res
-                .status(400)
+                .status(401)
                 .json({ status: false, message: "Insufficient funds" });
         }
     let walletAmount = user.walletAmount - amount;
     let bettingAmount = user.bettingAmount + amount;
-    let rechargeAmount = user.rechargeAmount-amount;
+
+    let rechargeAmount = user.rechargeAmount
+      if (rechargeAmount > 0) {
+      if (amount <= rechargeAmount) {
+        rechargeAmount -= amount;
+      } else if (rechargeAmount <= amount) {
+        const remainingAmount = amount - rechargeAmount
+        const deductAmount =amount - remainingAmount
+        rechargeAmount -=deductAmount;
+      }
+    }
     game.bets.push({ user: user._id, amount, group });
 
 
