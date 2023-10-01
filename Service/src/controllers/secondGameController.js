@@ -140,8 +140,8 @@ for (const key in groups) {
     
           }
         }
-      } else if (groups["B"].users.length === 0 && groups["A"].users.length == groups["C"].users.length !== 0) {
-        if (groups["A"].totalAmount == groups["C"].totalAmount !== 0) {
+      } else if (groups["B"].users.length === 0 && groups["A"].users.length == groups["C"].users.length !== 0  && groups["A"].totalAmount==groups["C"].totalAmount ) {
+        if (!groups["A"].totalAmount && !groups["C"].totalAmount) {
           const randomIndex = Math.floor(Math.random() * 2); // 0 or 1
           if (randomIndex === 0) {
             winnerGroup = "A";
@@ -153,8 +153,8 @@ for (const key in groups) {
 
           }
         }
-      } else if (groups["C"].users.length === 0 && groups["B"].users.length == groups["A"].users.length !== 0) {
-        if (groups["B"].totalAmount == groups["A"].totalAmount !== 0) {
+      } else if (groups["C"].users.length === 0 && groups["B"].users.length == groups["A"].users.length !== 0 && groups["A"].totalAmount==groups["B"].totalAmount) {
+        if (!groups["B"].totalAmount && !groups["A"].totalAmount) {
           const randomIndex = Math.floor(Math.random() * 2); // 0 or 1
           if (randomIndex === 0) {
             winnerGroup = "A";
