@@ -167,6 +167,7 @@ for (const key in groups) {
       }
     }
     else if (numberOfGroups === 3) {
+      
 const groupNames = Object.keys(groups);
 const totalAmounts = groupNames.map(groupName => groups[groupName].totalAmount);
 
@@ -213,7 +214,8 @@ if (totalAmounts.filter(amount => amount === minAmount).length === 1) {
     }
   }
 }
-else if (
+
+if (
         groups["A"].totalAmount !== 0 &&
         groups["B"].totalAmount !== 0 &&
         groups["C"].totalAmount !== 0 &&
