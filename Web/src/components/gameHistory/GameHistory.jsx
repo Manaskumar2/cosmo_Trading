@@ -145,7 +145,7 @@ const endIndex = startIndex + itemsPerPage;
                 </thead>
                 <tbody>
                     {gameHistoryList &&
-                        Array.isArray(gameHistoryList.gamesWithSuccessfulBets) && // Check if gameHistoryList.data is an array
+                        Array.isArray(gameHistoryList.gamesWithSuccessfulBets) && 
                         gameHistoryList.gamesWithSuccessfulBets
                             .filter((item) => item.isCompleted)
                             .map((item, index) => {

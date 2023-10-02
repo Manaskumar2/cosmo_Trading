@@ -20,18 +20,22 @@ export const toastProps = {
 };
 
 function AdminPrime() {
-  
+  const [status, setStatus]=useState('approved')
   const [user, setUser] = useState(null);
-  const [adminStatus, setAdminStatus] = useState('');
+  // const [adminStatus, setAdminStatus] = useState('');
   const authData = useRecoilValue(AuthState);
   const [premiumState, setPremiumState] = useRecoilState(PremiumState);
 
-  const handlePrimeRequest = async () => {
+  const handlePrimeRequest = async () => { 
     try {
       let token = authData.authToken;
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}admin/getPremiumRequest`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}admin/getPremiumRequest?status=${status}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      
       if (response.status === 200) {
         console.log(response);
         setPremiumState(response.data);
@@ -41,6 +45,7 @@ function AdminPrime() {
       const errorMessage = error.response ? error.response.data.message : error.message;
     }
   };
+  
 
   const handleUser = async (userId) => {
     try {
@@ -55,6 +60,7 @@ function AdminPrime() {
       }
     } catch (error) {
       const errorMessage = error.response ? error.response.data.message : error.message;
+      toast.error(errorMessage || 'Something went wrong', { ...toastProps });
     }
   };
 
@@ -62,7 +68,7 @@ function AdminPrime() {
     try {
       let token = authData.authToken;
       const response = await axios.put(
-        `${import.meta.env.VITE_API_URL}/admin/updatePremiumRequest/${userId}`,
+        `${import.meta.env.VITE_API_URL}admin/updatePremiumRequest/${userId}`,
         {  adminStatus: status },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -71,17 +77,19 @@ function AdminPrime() {
       if (response.status === 200) {
         toast.success("Premium Activated !", { ...toastProps });
         console.log(response);
+        handlePrimeRequest();
         setTransactionId("")
         return response;
       }
     } catch (error) {
       const errorMessage = error.response ? error.response.data.message : error.message;
+      toast.error(errorMessage || 'Something went wrong', { ...toastProps });
     }
   };
 
   useEffect(() => {
     handlePrimeRequest();
-  }, []);
+  }, [status]);
 
   return (
     <div>
@@ -89,6 +97,13 @@ function AdminPrime() {
       <div className='flex-div'>
         <Side />
         <div className='admin-rightSection'>
+        <div className='row tab-btns'>
+
+<button className={status==='approved'?'col-4 active-tab-btn-adminPage' : 'col-4 tab-btn'} onClick={() => { setStatus('approved') }}>Approved List</button>
+<button className={status==='pending'?'col-4 active-tab-btn-adminPage' : 'col-4 tab-btn'} onClick={() => { setStatus('pending') }}>Pending List</button>
+<button className={status==='rejected'?'col-4 active-tab-btn-adminPage' : 'col-4 tab-btn'} onClick={() => { setStatus('rejected') }}>Reject List</button>
+
+</div>
         <Toaster/>
           {premiumState && premiumState.data && premiumState.data.map((item, index) => (
             <Accordion key={index}>

@@ -31,7 +31,7 @@ border:1px solid #295992}
         .clock img{height: 2.2rem !important;width: 2.2rem !important;}
         .timeBtn .row .col-3{display: flex; flex-direction: column;gap: 15px; justify-content: center;align-items: center;}
             .timeBtn .row .col-3:hover{background: linear-gradient(180deg, #C82F36 0%, #EC4E56 100%);}
-            .clock:hover{background: #fff;}
+            /* .clock:hover{background: #fff;} */
             .mint{color: #FFF;font-family: Montserrat;font-size: 0.875rem;font-style: normal;font-weight: 600;line-height: 1.25rem; /* 142.857% */}
         .time-play{background: linear-gradient(180deg, #02375B 0%, #076D84 100%);}
         .end-time .row  div{background: linear-gradient(180deg, #013151 44.79%, #005275 44.80%, #013251 100%);display: flex;padding: 0.625rem;justify-content: center;align-items: center; margin: 5px; color: #fff; font-weight: 500; font-size: 1.2rem;
@@ -39,6 +39,7 @@ border:1px solid #295992}
 .time-play .left{padding: 1.2rem; display: flex;flex-direction: column;justify-content: center;align-items: center;color: #FFF;gap: .25rem;}
 .time-play .right{padding: 1.2rem; display: flex;flex-direction: column;color: #FFF;gap: .25rem;}
 .time-play .left h3{font-family: 'Montserrat';font-size: 1.125rem;font-style: normal;font-weight: 600;letter-spacing: 0.45rem;}
+.clock-btn{opacity: .3;}
 .selected-mint{border-radius: 6.25rem;
     background: linear-gradient(180deg, #0C568C 0%, #0782A9 100%);padding: .25rem .6rem;}
 
@@ -143,7 +144,7 @@ backdrop-filter: blur(15px);}
     .clock-btn-container .col-3 p{color: #99EDFF;font-family: 'Montserrat';font-size: 0.875rem;font-style: normal;font-weight: 600;line-height: 1.25rem; /* 142.857% */    width: 100%;}
     .clock-btn-container button{border: 0; outline: none; background-color: transparent;}
 
-    .activeClock{ background: linear-gradient(180deg, #C82F36 0%, #EC4E56 100%);    width: 100%;}
+    .activeClock{ background: linear-gradient(180deg, #C82F36 0%, #EC4E56 100%);}
     .activeClock .clock{ background: #fff !important;}
     .activeClock p{ color: #fff !important;}
     .fade , .modal , .show{padding: 0 !important;}

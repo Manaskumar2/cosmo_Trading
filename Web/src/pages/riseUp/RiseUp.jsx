@@ -241,9 +241,13 @@ function RiseUp() {
                 setMinute(response)
                 return response;
             }
-        } catch (error) {
-            const errorMessage = error.response ? error.response.data.message : error.message;
-            toast.error(errorMessage || 'Something went wrong', { ...toastProps });
+        }catch (error) {
+            if (error.response && error.response.status === 404) {
+                return null
+            } else {
+                const errorMessage = error.response ? error.response.data.message : error.message;
+                toast.error(errorMessage || "Something went wrong", { ...toastProps });
+            }
         }
     };
     useEffect(() => {
@@ -301,6 +305,18 @@ function RiseUp() {
                         <button className={activeTab === 1 ? 'activeClockRaiseUp col-3' : 'clock-btn col-3'} onClick={() => { setDuration(1); handleMin(duration); handleTabClick(1); setTimeNo(1) }}>
                             <div className='clock'><img src={clock} alt="" /></div>
                             <p>1 minute</p>
+                        </button>
+                        <button className='clock-btn col-3' >
+                            <div className='clock'><img src={clock} alt="" /></div>
+                            <p>3 minute</p>
+                        </button>
+                        <button className='clock-btn col-3'>
+                            <div className='clock'><img src={clock} alt="" /></div>
+                            <p>5 minute</p>
+                        </button>
+                        <button className='clock-btn col-3'>
+                            <div className='clock'><img src={clock} alt="" /></div>
+                            <p>10 minute</p>
                         </button>
                     </div>
                 </div>

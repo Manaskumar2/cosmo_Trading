@@ -3,13 +3,21 @@ import './PremiumApply.css'
 import back from '../../images/back-button 1.svg'
 import ear from '../../images/earphone.svg'
 import { Link } from 'react-router-dom'
-
+import toast, { Toaster } from "react-hot-toast";
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { useRecoilValue, useRecoilState } from 'recoil'
 import { AuthState } from '../../Atoms/AuthState'
 import { PremiumState } from '../../Atoms/Premium'
-
+export const toastProps = {
+    position: "top-center",
+    duration: 2000,
+    style: {
+        fontSize: "1rem",
+        background: "#fff",
+        color: "#333",
+    },
+};
 
 function PremiumApply() {
     const authData=useRecoilValue(AuthState)
@@ -40,11 +48,12 @@ function PremiumApply() {
             );
             if (response.status === 201) {
                 console.log(response);
-                settransactionId("")
+                toast.success( "Application sent for Premium User", { ...toastProps });
                 return response;
             }
-        } catch (error) {
+        }  catch (error) {
             const errorMessage = error.response ? error.response.data.message : error.message;
+            toast.error(errorMessage || "Something went wrong", { ...toastProps });
         }
     }
 
@@ -64,6 +73,7 @@ function PremiumApply() {
                         Prime Membership
                     </div>
                 </div>
+                < Toaster/>
             </div>
             <div className='Premium-Body'>
                 <p>Transaction Amount</p>

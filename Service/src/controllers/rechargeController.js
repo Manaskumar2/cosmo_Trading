@@ -13,7 +13,7 @@ const createRecharge = async (req, res) => {
     if(!validation.isTransactionId(upiReferenceNo)) return res.status(404).send({ status: false,message:"please enter valid transaction number" })
 
     const checkPayment = await rechargeModel.findOne({ upiReferenceNo: upiReferenceNo })
-    if (checkPayment) return res.status(400).send({ status: true, message: "please wait for payment confirmation" })
+    if (checkPayment) return res.status(400).send({ status: true, message: "reapted transaction Number" })
 
 
     const paymentRequest = await rechargeModel.create({

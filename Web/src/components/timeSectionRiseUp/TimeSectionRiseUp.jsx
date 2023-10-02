@@ -25,7 +25,7 @@ export const toastProps = {
 
 function TimeSection1({ uid }) {
 
-    const [time , setTime]=useRecoilState(Second)
+    // const [time , setTime]=useRecoilState(Second)
     const [remainingTime, setRemainingTime] = useState(0);
     const [showCountDown, setShowCountDown] = useRecoilState(ShowCountDown )
 

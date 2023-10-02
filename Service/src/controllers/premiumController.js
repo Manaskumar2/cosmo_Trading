@@ -25,8 +25,10 @@ const applyPremiumUser = async (req, res) => {
       }
      const checkAmount = await userModel.findOne({ _id: userId })
       if (!checkAmount) return res.status(400).send({ status: false, message: "please logIn again" })
-      if(!checkAmount.isPremiumUser==true) return res.status(400).send({status:false,message:"you  are already a premium user"})
-      if (!checkAmount.walletAmount >= amount) return res.status(400).send({ status: false, message: "insufficient funds" })
+      if (checkAmount.isPremiumUser == true) return res.status(400).send({ status: false, message: "you  are already a premium user" })
+      
+        const curreentBalance = checkAmount.walletAmount
+      if (curreentBalance< amount) return res.status(400).send({ status: false, message: "insufficient funds" })
       checkAmount.walletAmount -= amount
       checkAmount.save()
       const applyingPremium = await premiumModel.create({ amount: amount, userId: userId })
@@ -41,11 +43,12 @@ const applyPremiumUser = async (req, res) => {
 
 const getpremiumRequest = async (req, res) => { 
 
-    try {
-        const premiumApplyRequest = await premiumModel.find().sort({ createdAt: -1 })
+  try {
+      const status = req.query.status
+    const premiumApplyRequest = await premiumModel.find({ status: status }).sort({ createdAt: -1 })
         if (premiumApplyRequest.length < 0) return res.status(404).send({ status: false, message: "no premium request found." });
         return res.status(200).send({ status: true, message: "success", data: premiumApplyRequest })
-         
+      
     } catch (error) {
         console.error('Error applying for premium status:', error);
     return res.status(500).json({ message: 'Internal server error.' });

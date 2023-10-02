@@ -170,12 +170,12 @@ function Growup() {
     //         toast.error(errorMessage || 'Something went wrong', { ...toastProps });
     //     }
     // }
-    useEffect(() => {
+    // useEffect(() => {
 
-        if (countDownGrowup === 59) {
-            handleMin()
-        }
-    }, [countDownGrowup])
+    //     if (countDownGrowup === 59) {
+    //         handleMin()
+    //     }
+    // }, [countDownGrowup])
 
 
 
@@ -247,7 +247,6 @@ function Growup() {
             const response = await axios.get(`${import.meta.env.VITE_API_URL}/getgame/${duration}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
-
             if (response.status === 200) {
                 setTimeNo(duration)
                 setMinute(response)
@@ -255,8 +254,12 @@ function Growup() {
                 return response;
             }
         } catch (error) {
-            const errorMessage = error.response ? error.response.data.message : error.message;
-            toast.error(errorMessage || 'Something went wrong', { ...toastProps });
+            if (error.response && error.response.status === 404) {
+                return null
+            } else {
+                const errorMessage = error.response ? error.response.data.message : error.message;
+                toast.error(errorMessage || "Something went wrong", { ...toastProps });
+            }
         }
     };
 
@@ -265,10 +268,12 @@ function Growup() {
         const timer = setTimeout(async () => {
 
             await handleMin();
+            console.log(countDownGrowup);
         }, 5000);
         return () => {
             clearTimeout(timer);
         };
+        console.log(countDownGrowup)
         handleMin()
     }, []);
 
@@ -321,6 +326,18 @@ function Growup() {
                         <button className={activeTab === 1 ? 'activeClock col-3' : 'clock-btn col-3'} onClick={() => { setDuration(1); handleMin(duration); handleTabClick(1); setTimeNo(1) }}>
                             <div className='clock'><img src={clock} alt="" /></div>
                             <p>1 minute</p>
+                        </button>
+                        <button className='clock-btn col-3' >
+                            <div className='clock'><img src={clock} alt="" /></div>
+                            <p>3 minute</p>
+                        </button>
+                        <button className='clock-btn col-3'>
+                            <div className='clock'><img src={clock} alt="" /></div>
+                            <p>5 minute</p>
+                        </button>
+                        <button className='clock-btn col-3'>
+                            <div className='clock'><img src={clock} alt="" /></div>
+                            <p>10 minute</p>
                         </button>
                         {/* <button className={activeTab === 3 ? 'activeClock col-3' : 'clock-btn col-3'} onClick={() => { setDuration(3); handleMin(duration); handleTabClick(3); setTimeNo(3) }}>
                             <div className='clock'><img src={clock} alt="" /></div>

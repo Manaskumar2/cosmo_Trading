@@ -13,3 +13,12 @@
         font-family: Montserrat;
         font-size: 1rem;}
         .admin-prime-head div{margin-left: 2rem;}
+        .tab-btn{border-radius: 6.25rem;width: 28%;margin: 1rem;
+            border: 2px solid #FFF;
+            color: #FFF;padding: .5rem 0;
+            color: #FFF;padding: .5rem 0; margin-bottom: 2rem;
+            background: linear-gradient(95deg, #C82F36 5.74%, #C83E44 54.87%, #EC4E56 94.74%);}
+            .active-tab-btn-adminPage{border-radius: 6.25rem;width: 28%;margin: 1rem;
+                border: 2px solid #FFF;
+                color: #FFF;padding: .5rem 0;
+                background: linear-gradient(143deg, #296DAC 0%, #2FB0E7 100%);color: #FFF;padding: .5rem 0; margin-bottom: 2rem;}

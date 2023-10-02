@@ -5,10 +5,7 @@ const premiumSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    transactionId: {
-        type: Number,
-        required:true
-    },
+
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',

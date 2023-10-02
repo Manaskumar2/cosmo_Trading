@@ -711,7 +711,7 @@ const walletToWalletTransactions = async (req, res) => {
     const sender = await userModel.findById(senderId);
     const receiver = await userModel.findOne({ UID: receiverUID });
     if(sender.phoneNumber===receiver.phoneNumber) return res.status(400).send({status: false, message: "you cannot send yourself"})
-    if (transforAmount < 100) return res.status(400).send({ status: false, message: "Amount must be greater than 100" });
+    if (transforAmount < 100) return res.status(401).send({ status: false, message: "Amount must be greater than 100" });
     if(transforAmount>sender.walletAmount) return res.status(400).send({ status: false,message:"insufficient funds" });
   
     if (!sender || !receiver) {

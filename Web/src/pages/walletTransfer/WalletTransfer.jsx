@@ -37,11 +37,10 @@ function WalletTransfer() {
                 setreceiverUID("");
                 console.log(response);
                 setIsModalOpen(false);
-                
             }
         } catch (error) {
             if (error.response && error.response.status === 400) {
-                const errorMessage = ` You cannot send money until remaining bet amount 0`;
+                const errorMessage = `You cannot send money until remaining bet amount 0`;
                 toast.error(errorMessage, { ...toastProps });
             } else {
                 const errorMessage = error.response ? error.response.data.message : error.message;
