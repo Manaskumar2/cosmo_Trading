@@ -1,41 +1,30 @@
 const userModel = require('../models/userModel');
 const withdrawlModel = require('../models/withdrawlModel');
 const withdrawModel = require('../models/withdrawlModel')
-const rechargeModel = require('../models/rechargeModel');
-
-const mongoose = require('mongoose');
-
-
-
 
 const withdrawrequest = async (req, res) => {
 
     try {
-        const { withdrawAmount } = req.body;
+      const { withdrawAmount } = req.body;
+      const wAmount = parseInt(withdrawAmount)
         const userId = req.decodedToken.userId
-       
+       console.log(userId)
 
         if (!userId) return res.status(403).send({ status: false, message: "please login" })
-        if (!withdrawAmount) return res.status(400).send({ status: false, message: "please enter amount" })
-      if (withdrawAmount < 500) return res.status(400).send({ status: false, message: "can not withdraw bellow 500rs" })
+        if (!wAmount) return res.status(400).send({ status: false, message: "please enter amount" })
+      if (wAmount < 500) return res.status(400).send({ status: false, message: "can not withdraw bellow 500rs" })
       
-      const user = await userModel.findOne({ userId: userId })
-      const totalwithdraw= user.winningAmount+user.commissionAmount
-      if (totalwithdraw< withdrawAmount) return res.status(400).send({ status: false, message: "insufficient funds" })
+      const user = await userModel.findById({_id: userId })
+      const totalwithdraw= user.walletAmount
+      if (totalwithdraw < wAmount) return res.status(400).send({ status: false, message: "insufficient funds" })
+      // console.log(user)
       if (user.rechargeAmount != 0) return res.status(400).send({ status: false, message: "you  need to be bet " + user.rechargeAmount + " for withdraw " })
       
-      if (user.winningAmount > withdrawModel) {
-        user.winningAmount -= withdrawAmount
-        user.walletAmount -= withdrawAmount
+      if (user.walletAmount > wAmount) {
+        user.walletAmount -= wAmount
         user.save()
       }
-      else if (user.winningAmount < withdrawAmount) {
-        const remainingAmount = withdrawModel - user.winningAmount
-        user.commissionAmount -= remainingAmount
-        user.walletAmount -= withdrawAmount
-        user.save()
-      }
-        await withdrawlModel.create({ withdrawAmount: withdrawAmount, userId: userId, status: "pending" })
+        await withdrawlModel.create({ withdrawAmount: wAmount, userId: userId, status: "pending" })
         return res.status(200).send({ status: false, message: "waiting for payment confirmation" })
     } catch (error) {
         return res.status(500).send({ status: false, message: error.message })

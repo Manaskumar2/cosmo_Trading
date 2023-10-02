@@ -6,25 +6,25 @@ const createRecharge = async (req, res) => {
   try {
 
     const { upiId, upiReferenceNo, amount, qrCode } = req.body;
-    console.log(req.body);
     const userId = req.decodedToken.userId
+    const rechargeAmount = parseInt(amount)
 
     if (!upiReferenceNo) return res.status(404).send({ status: false, messsage: "please enter your sucessfull payment reference No" })
     if(!validation.isTransactionId(upiReferenceNo)) return res.status(404).send({ status: false,message:"please enter valid transaction number" })
 
     const checkPayment = await rechargeModel.findOne({ upiReferenceNo: upiReferenceNo })
-    if (checkPayment) return res.status(200).send({ status: true, message: "please wait for payment confirmation" })
+    if (checkPayment) return res.status(400).send({ status: true, message: "please wait for payment confirmation" })
 
 
     const paymentRequest = await rechargeModel.create({
       userId: userId,
       upiReferenceNo: upiReferenceNo,
-      amount: amount,
+      amount: rechargeAmount,
       qrCode: qrCode,
       upiId: upiId,
     });
 
-    res.status(201).json(paymentRequest);
+    res.status(201).send({status:true,message:"your request was sent please wait for payment confirmation"});
   } catch (error) {
     return res.status(500).send({ status: false, message: error.message });
   }

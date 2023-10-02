@@ -25,6 +25,11 @@ export const toastProps = {
 };
 
 function GameHistory({ duration }) {
+    const [page, setPage] = useState(1)
+    const itemsPerPage = 10; 
+
+const startIndex = (page - 1) * itemsPerPage;
+const endIndex = startIndex + itemsPerPage;
     const [second, setSecond] = useRecoilState(CountDownRiseup)
     const [expandedRowIndex, setExpandedRowIndex] = useState(null);
     const toggleRow = (index) => {
@@ -39,7 +44,8 @@ function GameHistory({ duration }) {
     const auth = useRecoilValue(AuthState)
     const [gameHistoryList, setGameHistoryList] = useRecoilState(GameHistoryListRiseUp)
     const [userGames, setUserGames] = useRecoilState(UserGameHistoryRiseUp)
-    const [page, setPage] = useState(1)
+   
+    const [historyPage, setHistoryPage] = useState(1)
 
     const getUserGameHistory = async () => {
 
@@ -52,7 +58,7 @@ function GameHistory({ duration }) {
                 headers: { Authorization: `Bearer ${token}` },
             });
             if (response.status === 200) {
-                // console.log(response);
+                console.log(response);
                 setUserGames(response)
                 // console.log(userGames)
                 return response;
@@ -67,11 +73,12 @@ function GameHistory({ duration }) {
             let token = auth.authToken;
             // console.log(token);
             const response = await axios.get(`${import.meta.env.VITE_API_URL}/gameHistory/${duration}`, {
+                params:{page : historyPage},
                 headers: { Authorization: `Bearer ${token}` },
             });
             if (response.status === 200) {
                 // console.log(response);
-                setGameHistoryList(response.data)
+                setGameHistoryList(response.data.data)
                 // console.log(gameHistoryList);
                 return response;
             }
@@ -84,6 +91,10 @@ function GameHistory({ duration }) {
         const fetchData = setInterval(getGameHistory, 3500)
         return () => { clearInterval(fetchData) }
     }, [])
+    useEffect(() => {
+        const fetchData = setInterval(getUserGameHistory, 3500)
+        return () => { clearInterval(fetchData) }
+    }, [historyPage])
 
     // useEffect(() => {
     //     if(countDownRiseup===59){
@@ -93,11 +104,10 @@ function GameHistory({ duration }) {
 
     useEffect(() => {
         getUserGameHistory()
-        const interval = setInterval(() => {
-            getUserGameHistory()
-        }, 3000);
-        return () => clearInterval(interval);
     }, [page])
+    useEffect(() => {
+        getGameHistory()
+    }, [historyPage])
 
 
     const handleTabClick = (tabIndex) => {
@@ -134,7 +144,7 @@ function GameHistory({ duration }) {
                             </thead>
                             <tbody>
                                 {gameHistoryList &&
-                                    gameHistoryList.data
+                                    gameHistoryList.gamesWithSuccessfulBets
                                         .filter((item) => item.isCompleted)
                                         .map((item, index) => {
                                             return (
@@ -146,7 +156,22 @@ function GameHistory({ duration }) {
                                                                 <img src={Winner} alt="Winner" />
                                                             </span>
                                                             <span className="icon_rate">
-                                                                {item.winnerGroup === 'A' ? (
+                                                            {item.winnerGroup === 'A' ? (
+                                                                <img src={Alpha} alt="Alpha" />
+                                                            ) : item.winnerGroup === 'B' ? (
+                                                                <img src={Beta} alt="Beta" />
+                                                            ) : item.winnerGroup === 'C' ? (
+                                                                <img src={Gama} alt="Gamma" />
+                                                            ) : item.winnerGroup === null ? (
+                                                                item.gameUID % 3 === 2 || item.gameUID % 3 === 5 || item.gameUID % 3 === 9 ? (
+                                                                    <img src={Gama} alt="Alpha"  style={{ height: "2rem", width: "2rem" }}/>
+                                                                ) : item.gameUID % 3 === 1 || item.gameUID % 3 === 4 || item.gameUID % 3 === 7 || item.gameUID % 3 === 8 ? (
+                                                                    <img src={Alpha} alt="Beta"  style={{ height: "2rem", width: "2rem" }}/>
+                                                                ) : item.gameUID % 3 === 0 || item.gameUID % 3 === 3 || item.gameUID % 3 === 6 ? (
+                                                                    <img src={Beta} alt="Gamma"  style={{ height: "2rem", width: "2rem" }}/>
+                                                                ) : null
+                                                            ) : null}
+                                                                {/* {item.winnerGroup === 'A' ? (
                                                                     <img src={Alpha} alt="Alpha" style={{ height: "2rem", width: "2rem" }} />
                                                                 ) : item.winnerGroup === 'B' ? (
                                                                     <img src={Beta} alt="Beta" style={{ height: "2rem", width: "2rem" }} />
@@ -158,10 +183,10 @@ function GameHistory({ duration }) {
                                                                     <img src={Beta} alt="Beta" style={{ height: "2rem", width: "2rem" }} />
                                                                 ) : item.winnerGroup === null && item.gameUID % 3 === 0 ? (
                                                                     <img src={Gama} alt="Gamma" style={{ height: "2rem", width: "2rem" }} />
-                                                                ) : null}
+                                                                ) : null} */}
 
                                                             </span>
-                                                            {item.runnerUpGroup && <span className="icon_rate">
+                                                            {/* {item.runnerUpGroup && <span className="icon_rate">
                                                                 {item.runnerUpGroup === 'A' ? (
                                                                     <img src={Alpha} alt="Alpha" />
                                                                 ) : item.runnerUpGroup === 'B' ? (
@@ -174,15 +199,46 @@ function GameHistory({ duration }) {
                                                                     <img src={Beta} alt="Beta" />
                                                                 ) : item.runnerUpGroup === null && item.gameUID % 5 === 0 ? (
                                                                     <img src={Gama} alt="Gamma" />
-                                                                ) : null}
-                                                            </span>}
+                                                                ) : null} 
+                                                           </span>} */}
+                                                            {item.runnerUpGroup === 'A' ? (
+                                                                <img src={Alpha} alt="Alpha" />
+                                                            ) : item.runnerUpGroup === 'B' ? (
+                                                                <img src={Beta} alt="Beta" />
+                                                            ) : item.runnerUpGroup === 'C' ? (
+                                                                <img src={Gama} alt="Gamma" />
+                                                            ) : item.runnerUpGroup === null ? (
+                                                                item.gameUID % 3 === 2 || item.gameUID % 3 === 5 || item.gameUID % 3 === 9 ? (
+                                                                    <img src={Alpha} alt="Alpha" />
+                                                                ) : item.gameUID % 3 === 1 || item.gameUID % 3 === 4 || item.gameUID % 3 === 7 || item.gameUID % 3 === 8 ? (
+                                                                    <img src={Beta} alt="Beta" />
+                                                                ) : item.gameUID % 3 === 0 || item.gameUID % 3 === 3 || item.gameUID % 3 === 6 ? (
+                                                                    <img src={Gama} alt="Gamma" />
+                                                                ) : null
+                                                            ) : null}
+
                                                         </div>
                                                     </td>
                                                 </tr>
                                             );
                                         })}
                             </tbody>
+                            
                         </table>
+                        <div className='pagination-buttons-container'>
+                            <div className='pagination-buttons'>
+                                <button className='decreaseBtn' onClick={() => { setHistoryPage(Math.max(historyPage - 1, 1)); }}>
+                                    <img src={right} alt="" />
+                                </button>
+
+                                {gameHistoryList && <div className='page-count'>  {historyPage}/{gameHistoryList.totalPages} </div>}
+                                {/* {page}/{item.totalPage} */}
+                                <button className='increaseBtn' onClick={() => { setHistoryPage(Math.min(historyPage + 1, gameHistoryList.totalPages)); }}>
+                                    <img src={left} alt="" />
+                                </button>
+
+                            </div>
+                        </div>
                     </div>
                 </div>
             }
@@ -199,24 +255,23 @@ function GameHistory({ duration }) {
 
                                     </tr>
                                 </thead>
+                                
                                 <tbody>
-                                    {userGames &&
-                                        userGames.data &&
-                                        userGames.data.history.map((item, index) => (
+                                {userGames.data.history.slice(startIndex, endIndex).map((item, index) => (
                                             <React.Fragment key={index}>
                                                 <tr onClick={() => toggleRow(index)}>
                                                     <td>{item.gameUID}</td>
                                                     <td style={{ textAlign: 'center' }}> {
-                                                                            item.isCompleted
-                                                                                ? item.group === item.winnerGroup
-                                                                                    ? 'Win'
-                                                                                    : item.group === item.loserGroup
-                                                                                        ? 'Lose'
-                                                                                        : item.group === item.runnerUpGroup
-                                                                                            ? 'Runner Up'
-                                                                                            : 'Pending'
-                                                                                : 'Pending'
-                                                                        }</td>
+                                                        item.isCompleted
+                                                            ? item.group === item.winnerGroup
+                                                                ? 'Win'
+                                                                : item.group === item.loserGroup
+                                                                    ? 'Lose'
+                                                                    : item.group === item.runnerUpGroup
+                                                                        ? 'Runner Up'
+                                                                        : 'Pending'
+                                                            : 'Pending'
+                                                    }</td>
                                                     <td>
                                                         <div className="winners_col_row">
                                                             <span className="icon_win">
@@ -254,7 +309,7 @@ function GameHistory({ duration }) {
                                                                 <div className='flex-div-space-Betn'><p>Period :</p><p>  {item.gameUID}</p></div>
                                                                 <div className='flex-div-space-Betn'><p>Amount :</p><p>  {item.amount}</p></div>
                                                                 <div className='flex-div-space-Betn'><p>Betting Placed :</p><p> {item.group === 'A' ? 'Alpha' : item.group === 'B' ? 'Beta' : item.group === 'C' ? 'Gama' : 'Unknown'}</p></div>
-                                                                
+
                                                                 <div className='flex-div-space-Betn'>
                                                                     <p>Betting Status :</p>
                                                                     <p style={{ textAlign: 'left' }}>

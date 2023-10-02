@@ -24,6 +24,7 @@ export const toastProps = {
 };
 
 function GameHistory({ duration  }) {
+    const[historyPage,setHistoryPage]=useState(1)
 
     const countDownGrowup = useRecoilValue(CountDownGrowup)
 
@@ -41,6 +42,10 @@ function GameHistory({ duration  }) {
     const [gameHistoryList, setGameHistoryList] = useRecoilState(GameHistoryList)
     const [userGames, setUserGames] = useRecoilState(UserGameHistory)
     const [page, setPage] = useState(1)
+    const itemsPerPage = 10; 
+
+const startIndex = (page - 1) * itemsPerPage;
+const endIndex = startIndex + itemsPerPage;
 
     const getUserGameHistory = async () => {
 
@@ -69,11 +74,12 @@ function GameHistory({ duration  }) {
         try {
             let token = auth.authToken;
             const response = await axios.get(`${import.meta.env.VITE_API_URL}/getSuccessFullGameHistory/${duration}`, {
+                params: {page:historyPage},
                 headers: { Authorization: `Bearer ${token}` },
             });
             if (response.status === 200) {
                 // console.log(response.data)
-                setGameHistoryList(response.data)
+                setGameHistoryList(response.data.data)
                 return response;
             }
         } catch (error) {
@@ -100,6 +106,9 @@ function GameHistory({ duration  }) {
             clearInterval(intervalId);
         };
     }, [page]);
+    useEffect(() => {
+        getGameHistory()
+    }, [historyPage]);
     
 
 
@@ -125,69 +134,62 @@ function GameHistory({ duration  }) {
             </div>
 
             {activeTab === 1 &&
-                <div className='period-heading'>
+    <div className='period-heading'>
+        <div className="table-responsive game_history_table">
+            <table className="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Period</th>
+                        <th width="140">Winner</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {gameHistoryList &&
+                        Array.isArray(gameHistoryList.gamesWithSuccessfulBets) && // Check if gameHistoryList.data is an array
+                        gameHistoryList.gamesWithSuccessfulBets
+                            .filter((item) => item.isCompleted)
+                            .map((item, index) => {
+                                return (
+                                    <tr key={index}>
+                                        <td>{item.gameUID}</td>
+                                        <td width="140">
+                                            <div className="winners_col_row">
+                                                <span className="icon_win">
+                                                    <img src={Winner} alt="Winner" />
+                                                </span>
+                                                <p>
+                                                    {item.winnerGroup === 'SMALL' ? 'Alpha' : (item.winnerGroup === 'BIG' ? 'Beta' :
+                                                        (item.winnerGroup === null ? (item.gameUID % 2 === 1 ? 'Alpha' : 'Beta') : ''))}
+                                                </p>
+                                                <span className="icon_rate">
+                                                    <img src={item.winnerGroup === 'SMALL' ? Alpha : (item.winnerGroup === 'BIG' ? Beta :
+                                                        (item.winnerGroup === null ? (item.gameUID % 2 === 1 ? Alpha : Beta) : ''))} />
+                                                </span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                );
+                            })}
+                </tbody>
+            </table>
+            <div className='pagination-buttons-container'>
+                            <div className='pagination-buttons'>
+                                <button className='decreaseBtn' onClick={() => { setHistoryPage(Math.max(historyPage - 1, 1)); }}>
+                                    <img src={right} alt="" />
+                                </button>
 
-                    <div className="table-responsive game_history_table">
-                        <table className="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Period</th>
-                                    <th width="140">Winner</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {gameHistoryList &&
-                                    gameHistoryList.data
-                                        .filter((item) => item.isCompleted)
-                                        .map((item, index) => {
+                                {gameHistoryList && <div className='page-count'>  {historyPage}/{gameHistoryList.totalPages} </div>}
+                                {/* {page}/{item.totalPage} */}
+                                <button className='increaseBtn' onClick={() => { setHistoryPage(Math.min(historyPage + 1, gameHistoryList.totalPages)); }}>
+                                    <img src={left} alt="" />
+                                </button>
 
-                                            return (
-                                                //                                             <tr key={index}>
-                                                //                                                 <td>{item.gameUID}</td>
-                                                //                                                 <td width="140">
-                                                //                                                     <div className="winners_col_row">
-                                                //                                                         <span className="icon_win">
-                                                //                                                             <img src={Winner} alt="Winner" />
-                                                //                                                         </span>
-                                                //                                                         <p>
-                                                //                                                             {item.winnerGroup === 'SMALL' ? 'Alpha' : (item.winnerGroup === 'BIG' ? 'Beta' : '')}
-                                                //                                                             {item.winnerGroup === null ? (item.gameUID % 2 === 1 ? 'Beta' : 'Alpha') : ''}
-                                                //                                                         </p>
-                                                //                                                         <span className="icon_rate">
-                                                //     <img src={item.winnerGroup === 'SMALL' ? Alpha : (item.winnerGroup === 'BIG' ? Beta : (item.gameUID % 2 === 1 ? Beta : Alpha))} alt="Alpha or Beta" />
-                                                //   </span>
-                                                //                                                     </div>
-                                                //                                                 </td>
-                                                //                                             </tr>
-                                                <tr key={index}>
-                                                    <td>{item.gameUID}</td>
-                                                    <td width="140">
-                                                        <div className="winners_col_row">
-                                                            <span className="icon_win">
-                                                                <img src={Winner} alt="Winner" />
-                                                            </span>
-                                                            <p>
-                                                                {item.winnerGroup === 'SMALL' ? 'Alpha' : (item.winnerGroup === 'BIG' ? 'Beta' :
-                                                                    (item.winnerGroup === null ? (item.gameUID % 2 === 1 ? 'Alpha' : 'Beta') : ''))}
-                                                            </p>
-                                                            <span className="icon_rate">
-                                                                <img src={item.winnerGroup === 'SMALL' ? Alpha : (item.winnerGroup === 'BIG' ? Beta :
-                                                                    (item.winnerGroup === null ? (item.gameUID % 2 === 1 ? Alpha : Beta) : ''))} />
-                                                            </span>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            );
-                                        })}
+                            </div>
+                        </div>
+        </div>
+    </div>
+}
 
-
-
-                            </tbody>
-                        </table>
-                    </div>
-
-                </div>
-            }
             {activeTab === 2 &&
                 <div>
                     <div className='period-heading'>
@@ -202,10 +204,9 @@ function GameHistory({ duration  }) {
                                     </tr>
                                 </thead>
                                 <tbody>
-
                                     {userGames &&
                                         userGames.data &&
-                                        userGames.data.history.map((item, index) => (
+                                        userGames.data.history.slice(startIndex, endIndex).map((item, index) => (
                                             <React.Fragment key={index}>
                                                 <tr onClick={() => toggleRow(index)}>
                                                     <td>{item.gameUID}</td>

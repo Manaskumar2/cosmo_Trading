@@ -486,6 +486,7 @@ const growUpUserBettingHistory = async (req, res) => {
     const userId = req.params.userId;
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
 
     if (!userId) return res.status(400).send({ status: false, message: "please provide userId" });
     
@@ -494,6 +495,9 @@ const growUpUserBettingHistory = async (req, res) => {
 
     const games = await Game.find({ 'bets.user': userId })
       .sort({ createdAt: -1 })
+       .skip(skip)
+      .limit(limit);
+    
 
     const count = await Game.countDocuments({ 'bets.user': userId });
 
@@ -562,13 +566,21 @@ const getGameHistory = async (req, res) => {
 
     
     const skip = (page - 1) * limit;
+     const count = await Game.countDocuments({ duration: duration,isCompleted:true })
+
 
     const gamesWithSuccessfulBets = await Game.find({ duration: duration,isCompleted:true })
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
+    
+          const response = {
+      currentPage: page,
+      totalPages: Math.ceil(count / limit),
+      gamesWithSuccessfulBets
+    };
 
-    return res.status(200).send({ status: true, message: "Success", data: gamesWithSuccessfulBets });
+    return res.status(200).send({ status: true, message: "Success", data:response });
   } catch (error) {
     console.error('Error fetching games with successful bets:', error);
     res.status(500).json({ error: 'Internal Server Error' });

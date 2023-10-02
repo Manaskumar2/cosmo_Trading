@@ -33,19 +33,21 @@ function WalletTransfer() {
             });
             if (response.status === 200) {
                 toast.success("Amount successfully Sent!", { ...toastProps });
-                setamount("");
+                setamount('');
                 setreceiverUID("");
                 console.log(response);
                 setIsModalOpen(false);
                 
             }
         } catch (error) {
-            const errorMessage = error.response ? error.response.data.message : error.message;
-            console.log(errorMessage)
-            toast.error(errorMessage || "Something went wrong", { ...toastProps });
-            // if (error.response && error.response.status === 400) {
-            //     toast.error(`You can't send money now! Bet first!`, { ...toastProps });
-            // }
+            if (error.response && error.response.status === 400) {
+                const errorMessage = ` You cannot send money until remaining bet amount 0`;
+                toast.error(errorMessage, { ...toastProps });
+            } else {
+                const errorMessage = error.response ? error.response.data.message : error.message;
+                console.log(errorMessage);
+                toast.error(errorMessage || "Something went wrong", { ...toastProps });
+            }
         
         }
     };
@@ -69,6 +71,7 @@ function WalletTransfer() {
                 return response;
             }
         } catch (error) {
+            
             const errorMessage = error.response ? error.response.data.message : error.message;
             console.log(errorMessage)
             toast.error(errorMessage || "Something went wrong", { ...toastProps });

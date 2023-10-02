@@ -695,24 +695,24 @@ const walletToWalletTransactions = async (req, res) => {
   try {
     const { receiverUID, amount } = req.body;
     const senderId = req.decodedToken.userId
-    
+    const transforAmount =parseInt(amount)
     if(validation.isValidObjectId(senderId))
         if (
             !amount ||
             !receiverUID ||
             isNaN(receiverUID) ||
-            isNaN(amount) 
+            isNaN(transforAmount) 
     
         ) {
             return res
                 .status(400)
                 .json({ status: false, message: "Missing parameters" });
-        }
+      }
     const sender = await userModel.findById(senderId);
     const receiver = await userModel.findOne({ UID: receiverUID });
     if(sender.phoneNumber===receiver.phoneNumber) return res.status(400).send({status: false, message: "you cannot send yourself"})
-    if (amount < 100) return res.status(400).send({ status: false, message: "Amount must be greater than 100" });
-    if(amount>sender.walletAmount) return res.status(400).send({ status: false,message:"insufficient funds" });
+    if (transforAmount < 100) return res.status(400).send({ status: false, message: "Amount must be greater than 100" });
+    if(transforAmount>sender.walletAmount) return res.status(400).send({ status: false,message:"insufficient funds" });
   
     if (!sender || !receiver) {
       return res.status(404).json({ message: "Sender or receiver not found." });
@@ -721,10 +721,10 @@ const walletToWalletTransactions = async (req, res) => {
     
     if (sender.isPremiumUser && !receiver.isPremiumUser) {
       
-      const commission = (amount * 0.01);
-      sender.walletAmount -= amount;
-      receiver.walletAmount += amount
-      receiver.rechargeAmount+=amount
+      const commission = (transforAmount * 0.01);
+      sender.walletAmount -= transforAmount;
+      receiver.walletAmount += transforAmount
+      receiver.rechargeAmount+=transforAmount
 
       
       sender.commissionAmount += commission;
@@ -738,14 +738,14 @@ const walletToWalletTransactions = async (req, res) => {
       return res.status(200).json({
         message: "Transfer successful.",
         commission: commission,
-        amount:amount
+        amount:transforAmount
       });
     } else if(receiver.isPremiumUser && !sender.isPremiumUser) {
       if (sender.rechargeAmount != 0) return res.status(400).send({ status: false, messaage: "you can't money transfer please bet first" })
-      const commission = (amount * 0.01);
-      sender.walletAmount -= amount;
+      const commission = (transforAmount * 0.01);
+      sender.walletAmount -= transforAmount;
       
-      receiver.walletAmount += amount;
+      receiver.walletAmount +=transforAmount;
       receiver.commissionAmount +=commission
 
       await sender.save();
@@ -755,33 +755,33 @@ const walletToWalletTransactions = async (req, res) => {
         message: "Transfer successful.",
         commission: commission,
 
-        amount:amount
+        amount:transforAmount
       
       });
     }
       else if (receiver.isPremiumUser && sender.isPremiumUser) {
       if (sender.rechargeAmount != 0) return res.status(400).send({ status: false, messaage: "you can't money transfer please bet first" })
       
-      sender.walletAmount -= amount;
+      sender.walletAmount -= transforAmount;
       
-      receiver.walletAmount + amount;
-      receiver.rechargeAmount + amount;
+      receiver.walletAmount += transforAmount;
+      receiver.rechargeAmount += transforAmount;
 
       await sender.save();
       await receiver.save();
 
       return res.status(200).json({
         message: "Transfer successful.",
-        amount:amount
+        amount:transforAmount
        
       });
     } else {
          if (sender.rechargeAmount != 0) return res.status(400).send({ status: false, messaage: "you can't money transfer please bet first" })
       
-      sender.walletAmount -= amount;
+      sender.walletAmount -= transforAmount;
       
-      receiver.walletAmount + amount;
-      receiver.rechargeAmount + amount;
+      receiver.walletAmount +=transforAmount;
+      receiver.rechargeAmount += transforAmount;
 
         await sender.save();
       await receiver.save();
