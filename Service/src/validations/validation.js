@@ -49,5 +49,10 @@ let regexSpaceChar = function (attribute) {
 let checkUpiId =(upiId)=> {
     return (/^[a-zA-Z0-9]+([._][a-zA-Z0-9]+)*@([a-zA-Z0-9]+\.)*[a-zA-Z0-9]+$/.test(upiId))
 }
+const isTransactionId = (transactionId) => {
+  const pattern = /^[A-Za-z0-9]{12}$/;
+  return pattern.test(transactionId);
+};
 
-module.exports = { isValid, isValidBody, isValidPhone, isValidEmail, isValidPwd, isValidObjectId, isValidName, isValidImage, isValidGender, PinCode, isUrlValid,regexSpaceChar ,isValidreqBody,checkUpiId}
+
+module.exports = { isValid, isValidBody, isValidPhone, isValidEmail, isValidPwd, isValidObjectId, isValidName, isValidImage, isValidGender, PinCode, isUrlValid,regexSpaceChar ,isValidreqBody,checkUpiId,isTransactionId}

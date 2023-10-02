@@ -101,7 +101,7 @@ function Wallet() {
                             <p style={{ color: '#29CEE4',fontFamily: 'Montserrat' }}>Wallet balance</p>
                             </div>
                             <div className="col-4" style={{textAlign:'right'}}><img src={wallet} alt="" /></div>
-                            <h2 style={{ color: '#fff',letterSpacing: 0.15,fontSize: 27,fontFamily: 'Montserrat',display:'flex', fontWeight: 600}}><img src={rupee} alt="" />{userData && userData.data.data.userDetails.walletAmount.toFixed(2)} <img src={reload} alt="" style={{marginLeft:10,}} /></h2>
+                            <h2 style={{ color: '#fff',letterSpacing: 0.15,fontSize: 27,fontFamily: 'Montserrat',display:'flex', fontWeight: 600}}><img src={rupee} alt="" />{userData && userData.data.data.userDetails.walletAmount.toFixed(2)} <img src={reload} alt="" style={{marginLeft:10,}} onClick={handleUserdata}/></h2>
                         </div>
                         <div className="container">
                             <div className="row history-row">

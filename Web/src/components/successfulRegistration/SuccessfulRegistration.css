@@ -79,11 +79,11 @@
       fill: white;
     }
   }
-
+  .inportant{color: #00ffff; font-size: 1.2rem; font-weight: 600;}
   .s-register{min-height: 100vh;padding: 3rem;background: #001C3E;display: flex;flex-direction: column;gap: 1.5rem;}
   .s-register h3{color: #FFF;font-family: Montserrat;}
   .s-register h5{color: #1e63e3eb;font-family: Montserrat;}
-  .s-register p{color: #FFF;font-family: Montserrat;}
+  .s-register p{color: #FFF;font-family: Montserrat;text-align: center;}
   .gotoLogin{margin-top: 20vh;display: flex;justify-content: center;}
   @media(min-width: 760px){
     .s-register{width: 30vw;margin: auto;}

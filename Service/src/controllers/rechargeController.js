@@ -1,4 +1,5 @@
 const rechargeModel = require('../models/rechargeModel')
+const validation = require("../validations/validation")
 const userModel = require('../models/userModel')
 
 const createRecharge = async (req, res) => {
@@ -9,6 +10,7 @@ const createRecharge = async (req, res) => {
     const userId = req.decodedToken.userId
 
     if (!upiReferenceNo) return res.status(404).send({ status: false, messsage: "please enter your sucessfull payment reference No" })
+    if(!validation.isTransactionId(upiReferenceNo)) return res.status(404).send({ status: false,message:"please enter valid transaction number" })
 
     const checkPayment = await rechargeModel.findOne({ upiReferenceNo: upiReferenceNo })
     if (checkPayment) return res.status(200).send({ status: true, message: "please wait for payment confirmation" })

@@ -702,7 +702,7 @@ const walletToWalletTransactions = async (req, res) => {
             !receiverUID ||
             isNaN(receiverUID) ||
             isNaN(amount) 
-      
+    
         ) {
             return res
                 .status(400)
@@ -710,15 +710,16 @@ const walletToWalletTransactions = async (req, res) => {
         }
     const sender = await userModel.findById(senderId);
     const receiver = await userModel.findOne({ UID: receiverUID });
+    if(sender.phoneNumber===receiver.phoneNumber) return res.status(400).send({status: false, message: "you cannot send yourself"})
     if (amount < 100) return res.status(400).send({ status: false, message: "Amount must be greater than 100" });
     if(amount>sender.walletAmount) return res.status(400).send({ status: false,message:"insufficient funds" });
-   
+  
     if (!sender || !receiver) {
       return res.status(404).json({ message: "Sender or receiver not found." });
     }
 
     
-    if (sender.isPremiumUser) {
+    if (sender.isPremiumUser && !receiver.isPremiumUser) {
       
       const commission = (amount * 0.01);
       sender.walletAmount -= amount;
@@ -729,18 +730,17 @@ const walletToWalletTransactions = async (req, res) => {
       sender.commissionAmount += commission;
       sender.walletAmount+=commission
       
-   
+
       await sender.save();
       
       await receiver.save();
 
       return res.status(200).json({
         message: "Transfer successful.",
-        sender: sender,
-        receiver: receiver,
         commission: commission,
+        amount:amount
       });
-    } else if(receiver.isPremiumUser) {
+    } else if(receiver.isPremiumUser && !sender.isPremiumUser) {
       if (sender.rechargeAmount != 0) return res.status(400).send({ status: false, messaage: "you can't money transfer please bet first" })
       const commission = (amount * 0.01);
       sender.walletAmount -= amount;
@@ -753,32 +753,44 @@ const walletToWalletTransactions = async (req, res) => {
 
       return res.status(200).json({
         message: "Transfer successful.",
-        sender: sender,
-        receiver: receiver,
+        commission: commission,
+
         amount:amount
-       
+      
       });
     }
-    else {
-        if (sender.rechargeAmount != 0) return res.status(400).send({ status: false, messaage: "you can't money transfer please bet first" })
+      else if (receiver.isPremiumUser && sender.isPremiumUser) {
+      if (sender.rechargeAmount != 0) return res.status(400).send({ status: false, messaage: "you can't money transfer please bet first" })
       
       sender.walletAmount -= amount;
       
-      receiver.walletAmount += amount;
-      receiver.rechargeAmount += amount;
-     
+      receiver.walletAmount + amount;
+      receiver.rechargeAmount + amount;
 
       await sender.save();
       await receiver.save();
 
       return res.status(200).json({
         message: "Transfer successful.",
-        sender: sender,
-        receiver: receiver,
         amount:amount
        
       });
+    } else {
+         if (sender.rechargeAmount != 0) return res.status(400).send({ status: false, messaage: "you can't money transfer please bet first" })
       
+      sender.walletAmount -= amount;
+      
+      receiver.walletAmount + amount;
+      receiver.rechargeAmount + amount;
+
+        await sender.save();
+      await receiver.save();
+
+      return res.status(200).json({
+        message: "Transfer successful.",
+        amount:amount
+       
+      });
     }
   } catch (error) {
     console.error(error);

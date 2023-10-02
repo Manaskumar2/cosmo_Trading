@@ -7,7 +7,7 @@ import { UserDetails } from '../../Atoms/UserDetails';
 import { AuthState } from '../../Atoms/AuthState';
 import { Nav } from '../../components/ComponentExport';
 import MyTeam from '../../components/myTeam/MyTeam';
-import Tutorial from '../../pages/beginnerTutorial/BeginnerTutorial';
+import CommissionHistory from '../../components/commissionHistory/CommissionHistory';
 import PromotionHistory from '../../components/promotionHistory/PromotionHistory';
 import back from '../../images/back-button 1.svg';
 import gift from '../../../../SVG/gift-box 1.svg';
@@ -132,7 +132,7 @@ function Promotion() {
                 </button>
                 <button className={activeTab === 4 ? 'active-Tab col-3' : 'tab col-3'} onClick={() => { handleTabClick(4) }}>
 
-                    <p>Tutorial</p>
+                    <p>Commission History</p>
                 </button>
             </div>
             {activeTab === 1 &&
@@ -195,7 +195,7 @@ function Promotion() {
                 </>}
             {activeTab == 2 && <MyTeam />}
             {activeTab == 3 && <PromotionHistory />}
-            {activeTab == 4 && <Tutorial />}
+            {activeTab == 4 && <CommissionHistory/>}
 
             <Nav style={{ marginTop: "2rem" }} />
         </div>

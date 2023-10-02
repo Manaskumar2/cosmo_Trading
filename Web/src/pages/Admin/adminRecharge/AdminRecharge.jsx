@@ -92,6 +92,7 @@ function AdminRecharge() {
       );
       if (response.status === 200) {
         toast.success("Recharge request confirmed", { ...toastProps });
+        handlePaymentRequest()
         console.log(response);
         return response;
       }
@@ -123,20 +124,21 @@ function AdminRecharge() {
           </form>
           <div className='row tab-btns'>
 
-            {/* 'pending', 'confirmed','cancelled' */}
-
-            <button className='col-4' onClick={() => { setStatus('confirmed') }}>Approved List</button>
-            <button className='col-4' onClick={() => { setStatus('pending') }}>Pending List</button>
-            <button className='col-4' onClick={() => { setStatus('cancelled') }}>Reject List</button>
+            <button className={status==='confirmed'?'col-4 active-tab-btn-adminPage' : 'col-4 tab-btn'} onClick={() => { setStatus('confirmed') }}>Approved List</button>
+            <button className={status==='pending'?'col-4 active-tab-btn-adminPage' : 'col-4 tab-btn'} onClick={() => { setStatus('pending') }}>Pending List</button>
+            <button className={status==='cancelled'?'col-4 active-tab-btn-adminPage' : 'col-4 tab-btn'} onClick={() => { setStatus('cancelled') }}>Reject List</button>
 
           </div>
           {withdrawData && withdrawData.map((item, i) => (
             <Accordion key={i}>
               <Accordion.Item eventKey={i}>
                 <Accordion.Header onClick={() => { handleUser(item.userId) }}>
-                  <p style={{ marginRight: "1.3rem" }}>User Id: {item.userId}</p>
-                  <p style={{ marginRight: "1.3rem" }}>Amount: {item.amount}</p>
-                  <p style={{ marginRight: "1.3rem" }}>Status: {item.status}</p>
+                  {/* <p style={{ marginRight: ".8rem" }}>User Id: {item.userId}</p> */}
+                  <p style={{ marginRight: "3.5rem" }}>Order: {item._id}</p>
+                  <p style={{ marginRight: "3.5rem" }}>Amount: {item.amount}</p>
+                  <p style={{ marginRight: "3.5rem" }}>Status: {item.status}</p>
+                  {/* <p style={{ marginRight: ".8rem" }}>Time: {item.createdAt}</p> */}
+                  
 
                 </Accordion.Header>
                 <Accordion.Body>
@@ -144,7 +146,12 @@ function AdminRecharge() {
                   <p>Phone: {user && user.data.data.userDetails.phoneNumber}</p>
                   <p>Upi ReferenceNo: {item.upiReferenceNo}</p>
                   <p>Upi Id: {item.upiId}</p>
-                  <button className='prime-approve-btn' onClick={() => { handlePayment(item._id, 'confirm') }}>Approve</button><button onClick={() => { handlePayment(item._id, 'cancel') }} className='prime-reject-btn'>Reject</button>
+                  {item.status !== 'confirmed' && item.status !== 'cancelled' && (
+  <>
+    <button className='prime-approve-btn' onClick={() => { handlePayment(item._id, 'confirm') }}>Approve</button>
+    <button onClick={() => { handlePayment(item._id, 'cancel') }} className='prime-reject-btn'>Reject</button>
+  </>
+)}
                 </Accordion.Body>
               </Accordion.Item>
             </Accordion>))}

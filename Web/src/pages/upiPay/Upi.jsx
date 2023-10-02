@@ -44,6 +44,7 @@ function Upi() {
                 headers: { Authorization: `Bearer ${token}` },
             });
             if (response.status === 201) {
+                toast.success("Recharge request successfully Sent!", { ...toastProps });
                 setUpiReferenceNo("")
                 console.log(response);
             }

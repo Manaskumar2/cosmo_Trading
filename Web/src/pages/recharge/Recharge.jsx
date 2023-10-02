@@ -17,6 +17,16 @@ import axios from 'axios';
 // import { useRecoilState } from 'recoil';
 import { RechargeAmount } from '../../Atoms/RechargeAmount';
 import { AuthState } from '../../Atoms/AuthState'
+import toast, { Toaster } from "react-hot-toast";
+export const toastProps = {
+    position: "top-center",
+    duration: 2000,
+    style: {
+        fontSize: "1rem",
+        background: "#fff",
+        color: "#333",
+    },
+};
 function Recharge() {
   const auth = useRecoilValue(AuthState)
   const [selectedButton, setSelectedButton] = useState(null);
@@ -82,7 +92,7 @@ function Recharge() {
             <div className="col-4" style={{ textAlign: 'right' }}><img src={wallet} alt="" /></div>
             <h2 style={{ color: '#fff', letterSpacing: 0.15, fontSize: 27, fontFamily: 'Montserrat', display: 'flex', fontWeight: 600 }}>
               <img src={rupee} alt="" /> {userData?.data?.data?.userDetails?.walletAmount?.toFixed(2) ?? 0}
-              <img src={reload} alt="" style={{ marginLeft: 10 }} />
+              <img src={reload} alt="" style={{ marginLeft: 10 }} onClick={handleUserdata}/>
             </h2>
 
           </div>

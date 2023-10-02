@@ -9,17 +9,17 @@ import { AuthState } from '../../../Atoms/AuthState'
 import Accordion from 'react-bootstrap/Accordion';
 import toast, { Toaster } from "react-hot-toast";
 export const toastProps = {
-    position: "top-center",
-    duration: 2000,
-    style: {
-        fontSize: "1rem",
-        background: "#fff",
-        color: "#333",
-    },
+  position: "top-center",
+  duration: 2000,
+  style: {
+    fontSize: "1rem",
+    background: "#fff",
+    color: "#333",
+  },
 };
 
 function AdminWithdraw() {
-  const [status,setStatus]=useState('confirmed')
+  const [status, setStatus] = useState('confirmed')
   const [user, setUser] = useState(null)
   const [withDrawdata, setWithdrawData] = useState(null)
   const [bankData, setBankData] = useState(null)
@@ -85,6 +85,7 @@ function AdminWithdraw() {
       );
       if (response.status === 200) {
         toast.success("Withdraw request confirmed", { ...toastProps });
+        handlePaymentRequest()
         console.log(response);
         return response;
       }
@@ -99,22 +100,22 @@ function AdminWithdraw() {
       <div className='flex-div'>
         <Side />
         <div className='admin-rightSection'>
-        <div className='row tab-btns'>
-            
+          <div className='row tab-btns'>
+
             {/* 'pending', 'confirmed','cancelled' */}
-              
-            <button className='col-4' onClick={()=>{setStatus('confirmed')}}>Approved List</button>
-              <button className='col-4' onClick={()=>{setStatus('pending')}}>Pending List</button>
-              <button className='col-4' onClick={()=>{setStatus('cancelled')}}>Reject List</button>
-  
-            </div>
-        <Toaster/>
+
+            <button className={status==='confirmed'?'col-4 active-tab-btn-adminPage' : 'col-4 tab-btn'} onClick={() => { setStatus('confirmed') }}>Approved List</button>
+            <button className={status==='pending'?'col-4 active-tab-btn-adminPage' : 'col-4 tab-btn'} onClick={() => { setStatus('pending') }}>Pending List</button>
+            <button className={status==='cancelled'?'col-4 active-tab-btn-adminPage' : 'col-4 tab-btn'} onClick={() => { setStatus('cancelled') }}>Reject List</button>
+
+          </div>
+          <Toaster />
           {withDrawdata && withDrawdata.data.map((item, index) => (
             <Accordion key={index}>
               <Accordion.Item eventKey={index}>
                 <Accordion.Header onClick={() => { handleBankData(item.userId); handleUser(item.userId) }} >
                   <div className='admin-Widthdraw-box'>
-                    <p>User Id : {item.userId}</p>
+                    <p>Order : {item._id}</p>
                     <p>Amount : {item.withdrawAmount}</p>
                     <p>Status : {item.status}</p>
                   </div>
@@ -142,8 +143,13 @@ function AdminWithdraw() {
                         <p>Ifsc Code: {bankData.data.data.ifscCode}</p>
                         <p>Branch Address: {bankData.data.data.bankBranchAddress}</p>
                         <p>City: {bankData.data.data.city}</p>
-                        <div className='flex-div'><button onClick={() => { handleConfirm(item._id, "confirmed") }} className='prime-approve-btn'>Approve</button> <button onClick={() => { handleConfirm(item._id, "cancelled") }} className='prime-reject-btn'>Reject</button></div>
-                        
+
+                        {item.status !== 'confirmed' && item.status !== 'cancelled' && (
+                          <>
+                            <div className='flex-div'><button onClick={() => { handleConfirm(item._id, "confirmed") }} className='prime-approve-btn'>Approve</button> <button onClick={() => { handleConfirm(item._id, "cancelled") }} className='prime-reject-btn'>Reject</button></div>
+                          </>
+                        )}
+
                       </div>}
                     </div>
                   </div>

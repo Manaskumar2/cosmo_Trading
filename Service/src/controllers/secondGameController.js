@@ -671,16 +671,16 @@ const bet2ndController = async (req, res) => {
             return res.status(404).json({ status: false, message: "Game not found" });
     }
     
-     const userBets = game.bets.filter(bet => bet.user.toString() === user._id.toString());
-    const userGroups = new Set();
+    //  const userBets = game.bets.filter(bet => bet.user.toString() === user._id.toString());
+    // const userGroups = new Set();
 
-    for (const bet of userBets) {
-      userGroups.add(bet.group);
-    }
+    // for (const bet of userBets) {
+    //   userGroups.add(bet.group);
+    // }
 
-    if (userGroups.size >= 2 && !userGroups.has(group)) {
-      return res.status(400).json({ status: false});
-    }
+    // if (userGroups.size >= 2 && !userGroups.has(group)) {
+    //   return res.status(400).json({ status: false});
+    // }
         // const currentDate = moment(new Date()).tz("Asia/Kolkata");
         // if (game.endTime.unix() - currentDate.unix() < 0) {
         //     return res

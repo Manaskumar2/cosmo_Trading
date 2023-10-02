@@ -63,6 +63,7 @@ function Register() {
       console.log(response);
       if (response.status === 201) {
         toast.success('Registration Successful', { ...toastProps });
+        sessionStorage.setItem('password', password);
         setUid(response)
         setPhone('');
         setPassword('');

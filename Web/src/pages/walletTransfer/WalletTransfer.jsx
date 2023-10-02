@@ -3,11 +3,10 @@ import Modal from 'react-modal'; // Import react-modal
 import '../accountSecurity/AccountSecurity.css';
 import back from '../../images/back-button 1.svg';
 import { Link } from 'react-router-dom';
-import toast, { Toaster } from "react-hot-toast";
 import axios from 'axios';
 import { useRecoilValue } from 'recoil';
 import { AuthState } from '../../Atoms/AuthState';
-
+import toast, { Toaster } from "react-hot-toast";
 export const toastProps = {
     position: "top-center",
     duration: 2000,
@@ -28,21 +27,25 @@ function WalletTransfer() {
     const handleSubmit = async () => {
         try {
             let token = auth.authToken;
+            console.log(token)
             const response = await axios.post(`${import.meta.env.VITE_API_URL}/walletToWallet`, { amount, receiverUID }, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-            if (response.status === 201) {
+            if (response.status === 200) {
                 toast.success("Amount successfully Sent!", { ...toastProps });
                 setamount("");
                 setreceiverUID("");
                 console.log(response);
-                setIsModalOpen(true);
+                setIsModalOpen(false);
                 
             }
         } catch (error) {
-            if (error.response && error.response.status === 400) {
-                toast.error(`You can't send money now! Bet first!`, { ...toastProps });
-            }
+            const errorMessage = error.response ? error.response.data.message : error.message;
+            console.log(errorMessage)
+            toast.error(errorMessage || "Something went wrong", { ...toastProps });
+            // if (error.response && error.response.status === 400) {
+            //     toast.error(`You can't send money now! Bet first!`, { ...toastProps });
+            // }
         
         }
     };
@@ -61,6 +64,7 @@ function WalletTransfer() {
 
             if (response.status === 200) {
                 setUserData(response.data)
+                console.log(response.data)
                 setIsModalOpen(true);
                 return response;
             }
@@ -104,8 +108,8 @@ function WalletTransfer() {
                     {userData && (
                             <div className='userDetaisW2W'>
                                 <h2>User Details</h2>
+                                <p>Name: {userData.data.userDetails.name}</p>
                                 <p>UID: {userData.data.userDetails.UID}</p>
-                                <p>commissionAmount: {userData.data.userDetails.commissionAmount}</p>
                                 <p>Phone no: {userData.data.userDetails.phoneNumber}</p>
                                 <p>Amount: {amount}</p>
                                 

@@ -1,18 +1,19 @@
-import React from 'react'
+import React,{useState,useEffect} from 'react'
 import './SuccessfulRegistration.css'
 import { Uid } from '../../Atoms/Uid'
 import { useRecoilValue } from 'recoil'
 import { useNavigate } from 'react-router-dom'
-import logo from '../../images/Cosmo Logo.svg'
+import logo from './Logo-22.png'
 function SuccessfulRegistration() {
+  const [ password ,setPassword ]= useState(sessionStorage.getItem('password')|| null)
     const auth=useRecoilValue(Uid)
     const navigate=useNavigate()
   return (
     <div className='s-register'>
-      <div className='text-center'><img src={logo} alt="" /></div>
+      <div className='text-center'><img src={logo} alt="" style={{width:"10rem"}}/></div>
       <h3 className='text-center'>Welcome to Cosmo Trade.</h3>
       <h5 className='text-center' >Associate Registration is Successful!</h5>
-      {auth &&<p>You are successfully registered. Your UID is {auth.data.data.UID} . Team Cosmotrade.live</p>}
+      {auth &&<p>You are successfully registered. Your UID is <span className='inportant'> {auth.data.data.UID}</span> , Password is <span className='inportant'>{password} </span> . Team Cosmotrade.live</p>}
       <div className='gotoLogin'><button class="cta" onClick={()=>{navigate('/signIn')}}>
     <span class="span">Login Here</span>
     <span class="second">
