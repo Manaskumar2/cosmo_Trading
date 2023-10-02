@@ -361,7 +361,8 @@ if (
   }
 } 
 
-async function distributeComissionToThreeUsers(winner, runnerUp, losers, game,winnerGroup,runnerUpGroup) {
+async function distributeComissionToThreeUsers(winner, runnerUp, losers, game, winnerGroup, runnerUpGroup) {
+  const gameDetails = game.bets
   let totalAmount = winner.totalAmount + runnerUp.totalAmount + losers.totalAmount;
   let directCompanyProfit = (totalAmount * 0.97) * 0.05;
   let remainingLosersAmount = (losers.totalAmount * 0.97) - directCompanyProfit;
@@ -377,8 +378,11 @@ async function distributeComissionToThreeUsers(winner, runnerUp, losers, game,wi
   //     { $inc: { walletAmount: winAmount, winningAmount: winAmount } }
   //   );
   // }
-  for (const bet of winner.users) {
+  for (const bet of game.bets) {
+
+
     if (bet.group === winnerGroup) {
+
       // Calculate the win amount for each winner user based on their bet amount
       let winAmount = roundDown(bet.amount * winnerRatio, 2);
       const returnAmount = bet.amount + winAmount
@@ -395,6 +399,7 @@ async function distributeComissionToThreeUsers(winner, runnerUp, losers, game,wi
         }
       );
     }
+    
   }
   // for (let i = 0; i < runnerUp.users.length; i++) {
   //   let winAmount = roundDown(runnerUp.users[i].walletAmount * 0.97 + (runnerUp.users[i].walletAmount * 0.97 * runnerUpRatio), 2);
@@ -404,7 +409,7 @@ async function distributeComissionToThreeUsers(winner, runnerUp, losers, game,wi
   //     { $inc: { walletAmount: winAmount, winningAmount: winAmount } }
   //   );
   // }
-    for (const bet of runnerUp.users) {
+    for (const bet of game.bets) {
     if (bet.group === runnerUpGroup) {
       // Calculate the win amount for each winner user based on their bet amount
       let runnerUpAmount = roundDown(bet.amount * runnerUpRatio, 2);
@@ -693,7 +698,7 @@ const bet2ndController = async (req, res) => {
                 .json({ status: false, message: "Insufficient funds" });
         }
     let walletAmount = user.walletAmount - amount;
-    let bettingAmount = user.bettingAmount + amount;
+    // let bettingAmount = user.bettingAmount + amount;
 
     let rechargeAmount = user.rechargeAmount
       if (rechargeAmount > 0) {
@@ -715,7 +720,7 @@ const bet2ndController = async (req, res) => {
       { _id: user._id },
       {
         walletAmount: walletAmount,
-        bettingAmount: bettingAmount,
+        // bettingAmount: bettingAmount,
         rechargeAmount:rechargeAmount
       }
     );

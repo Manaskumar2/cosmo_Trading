@@ -405,7 +405,6 @@ const betController = async (req, res) => {
      await game.save();
 
      let walletAmount = user.walletAmount - amount;
-    let bettingAmount = user.bettingAmount + amount;
     let rechargeAmount = user.rechargeAmount
       if (rechargeAmount > 0) {
       if (amount <= rechargeAmount) {
@@ -420,7 +419,6 @@ const betController = async (req, res) => {
       { _id: user._id },
       {
         walletAmount: walletAmount,
-        bettingAmount: bettingAmount,
         rechargeAmount:rechargeAmount
       }
     );
