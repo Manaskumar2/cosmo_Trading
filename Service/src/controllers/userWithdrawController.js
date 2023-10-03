@@ -14,7 +14,8 @@ const withdrawrequest = async (req, res) => {
         if (!wAmount) return res.status(400).send({ status: false, message: "please enter amount" })
       if (wAmount < 500) return res.status(400).send({ status: false, message: "can not withdraw bellow 500rs" })
       
-      const user = await userModel.findById({_id: userId })
+      const user = await userModel.findById({ _id: userId })
+      if (user.isPremiumUser) return res.status(400).send({ status: false, message: "you can not withdraw money" });
       const totalwithdraw= user.walletAmount
       if (totalwithdraw < wAmount) return res.status(400).send({ status: false, message: "insufficient funds" })
       // console.log(user)
