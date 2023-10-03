@@ -384,7 +384,7 @@ async function distributeComissionToThreeUsers(winner, runnerUp, losers, game, w
     if (bet.group === winnerGroup) {
 
       // Calculate the win amount for each winner user based on their bet amount
-      let winAmount = roundDown(bet.amount * winnerRatio, 2);
+      let winAmount = roundDown(bet.amount*0.97 * winnerRatio, 2);
       const returnAmount = bet.amount + winAmount
       totalAmount -= returnAmount;
 
@@ -412,7 +412,7 @@ async function distributeComissionToThreeUsers(winner, runnerUp, losers, game, w
     for (const bet of game.bets) {
     if (bet.group === runnerUpGroup) {
       // Calculate the win amount for each winner user based on their bet amount
-      let runnerUpAmount = roundDown(bet.amount * runnerUpRatio, 2);
+      let runnerUpAmount = roundDown(bet.amount*0.97 * runnerUpRatio, 2);
       const returnAmount = bet.amount + runnerUpAmount
       totalAmount -= returnAmount;
 
@@ -450,7 +450,7 @@ async function distributeComissionToTwoUsers(winner, losers, game,winnerGroup) {
   for (const bet of game.bets) {
     if (bet.group === winnerGroup) {
       // Calculate the win amount for each winner user based on their bet amount
-      let winAmount = roundDown(bet.amount * winnerRatio, 2);
+      let winAmount = roundDown(bet.amount*0.97 * winnerRatio, 2);
       const returnAmount = bet.amount + winAmount
       totalAmount -= returnAmount;
 
@@ -494,7 +494,7 @@ async function distributeComissionToOneUser(loser, game) {
   //   );
   // }
    for (const bet of game.bets) {
-    let winAmount = roundDown(bet.amount * 0.70, 2);
+    let winAmount = roundDown(bet.amount*0.97 * 0.70, 2);
     totalAmount -= winAmount;
     await userModel.updateOne(
       { _id: bet.user._id },

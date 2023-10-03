@@ -8,8 +8,12 @@ const applyPremiumUser = async (req, res) => {
     try {
         const { amount} = req.body
         console.log(amount);
-        const userId = req.decodedToken.userId
-         
+      const userId = req.decodedToken.userId
+      
+     const premiumDetails = await premiumModel.findOne({ userId: userId,status:"pending" });
+    if (premiumDetails) {
+      return res.status(400).send({ status: false, message: "Wait for the confirmation" });
+        }  
         checkPremium = await premiumModel.find()
         if (checkPremium.length < 50) {
             const requireAmount = 10000
