@@ -692,7 +692,7 @@ const bet2ndController = async (req, res) => {
         //         .status(400)
         //         .json({ status: false, message: "Wait for Next Game" });
         // }
-        if (user.walletAmount <= amount) {
+        if (user.walletAmount < amount) {
             return res
                 .status(401)
                 .json({ status: false, message: "Insufficient funds" });
