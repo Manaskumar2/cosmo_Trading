@@ -29,7 +29,8 @@ import { useEffect,useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import prime from './prime.svg'
 function Profile() {
-    LiveChatWidget.call("hide");
+
+
     const [edit , setEdit]=useState(true)
     const [userName , setuserName]=useState('')
     const navigate = useNavigate()

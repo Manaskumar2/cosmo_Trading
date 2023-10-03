@@ -6,7 +6,6 @@ import './Customer.css';
 
 function Customer() {
 
-    LiveChatWidget.call("maximize");
 
 
     return (

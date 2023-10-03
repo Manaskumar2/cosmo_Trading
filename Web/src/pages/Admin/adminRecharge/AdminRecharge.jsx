@@ -104,7 +104,7 @@ function AdminRecharge() {
   }
   useEffect(() => { handlePaymentRequest() }, [status])
 
-  LiveChatWidget.call("hide");
+
   return (
     <div>
       <AdminNav />

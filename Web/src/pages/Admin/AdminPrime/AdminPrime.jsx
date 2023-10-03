@@ -90,7 +90,7 @@ function AdminPrime() {
   useEffect(() => {
     handlePrimeRequest();
   }, [status]);
-  LiveChatWidget.call("hide");
+
   return (
     <div>
       <AdminNav />

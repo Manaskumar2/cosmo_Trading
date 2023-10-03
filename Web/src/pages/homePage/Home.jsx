@@ -16,7 +16,7 @@ import { AuthState } from '../../Atoms/AuthState'
 import wp from './wp.svg'
 import axios from 'axios'
 function Home() {
-    LiveChatWidget.call("hide");
+   
   const auth = useRecoilValue(AuthState)
   const [duration ,setDuration]=useState(1)
   const [gameHistoryList, setGameHistoryList] = useRecoilState(GameHistoryList)
