@@ -6,6 +6,8 @@ import './Customer.css';
 
 function Customer() {
 
+    LiveChatWidget.call("maximize");
+
 
     return (
         <div className='about'>
@@ -21,7 +23,7 @@ function Customer() {
             </div>
             <div className="about-container">
                 <div>
-                <iframe src="https://tawk.to/chat/650fede6b1aaa13b7a78972f/1hb33ijko" height="650px" width="100%" title="Iframe Example"></iframe>
+                
                 </div>
             </div>
         </div>

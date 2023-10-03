@@ -386,7 +386,7 @@ async function distributeComissionToThreeUsers(winner, runnerUp, losers, game, w
       // Calculate the win amount for each winner user based on their bet amount
       let winAmount = roundDown(bet.amount*0.97 * winnerRatio, 2);
       const returnAmount = bet.amount + winAmount
-      totalAmount -= returnAmount;
+       totalAmount -= returnAmount;
 
       // Update the user's wallet with the win amount
       await userModel.updateOne(
@@ -438,6 +438,7 @@ async function distributeComissionToThreeUsers(winner, runnerUp, losers, game, w
   }
 
   let compnayFund = totalAmount - distributedAmount;
+  compnayFund = compnayFund+directCompanyProfit
   wallet.amount = wallet.amount + compnayFund;
   await wallet.save();
 }
@@ -477,8 +478,8 @@ async function distributeComissionToTwoUsers(winner, losers, game,winnerGroup) {
     return;
   }
 
-  let compnayFund = totalAmount - distributedAmount;
-  wallet.amount = wallet.amount + compnayFund;
+  let companyFund = totalAmount - distributedAmount;
+  wallet.amount = wallet.amount + companyFund;
   await wallet.save();
 }
 

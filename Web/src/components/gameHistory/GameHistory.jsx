@@ -74,7 +74,7 @@ const endIndex = startIndex + itemsPerPage;
         try {
             let token = auth.authToken;
             const response = await axios.get(`${import.meta.env.VITE_API_URL}/getSuccessFullGameHistory/${duration}`, {
-                params: {page:historyPage},
+                params:{page : historyPage},
                 headers: { Authorization: `Bearer ${token}` },
             });
             if (response.status === 200) {
@@ -88,27 +88,21 @@ const endIndex = startIndex + itemsPerPage;
         }
     }
 
-    useEffect(()=>{const fetchData=setInterval(getGameHistory,3500)
-        return ()=>{clearInterval(fetchData)}},[])
-    // useEffect(() => {
-    //     if (countDownGrowup===59){
-    //         getGameHistory();
-    //     }
-        
-    // }, [countDownGrowup]);
+    useEffect(() => {
+        const fetchData = setInterval(getGameHistory, 3500)
+        return () => { clearInterval(fetchData) }
+    }, [historyPage])
+    useEffect(() => {
+        const fetchData = setInterval(getUserGameHistory, 3500)
+        return () => { clearInterval(fetchData) }
+    }, [page])
 
     useEffect(() => {
-        const intervalId = setInterval(() => {
-            getUserGameHistory();
-        }, 3000); 
-
-        return () => {
-            clearInterval(intervalId);
-        };
-    }, [page]);
+        getUserGameHistory()
+    }, [page])
     useEffect(() => {
         getGameHistory()
-    }, [historyPage]);
+    }, [historyPage])
     
 
 

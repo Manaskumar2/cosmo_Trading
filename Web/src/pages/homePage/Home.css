@@ -1,11 +1,11 @@
 .home .container{border-bottom: 1px solid #133B77; background: #001C3E; background-image: url('../../images/belips.png'); background-position: bottom; background-repeat: no-repeat;}
-.home .container .col-3{display: flex; justify-content: center; align-items: center;}
+.home .container .col-2{display: flex; justify-content: center; align-items: center;}
 .download svg{font-size: 2rem; color:#ffffff;}
-.home .container .col-9 {text-align: center;}
-.home .container .col-9 img {margin-left: 5rem;}
+.home .container .col-8 {text-align: center;}
+/* .home .container .col-8 img {margin-left: 3rem;} */
 
 .main-background{background: #001C3E ; display: block; margin: auto; max-width:500px;}
-
+.home-row{padding: 1.2rem 0;}
 @media(min-width:500px){
     .main-background{max-width:500px;}
 }

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import logo from '../../images/Cosmo Logo.svg'
+import logo from './Cosmo Logo.svg'
 import './Home.css'
 import telegram from '../../images/telegram.svg'
 import  Nav  from '../../components/Nav/Nav'
@@ -13,8 +13,10 @@ import Accordian from '../../components/accordian/Accordian'
 import { GameHistoryList } from '../../Atoms/GameHistory';
 import { useRecoilValue ,useRecoilState } from 'recoil'
 import { AuthState } from '../../Atoms/AuthState'
+import wp from './wp.svg'
 import axios from 'axios'
 function Home() {
+    LiveChatWidget.call("hide");
   const auth = useRecoilValue(AuthState)
   const [duration ,setDuration]=useState(1)
   const [gameHistoryList, setGameHistoryList] = useRecoilState(GameHistoryList)
@@ -42,13 +44,17 @@ useEffect(() => {
 }, []);
 
   return (
-    
     <div className='main-background'>
     <div className='home'> 
     <div className='container'>
-    <div className='row'>
-        <div className='col-9'><img src={logo} alt="" /></div>
-        <div className='col-3 download'>
+    <div className='row home-row'>
+    <div className='col-2 download'>
+            <a href="" target="_blank" rel="noopener noreferrer">
+                <img src={wp} alt="" />
+            </a>
+        </div>
+        <div className='col-8'><img src={logo} alt="" /></div>
+        <div className='col-2 download'>
             <a href="https://t.me/cosmotradeofficial" target="_blank" rel="noopener noreferrer">
                 <img src={telegram} alt="" />
             </a>

@@ -8,12 +8,8 @@ const applyPremiumUser = async (req, res) => {
     try {
         const { amount} = req.body
         console.log(amount);
-      const userId = req.decodedToken.userId
-      
-     const premiumDetails = await premiumModel.findOne({ userId: userId,status:"pending" });
-    if (premiumDetails) {
-      return res.status(400).send({ status: false, message: "Wait for the confirmation" });
-        }  
+        const userId = req.decodedToken.userId
+         
         checkPremium = await premiumModel.find()
         if (checkPremium.length < 50) {
             const requireAmount = 10000
@@ -27,7 +23,7 @@ const applyPremiumUser = async (req, res) => {
             const requireAmount = 30000
              if(amount!== requireAmount) return res.status(400).send({status:false,message:"amount must be 30000 for 100 to 150 users"})
       }
-     const checkAmount = await userModel.findOne({ _id: userId })
+     const checkAmount = await userModel.findById({ _id: userId })
       if (!checkAmount) return res.status(400).send({ status: false, message: "please logIn again" })
       if (checkAmount.isPremiumUser == true) return res.status(400).send({ status: false, message: "you  are already a premium user" })
       
@@ -35,6 +31,10 @@ const applyPremiumUser = async (req, res) => {
       if (curreentBalance< amount) return res.status(400).send({ status: false, message: "insufficient funds" })
       checkAmount.walletAmount -= amount
       checkAmount.save()
+      const premiumDetails = await premiumModel.findOne({ userId: userId,status:"pending" });
+    if (premiumDetails) {
+      return res.status(401).send({ status: false, message: "You are already applied please wait conformation" });
+        }
       const applyingPremium = await premiumModel.create({ amount: amount, userId: userId })
         
          return res.status(201).json({ message: 'Premium application submitted successfully.' });

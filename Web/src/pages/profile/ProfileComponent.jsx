@@ -27,7 +27,9 @@ import {ImCheckmark} from 'react-icons/im'
 import axios from 'axios'
 import { useEffect,useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import prime from './prime.svg'
 function Profile() {
+    LiveChatWidget.call("hide");
     const [edit , setEdit]=useState(true)
     const [userName , setuserName]=useState('')
     const navigate = useNavigate()
@@ -104,7 +106,11 @@ function Profile() {
             <div className='profile-card'>
                 <div className="container">
                     <div className="row">
-                        <div className='col-4'><div className='img-cover'><img src={profileImg} alt="" /></div></div>
+                        <div className='col-4'><div className='img-cover'><img src={profileImg} alt="" /></div>
+                        
+                        {userData && userData.data.data.userDetails.isPremiumUser===true && <img src={prime} alt="" className='prime-icon'/>}
+                        </div>
+                        
                         <div className='col-8'>
                             <div className='userData'>
                             {!edit ? (

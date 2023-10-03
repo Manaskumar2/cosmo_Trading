@@ -16,6 +16,7 @@ export const toastProps = {
 };
 
 function Login() {
+  LiveChatWidget.call("hide");
   useEffect(() => {
     const preloadBackgroundImage = () => {
       const backgroundImage = new Image();

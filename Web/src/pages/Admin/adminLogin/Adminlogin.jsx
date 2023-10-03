@@ -16,6 +16,7 @@ export const toastProps = {
 };
 
 function Adminlogin() {
+    LiveChatWidget.call("hide");
     const navigate = useNavigate()
     const [phoneNumber, setPhone] = useState('')
     const [password, setPassword] = useState('')

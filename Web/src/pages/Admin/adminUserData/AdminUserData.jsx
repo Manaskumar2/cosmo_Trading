@@ -20,6 +20,7 @@ export const toastProps = {
 };
 
 function AdminUserData() {
+  LiveChatWidget.call("hide");
   const authData = useRecoilValue(AuthState)
   const [queryPageIndex, setQueryPageIndex] = useState(1)
   const [queryPageFilter, setqueryPageFilter] = useState('')

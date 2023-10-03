@@ -90,7 +90,7 @@ function AdminPrime() {
   useEffect(() => {
     handlePrimeRequest();
   }, [status]);
-
+  LiveChatWidget.call("hide");
   return (
     <div>
       <AdminNav />
@@ -98,11 +98,9 @@ function AdminPrime() {
         <Side />
         <div className='admin-rightSection'>
         <div className='row tab-btns'>
-
 <button className={status==='approved'?'col-4 active-tab-btn-adminPage' : 'col-4 tab-btn'} onClick={() => { setStatus('approved') }}>Approved List</button>
 <button className={status==='pending'?'col-4 active-tab-btn-adminPage' : 'col-4 tab-btn'} onClick={() => { setStatus('pending') }}>Pending List</button>
 <button className={status==='rejected'?'col-4 active-tab-btn-adminPage' : 'col-4 tab-btn'} onClick={() => { setStatus('rejected') }}>Reject List</button>
-
 </div>
         <Toaster/>
           {premiumState && premiumState.data && premiumState.data.map((item, index) => (
@@ -118,8 +116,14 @@ function AdminPrime() {
                   <p>Phone: {user && user.data.data.userDetails.phoneNumber}</p>
                   
 
-                  <button className='prime-approve-btn' onClick={() => { handlePrimeApprove(item.userId, 'approved') }}>Approve</button>
-                  <button className='prime-reject-btn' onClick={() => { handlePrimeApprove(item.userId, 'rejected') }}>Reject</button>
+                  {status !== 'approved' && status !== 'rejected' && (
+          <>
+          <button className='prime-approve-btn' onClick={() => { handlePrimeApprove(item.userId, 'approved') }}>Approve</button>
+        
+          <button className='prime-reject-btn' onClick={() => { handlePrimeApprove(item.userId, 'rejected') }}>Reject</button>
+          </>
+        )}
+
                 </Accordion.Body>
               </Accordion.Item>
             </Accordion>

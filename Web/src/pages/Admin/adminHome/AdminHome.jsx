@@ -6,6 +6,7 @@ import { AuthState } from '../../../Atoms/AuthState';
 import { useRecoilValue, useRecoilState } from 'recoil';
 import './AdminHome.css'
 function AdminHome() {
+  LiveChatWidget.call("hide");
   const [cosmo, setCosmo] = useState(null)
   const [riseUp, setRiseUp] = useState(null)
   const [growUp, setGrowUp] = useState(null)

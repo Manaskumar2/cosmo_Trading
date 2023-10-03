@@ -90,11 +90,11 @@ const endIndex = startIndex + itemsPerPage;
     useEffect(() => {
         const fetchData = setInterval(getGameHistory, 3500)
         return () => { clearInterval(fetchData) }
-    }, [])
+    }, [historyPage])
     useEffect(() => {
         const fetchData = setInterval(getUserGameHistory, 3500)
         return () => { clearInterval(fetchData) }
-    }, [historyPage])
+    }, [page])
 
     // useEffect(() => {
     //     if(countDownRiseup===59){
