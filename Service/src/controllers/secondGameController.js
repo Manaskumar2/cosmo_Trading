@@ -452,7 +452,7 @@ async function distributeComissionToTwoUsers(winner, losers, game,winnerGroup) {
     if (bet.group === winnerGroup) {
       // Calculate the win amount for each winner user based on their bet amount
       let winAmount = roundDown(bet.amount*0.97 * winnerRatio, 2);
-      const returnAmount = bet.amount + winAmount
+      const returnAmount = bet.amount*0.97 + winAmount
       totalAmount -= returnAmount;
 
       // Update the user's wallet with the win amount
