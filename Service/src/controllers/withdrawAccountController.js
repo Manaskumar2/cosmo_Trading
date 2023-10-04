@@ -17,17 +17,18 @@ const createBankAccount = async (req, res) => {
       const userId = req.decodedToken.userId
 
     if (!bankName || !accountHolderName || !bankAccountNo || !city || !ifscCode || !bankBranchAddress || !userId||!confirmBankAccountNo) {
-      return res.status(400).json({ error: 'All fields are required' });
+      return res.status(400).json({ error: false, message: 'All fields are required' });
     }
     const userExists = await userModel.findById(userId);
     if (!userExists) {
-      return res.status(404).json({ error: 'User not found' });
+      return res.status(404).json({ error: false, message: 'User not found' });
     }
+    if (userExists.isPremiumUser) return res.status(400).send({ status:false,message:"Premium user cannot add bank account" });
     if (confirmBankAccountNo !== bankAccountNo) return res.status(404).json({
       error: false, message: "please enter correct bank account number"})
 
       const checkBankAccount = await accountDetail.findOne({ userId: userId })
-      if (checkBankAccount) return res.status(404).json({ error: 'Bank account details is already present' });
+      if (checkBankAccount) return res.status(404).json({ error: false, message: 'Bank account details is already present' });
       
     const newAccountDetail = new accountDetail({
       bankName,
@@ -62,7 +63,7 @@ const getBankAccountbyId = async (req, res) => {
 
 
     } catch (error) {
-        res.status(500).json({ error: 'Internal Server Error' });
+        res.status(500).json({ error: false, message: 'Internal Server Error' });
   }
   
 }
@@ -87,13 +88,13 @@ const updateBankAccount = async (req, res) => {
 
   
     if (!bankName || !accountHolderName || !bankAccountNo || !city || !ifscCode || !bankBranchAddress || !userId || !confirmBankAccountNo) {
-      return res.status(400).json({ error: 'All fields are required' });
+      return res.status(400).json({ error: false, message: 'All fields are required' });
     }
 
     
     const userExists = await userModel.findById(userId);
     if (!userExists) {
-      return res.status(404).json({ error: 'User not found' });
+      return res.status(404).json({error: false, message: 'User not found' });
     }
 
     

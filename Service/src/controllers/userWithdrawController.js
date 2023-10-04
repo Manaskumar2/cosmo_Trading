@@ -15,7 +15,7 @@ const withdrawrequest = async (req, res) => {
       if (wAmount < 500) return res.status(400).send({ status: false, message: "can not withdraw bellow 500rs" })
       
       const user = await userModel.findById({ _id: userId })
-      if (user.isPremiumUser) return res.status(400).send({ status: false, message: "you can not withdraw money" });
+      if (user.isPremiumUser) return res.status(400).send({ status:false,message:"you cannot withdraw money! You are a Premium User"})
       const totalwithdraw= user.walletAmount
       if (totalwithdraw < wAmount) return res.status(400).send({ status: false, message: "insufficient funds" })
       // console.log(user)
@@ -61,10 +61,10 @@ const confirmRequest = async (req, res) => {
 
         const request = await withdrawModel.findById(requestId);
         if (!request) {
-            return res.status(404).send({ status: false, message: "Withdraw request not found" });
+            return res.status(404).json({ error: false, message: 'Bank account not found' })
         }
         if (request.status !== "pending") {
-            return res.status(400).send({ status: false, message: "Withdraw request is not pending" });
+            return res.status(400).json({ status: false, message: "No Pending request remaining ! Wait for Pending Request!" })
         }
 
         const user = await userModel.findOne({ _id: request.userId });

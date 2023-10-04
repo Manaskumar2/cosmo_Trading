@@ -64,21 +64,20 @@ function AdminPrime() {
     }
   };
 
-  const handlePrimeApprove = async (userId, status) => {
+  const handlePrimeApprove = async (userId, status,premiumId) => {
     try {
       let token = authData.authToken;
       const response = await axios.put(
         `${import.meta.env.VITE_API_URL}admin/updatePremiumRequest/${userId}`,
-        {  adminStatus: status },
+        {  adminStatus: status ,premiumId:premiumId },
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
       if (response.status === 200) {
-        toast.success("Premium Activated !", { ...toastProps });
+        toast.success("Premium Updated !", { ...toastProps });
         console.log(response);
         handlePrimeRequest();
-        setTransactionId("")
         return response;
       }
     } catch (error) {
@@ -118,9 +117,9 @@ function AdminPrime() {
 
                   {status !== 'approved' && status !== 'rejected' && (
           <>
-          <button className='prime-approve-btn' onClick={() => { handlePrimeApprove(item.userId, 'approved') }}>Approve</button>
+          <button className='prime-approve-btn' onClick={() => { handlePrimeApprove(item.userId, 'approved',item._id) }}>Approve</button>
         
-          <button className='prime-reject-btn' onClick={() => { handlePrimeApprove(item.userId, 'rejected') }}>Reject</button>
+          <button className='prime-reject-btn' onClick={() => { handlePrimeApprove(item.userId, 'rejected',item._id) }}>Reject</button>
           </>
         )}
 

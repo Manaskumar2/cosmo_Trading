@@ -50,11 +50,9 @@ const getPaymentRequest = async (req, res) => {
     else {
       const paymentsRequest = await rechargeModel.find({ status:status }) .sort({ createdAt: -1 })
       .skip(skip)
-      .limit(limit);;
+      .limit(limit);
 
-      if (! paymentsRequest || paymentsRequest.length === 0) {
-        return res.status(404).json({ error: 'No request found' });
-      }
+      
       res.status(200).json( paymentsRequest);
     }
   } catch (error) {
@@ -73,6 +71,7 @@ const updatePaymentRequest = async (req, res) => {
     if (!manualPayment) {
       return res.status(404).json({ error: 'Manual payment request not found' });
     }
+    if(manualPayment.status==='confirmed') return res.status(200).send({status:false,message:"payment is already confirmed"})
 
     if (status === 'confirm') {
       manualPayment.status = 'confirmed';

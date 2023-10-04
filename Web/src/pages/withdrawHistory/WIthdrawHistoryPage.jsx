@@ -4,10 +4,13 @@ import back from '../../images/back-button 1.svg'
 import ear from '../../images/earphone.svg'
 import { Link } from 'react-router-dom'
 import { WithdrawHistory } from '../../Atoms/WithdrawHistory'
-import { useRecoilState } from 'recoil'
-
+import { useRecoilState, useRecoilValue } from 'recoil'
+import { AuthState } from '../../Atoms/AuthState'
+import axios from 'axios'
+ import { useEffect } from 'react'
 
 function WIthdrawHistoryPage() {
+  const auth=useRecoilValue(AuthState)
   const [withdrawHistory, setWithdrawHistory] = useRecoilState(WithdrawHistory)
   const getStatusColor = (status) => {
     if (status === 'pending') {
@@ -18,6 +21,29 @@ function WIthdrawHistoryPage() {
       return 'red';
     }
   };
+
+  const handleWithdrawHistory = async () => {
+    try {
+        let token = auth.authToken
+        let userId = auth._id
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/getWithdrawalHistory/${userId}`,  {
+            headers: { Authorization: `Bearer ${token}` }
+        }
+        );
+        if (response.status === 200) {
+            // toast.success("got user money data", { ...toastProps });
+            console.log(response);
+            setWithdrawHistory(response)
+            return response;
+        }
+    } catch (error) {
+        const errorMessage = error.response ? error.response.data.message : error.message;
+
+    }
+    
+}
+useEffect(()=>{handleWithdrawHistory();},[])
+
   return (
     <div className='withdrawHistoryPage'>
       <div className="container ProNav">

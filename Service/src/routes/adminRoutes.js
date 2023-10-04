@@ -46,9 +46,8 @@ router.put("/updatePremiumRequest/:userId", authentication, adminAuthorization, 
 router.get("/getWithdrawRequest", authentication, adminAuthorization, getWithdrawRequest)
 router.put("/conformWithdrawRequest/:requestId", authentication, adminAuthorization, confirmRequest)
 router.put("/updateUserBankAccount/:bankId",authentication,adminAuthorization,updateBankAccount)
-
 router.get("/getWithdrawRequest", authentication, adminAuthorization, getWithdrawRequest)
-router.put("/conformWithdrawRequest/:requestId", authentication, adminAuthorization, confirmRequest)
+
 //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>GrowUp<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<//
 router.get("/growUpbetAmount", authentication, adminAuthorization, growUpBetamount)
 

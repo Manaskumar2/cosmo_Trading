@@ -48,8 +48,15 @@ const applyPremiumUser = async (req, res) => {
 const getpremiumRequest = async (req, res) => { 
 
   try {
-      const status = req.query.status
-    const premiumApplyRequest = await premiumModel.find({ status: status }).sort({ createdAt: -1 })
+    const status = req.query.status
+     const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+
+
+    
+    const skip = (page - 1) * limit;
+    const premiumApplyRequest = await premiumModel.find({ status: status }).sort({ createdAt: -1 }).skip(skip)
+      .limit(limit);
         if (premiumApplyRequest.length < 0) return res.status(404).send({ status: false, message: "no premium request found." });
         return res.status(200).send({ status: true, message: "success", data: premiumApplyRequest })
       
@@ -61,18 +68,20 @@ const getpremiumRequest = async (req, res) => {
 
 const updatePremiumUser = async (req, res) => { 
     try {
-        const userId = req.params.userId
+      const userId = req.params.userId
+      const premiumId = req.body.premiumId
         if (!userId) return res.status(400).send({ status: false, message: "please provide userId in the params" });
-        if (!validation.isValidObjectId(userId)) return res.status(400).send({ status: false, message: "invalid userId in the params" });
+      if (!validation.isValidObjectId(userId)) return res.status(400).send({ status: false, message: "invalid userId in the params" });
+      if (!validation.isValidObjectId(premiumId)) return res.status(400).send({ status: false, message: "invalid premiumId in the params" })
         
-        const user = await userModel.findOne({ _id: userId })
-        if (user.isPremiumUser == true) return res.status(400).send({ status: false, message: "user already have a premium user" })
-
-
-      const premiumDetails = await premiumModel.findOne({ userId: userId });
+        const user = await userModel.findById({ _id: userId })
+      if (user.isPremiumUser == true) return res.status(400).send({ status: false, message: "user already have a premium user" })
+      const premiumDetails = await premiumModel.findById({ _id: premiumId })
     if (!premiumDetails) {
-      return res.status(400).send({ status: false, message: "No premium application found for this user" });
-        }
+      return res.status(400).send({ status: false, message: "No premium application found " });
+      }
+      
+      if (premiumDetails.userId != userId) return res.status(400).send({ status: false, message: "invalid userId" })
 
     if (!req.body.adminStatus) {
       return res.status(400).send({ status: false, message: "Please provide an adminStatus (approved or rejected) in the request body" });
@@ -84,19 +93,25 @@ const updatePremiumUser = async (req, res) => {
 
   
       user.isPremiumUser = true;
+      user.rechargeAmount = 0
 
       premiumDetails.status = "approved";
+       await user.save();
+      await premiumDetails.save();
+       return res.status(200).send({status:true ,message:"sucessfully update premium status"})
+
     } else if (req.body.adminStatus === "rejected") {
       user.walletAmount+=premiumDetails.amount
       premiumDetails.status = "rejected";
+      await user.save();
+      await premiumDetails.save();
+       return res.status(200).send({status:true ,message:"sucessfully update premium status"})
+
     } else {
       return res.status(400).send({ status: false, message: "Invalid adminStatus. Use 'approved' or 'rejected'" });
     }
 
-    
-    await user.save();
-    await premiumDetails.save();
-
+  
     } catch (error) {
            console.error('Error applying for premium status:', error);
     return res.status(500).json({ message: 'Internal server error.' });

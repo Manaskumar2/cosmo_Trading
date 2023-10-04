@@ -478,8 +478,8 @@ async function distributeComissionToTwoUsers(winner, losers, game,winnerGroup) {
     return;
   }
 
-  let companyFund = totalAmount - distributedAmount;
-  wallet.amount = wallet.amount + companyFund;
+  let compnayFund = totalAmount - distributedAmount;
+  wallet.amount = wallet.amount + compnayFund;
   await wallet.save();
 }
 

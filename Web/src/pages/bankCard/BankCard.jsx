@@ -138,7 +138,7 @@ function BankCard() {
 
             <div className="container">
               <div className="row withdraw-Button">
-                <button className="col-12" type='submit'>Withdraw</button>
+                <button className="col-12" type='submit'>Add Bank Card</button>
               </div>
             </div>
           </form>
