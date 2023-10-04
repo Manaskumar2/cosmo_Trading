@@ -19,7 +19,7 @@ export const toastProps = {
 };
 
 function Register() {
-  LiveChatWidget.call("hide");
+
   const [uid , setUid]=useRecoilState(Uid)
   const [phoneNumber, setPhone] = useState('');
   const [userName, setUserName] = useState('');

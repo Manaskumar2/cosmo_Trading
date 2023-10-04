@@ -49,7 +49,7 @@ useEffect(() => {
     <div className='container'>
     <div className='row home-row'>
     <div className='col-2 download'>
-            <a href="" target="_blank" rel="noopener noreferrer">
+            <a rel="noopener noreferrer">
                 <img src={wp} alt="" />
             </a>
         </div>

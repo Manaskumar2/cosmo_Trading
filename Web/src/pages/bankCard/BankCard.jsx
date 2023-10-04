@@ -29,19 +29,15 @@ function BankCard() {
   const [bankBranchAddress, setbankBranchAddress] = useState('')
 
   const auth = useRecoilValue(AuthState)
-  const handleAccountNumberChange = (e) => {
-    const confirmAccountNo = e.target.value;
-    setConfirmBankAccountNo(confirmAccountNo);
-    setAccountNumbersMatch(bankAccountNo === confirmAccountNo);
-  };
 
   const handleBankData = async (e) => {
     e.preventDefault();
+    if (bankAccountNo !== confirmBankAccountNo) {
+      toast.error('Bank Account Number and Confirm Bank Account No do not match', { ...toastProps });
+      return;
+    }
     try {
-      if (!accountNumbersMatch) {
-        toast.error('Account numbers do not match!', { ...toastProps });
-        return;
-      }
+
       let token = auth.authToken
       const response = await axios.post(`${import.meta.env.VITE_API_URL}/createbankAccount`, {
         bankName,

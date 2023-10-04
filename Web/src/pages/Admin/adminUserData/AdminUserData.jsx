@@ -51,7 +51,7 @@ function AdminUserData() {
       let token = authData.authToken;
       console.log(token);
       const response = await axios.patch(
-        `${import.meta.env.VITE_API_URL}/admin/activateUser/${userId}`, {},
+        `${import.meta.env.VITE_API_URL}admin/activateUser/${userId}`, {},
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -77,7 +77,7 @@ function AdminUserData() {
       let adminId = authData._id
       console.log(adminId);
       const response = await axios.patch(
-        `${import.meta.env.VITE_API_URL}/admin/deactivateUser/${userId}`, {},
+        `${import.meta.env.VITE_API_URL}admin/deactivateUser/${userId}`, {},
         {
           headers: { Authorization: `Bearer ${token}` },
         }
