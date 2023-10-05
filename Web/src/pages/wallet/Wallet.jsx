@@ -6,7 +6,7 @@ import profileImg from '../../../../SVG/profile 2.svg'
 import wallet from '../../images/green-wallet.svg'
 import rupee from '../../images/rupee.svg'
 import reload from '../../images/reload 1.svg'
-// import next from '../../../../SVG/next.svg'
+import crown from '../profile/prime.svg'
 import Nav from '../../components/Nav/Nav'
 import { AuthState } from '../../Atoms/AuthState'
 import { UserDetails } from '../../Atoms/UserDetails'
@@ -82,12 +82,13 @@ function Wallet() {
             <div className='wallet-card'>
                 <div className="container">
                     <div className="row wallet-pro-row">
-                        <div className='col-4'><div className='img-cover'><img src={profileImg} alt="" /></div></div>
+                        <div className='col-4' ><div className='img-cover-wallet'><img src={profileImg} alt="" />{userData && userData.data.data.userDetails.isPremiumUser===true && <img src={crown} alt="" className='prime-crown'/>}</div></div>
                         <div className='col-8'>
                             <div className='userData'>
-                            
+                            <p>Name : {userData && userData.data.data.userDetails.name}</p>
                         <p>ID : {auth.UID}</p>
-                        <p>Mobile :{auth.phoneNumber}</p>
+                        <p>Mobile : {auth.phoneNumber}</p>
+                        
                             </div>
                         
                         </div>
@@ -106,7 +107,7 @@ function Wallet() {
                         <div className="container">
                             <div className="row history-row">
                                 <div className="col-6">
-                                    <h6>History Withdraw</h6>
+                                    <h6>Total Withdraw</h6>
                                     {withdrawHistory && <p>&#8377; {withdrawHistory.data.totalWithdrawAmount}</p>}
                                     
                                     

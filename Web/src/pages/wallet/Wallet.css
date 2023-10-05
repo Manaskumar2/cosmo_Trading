@@ -8,6 +8,9 @@
     .wallet-pro-row .col-8{display: flex;justify-content: center;width: 100%; margin-top: 1rem;}
     .wallet-pro-row .col-8 p{display: flex;justify-content: center;width: 100%;color: #FFF;font-family: Poppins;font-size: 1rem;font-style: normal;font-weight: 400;line-height: normal;}
 .history-row{border-top: 1px solid #2EACBD;}
+.prime-crown{    position: relative;
+    bottom: 25px;
+    right: 23px;}
 .history-row .col-6 h6{color: #86F0FE;text-align: center;
 font-family: Montserrat;
 font-size: .9rem;
@@ -44,5 +47,5 @@ justify-content: center;align-items: center;border-radius: 6.25rem;background: #
         padding: 1rem;
     }
     .winWallet{background: linear-gradient(180deg, rgba(5, 42, 86, 0.80) 0%, rgba(10, 171, 182, 0.80) 100%);padding: 1.5625rem;border-radius: 1.2rem}
-
+    .img-cover-wallet{padding-left: 20px;}
     @media(min-width:500px){.WalletContainer{max-width:500px; margin:0 auto;}}

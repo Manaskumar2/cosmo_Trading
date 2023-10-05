@@ -11,6 +11,7 @@ function Side() {
                 <Link to='/admin/recharge'> Recharge Requests</Link>
                 <Link to='/admin/withdraw'> Withdraw Requests</Link>
                 <Link to='/admin/prime'> Premium Membership</Link>
+                <Link to='/admin/premiumUsers'> Premium Users</Link>
 
             </ul>
        </div>

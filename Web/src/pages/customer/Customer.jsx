@@ -22,7 +22,8 @@ function Customer() {
             </div>
             <div className="about-container">
                 <div>
-                
+                    <iframe src="https://direct.lc.chat/16269576/" frameborder="0" width='100%' height='650px'></iframe>r
+                {/* <a href="https://direct.lc.chat/16269576/">Chat</a> */}
                 </div>
             </div>
         </div>

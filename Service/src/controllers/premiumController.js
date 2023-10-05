@@ -125,7 +125,7 @@ const getPremiumRequestById = async (req, res) => {
          if (!userId) return res.status(400).send({ status: false, message: "please provide userId in the params" });
         if (!validation.isValidObjectId(userId)) return res.status(400).send({ status: false, message: "invalid userId in the params" });
         
-        const user = await userModel.findOne({ _id: userId })
+        const user = await userModel.findById({ _id: userId })
         if (user.isPremiumUser == true) return res.status(400).send({ status: false, message: "user already have a premium user" })
 
 
@@ -141,6 +141,38 @@ const getPremiumRequestById = async (req, res) => {
     return res.status(500).json({ message: 'Internal server error.' });
     }
 }
+const getPremiumDetails = async (req, res) => {
+  try {
+       const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+    const skip = (page - 1) * limit;
 
+       const count = await userModel.countDocuments({isPremiumUser:true});
 
-module.exports ={applyPremiumUser,getpremiumRequest,updatePremiumUser,getPremiumRequestById}
+        getUsers = await userModel.find({isPremiumUser:true}) .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+
+        if (getUsers.length < 1) {
+          return res
+            .status(400)
+            .send({ status: false, message: "No user found" });
+        }
+
+        const response = {
+          getUsers,
+      currentPage: page,
+      totalPages: Math.ceil(count / limit),
+          totalCount: count,
+          totalpremiumUsers:count
+        };
+
+        return res.status(200).send({ status: true, message: "Successful", response });
+
+  } catch (error) {
+     console.error('Error applying for premium status:', error);
+    return res.status(500).json({status:false,message:error.message});
+  }
+ }
+
+module.exports ={applyPremiumUser,getpremiumRequest,updatePremiumUser,getPremiumRequestById,getPremiumDetails}

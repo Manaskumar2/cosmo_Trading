@@ -74,5 +74,7 @@ const RechargeHistory= lazy(()=>
 import('../../src/pages/rechargeHistory/RechargeHistoryPage'))
 const WalletTransfer= lazy(()=>
 import('../../src/pages/walletTransfer/WalletTransfer'))
+const PremiumUser= lazy(()=>
+import('../../src/pages/Admin/premiumUser/PremiumUser'))
 
-export {Login,Register,Forgot,OTP,Reset,Success,Home,Growup,ProfileComponent,Promotion,Recharge,UPI,Withdraw,BankCard,Wallet,Gift,BeginnerTutorial,About,Customer,Message,Transection,Launch,AdminHome,AdminUser,AdminRecharge,AdminWithdraw,AdminLogin,Terms,SRegister,AdminPrime,Premium,PremiumApply,Security,RiseUp,WidthdrawHistory,RechargeHistory,WalletTransfer}
+export {Login,Register,Forgot,OTP,Reset,Success,Home,Growup,ProfileComponent,Promotion,Recharge,UPI,Withdraw,BankCard,Wallet,Gift,BeginnerTutorial,About,Customer,Message,Transection,Launch,AdminHome,AdminUser,AdminRecharge,AdminWithdraw,AdminLogin,Terms,SRegister,AdminPrime,Premium,PremiumApply,Security,RiseUp,WidthdrawHistory,RechargeHistory,WalletTransfer,PremiumUser}

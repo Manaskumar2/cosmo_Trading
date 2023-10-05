@@ -8,11 +8,12 @@ const { uploadQrCode, getAllImageURLs } = require('../controllers/qrCodeControll
 const { getBankAccountbyId, updateBankAccount } = require("../controllers/withdrawAccountController")
 const { getPaymentRequest, updatePaymentRequest } = require("../controllers/rechargeController")
 // const { getWithdrawRequest, confirmRequest } = require("../controllers/userWithdrawController");
-const {getpremiumRequest,updatePremiumUser, getPremiumRequestById} =  require("../controllers/premiumController")
+const {getpremiumRequest,updatePremiumUser, getPremiumRequestById, getPremiumDetails} =  require("../controllers/premiumController")
 const { getWithdrawRequest, confirmRequest } = require("../controllers/userWithdrawController");
 const { deleteGames, growUpBetamount } = require("../controllers/gameController");
 const { riseUpBetamount } = require("../controllers/secondGameController");
 const {getCompanyDetails} = require("../controllers/companyWalletController");
+const { franchiseCommissions } = require("../controllers/commissionController");
 router.post("/signIn", adminlogin)
 
 router.get("/getAllUsers", authentication,adminAuthorization ,getAllUsers)
@@ -62,5 +63,8 @@ router.get("/riseUpbet", authentication, adminAuthorization, riseUpBetamount)
 //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>companyDetails<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<//
 
 router.get("/companyDetails",authentication,adminAuthorization,getCompanyDetails)
+//********************************Frinchase ************************************************//
 
+router.get("/getPremiumUsers", authentication, adminAuthorization, getPremiumDetails)
+router.post("/franchisecommissions",authentication,adminAuthorization,franchiseCommissions)
 module.exports =router

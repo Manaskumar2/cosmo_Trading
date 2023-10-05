@@ -1,5 +1,5 @@
 .about{min-height: 100vh;background: #001C3E;}
-.about-container{padding: 1rem;display: flex;flex-direction: column;justify-content: center;width: 100%;gap: 1.5rem;}
+.about-container{display: flex;flex-direction: column;justify-content: center;width: 100%;gap: 1.5rem;}
 .about-container .logo{width: 10rem;
     height: 3.5rem;margin: auto;}
 .version{border: 1px solid #4CB7D9;color: #45C0DB;

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { AdminHome, AdminUser, AdminRecharge, AdminWithdraw, AdminLogin, AdminPrime } from './importPages';
+import { AdminHome, AdminUser, AdminRecharge, AdminWithdraw, AdminLogin, AdminPrime ,PremiumUser} from './importPages';
 import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import AdminLoader from '../pages/Admin/adminLoading/AdminLoading';
 import { Suspense } from 'react';
@@ -76,6 +76,14 @@ function AdminRoute() {
             element={
               <Suspense fallback={<AdminLoader />}>
                 <AdminLogin />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/admin/premiumUsers"
+            element={
+              <Suspense fallback={<AdminLoader />}>
+                <PremiumUser/>
               </Suspense>
             }
           />
