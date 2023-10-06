@@ -28,6 +28,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: null,
   },
+  parentUserUid: {
+     type: Number,
+    required: true,
+  },
   profilePhoto: {
     type: String,
   },

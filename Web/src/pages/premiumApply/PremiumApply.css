@@ -1,11 +1,11 @@
 .PremiumApply{background: #001C3E;min-height: 100vh;}
 .Premium-Body{padding: 1.5rem;display: flex;flex-direction:column ;gap: 1.2rem; font-family: Montserrat;font-size: 1rem;}
 .Premium-Body p{color: aliceblue; font-family: Montserrat;font-size: 1rem;}
-.Premium-Body button{padding:10px 20px; border: 0; outline: none;font-family: Montserrat;font-size: 1rem;transition: .5s ease-in-out;margin-top: 2rem; background: #094691;
+.premiumApply-Submit{padding:10px 20px; border: 0; outline: none;font-family: Montserrat;font-size: 1rem;transition: .5s ease-in-out;margin-top: 2rem; background: #094691;
     color: #fff;
     font-size: 18px;
-    text-transform: uppercase;}
-.Premium-Body button:hover{background: #0e53a8;color: aliceblue;}
+    text-transform: uppercase;border-radius: 1.2rem;}
+
 .Premium-Body input{padding:10px 20px ; border: 1px solid #28c3cd; color: aliceblue; outline: none; background:transparent;font-family: Montserrat;font-size: 1rem;}
 
 

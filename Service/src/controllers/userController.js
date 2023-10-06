@@ -1,7 +1,7 @@
 const userModel = require("../models/userModel")
+const commissionModel = require("../models/commissionModel")
 const jwt = require("jsonwebtoken")
 const bcrypt = require('bcrypt')
-const cache = require("memory-cache");
 const validation = require("../validations/validation")
 const { generateUniqueReferralCode, } = require("../util/util")
 
@@ -32,8 +32,12 @@ const signUp = async (req, res) => {
     if (uniquePhone) return res.status(400).send({ status: false, message: `This PhoneNumber  has already registered Please Sign In`, })
 
     if (!validation.isValidPwd(password)) return res.status(400).send({ status: false, message: "Password should be 8-15 characters long and must contain one of 0-9,A-Z,a-z and special characters", })
+    
+    const parentDetails = await userModel.findOne({ referralCode: referralCode })
+    if (!parentDetails) return res.status(404).send({ status: false, message: "invalid referralcode" })
 
-    const hashedPassword = await bcrypt.hash(password, 10)
+
+
   
     const latestUser = await userModel
       .findOne()
@@ -45,11 +49,12 @@ const signUp = async (req, res) => {
     if (!UID) return res.status(404).send({ status: false, message: "UID is not available" })
     const createUser = await userModel.create({
       phoneNumber: phoneNumber,
-      password: hashedPassword,
+      password:password,
       parentReferralCode: referralCode,
       referralCode: await generateUniqueReferralCode()+UID,
       UID: UID,
-      name: userName
+      name: userName,
+      parentUserUid:parentDetails.UID
     })
    
     if (referralCode) {
@@ -91,8 +96,7 @@ const signIn = async (req, res) => {
 
     const correctPassword = findUser.password;
 
-    const bcryptPass = await bcrypt.compare(password, correctPassword);
-    if (!bcryptPass) {
+    if(password!== correctPassword){
       return res.status(400).send({ status: false, message: "Incorrect Password" });
     }
 
@@ -133,8 +137,8 @@ const adminlogin =async (req, res) => {
 
     const correctPassword = findUser.password;
 
-    const bcryptPass = await bcrypt.compare(password, correctPassword);
-    if (!bcryptPass) {
+    
+    if (correctPassword!==password) {
       return res.status(400).send({ status: false, message: "Incorrect Password" });
     }
 
@@ -240,11 +244,10 @@ const resetPassword = async (req, res) => {
     const user = await userModel.findOne({ _id: data.userId });
     if (!user) return res.status(404).json({ status: false, message: "Invalid  verified Otp token" });
 
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+   
 
 
-    user.password = hashedPassword;
+    user.password = newPassword;
 
     await user.save()
 
@@ -524,12 +527,14 @@ const getReferralStats = async (req, res) => {
     const weeklyCount = await userModel.countDocuments({parentReferralCode:referralID,
       createdAt: { $gte: sevenDaysAgo, $lte: todayEnd },
     });
+    const totalCount = await userModel.countDocuments({ parentReferralCode: referralID })
 
     return res.status(200).json({
       status: true,
       data: {
         todayCount: todayCount,
         weeklyCount: weeklyCount,
+        totalCount: totalCount
       },
     });
   } catch (error) {
@@ -729,7 +734,12 @@ const walletToWalletTransactions = async (req, res) => {
       
       sender.commissionAmount += commission;
       sender.walletAmount+=commission
-      
+      await commissionModel.create({
+        userId: sender._id,
+        amount: commission,
+        date: Date.now(),
+        commissionType: "RECHARGE",
+      })
 
       await sender.save();
       
@@ -746,10 +756,17 @@ const walletToWalletTransactions = async (req, res) => {
       sender.walletAmount -= transforAmount;
       
       receiver.walletAmount +=transforAmount;
-      receiver.commissionAmount +=commission
+      receiver.commissionAmount += commission;
+      receiver.walletAmount+=commission
 
       await sender.save();
       await receiver.save();
+       await commissionModel.create({
+        userId: receiver ._id,
+        amount: commission,
+        date: Date.now(),
+        commissionType: "RECHARGE",
+      })
 
       return res.status(200).json({
         message: "Transfer successful.",

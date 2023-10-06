@@ -132,7 +132,7 @@ function Promotion() {
                 </button>
                 <button className={activeTab === 4 ? 'active-Tab col-3' : 'tab col-3'} onClick={() => { handleTabClick(4) }}>
 
-                    <p>Commission History</p>
+                    <p>Salary History</p>
                 </button>
             </div>
             {activeTab === 1 &&
@@ -157,6 +157,12 @@ function Promotion() {
                         <div className="container">
                             {userData && <div className="row commission-bot-row">
                                 <div className="col-10">Number Of Direct Subordinates</div>
+                                <div className="col-2">
+                                    {userData.data.data.userDetails.downline.length}
+                                </div>
+                            </div>}
+                            {userData && <div className="row commission-bot-row">
+                                <div className="col-10">Total Invite </div>
                                 <div className="col-2">
                                     {userData.data.data.userDetails.downline.length}
                                 </div>

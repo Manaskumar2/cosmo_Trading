@@ -14,13 +14,13 @@ font-size: 1rem;
 font-style: normal;
 font-weight: 600;
 line-height: normal;
-    padding: 1rem 1rem; 
+    padding: .8rem .5rem; 
     text-align: left; 
+    width: 4rem;
   }
-  
-
   table td {
-    padding: .5rem 1rem; 
+    width: 4rem;
+    padding: .8rem .5rem; 
     text-align: left;
     color: #fff;
     font-family: Montserrat;

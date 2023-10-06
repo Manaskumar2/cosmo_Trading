@@ -26,19 +26,19 @@ function banner() {
                     </Carousel.Item>
                 </Carousel>
             </div>
-            {/* <div className='announcement container'>
-                <div className='title text-center'><h4>Latest Announcement</h4></div>
+            <div className='announcement container'>
+                <div className='title text-center'><h4>Latest News</h4></div>
             <div className='row marquee-wrapper'>
                 <div className='img_marquee'>
                     <img src={mic} alt="" />
                 </div>
                 <div className='marquee_text'>
                     <marquee direction="left" >
-                        pixel design india is the best it solution for your dream company website.
+                        Welcome to CosmoTrade.live
                     </marquee>
                 </div>
             </div>
-            </div> */}
+            </div>
 
         </div>
     )

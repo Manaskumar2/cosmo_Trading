@@ -19,7 +19,7 @@ const franchiseCommissions = async (req, res) => {
         date: new Date(),
         amount: commissionPerUser,
         userId: user._id,
-        commissionType: "FRANCHISE",
+        commissionType: "PREMIUM",
       });
       commissionRecords.push(commissionRecord);
     }

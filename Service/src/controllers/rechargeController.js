@@ -1,6 +1,7 @@
 const rechargeModel = require('../models/rechargeModel')
 const validation = require("../validations/validation")
 const userModel = require('../models/userModel')
+const commissionModel = require("../models/commissionModel")
 
 const createRecharge = async (req, res) => {
   try {
@@ -80,6 +81,21 @@ const updatePaymentRequest = async (req, res) => {
       const user = await userModel.findById(manualPayment.userId);
       if (!user) {
         return res.status(404).json({ error: 'User not found' });
+      }
+      if (user.isPremiumUser) {
+        const commission = (manualPayment.amount*0.01)
+        user.walletAmount += manualPayment.amount;
+        user.commissionAmount+=commission
+        user.walletAmount+=commission
+       await commissionModel.create({
+        userId: user._id,
+        amount: commission,
+        date: Date.now(),
+        commissionType: "RECHARGE",
+       })
+        await user.save();
+        await manualPayment.save()
+       return res.status(200).json({ message: `Manual payment ${manualPayment.status}` }); 
       }
 
       user.walletAmount += manualPayment.amount;

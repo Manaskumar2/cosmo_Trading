@@ -17,8 +17,8 @@
 }
 
 .admin-rightSection{padding: 1.5rem;background-color:#001C3E;width: 100%;}
-.activate{background-color: rgb(43, 224, 43);color: #fff; padding: .3rem 1rem;border: 0;outline: none;width: 8rem;}
-.deactivate{background-color: rgb(200, 59, 44);color: #fff; padding: .3rem 1rem;border: 0;outline: none;width: 8rem;}
+.activate{background-color: rgb(43, 224, 43);color: #fff; padding: .3rem 1rem;border: 0;outline: none;width: 6rem;}
+.deactivate{background-color: rgb(200, 59, 44);color: #fff; padding: .3rem 1rem;border: 0;outline: none;width: 6rem;}
 .ac-de-btn{ display: flex;gap: 1.5rem; }
 .ac-de-btn button{padding: .5rem 1.2rem; border: 0; outline: none; border-radius: 10px; }
 .admin-rightSection{margin-top: 3rem;margin-left: 18rem;min-height: 100vh;}

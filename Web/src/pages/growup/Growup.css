@@ -174,7 +174,7 @@ backdrop-filter: blur(15px);}
 
 .modal.show .modal-dialog{height: 100%;}
 
-
+.clock:hover{background:rgba(31,100,150,0.50) !important;}
 @media(min-width:500px){
 
     .big-small .left img, .big-small .right img{width: 11rem;display: flex; justify-content: center;align-items: center;}

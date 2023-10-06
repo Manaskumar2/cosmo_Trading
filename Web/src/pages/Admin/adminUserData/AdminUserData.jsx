@@ -10,13 +10,13 @@ import Accordion from 'react-bootstrap/Accordion';
 import './User.css'
 import toast, { Toaster } from "react-hot-toast";
 export const toastProps = {
-    position: "top-center",
-    duration: 2000,
-    style: {
-        fontSize: "1rem",
-        background: "#fff",
-        color: "#333",
-    },
+  position: "top-center",
+  duration: 2000,
+  style: {
+    fontSize: "1rem",
+    background: "#fff",
+    color: "#333",
+  },
 };
 
 function AdminUserData() {
@@ -32,7 +32,7 @@ function AdminUserData() {
       const response = await axios.get(`${import.meta.env.VITE_API_URL}admin/getAllUsers`,
         {
           headers: { Authorization: `Bearer ${token}` },
-          params: { queryPageIndex ,queryPageFilter}
+          params: { queryPageIndex, queryPageFilter }
         },
       );
       if (response.status === 200) {
@@ -95,7 +95,7 @@ function AdminUserData() {
     }
   };
 
-  useEffect(() => { handleUser() }, [queryPageIndex,queryPageFilter,queryPageSortBy])
+  useEffect(() => { handleUser() }, [queryPageIndex, queryPageFilter, queryPageSortBy])
 
 
 
@@ -120,41 +120,45 @@ function AdminUserData() {
       <div className='flex-div'>
         <Side />
         <div className='admin-rightSection'>
-        <Toaster/>
-          <input type="number" className='user-input' value={queryPageFilter} onChange={(e)=>{setqueryPageFilter(e.target.value)}} placeholder='Search Number / UID'/>
-          
+          <Toaster />
+          <input type="number" className='user-input' value={queryPageFilter} onChange={(e) => { setqueryPageFilter(e.target.value) }} placeholder='Search Number / UID' />
+
           <table>
-  <thead>
-    <tr className='table-row'>
-      <th>UID</th>
-      <th>Phone</th>
-      <th>Total Downline</th>
-      <th>Total Commission Earned</th>
-      <th>Level</th>
-      <th>Wallet Amount</th>
-      <th>Winning Amount</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    {allUser &&
-      allUser.data.response.getUsers.map((user, index) => (
-        <tr key={index} className='table-row'>
-          <td>{user.UID}</td>
-          <td>{user.phoneNumber}</td>
-          <td>{user.downline.length}</td>
-          <td>{user.commissionAmount}</td>
-          <td>{user.level}</td>
-          <td>{(user.walletAmount).toFixed(2)}</td>
-          <td>{(user.winningAmount).toFixed(2)}</td>
-          <td>
-            <button onClick={() => handleActive(user._id)} className='activate'>Activate</button>
-            <button onClick={() => handleDeactive(user._id)} className='deactivate'>Deactivate</button>
-          </td>
-        </tr>
-      ))}
-  </tbody>
-</table>
+            <thead>
+              <tr className='table-row'>
+                <th>UID</th>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Password</th>
+                <th>Total Downline</th>
+                <th>Parent Id</th>
+                <th>Commission Earned</th>
+                <th>Wallet Amount</th>
+                <th>Winning Amount</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {allUser &&
+                allUser.data.response.getUsers.map((user, index) => (
+                  <tr key={index} className='table-row'>
+                    <td>{user.UID}</td>
+                    <td>{user.name}</td>
+                    <td>{user.phoneNumber}</td>
+                    <td>{user.password}</td>
+                    <td>{user.downline.length}</td>
+                    <td>{user.parentUserUid}</td>
+                    <td>{user.commissionAmount}</td>
+                    <td>{(user.walletAmount).toFixed(2)}</td>
+                    <td>{(user.winningAmount).toFixed(2)}</td>
+                    <td>
+                      <button onClick={() => handleActive(user._id)} className='activate'>Activate</button>
+                      <button onClick={() => handleDeactive(user._id)} className='deactivate'>Deactivate</button>
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
 
           <div className='inc-dec-btns'>
             <button onClick={handleDecrement}>-</button>

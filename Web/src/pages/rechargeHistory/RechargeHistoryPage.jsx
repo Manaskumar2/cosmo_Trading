@@ -59,7 +59,7 @@ function WIthdrawHistoryPage() {
         {rechargeHistory && rechargeHistory.data.data.map((item, index) => (
           <div key={index} className='container'>
             <div className='row'>
-              <div className="col-4">
+              <div className="col-5">
                 <div >Transaction Id</div>
                 <div >Amount:</div>
                 <div >Upi Id:</div>
@@ -67,7 +67,7 @@ function WIthdrawHistoryPage() {
                 <div> Time:</div>
               </div>
 
-              <div className="col-8" >
+              <div className="col-7" >
                 <div>{item.upiReferenceNo}</div>
                 <div>{item.amount}</div>
               

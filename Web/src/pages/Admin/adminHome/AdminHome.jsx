@@ -8,6 +8,7 @@ import './AdminHome.css'
 function AdminHome() {
 
   const [cosmo, setCosmo] = useState(null)
+  const [transaction, setTransaction] = useState(null)
   const [riseUp, setRiseUp] = useState(null)
   const [growUp, setGrowUp] = useState(null)
   const authData = useRecoilValue(AuthState);
@@ -21,6 +22,21 @@ function AdminHome() {
       if (response.status === 200) {
         console.log(response);
         setCosmo(response)
+        return response;
+      }
+    } catch (error) {
+      const errorMessage = error.response ? error.response.data.message : error.message;
+    }
+  };
+  const handleTransactionData = async () => {
+    try {
+      let token = authData.authToken;
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}admin/totalTransactions`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (response.status === 200) {
+        setTransaction(response.data.data)
+        console.log(response);
         return response;
       }
     } catch (error) {
@@ -60,6 +76,7 @@ function AdminHome() {
 
   useEffect(() => {
     const callFunctions = () => {
+      handleTransactionData()
       handleCosmoData();
       handleGrowUp();
       handleRiseUp();
@@ -101,6 +118,36 @@ function AdminHome() {
                 <div className='admin-home-box'>
                   <h5>Today Betting Amount</h5>
                   <p>{cosmo.data.data[0].everydayBettingAmount.toFixed(2)}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+              }
+            {transaction &&
+            <div>
+              <div className="row">
+                <div className="col-4">
+                  <div className='admin-home-box'>
+                    <h5>Today Recharge</h5>
+                    <p>{transaction.todayTotalRecharge.toFixed(2)}</p>
+                  </div>
+                </div>
+                <div className="col-4">
+                  <div className='admin-home-box'>
+                  <h5>Total Recharge</h5>
+                  <p>{transaction.overallTotalRecharge.toFixed(2)}</p>
+                  </div>
+                </div>
+                <div className="col-4">
+                <div className='admin-home-box'>
+                  <h5>Today Withdraw</h5>
+                  <p>{transaction.todayTotalWithdraw.toFixed(2)}</p>
+                  </div>
+                </div>
+                <div className="col-4">
+                <div className='admin-home-box'>
+                  <h5>Total Withdraw</h5>
+                  <p>{transaction.overallTotalWithdraw.toFixed(2)}</p>
                   </div>
                 </div>
               </div>

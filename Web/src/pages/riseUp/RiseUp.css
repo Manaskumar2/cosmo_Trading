@@ -223,8 +223,6 @@ backdrop-filter: blur(15px);}
     margin: 0 auto;
     padding: 4.5rem 0 0;
 }
-    
-/* .col-3:hover */
 .wr-btns .col-6{padding-left: 7px;padding-right: 7px;}
 
 .custom_checkbox{padding-left: 20px;padding-right: 20px;margin-top: 20px}
@@ -239,6 +237,7 @@ backdrop-filter: blur(15px);}
 .clock-btn-containerRaiseUp{ text-align: center;}
 .clock-btn-containerRaiseUp button.activeClockRaiseUp{text-align: center; margin: 0 auto;}
 
+.clock:hover{background:rgba(31,100,150,0.50) !important;}
 @media(min-width:768px){
     .big-small .left img, .big-small .right img{width: 11rem;display: flex; justify-content: center;align-items: center;}
 

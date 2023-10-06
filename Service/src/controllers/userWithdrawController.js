@@ -3,34 +3,43 @@ const withdrawlModel = require('../models/withdrawlModel');
 const withdrawModel = require('../models/withdrawlModel')
 
 const withdrawrequest = async (req, res) => {
+  try {
+    const { withdrawAmount } = req.body;
+    const wAmount = parseInt(withdrawAmount);
+    const userId = req.decodedToken.userId;
+    console.log(userId);
 
-    try {
-      const { withdrawAmount } = req.body;
-      const wAmount = parseInt(withdrawAmount)
-        const userId = req.decodedToken.userId
-       console.log(userId)
+    if (!userId) return res.status(403).send({ status: false, message: "Please login" });
+    if (!wAmount) return res.status(400).send({ status: false, message: "Please enter amount" });
+    if (wAmount < 500) return res.status(400).send({ status: false, message: "Cannot withdraw below 500rs" });
 
-        if (!userId) return res.status(403).send({ status: false, message: "please login" })
-        if (!wAmount) return res.status(400).send({ status: false, message: "please enter amount" })
-      if (wAmount < 500) return res.status(400).send({ status: false, message: "can not withdraw bellow 500rs" })
-      
-      const user = await userModel.findById({ _id: userId })
-      if (user.isPremiumUser) return res.status(400).send({ status:false,message:"you cannot withdraw money! You are a Premium User"})
-      const totalwithdraw= user.walletAmount
-      if (totalwithdraw < wAmount) return res.status(400).send({ status: false, message: "insufficient funds" })
-      // console.log(user)
-      if (user.rechargeAmount != 0) return res.status(400).send({ status: false, message: "you  need to be bet " + user.rechargeAmount + " for withdraw " })
-      
-      if (user.walletAmount > wAmount) {
-        user.walletAmount -= wAmount
-        user.save()
-      }
-        await withdrawlModel.create({ withdrawAmount: wAmount, userId: userId, status: "pending" })
-        return res.status(200).send({ status: false, message: "waiting for payment confirmation" })
-    } catch (error) {
-        return res.status(500).send({ status: false, message: error.message })
+    const user = await userModel.findById({ _id: userId });
+    if (user.isPremiumUser) return res.status(400).send({ status: false, message: "You cannot withdraw money! You are a Premium User" });
+    const totalWithdraw = user.walletAmount;
+    if (totalWithdraw < wAmount) return res.status(400).send({ status: false, message: "Insufficient funds" });
+    
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const withdrawalCount = await withdrawlModel.countDocuments({ userId: userId, createdAt: { $gte: today } });
+    
+    if (withdrawalCount >= 3) {
+      return res.status(400).send({ status: false, message: "You have already reached the daily withdrawal limit of 3 times" });
     }
+
+    if (user.rechargeAmount !== 0) return res.status(400).send({ status: false, message: "You need to bet " + user.rechargeAmount + " for withdrawal" });
+
+    if (user.walletAmount >= wAmount) {
+      user.walletAmount -= wAmount;
+      user.save();
+    }
+    
+    await withdrawlModel.create({ withdrawAmount: wAmount, userId: userId, status: "pending" });
+    return res.status(200).send({ status: false, message: "Waiting for payment confirmation" });
+  } catch (error) {
+    return res.status(500).send({ status: false, message: error.message });
+  }
 }
+
 
 const getWithdrawRequest = async (req, res) => {
   try {

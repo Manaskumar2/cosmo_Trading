@@ -12,7 +12,7 @@ const {getpremiumRequest,updatePremiumUser, getPremiumRequestById, getPremiumDet
 const { getWithdrawRequest, confirmRequest } = require("../controllers/userWithdrawController");
 const { deleteGames, growUpBetamount } = require("../controllers/gameController");
 const { riseUpBetamount } = require("../controllers/secondGameController");
-const {getCompanyDetails} = require("../controllers/companyWalletController");
+const {getCompanyDetails, companyRechargeAndWithdraw} = require("../controllers/companyWalletController");
 const { franchiseCommissions } = require("../controllers/commissionController");
 router.post("/signIn", adminlogin)
 
@@ -66,5 +66,8 @@ router.get("/companyDetails",authentication,adminAuthorization,getCompanyDetails
 //********************************Frinchase ************************************************//
 
 router.get("/getPremiumUsers", authentication, adminAuthorization, getPremiumDetails)
-router.post("/franchisecommissions",authentication,adminAuthorization,franchiseCommissions)
+router.post("/franchisecommissions", authentication, adminAuthorization, franchiseCommissions)
+
+//******************************** total transaction  ************************************************//
+router.get("/totalTransactions", authentication, adminAuthorization,companyRechargeAndWithdraw)
 module.exports =router

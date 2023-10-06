@@ -26,15 +26,15 @@ const applyPremiumUser = async (req, res) => {
      const checkAmount = await userModel.findById({ _id: userId })
       if (!checkAmount) return res.status(400).send({ status: false, message: "please logIn again" })
       if (checkAmount.isPremiumUser == true) return res.status(400).send({ status: false, message: "you  are already a premium user" })
-      
-        const curreentBalance = checkAmount.walletAmount
-      if (curreentBalance< amount) return res.status(400).send({ status: false, message: "insufficient funds" })
-      checkAmount.walletAmount -= amount
-      checkAmount.save()
       const premiumDetails = await premiumModel.findOne({ userId: userId,status:"pending" });
     if (premiumDetails) {
       return res.status(401).send({ status: false, message: "You are already applied please wait conformation" });
         }
+        const curreentBalance = checkAmount.walletAmount
+      if (curreentBalance< amount) return res.status(400).send({ status: false, message: "insufficient funds" })
+      checkAmount.walletAmount -= amount
+      checkAmount.save()
+      
       const applyingPremium = await premiumModel.create({ amount: amount, userId: userId })
         
          return res.status(201).json({ message: 'Premium application submitted successfully.' });
@@ -53,12 +53,12 @@ const getpremiumRequest = async (req, res) => {
     const limit = parseInt(req.query.limit) || 20;
 
 
-    
+    const premiumCount = await userModel.countDocuments({isPremiumUser:true})
     const skip = (page - 1) * limit;
     const premiumApplyRequest = await premiumModel.find({ status: status }).sort({ createdAt: -1 }).skip(skip)
       .limit(limit);
         if (premiumApplyRequest.length < 0) return res.status(404).send({ status: false, message: "no premium request found." });
-        return res.status(200).send({ status: true, message: "success", data: premiumApplyRequest })
+        return res.status(200).send({ status: true, message: "success", data: premiumApplyRequest,premiumCount })
       
     } catch (error) {
         console.error('Error applying for premium status:', error);

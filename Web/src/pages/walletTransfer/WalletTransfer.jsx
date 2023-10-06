@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Modal from 'react-modal'; // Import react-modal
+import Modal from 'react-modal';
 import '../accountSecurity/AccountSecurity.css';
 import back from '../../images/back-button 1.svg';
 import { Link } from 'react-router-dom';

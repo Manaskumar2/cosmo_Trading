@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import AdminNav from '../adminNav/AdminNav';
 import Side from '../adminSide/Side';
 import axios from 'axios';
+import '../adminUserData/User.css'
 import { useRecoilValue, useRecoilState } from 'recoil';
 import { PremiumState } from '../../../Atoms/Premium';
 import { AuthState } from '../../../Atoms/AuthState';
@@ -20,7 +21,7 @@ export const toastProps = {
 };
 
 function PremiumUser() {
-    const [amount, setAmount]=useState(0)
+    const [amount, setAmount]=useState('')
 
     const authData = useRecoilValue(AuthState);
     const [premiumState, setPremiumState] = useRecoilState(PremiumState);
@@ -55,7 +56,7 @@ function PremiumUser() {
             if (response.status === 200) {
                 handlePrimeRequest()
                 toast.success( 'Commission Successfully Distributed!', { ...toastProps })
-                setAmount(0)
+                setAmount('')
                 return response;
             }
         } catch (error) {
@@ -78,32 +79,71 @@ function PremiumUser() {
                 <div className='admin-rightSection'>
                     <div className='Amount-distribution-box'>
                         <h5>Enter Premium Member Distribution Amount</h5>
-                        <div><input type="number" value={amount } onChange={(e)=>{setAmount(e.target.value)}}/></div>
+                        <div><input type="number" value={amount } onChange={(e)=>{setAmount(e.target.value)}} placeholder='Enter Amount'/></div>
                         <button onClick={handleDistribution}>SEND COMMISSION</button>
 
                     </div>
 
                     <Toaster />
-                    {premiumState && premiumState.response && premiumState.response.getUsers.map((item, index) => (
+                    {/* {premiumState && premiumState.response && premiumState.response.getUsers.map((item, index) => (
                         <Accordion key={index}>
                             <Accordion.Item eventKey="0">
                                 <Accordion.Header  className='admin-prime-head'>
                                     <div>user Id: {item.UID}</div>
                                     <div>Phone No: {item.phoneNumber}</div>
+                                    <p>Wallet Amount:   </p>
 
                                 </Accordion.Header>
                                 <Accordion.Body>
-                                    <p>user Id:   {item.UID}</p>
-                                    <p>Phone No:   {item.phoneNumber}</p>
-                                    <p>Wallet Amount:   {item.walletAmount}</p>
-                                    <p>Winning Amount:   {item.winningAmount}</p>
-                                    <p>Recharge Amount:   {item.winningAmount}</p>
-                                    <p>Betting Amount:   {item.bettingAmount}</p>
-                                    <p>Commission Amount:   {item.commissionAmount}</p>
+                                    <div className='row'>
+                                        <div className='col-3'>
+                                            <p>UID:   </p>
+                                            <p>Name:</p>
+                                            <p>Phone No:  </p>
+                                            <p>Wallet Amount:</p>
+                                            <p>Commission Amount:   </p>
+                                        </div>
+                                        <div className='col-2' style={{textAlign:"right"}}>
+                                            <p>{item.UID}</p>
+                                            <p>{item.name}</p>
+                                            <p>{item.phoneNumber}</p>
+                                            <p>{item.walletAmount}</p>
+                                            <p>{item.commissionAmount}</p>
+                                        </div>
+                                    
+                                    
+                                    
+                                    
+                                    </div>
                                 </Accordion.Body>
                             </Accordion.Item>
                         </Accordion>
-                    ))}
+                    ))} */}
+                    <table>
+            <thead>
+              <tr className='table-row'>
+                <th>UID</th>
+                <th>Name</th>
+                <th>Phone No</th>
+                <th>Commission Amount</th>
+                <th>Wallet Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+            {premiumState && premiumState.response && premiumState.response.getUsers.map((user, index) => (
+                  <tr key={index} className='table-row'>
+                    <td>{user.UID}</td>
+                    <td>{user.name}</td>
+                    <td>{user.phoneNumber}</td>
+                    <td>{user.commissionAmount}</td>
+                    <td>{user.walletAmount}</td>
+                    
+                    
+
+                  </tr>
+                ))}
+            </tbody>
+          </table>
                 </div>
             </div>
         </div>
