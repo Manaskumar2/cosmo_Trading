@@ -16,28 +16,30 @@ import { useRecoilValue, useRecoilState } from 'recoil';
 import { AuthState } from '../../Atoms/AuthState';
 import wp from './wp.svg';
 import axios from 'axios';
-import {CgCloseO} from 'react-icons/cg'
+import { CgCloseO } from 'react-icons/cg';
 
 function Home() {
     const auth = useRecoilValue(AuthState);
-    const [duration, setDuration] = useState(1);
-    const [gameHistoryList, setGameHistoryList] = useRecoilState(GameHistoryList);
     const [showPopup, setShowPopup] = useState(false);
-    const [delay, setDelay] = useState(2000); // 2 seconds in milliseconds
+    const [delay, setDelay] = useState(2000);
+    const [news, setNews] = useState('');
 
     const handleClosePopup = () => {
+        console.log("Closing popup");
         setShowPopup(false);
+        localStorage.setItem('showPopUp','false');
     };
+    
 
     const getGameHistory = async () => {
         try {
             let token = auth.authToken;
-            const response = await axios.get(`${import.meta.env.VITE_API_URL}/getSuccessFullGameHistory/${duration}`, {
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/articles`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             if (response.status === 200) {
                 console.log(response.data);
-                setGameHistoryList(response.data);
+                setNews(response.data);
                 return response;
             }
         } catch (error) {
@@ -46,25 +48,29 @@ function Home() {
         }
     };
 
-    // useEffect(() => {
-    //     const timer = setTimeout(() => {
-    //         setShowPopup(true);
-    //     }, delay);
-
-    //     return () => {
-    //         clearTimeout(timer);
-    //     };
-    // }, []);
-
     useEffect(() => {
         getGameHistory();
     }, []);
+    useEffect(() => {
+        const timerId = setTimeout(() => {
+            const popupShown = localStorage.getItem('showPopUp');
+            console.log(showPopup)
+            console.log(popupShown)
+            if (popupShown === 'true') {
+                setShowPopup(true);
+                console.log(showPopup)
+            } 
+        }, 1000);
+    
+        return () => clearTimeout(timerId);
+    }, []);
+    
 
     return (
         <div className="main-background">
             <div className="home">
                 <div className="container">
-                    <div className="row home-row">
+                <div className="row home-row">
                         <div className="col-2 download">
                             <a href="https://whatsapp.com/channel/0029VaAOCUm2Jl8C4oYY1u0M" target="_blank" rel="noopener noreferrer">
                                 <img src={wp} alt="" style={{ width: '2.5rem' }} />
@@ -81,7 +87,7 @@ function Home() {
                     </div>
                 </div>
             </div>
-            <Banner />
+            <Banner news= {news}/>
             <GameSection />
             <OnlineCount />
             <BonusCount />
@@ -90,13 +96,13 @@ function Home() {
             <Accordian />
             <Nav />
 
+
             {showPopup && (
                 <div className="popup-Home popup">
-                    <button className="popup-close " onClick={handleClosePopup}>
-                        <CgCloseO/>
+                    <button className="popup-close" onClick={handleClosePopup}>
+                        <CgCloseO />
                     </button>
                     <img src={popupImg} alt="Popup" />
-                    
                 </div>
             )}
         </div>

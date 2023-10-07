@@ -16,7 +16,6 @@ export const toastProps = {
 };
 
 function Login() {
-  
   useEffect(() => {
     const preloadBackgroundImage = () => {
       const backgroundImage = new Image();
@@ -46,7 +45,8 @@ function Login() {
 
       if (response.status === 200) {
         toast.success('Welcome to our Gaming Zone', { ...toastProps });
-        sessionStorage.setItem('authToken', JSON.stringify(response.data.data));
+        sessionStorage.setItem('authUserToken', JSON.stringify(response.data.data));
+        localStorage.setItem('showPopUp', JSON.stringify('true'));
         setPhone('');
         setPassword('');
         setLoading(false);

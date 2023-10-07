@@ -52,3 +52,4 @@ line-height: 1.875rem;
     font-family: Montserrat;}
   .inc-dec-btns button{color: #fff;
     font-family: Montserrat; border: 0;outline: none;background-color: #0B5A8F;}
+    .login-user{background-color: rgb(33, 116, 223);color: #fff; padding: .3rem 1rem;border: 0;outline: none;width: 6rem;}

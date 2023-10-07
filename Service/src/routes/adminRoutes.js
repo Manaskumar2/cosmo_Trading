@@ -1,5 +1,19 @@
 const express = require("express");
 const router = express.Router();
+const multer = require('multer');
+const path = require('path');
+const app = express();
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/');
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  },
+});
+
+const upload = multer({ storage })
 
 
 const { authentication, adminAuthorization } = require("../middlewares/authMiddleware")
@@ -14,6 +28,8 @@ const { deleteGames, growUpBetamount } = require("../controllers/gameController"
 const { riseUpBetamount } = require("../controllers/secondGameController");
 const {getCompanyDetails, companyRechargeAndWithdraw} = require("../controllers/companyWalletController");
 const { franchiseCommissions } = require("../controllers/commissionController");
+const { uploadImage, getImage } = require("../controllers/popUpimageController");
+const { createArticle } = require("../controllers/articleController");
 router.post("/signIn", adminlogin)
 
 router.get("/getAllUsers", authentication,adminAuthorization ,getAllUsers)
@@ -69,5 +85,10 @@ router.get("/getPremiumUsers", authentication, adminAuthorization, getPremiumDet
 router.post("/franchisecommissions", authentication, adminAuthorization, franchiseCommissions)
 
 //******************************** total transaction  ************************************************//
-router.get("/totalTransactions", authentication, adminAuthorization,companyRechargeAndWithdraw)
+router.get("/totalTransactions", authentication, adminAuthorization, companyRechargeAndWithdraw)
+
+//********************************uploads popUpimage ************************************************
+router.post("/uploads", authentication,adminAuthorization, upload.single('image'), uploadImage)
+//********************************Articles  ************************************************
+router.post("/articles", authentication,adminAuthorization,createArticle)
 module.exports =router

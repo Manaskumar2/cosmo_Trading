@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
-import { AdminHome, AdminUser, AdminRecharge, AdminWithdraw, AdminLogin, AdminPrime ,PremiumUser} from './importPages';
+import { AdminHome, AdminUser, AdminRecharge, AdminWithdraw, AdminLogin, AdminPrime ,PremiumUser,UploadPopUpAndNews} from './importPages';
 import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import AdminLoader from '../pages/Admin/adminLoading/AdminLoading';
 import { Suspense } from 'react';
-import { AuthState } from '../Atoms/AuthState';
+import { AdminAuthState } from '../Atoms/AdminAuthState';
 import { useRecoilValue } from 'recoil';
 
 function AdminRoute() {
-  const adminAuth = useRecoilValue(AuthState);
+  const adminAuth = useRecoilValue(AdminAuthState);
   const navigate = useNavigate();
 
   // useEffect(() => {
@@ -84,6 +84,14 @@ function AdminRoute() {
             element={
               <Suspense fallback={<AdminLoader />}>
                 <PremiumUser/>
+              </Suspense>
+            }
+          />
+          <Route
+            path="/admin/uploadNewsAndImage"
+            element={
+              <Suspense fallback={<AdminLoader />}>
+                <UploadPopUpAndNews/>
               </Suspense>
             }
           />

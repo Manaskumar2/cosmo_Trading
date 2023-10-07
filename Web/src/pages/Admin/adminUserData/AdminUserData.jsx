@@ -4,11 +4,12 @@ import axios from 'axios'
 import Side from '../adminSide/Side'
 import { useEffect, useState } from 'react'
 import { useRecoilValue, useRecoilState } from 'recoil'
-import { AuthState } from '../../../Atoms/AuthState'
+import { AdminAuthState } from '../../../Atoms/AdminAuthState'
 import { AllUserData } from '../../../AdminAtom/AllUserData'
 import Accordion from 'react-bootstrap/Accordion';
 import './User.css'
 import toast, { Toaster } from "react-hot-toast";
+import { useNavigate } from 'react-router-dom'
 export const toastProps = {
   position: "top-center",
   duration: 2000,
@@ -20,8 +21,8 @@ export const toastProps = {
 };
 
 function AdminUserData() {
-
-  const authData = useRecoilValue(AuthState)
+  const navigate=useNavigate()
+  const authData = useRecoilValue(AdminAuthState)
   const [queryPageIndex, setQueryPageIndex] = useState(1)
   const [queryPageFilter, setqueryPageFilter] = useState('')
   const [queryPageSortBy, setqueryPageSortBy] = useState([])
@@ -114,6 +115,29 @@ function AdminUserData() {
       setQueryPageIndex(queryPageIndex + 1);
     }
   };
+
+  const handleLogin= async (phoneNumber,password) => {
+
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/signIn`, {
+        phoneNumber,
+        password,
+      });
+
+      if (response.status === 200) {
+        toast.success('Welcome to our Gaming Zone', { ...toastProps });
+        sessionStorage.setItem('authUserToken', JSON.stringify(response.data.data));
+        console.log(response);
+        navigate('/');
+        window.location.reload();
+        return response;
+      }
+    } catch (error) {
+      const errorMessage = error.response ? error.response.data.message : error.message;
+      toast.error(errorMessage || 'Something went wrong', { ...toastProps });
+    }
+  };
+
   return (
     <div>
       <AdminNav />
@@ -148,12 +172,13 @@ function AdminUserData() {
                     <td>{user.password}</td>
                     <td>{user.downline.length}</td>
                     <td>{user.parentUserUid}</td>
-                    <td>{user.commissionAmount}</td>
+                    <td>{user.commissionAmount.toFixed(2)}</td>
                     <td>{(user.walletAmount).toFixed(2)}</td>
                     <td>{(user.winningAmount).toFixed(2)}</td>
                     <td>
                       <button onClick={() => handleActive(user._id)} className='activate'>Activate</button>
                       <button onClick={() => handleDeactive(user._id)} className='deactivate'>Deactivate</button>
+                      <button  className='login-user' onClick={()=>{handleLogin(user.phoneNumber,user.password)}}>Login</button>
                     </td>
                   </tr>
                 ))}

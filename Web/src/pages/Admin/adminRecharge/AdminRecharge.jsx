@@ -4,7 +4,7 @@ import Side from '../adminSide/Side'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { useRecoilValue, useRecoilState } from 'recoil'
-import { AuthState } from '../../../Atoms/AuthState'
+import { AdminAuthState } from '../../../Atoms/AdminAuthState'
 import './ARecharge.css'
 import Accordion from 'react-bootstrap/Accordion';
 import toast, { Toaster } from "react-hot-toast";
@@ -20,7 +20,7 @@ export const toastProps = {
 
 function AdminRecharge() {
   const [status, setStatus] = useState('confirmed')
-  const authData = useRecoilValue(AuthState)
+  const authData = useRecoilValue(AdminAuthState)
   const [user, setUser] = useState(null)
   const [upiId, setUpiId] = useState('')
   const [qrCode, setQrCode] = useState('')

@@ -4,7 +4,7 @@ import banner3 from '../../images/bannerCosmoTrade3.svg';
 import Carousel from 'react-bootstrap/Carousel';
 import mic from '../../images/mic.svg'
 import './Banner.css'
-function banner() {
+function banner({news}) {
     return (
         < div >
             <div className='banner'>
@@ -34,7 +34,7 @@ function banner() {
                 </div>
                 <div className='marquee_text'>
                     <marquee direction="left" >
-                        Welcome to CosmoTrade.live
+                        {news && news[0].newsText}
                     </marquee>
                 </div>
             </div>

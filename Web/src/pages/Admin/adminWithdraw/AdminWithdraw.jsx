@@ -5,7 +5,7 @@ import './AWithdraw.css'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { useRecoilValue, useRecoilState } from 'recoil'
-import { AuthState } from '../../../Atoms/AuthState'
+import { AdminAuthState } from '../../../Atoms/AdminAuthState'
 import Accordion from 'react-bootstrap/Accordion';
 import toast, { Toaster } from "react-hot-toast";
 export const toastProps = {
@@ -24,7 +24,7 @@ function AdminWithdraw() {
   const [withDrawdata, setWithdrawData] = useState(null)
   const [bankData, setBankData] = useState(null)
 
-  const authData = useRecoilValue(AuthState)
+  const authData = useRecoilValue(AdminAuthState)
 
   const handleUser = async (userId) => {
     try {

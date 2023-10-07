@@ -39,7 +39,7 @@ function Profile() {
 
     const logout = () => {
 
-        sessionStorage.removeItem('authToken');
+        sessionStorage.removeItem('authUserToken');
         setAuth(null)
 
         navigate('/signIn')

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import AdminNav from '../adminNav/AdminNav'
 import Side from '../adminSide/Side'
 import axios from 'axios'
-import { AuthState } from '../../../Atoms/AuthState';
+import { AdminAuthState } from '../../../Atoms/AdminAuthState';
 import { useRecoilValue, useRecoilState } from 'recoil';
 import './AdminHome.css'
 function AdminHome() {
@@ -11,7 +11,7 @@ function AdminHome() {
   const [transaction, setTransaction] = useState(null)
   const [riseUp, setRiseUp] = useState(null)
   const [growUp, setGrowUp] = useState(null)
-  const authData = useRecoilValue(AuthState);
+  const authData = useRecoilValue(AdminAuthState);
 
   const handleCosmoData = async () => {
     try {

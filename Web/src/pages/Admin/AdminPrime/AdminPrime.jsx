@@ -4,7 +4,7 @@ import Side from '../adminSide/Side';
 import axios from 'axios';
 import { useRecoilValue, useRecoilState } from 'recoil';
 import { PremiumState } from '../../../Atoms/Premium';
-import { AuthState } from '../../../Atoms/AuthState';
+import { AdminAuthState } from '../../../Atoms/AdminAuthState';
 import './AdminPrime.css';
 import Accordion from 'react-bootstrap/Accordion';
 import toast, { Toaster } from "react-hot-toast";
@@ -23,7 +23,7 @@ function AdminPrime() {
   const [status, setStatus]=useState('approved')
   const [user, setUser] = useState(null);
   // const [adminStatus, setAdminStatus] = useState('');
-  const authData = useRecoilValue(AuthState);
+  const authData = useRecoilValue(AdminAuthState);
   const [premiumState, setPremiumState] = useRecoilState(PremiumState);
 
   const handlePrimeRequest = async () => { 
