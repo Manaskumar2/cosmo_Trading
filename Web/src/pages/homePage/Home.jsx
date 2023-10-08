@@ -27,6 +27,7 @@ function Home() {
     const handleClosePopup = () => {
         setShowPopup(false);
         localStorage.removeItem('showPopUp');
+        document.body.style.overflow = 'auto';
     };
 
 
@@ -73,6 +74,7 @@ function Home() {
         const popupShown = localStorage.getItem('showPopUp') || null;
         if (popupShown) {
             setShowPopup(true);
+            document.body.style.overflow = 'hidden';
         }
     }, []);
 

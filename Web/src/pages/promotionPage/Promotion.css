@@ -2,7 +2,7 @@
 .PromoNav{background: #001C3E; background-image: url('../../images/belips.png');background-position: bottom; background-repeat: no-repeat; padding:15px 1.5rem;border-bottom: 1px solid #133B77;}
 .PromoNav .row .col-8{color: #FFF;text-align: center;font-family: 'Montserrat';font-size: 1.1rem;font-weight: 500;letter-spacing: 0.00688rem;text-transform: capitalize;}
 .tab-btn-container{overflow: hidden;display: flex;justify-content: center;align-items: center}
-.tab-btn-container .col-3{width: 23.5%;outline: none; border: 0; background-color: transparent;padding: 10px 15px; font-weight: 450; font-size: 1rem; }
+.tab-btn-container .col-3{width: 23.5%;outline: none; border: 0; background-color: transparent;padding: 10px 5px; font-weight: 450; font-size: 1rem; }
 .promotionContainer{background: #001C3E; overflow: hidden; }
 .tab-btn-container .tab{color: #6CD7EE;}
 .tab-btn-container .active-Tab{border-bottom: 1.5px  solid #FBB040; color:  #fff;}
