@@ -7,7 +7,7 @@ const userModel = require("../models/userModel")
 const applyPremiumUser = async (req, res) => {
     try {
         const { amount} = req.body
-        console.log(amount);
+       
         const userId = req.decodedToken.userId
          
         checkPremium = await premiumModel.find()

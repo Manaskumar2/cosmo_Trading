@@ -1,25 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const multer = require('multer');
-const path = require('path');
-const app = express();
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads/');
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname);
-  },
-});
-
-const upload = multer({ storage })
 
 
 const { authentication, adminAuthorization } = require("../middlewares/authMiddleware")
 const { adminlogin,getAllUsers,activeUser,deactiveUser,getDownlineDetails, getUserDetailsByUserId } = require("../controllers/userController")
 const { uploadQrCode, getAllImageURLs } = require('../controllers/qrCodeController')
-const { getBankAccountbyId, updateBankAccount } = require("../controllers/withdrawAccountController")
+const { getBankAccountbyId, updateBankAccountAnduserDetails, getUserDetailsWithBank } = require("../controllers/withdrawAccountController")
 const { getPaymentRequest, updatePaymentRequest } = require("../controllers/rechargeController")
 // const { getWithdrawRequest, confirmRequest } = require("../controllers/userWithdrawController");
 const {getpremiumRequest,updatePremiumUser, getPremiumRequestById, getPremiumDetails} =  require("../controllers/premiumController")
@@ -62,7 +48,6 @@ router.put("/updatePremiumRequest/:userId", authentication, adminAuthorization, 
 
 router.get("/getWithdrawRequest", authentication, adminAuthorization, getWithdrawRequest)
 router.put("/conformWithdrawRequest/:requestId", authentication, adminAuthorization, confirmRequest)
-router.put("/updateUserBankAccount/:bankId",authentication,adminAuthorization,updateBankAccount)
 router.get("/getWithdrawRequest", authentication, adminAuthorization, getWithdrawRequest)
 
 //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>GrowUp<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<//
@@ -88,7 +73,11 @@ router.post("/franchisecommissions", authentication, adminAuthorization, franchi
 router.get("/totalTransactions", authentication, adminAuthorization, companyRechargeAndWithdraw)
 
 //********************************uploads popUpimage ************************************************
-router.post("/uploads", authentication,adminAuthorization, upload.single('image'), uploadImage)
+router.post("/uploads", authentication,adminAuthorization, uploadImage)
 //********************************Articles  ************************************************
-router.post("/articles", authentication,adminAuthorization,createArticle)
+router.post("/articles", authentication, adminAuthorization, createArticle)
+
+//********************************get and update user details and bank account ********************************
+router.put("/updateUser/:userId", authentication, adminAuthorization, updateBankAccountAnduserDetails)
+router.get("/userAndBankData/:userId", authentication,adminAuthorization,getUserDetailsWithBank)
 module.exports =router

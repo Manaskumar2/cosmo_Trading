@@ -318,7 +318,7 @@ if (
       const winner = groups[winnerGroup];
       const runnerUp = groups[runnerUpGroup];
       const losers = groups[loserGroup];
-      // console.log("3rd distribution")
+      
        await distributeComissionToThreeUsers(winner, runnerUp, losers,game,winnerGroup,runnerUpGroup);
     }
     else if (runnerUpGroup == null && loserGroup !== null && winnerGroup !== null) {
@@ -331,7 +331,7 @@ if (
       // console.log("1nd distribution")
        await distributeComissionToOneUser(loser, game)
     }
-    console.log(winnerGroup + " " + runnerUpGroup + " " + loserGroup)
+
     game.winnerGroup = winnerGroup;
     game.runnerUpGroup = runnerUpGroup;
     game.losersGroup = loserGroup;
@@ -727,7 +727,7 @@ const bet2ndController = async (req, res) => {
     );
 
         res.status(201).json({ status: true, message: "Bet placed successfully" });
-        console.log("bet Placed ")
+       
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: "An error occurred while placing the bet" });
@@ -867,7 +867,7 @@ const update2ndGameUid = async (req, res) => {
     
     const { gameUID } = req.body;
 
-    console.log(gameUID+" updated")
+   
     const parsedGameUID = parseInt(gameUID);
 
     if (isNaN(parsedGameUID)) {

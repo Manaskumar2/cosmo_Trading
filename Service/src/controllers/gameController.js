@@ -691,7 +691,7 @@ const updateGameUid = async (req, res) => {
     
     const { gameUID } = req.body;
 
-    console.log(gameUID+" updated")
+
     const parsedGameUID = parseInt(gameUID);
 
     if (isNaN(parsedGameUID)) {

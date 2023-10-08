@@ -64,7 +64,7 @@ const getPaymentRequest = async (req, res) => {
 const updatePaymentRequest = async (req, res) => {
   try {
     const paymentId  = req.params.paymentId;
-    console.log(paymentId)
+  
     const { status } = req.body;
 
     const manualPayment = await rechargeModel.findById(paymentId);

@@ -3,7 +3,8 @@ const commissionModel = require("../models/commissionModel")
 const jwt = require("jsonwebtoken")
 const bcrypt = require('bcrypt')
 const validation = require("../validations/validation")
-const { generateUniqueReferralCode, } = require("../util/util")
+const { generateUniqueReferralCode, } = require("../util/util");
+const schedule = require('node-schedule')
 
 
 const twilio = require('twilio')("ACfe32400dd6c9efafd446cecf70102c0b", "7a4d599d44148524de82afe08e75b4d2");
@@ -65,7 +66,7 @@ const signUp = async (req, res) => {
       }
 
       const newUserObjectId = createUser._id;
-      console.log(newUserObjectId);
+     
 
       findParentUser.downline.push({ user: newUserObjectId });
       await findParentUser.save();
@@ -203,7 +204,7 @@ const verifyOtp = async (req, res) => {
 
   try {
     const { otpToken, otp } = req.body;
-    console.log(otpToken, otp)
+ 
 
     if (!otpToken) return res.status(400).json({ status: false, message: "Invalid Otp Token" })
 
@@ -518,7 +519,7 @@ const getReferralStats = async (req, res) => {
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(today.getDate() - 7);
     sevenDaysAgo.setHours(0, 0, 0, 0);
-    console.log(sevenDaysAgo);
+    
     const todayCount = await userModel.countDocuments({
       parentReferralCode:referralID,
       createdAt: { $gte: todayStart, $lte: todayEnd },
@@ -564,11 +565,11 @@ const changePassword = async (req, res) => {
 const deactiveUser = async (req, res) => {
     try {
       const userId = req.params.userId
-      console.log(userId)
+   
         const adminId = req.decodedToken.userId
-        console.log(adminId)
+      
         if (!validation.isValidObjectId(adminId)) return res.status(400).send({ status: false, message: " ENTER VALID ADMIN ID" })
-        console.log(adminId)
+      
         if (!validation.isValidObjectId(userId)) return res.status(400).send({ status: false, message: " ENTER VALID USER ID" })
         const userData = await userModel.findOne({ _id: userId, isDeleted: false })
       
@@ -610,12 +611,11 @@ const activeUser = async (req, res) => {
     const  getAllUsers = async (req, res) => {
       try {
         const { queryPageIndex = 1, queryPageSize = 20, queryPageFilter, queryPageSortBy = [{ id: '_id', desc: false }] } = req.query;
-        console.log( queryPageSortBy )
+        
         let query = {};
         let sortBy = queryPageSortBy[0].id;
         let sortOrder = queryPageSortBy[0].desc ? -1 : 1;
-        console.log(sortOrder)
-        console.log(sortBy)
+      
     
         if (queryPageFilter) {
           let searchRegex = new RegExp(queryPageFilter, "i");
@@ -814,6 +814,16 @@ const walletToWalletTransactions = async (req, res) => {
     return res.status(500).json({ message: "Internal server error." });
   }
 }
+
+const job = schedule.scheduleJob('0 0 * * *', async () => {
+  try {
+  
+    await userModel.updateMany({}, { $unset: { commissions: 1 } });
+    console.log('Commissions field deleted for all users.');
+  } catch (error) {
+    console.error('Error deleting commissions field:', error);
+  }
+})
 
 module.exports = {
   signIn,

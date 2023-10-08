@@ -7,7 +7,7 @@ const withdrawrequest = async (req, res) => {
     const { withdrawAmount } = req.body;
     const wAmount = parseInt(withdrawAmount);
     const userId = req.decodedToken.userId;
-    console.log(userId);
+  
 
     if (!userId) return res.status(403).send({ status: false, message: "Please login" });
     if (!wAmount) return res.status(400).send({ status: false, message: "Please enter amount" });
@@ -110,7 +110,7 @@ function getTodayDate() {
 const withdrawalHistory = async (req, res) => { 
   try {
       const userId = req.params.userId;
-      console.log(userId);
+      
       
      const totalWithdraw = await withdrawModel.find({
   userId: userId,

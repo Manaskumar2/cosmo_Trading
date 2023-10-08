@@ -7,8 +7,11 @@ const cors = require('cors')
 const path = require('path');
 const server = require("http").Server(app)
 const mongoose = require('mongoose');
-const {initSocket}=require("./src/socket/socketio.js")
+
 const bodyParser = require('body-parser');
+const multer = require('multer');
+app.use(multer().any());
+
 
 
 app.use(
@@ -42,35 +45,9 @@ mongoose
   .then(() => console.log("MongoDb is connected"))
   .catch((err) => console.log(err));
 
-initSocket(server);
 app.use("/api", route);
 app.use("/api/admin", admin);
 
-
-
-
-
-
-// if (
-//    process.env.NODE_ENV === "production"||process.env.NODE_ENV === "development"
-
-// ) {
-  // app.use(express.static("dist"));
-  // app.get("*", (req, res) => {
-  //   res.sendFile(path.join(rootDir, "../Web/dist/index.html"));
-  // });
-
-//   app.use(express.static(path.join(__dirname, "../Web/dist")));
-// app.get("*", (req, res) => {
-//   res.sendFile(path.join(__dirname + "../Web/dist/index.html"));
-// });
-
-
-//  }
-//  app.use(express.static(path.join(__dirname, "../Web/dist")));
-// app.get("*", (req, res) => {
-//   res.sendFile(path.join(__dirname + "../Web/dist/index.html"));
-// });
 
   app.use(express.static(path.join(__dirname, "ui")));
 app.get("/", (req, res) => {
