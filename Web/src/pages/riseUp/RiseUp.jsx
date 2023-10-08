@@ -149,7 +149,6 @@ function RiseUp() {
                 setGmShow(false);
                 setMultiplier(1)
                 setMoney(1)
-                console.log(response);
                 handleUserMoney();
                 return response;
             }
@@ -236,7 +235,6 @@ function RiseUp() {
                 headers: { Authorization: `Bearer ${token}` },
             });
             if (response.status === 200){
-                console.log(response);
                 setTimeNo(duration)
                 setMinute(response)
                 return response;

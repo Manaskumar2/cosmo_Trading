@@ -26,7 +26,6 @@ const Timer = () => {
                 } else {
                     clearInterval(interval);
                     setCountState(false);
-                    console.log(countState);
                     return prevCountdown; 
                 }
             });

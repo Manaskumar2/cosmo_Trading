@@ -33,7 +33,6 @@ function AdminWithdraw() {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (response.status === 200) {
-        console.log(response);
         setUser(response);
         return response;
       }
@@ -51,7 +50,6 @@ function AdminWithdraw() {
         },
       );
       if (response.status === 200) {
-        console.log(response);
         setWithdrawData(response.data)
         return response;
       }
@@ -69,7 +67,7 @@ function AdminWithdraw() {
         },
       );
       if (response.status === 200) {
-        console.log(response);
+ 
         setBankData(response)
         return response;
       }
@@ -88,7 +86,7 @@ function AdminWithdraw() {
       if (response.status === 200) {
         toast.success("Withdraw request confirmed", { ...toastProps });
         handlePaymentRequest()
-        console.log(response);
+
         return response;
       }
     } catch (error) {

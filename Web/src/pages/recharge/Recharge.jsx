@@ -54,7 +54,6 @@ function Recharge() {
       }
       );
       if (response.status === 200) {
-        console.log(response);
         setUserData(response)
         return response;
       }

@@ -39,7 +39,7 @@ function PremiumUser() {
             );
 
             if (response.status === 200) {
-                console.log(response.data);
+
                 setPremiumState(response.data);
                 return response;
             }
@@ -83,7 +83,7 @@ function PremiumUser() {
           if (response.status === 200) {
             toast.success('Welcome to our Gaming Zone', { ...toastProps });
             sessionStorage.setItem('authUserToken', JSON.stringify(response.data.data));
-            console.log(response);
+
             navigate('/');
             window.location.reload();
             return response;

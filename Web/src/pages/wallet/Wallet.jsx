@@ -33,7 +33,6 @@ function Wallet() {
             );
             if (response.status === 200) {
                 // toast.success("got user money data", { ...toastProps });
-                console.log(response);
                 setUserData(response)
                 return response;
             }
@@ -52,7 +51,7 @@ function Wallet() {
             );
             if (response.status === 200) {
                 // toast.success("got user money data", { ...toastProps });
-                console.log(response);
+
                 setWithdrawHistory(response)
                 return response;
             }

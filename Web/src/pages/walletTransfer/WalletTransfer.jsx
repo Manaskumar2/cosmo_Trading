@@ -27,7 +27,7 @@ function WalletTransfer() {
     const handleSubmit = async () => {
         try {
             let token = auth.authToken;
-            console.log(token)
+
             const response = await axios.post(`${import.meta.env.VITE_API_URL}/walletToWallet`, { amount, receiverUID }, {
                 headers: { Authorization: `Bearer ${token}` }
             });
@@ -35,7 +35,6 @@ function WalletTransfer() {
                 toast.success("Amount successfully Sent!", { ...toastProps });
                 setamount('');
                 setreceiverUID("");
-                console.log(response);
                 setIsModalOpen(false);
             }
         } catch (error) {
@@ -44,7 +43,6 @@ function WalletTransfer() {
                 toast.error(errorMessage, { ...toastProps });
             } else {
                 const errorMessage = error.response ? error.response.data.message : error.message;
-                console.log(errorMessage);
                 toast.error(errorMessage || "Something went wrong", { ...toastProps });
             }
         
@@ -65,14 +63,14 @@ function WalletTransfer() {
 
             if (response.status === 200) {
                 setUserData(response.data)
-                console.log(response.data)
+
                 setIsModalOpen(true);
                 return response;
             }
         } catch (error) {
             
             const errorMessage = error.response ? error.response.data.message : error.message;
-            console.log(errorMessage)
+
             toast.error(errorMessage || "Something went wrong", { ...toastProps });
         }
     }

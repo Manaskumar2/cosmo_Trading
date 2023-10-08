@@ -20,7 +20,6 @@ function AdminHome() {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (response.status === 200) {
-        console.log(response);
         setCosmo(response)
         return response;
       }
@@ -36,7 +35,6 @@ function AdminHome() {
       });
       if (response.status === 200) {
         setTransaction(response.data.data)
-        console.log(response);
         return response;
       }
     } catch (error) {
@@ -51,7 +49,6 @@ function AdminHome() {
       });
       if (response.status === 200) {
         setRiseUp(response)
-        console.log(response);
         return response;
       }
     } catch (error) {
@@ -66,7 +63,6 @@ function AdminHome() {
       });
       if (response.status === 200) {
         setGrowUp(response)
-        console.log(response);
         return response;
       }
     } catch (error) {

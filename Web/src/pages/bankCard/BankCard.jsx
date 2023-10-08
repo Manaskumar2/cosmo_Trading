@@ -59,7 +59,6 @@ function BankCard() {
         setifscCode("")
         setconfirmBankAccountNo("")
         setbankBranchAddress("")
-        console.log(response);
         toast.success('Bank Card Created Successfully!', { ...toastProps });
         return response;
       }

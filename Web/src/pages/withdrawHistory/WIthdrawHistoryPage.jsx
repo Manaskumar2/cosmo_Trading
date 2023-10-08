@@ -32,7 +32,7 @@ function WIthdrawHistoryPage() {
         );
         if (response.status === 200) {
             // toast.success("got user money data", { ...toastProps });
-            console.log(response);
+
             setWithdrawHistory(response)
             return response;
         }

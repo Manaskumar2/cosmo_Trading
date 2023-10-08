@@ -23,7 +23,6 @@ function Premium() {
                 headers: { Authorization: `Bearer ${token}` },
             });
             if (response.status === 200) {
-                console.log(response);
                 setPremiumState(response);
                 return response;
             }

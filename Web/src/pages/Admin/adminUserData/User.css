@@ -10,9 +10,8 @@ table th {
     color: #FFF;
 text-align: center;
 font-family: Montserrat;
-font-size: 1rem;
-font-style: normal;
-font-weight: 600;
+font-size: 14px;
+  font-weight: 400;
 line-height: normal;
     padding: .8rem .5rem; 
     text-align: left; 
@@ -53,3 +52,13 @@ line-height: 1.875rem;
   .inc-dec-btns button{color: #fff;
     font-family: Montserrat; border: 0;outline: none;background-color: #0B5A8F;}
     .login-user{background-color: rgb(33, 116, 223);color: #fff; padding: .3rem 1rem;border: 0;outline: none;width: 6rem;}
+    .userModalBody{background: #001C3E; display: flex; justify-content: space-between;width: 100%;}
+    .userModalBody h5 , .userModalBody div{ color: #fff;margin: .6rem 0;;}
+    .userModalBody>div> div>input{ color: #fff;background: #001C3E ; border: 1px solid rgb(29, 176, 239); border-radius: 5px; margin-left: 1.2rem; padding: 3px 5px 3px 10px;align-items: right;}
+    .userModalBody>div> div{display: flex;justify-content: space-between}
+    .userUpdate{    border-radius: 12.5rem;
+      border: 1px solid #FFF;
+      background: linear-gradient(143deg, #296DAC 0%, #2FB0E7 100%);
+      padding: .5rem 3rem;
+      color: #FFF;
+     }

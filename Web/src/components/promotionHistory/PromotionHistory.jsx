@@ -45,15 +45,12 @@ function PromotionHistory() {
         try {
             let userId = auth._id;
             let token = auth.authToken;
-            console.log(token);
             const response = await axios.get(`${import.meta.env.VITE_API_URL}/get2ndgameUserHistory/${userId}`, {
                 params: { page: page2 },
                 headers: { Authorization: `Bearer ${token}` },
             });
             if (response.status === 200) {
-                console.log(response);
                 setUserSecondGames(response)
-                console.log(userGames)
                 return response;
             }
         } catch (error) {
@@ -65,15 +62,12 @@ function PromotionHistory() {
         try {
             let userId = auth._id;
             let token = auth.authToken;
-            console.log(token);
             const response = await axios.get(`${import.meta.env.VITE_API_URL}/bettingHistory/${userId}`, {
                 params: { page },
                 headers: { Authorization: `Bearer ${token}` },
             });
             if (response.status === 200) {
-                console.log(response);
                 setUserGames(response)
-                console.log(userGames)
                 return response;
             }
         } catch (error) {

@@ -54,14 +54,12 @@ function PremiumApply() {
 
             if (response.status === 200) {
                 setUserData(response.data)
-                console.log(response.data)
                 setIsModalOpen(true);
                 return response;
             }
         } catch (error) {
             
             const errorMessage = error.response ? error.response.data.message : error.message;
-            console.log(errorMessage)
             toast.error(errorMessage || "Something went wrong", { ...toastProps });
         }
     }
@@ -75,7 +73,7 @@ function PremiumApply() {
                 },
             );
             if (response.status === 201) {
-                console.log(response);
+
                 toast.success( "Application sent for Premium User", { ...toastProps });
                 setIsModalOpen(false)
                 return response;

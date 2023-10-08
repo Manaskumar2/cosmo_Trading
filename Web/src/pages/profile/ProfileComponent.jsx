@@ -55,7 +55,7 @@ function Profile() {
             );
             if (response.status === 200) {
                 // toast.success("got user money data", { ...toastProps });
-                console.log(response);
+
                 setUserData(response)
                 return response;
             }
@@ -74,7 +74,6 @@ function Profile() {
             if (response.status === 200) {
                 handleUserdata()
                 setEdit(!edit)
-                console.log(response);
                 handleUserdata()
                 return response;
             }

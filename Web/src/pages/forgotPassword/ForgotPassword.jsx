@@ -28,12 +28,11 @@ function ForgotPassword() {
             const response = await axios.post(`${import.meta.env.VITE_API_URL}/forgotPassword`, {
                 phoneNumber,
             });
-            console.log(response);
             if(response.status===200){
                 toast.success("Welcome to our Gaming Zone", { ...toastProps });
                 setPhoneNumber('');
                 navigate('/verifyOtp')
-                console.log(response)
+
                 return response;
             }
         } catch (error) {

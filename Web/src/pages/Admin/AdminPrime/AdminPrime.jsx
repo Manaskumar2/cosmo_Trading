@@ -37,7 +37,6 @@ function AdminPrime() {
       );
       
       if (response.status === 200) {
-        console.log(response);
         setPremiumState(response.data);
         return response;
       }
@@ -54,7 +53,6 @@ function AdminPrime() {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (response.status === 200) {
-        console.log(response);
         setUser(response);
         return response;
       }
@@ -76,7 +74,6 @@ function AdminPrime() {
       );
       if (response.status === 200) {
         toast.success("Premium Updated !", { ...toastProps });
-        console.log(response);
         handlePrimeRequest();
         return response;
       }

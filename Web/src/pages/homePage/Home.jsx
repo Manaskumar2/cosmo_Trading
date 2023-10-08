@@ -21,15 +21,32 @@ import { CgCloseO } from 'react-icons/cg';
 function Home() {
     const auth = useRecoilValue(AuthState);
     const [showPopup, setShowPopup] = useState(false);
-    const [delay, setDelay] = useState(2000);
+    const [popUpImage, setImage] = useState('');
     const [news, setNews] = useState('');
 
     const handleClosePopup = () => {
-        console.log("Closing popup");
         setShowPopup(false);
-        localStorage.setItem('showPopUp','false');
+        localStorage.removeItem('showPopUp');
     };
-    
+
+
+    const getPopUpImage = async () => {
+        try {
+            let token = auth.authToken;
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/images`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            if (response.status === 200) {
+                // const popUpImageData = response.data;
+                // const decodedPopUpImageData = atob(popUpImageData);
+                // const popUpBlob = new Blob([decodedPopUpImageData], { type: "image/jpeg" });
+                // const popUpImageUrl = URL.createObjectURL(popUpBlob);
+                setImage(response.data.data.imageUrl);
+            }
+        } catch (error) {
+            const errorMessage = error.response ? error.response.data.message : error.message;
+        }
+    };
 
     const getGameHistory = async () => {
         try {
@@ -38,73 +55,84 @@ function Home() {
                 headers: { Authorization: `Bearer ${token}` },
             });
             if (response.status === 200) {
-                console.log(response.data);
+
                 setNews(response.data);
                 return response;
             }
         } catch (error) {
             const errorMessage = error.response ? error.response.data.message : error.message;
-            console.log(errorMessage);
+
         }
     };
 
     useEffect(() => {
         getGameHistory();
+        getPopUpImage()
     }, []);
     useEffect(() => {
-        const timerId = setTimeout(() => {
-            const popupShown = localStorage.getItem('showPopUp');
-            console.log(showPopup)
-            console.log(popupShown)
-            if (popupShown === 'true') {
-                setShowPopup(true);
-                console.log(showPopup)
-            } 
-        }, 1000);
-    
-        return () => clearTimeout(timerId);
+        const popupShown = localStorage.getItem('showPopUp') || null;
+        if (popupShown) {
+            setShowPopup(true);
+        }
     }, []);
-    
 
+
+
+    // const timerId = setTimeout(() => {
+    //     const popupShown = localStorage.getItem('showPopUp');
+    //     console.log(showPopup)
+    //     console.log(popupShown)
+    //     if (popupShown === 'true') {
+    //         setShowPopup(true);
+    //         console.log(showPopup)
+    //     } 
+    // }, 1000);
+
+    // return () => clearTimeout(timerId);
     return (
-        <div className="main-background">
-            <div className="home">
-                <div className="container">
-                <div className="row home-row">
-                        <div className="col-2 download">
-                            <a href="https://whatsapp.com/channel/0029VaAOCUm2Jl8C4oYY1u0M" target="_blank" rel="noopener noreferrer">
-                                <img src={wp} alt="" style={{ width: '2.5rem' }} />
-                            </a>
-                        </div>
-                        <div className="col-8">
-                            <img src={logo} alt="" />
-                        </div>
-                        <div className="col-2 download">
-                            <a href="https://t.me/cosmotradeofficial" target="_blank" rel="noopener noreferrer">
-                                <img src={telegram} alt="" />
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <Banner news= {news}/>
-            <GameSection />
-            <OnlineCount />
-            <BonusCount />
-            <RunningTime />
-            <WithdrawSection />
-            <Accordian />
-            <Nav />
-
-
-            {showPopup && (
+        <div className="main-background main-background-Home">
+            {showPopup &&
                 <div className="popup-Home popup">
+                    <div className="popup-body-home">
                     <button className="popup-close" onClick={handleClosePopup}>
                         <CgCloseO />
                     </button>
-                    <img src={popupImg} alt="Popup" />
+                    {popUpImage &&
+                    <img src={popUpImage} alt="Popup" />}
+                    </div>
+                    
+
+                </div>}
+<> <div className="home">
+                    <div className="container">
+                        <div className="row home-row">
+                            <div className="col-2 download">
+                                <a href="https://whatsapp.com/channel/0029VaAOCUm2Jl8C4oYY1u0M" target="_blank" rel="noopener noreferrer">
+                                    <img src={wp} alt="" style={{ width: '2.5rem' }} />
+                                </a>
+                            </div>
+                            <div className="col-8">
+                                <img src={logo} alt="" />
+                            </div>
+                            <div className="col-2 download">
+                                <a href="https://t.me/cosmotradeofficial" target="_blank" rel="noopener noreferrer">
+                                    <img src={telegram} alt="" />
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            )}
+                    <Banner news={news} />
+                    <GameSection />
+                    <OnlineCount />
+                    <BonusCount />
+                    <RunningTime />
+                    <WithdrawSection />
+                    <Accordian />
+                    <Nav /></>
+
+
+
         </div>
     );
 }

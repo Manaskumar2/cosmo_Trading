@@ -38,13 +38,11 @@ function MyTeam() {
             });
 
             if (response.status === 200) {
-                console.log(response.data.downlineDetails)
                 setDownline(response.data.downlineDetails);
                 return response;
             }
         } catch (error) {
             const errorMessage = error.response ? error.response.data.message : error.message;
-            console.log(errorMessage);
         }
     };
 
@@ -61,7 +59,6 @@ function MyTeam() {
             }
         } catch (error) {
             const errorMessage = error.response ? error.response.data.message : error.message;
-            console.log(errorMessage);
         }
     };
 
@@ -74,13 +71,11 @@ function MyTeam() {
 
             if (response.status === 200) {
                 setSelectedUserData(response.data);
-                console.log(response.data)
                 setShowPopup(true);
                 return response;
             }
         } catch (error) {
             const errorMessage = error.response ? error.response.data.message : error.message;
-            console.log(errorMessage);
         }
     };
 

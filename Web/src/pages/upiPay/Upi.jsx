@@ -46,7 +46,7 @@ function Upi() {
             if (response.status === 201) {
                 toast.success("Recharge request successfully Sent!", { ...toastProps });
                 setUpiReferenceNo("")
-                console.log(response);
+    
             }
         } catch (error) {
             const errorMessage = error.response ? error.response.data.message : error.message;
@@ -62,7 +62,6 @@ function Upi() {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 if (response.status === 200) {
-                    console.log(response);
                     setUpiData(response.data);
                 }
             } catch (error) {

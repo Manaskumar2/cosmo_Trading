@@ -21,8 +21,8 @@
 .deactivate{background-color: rgb(200, 59, 44);color: #fff; padding: .3rem 1rem;border: 0;outline: none;width: 6rem;}
 .ac-de-btn{ display: flex;gap: 1.5rem; }
 .ac-de-btn button{padding: .5rem 1.2rem; border: 0; outline: none; border-radius: 10px; }
-.admin-rightSection{margin-top: 3rem;margin-left: 18rem;min-height: 100vh;}
-.flex-div{display: flex;}
+.admin-rightSection{min-height: 100vh;}
+.flex-div{display: block;}
 .ProNav{background: #001C3E; background-image: url('../../images/belips.png');background-position: bottom; background-repeat: no-repeat; padding:15px 1.5rem;border-bottom: 1px solid #133B77;}
 .ProNav .row .col-8{color: #FFF;text-align: center;font-family: 'Montserrat';font-size: 1.1rem;font-weight: 500;letter-spacing: 0.00688rem;text-transform: capitalize;}
 .inputBox:hover{border-radius: 5px;

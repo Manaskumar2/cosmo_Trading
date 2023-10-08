@@ -35,7 +35,6 @@ function AccountSecurity() {
                 toast.success("Password Changed Successfully", { ...toastProps });
                 setPassword("")
                 setConfirmPassword("")
-                console.log(response);
                 return response;
             }
         } catch (error) {

@@ -242,15 +242,12 @@ function Growup() {
     const handleMin = async () => {
         try {
             let token = auth.authToken;
-            console.log(duration);
-            console.log(token);
             const response = await axios.get(`${import.meta.env.VITE_API_URL}/getgame/${duration}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             if (response.status === 200) {
                 setTimeNo(duration)
                 setMinute(response)
-                console.log(response)
                 return response;
             }
         } catch (error) {
@@ -268,12 +265,10 @@ function Growup() {
         const timer = setTimeout(async () => {
 
             await handleMin();
-            console.log(countDownGrowup);
         }, 5000);
         return () => {
             clearTimeout(timer);
         };
-        console.log(countDownGrowup)
         handleMin()
     }, []);
 

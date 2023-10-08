@@ -29,7 +29,6 @@ function WIthdrawHistoryPage() {
       }
       );
       if (response.status === 200) {
-        console.log(response);
         setRechargeHistory(response)
         return response;
       }

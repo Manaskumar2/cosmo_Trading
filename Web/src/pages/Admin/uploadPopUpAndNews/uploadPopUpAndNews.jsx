@@ -18,9 +18,39 @@ export const toastProps = {
 };
 
 function UploadPopUpAndNews() {
+    const [file, setfile] = useState(null);
     const authData = useRecoilValue(AdminAuthState)
     const [newsText, setnewsText] = useState('')
-    // articles
+    const handleImageChange = (event) => {
+        const file = event.target.files[0];
+        setfile(file);
+      };
+      const handleImg = async () => {
+        const formData = new FormData();
+        formData.append('image', file);
+    
+        try {
+            let token = authData.authToken;
+            const response = await axios.post(
+                `${import.meta.env.VITE_API_URL}admin/uploads`,
+                formData, 
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'multipart/form-data', 
+                    },
+                }
+            );
+            if (response.status === 201) {
+                toast.success("Image uploaded!", { ...toastProps });
+                setfile(null)
+                return response;
+            }
+        } catch (error) {
+            const errorMessage = error.response ? error.response.data.message : error.message;
+        }
+    };
+    
     const handleQr = async (e) => {
         e.preventDefault()
         try {
@@ -32,7 +62,6 @@ function UploadPopUpAndNews() {
             );
             if (response.status === 201) {
                 toast.success("News updated!", { ...toastProps });
-
                 setnewsText("")
                 return response;
             }
@@ -57,6 +86,16 @@ function UploadPopUpAndNews() {
 
                     <button type='submit'>Submit</button>
                 </form>
+                <div  className='form-rechrge' >
+                    <h3 className='text-centre'>Upload Promo Image</h3>
+                    <label >Select Image</label>
+
+                    <input type="file" accept=".jpg, .jpeg, .png, .svg" onChange={handleImageChange}/>
+
+
+
+                    <button onClick={handleImg}>Submit</button>
+                </div>
             </div>
              </div>
          

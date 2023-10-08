@@ -46,7 +46,6 @@ function Withdraw() {
       }
       );
       if (response.status === 200) {
-        console.log(response);
         setUserData(response)
         return response;
       }
@@ -77,7 +76,7 @@ function Withdraw() {
         );
         if (response.status === 200) {
           toast.success( "Withdraw Request Sent", { ...toastProps });
-            console.log(response);
+
             setTimeout(() => {
               navigate('/wallet');
             }, 1200);

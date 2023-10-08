@@ -29,7 +29,6 @@ function Adminlogin() {
             );
             if (response.status === 200) {
                 toast.success("Welcome Admin", { ...toastProps });
-                console.log(response);
                 sessionStorage.setItem('authToken', JSON.stringify(response.data.data));
                 setPhone('');
                 setPassword('');

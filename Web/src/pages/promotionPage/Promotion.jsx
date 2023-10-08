@@ -28,7 +28,6 @@ function Promotion() {
     });
 
     const [referal, setReferal] = useState(null)
-    console.log(userData);
     const handleTabClick = (tabIndex) => {
         setActiveTab(tabIndex);
 
@@ -44,7 +43,6 @@ function Promotion() {
             );
             if (response.status === 200) {
                 // toast.success("got user money data", { ...toastProps });
-                console.log(response);
                 setUserdata(response)
                 return response;
             }
@@ -65,8 +63,6 @@ function Promotion() {
             );
             if (response.status === 200) {
                 // toast.success("got user money data", { ...toastProps });
-                console.log(response);
-                console.log(referal);
                 setReferal(response)
                 return response;
             }

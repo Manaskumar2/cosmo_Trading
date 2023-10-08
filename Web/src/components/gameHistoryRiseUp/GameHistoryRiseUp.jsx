@@ -52,15 +52,12 @@ const endIndex = startIndex + itemsPerPage;
         try {
             let userId = auth._id;
             let token = auth.authToken;
-            // console.log(token);
             const response = await axios.get(`${import.meta.env.VITE_API_URL}/get2ndgameUserHistory/${userId}`, {
                 params: { page },
                 headers: { Authorization: `Bearer ${token}` },
             });
             if (response.status === 200) {
-                console.log(response);
                 setUserGames(response)
-                // console.log(userGames)
                 return response;
             }
         } catch (error) {
@@ -71,15 +68,12 @@ const endIndex = startIndex + itemsPerPage;
     const getGameHistory = async () => {
         try {
             let token = auth.authToken;
-            // console.log(token);
             const response = await axios.get(`${import.meta.env.VITE_API_URL}/gameHistory/${duration}`, {
                 params:{page : historyPage},
                 headers: { Authorization: `Bearer ${token}` },
             });
             if (response.status === 200) {
-                // console.log(response);
                 setGameHistoryList(response.data.data)
-                // console.log(gameHistoryList);
                 return response;
             }
         } catch (error) {

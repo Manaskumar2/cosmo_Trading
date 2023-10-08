@@ -59,7 +59,6 @@ const endIndex = startIndex + itemsPerPage;
             });
 
             if (response.status === 200) {
-                console.log(response)
                 setUserGames(response)
                 return response;
             }
@@ -78,7 +77,6 @@ const endIndex = startIndex + itemsPerPage;
                 headers: { Authorization: `Bearer ${token}` },
             });
             if (response.status === 200) {
-                // console.log(response.data)
                 setGameHistoryList(response.data.data)
                 return response;
             }

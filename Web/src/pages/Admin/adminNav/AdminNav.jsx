@@ -3,7 +3,7 @@ import './AdminNav.css'
 function AdminNav() {
 
   return (
-    <div>
+    <div style={{overFlow:'hidden'}}>
        <>
       {/* <Button variant="primary" onClick={handleShow}>
         Dash Board Options

@@ -34,7 +34,7 @@ function banner({news}) {
                 </div>
                 <div className='marquee_text'>
                     <marquee direction="left" >
-                        {news && news[0].newsText}
+                        {news && news.newsText}
                     </marquee>
                 </div>
             </div>

@@ -42,7 +42,6 @@ function AdminRecharge() {
         toast.success("Qr code uploaded!", { ...toastProps });
         setUpiId("")
         setQrCode("")
-        console.log(response);
 
         return response;
       }
@@ -57,7 +56,6 @@ function AdminRecharge() {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (response.status === 200) {
-        console.log(response);
         setUser(response);
         return response;
       }
@@ -74,7 +72,6 @@ function AdminRecharge() {
         },
       );
       if (response.status === 200) {
-        console.log(response);
         setWithdrawData(response.data)
         return response;
       }
@@ -94,7 +91,6 @@ function AdminRecharge() {
       if (response.status === 200) {
         toast.success("Recharge request confirmed", { ...toastProps });
         handlePaymentRequest()
-        console.log(response);
         return response;
       }
     } catch (error) {

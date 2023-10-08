@@ -34,7 +34,6 @@ function Register() {
     const searchParams = new URLSearchParams(location.search);
     const referralCodeFromURL = searchParams.get('referral');
 
-    console.log('Referral Code from URL:', referralCodeFromURL);
 
     if (referralCodeFromURL) {
       setReferral(referralCodeFromURL);
@@ -61,7 +60,7 @@ function Register() {
         referralCode,
       });
 
-      console.log(response);
+
       if (response.status === 201) {
         toast.success('Registration Successful', { ...toastProps });
         sessionStorage.setItem('password', password);
@@ -74,7 +73,7 @@ function Register() {
         setTimeout(() => {
           navigate('/registered');
         }, 1500);
-        console.log(response);
+
         return response;
       }
     } catch (error) {
