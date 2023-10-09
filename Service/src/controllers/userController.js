@@ -129,7 +129,7 @@ const adminlogin =async (req, res) => {
       return res.status(400).send({ status: false, message: "Provide both phone number and password to login" });
     }
 
-    const findUser = await userModel.findOne({ phoneNumber: phoneNumber ,isDeleted:false});
+    const findUser = await userModel.findOne({ phoneNumber: phoneNumber});
 
     if (!findUser) {
       return res.status(400).send({ status: false, message: "Invalid Phone Number" });

@@ -188,11 +188,6 @@ const getUserDetailsWithBank = async (req, res) => {
     
     const bankDetails = await accountDetail.findOne({ userId });
 
-    if (!bankDetails) {
-      return res.status(404).json({ message: 'Bank details not found' });
-    }
-
-    
     const userDetailsWithBank = {
       user,
       bankDetails,
