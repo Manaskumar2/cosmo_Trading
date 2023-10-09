@@ -23,7 +23,13 @@ export const toastProps = {
 
 function AdminUserData() {
   const [modalShow, setModalShow] = React.useState(false);
-  const handleClose=()=>{setModalShow(false)}
+  const handleClose=()=>{setModalShow(false);setbankName('');
+  setaccountHolderName('');
+  setbankAccountNo('' );
+  setcity('');
+  setbankId('');
+  setifscCode('');
+  setbankBranchAddress('' )}
 
   const [bankName, setbankName] = useState('')
   const [accountHolderName, setaccountHolderName] = useState('')
@@ -50,7 +56,7 @@ function AdminUserData() {
     try {
       let token = authData.authToken;
       const response = await axios.put(`${import.meta.env.VITE_API_URL}admin/updateUser/${userId}`,{
-        bankName,
+      bankName,
       accountHolderName,
       bankAccountNo,
       bankId,
@@ -70,6 +76,13 @@ function AdminUserData() {
       );
       if (response.status === 200) {
         toast.success('User Data Successfully Updated', { ...toastProps });
+        setbankName('')
+        setaccountHolderName('')
+        setbankAccountNo('' )
+        setcity('')
+        setbankId('')
+        setifscCode('')
+        setbankBranchAddress('' )
         handleClose()
 
 
@@ -80,6 +93,7 @@ function AdminUserData() {
     }
   }
   const handleUser = async () => {
+    
     try {
       let token = authData.authToken;
       const response = await axios.get(`${import.meta.env.VITE_API_URL}admin/getAllUsers`,
@@ -97,6 +111,7 @@ function AdminUserData() {
     }
   }
   const getAllUserData = async (userId) => {
+    
     try {
       let token = authData.authToken;
       const response = await axios.get(`${import.meta.env.VITE_API_URL}admin/userAndBankData/${userId}`,
@@ -104,24 +119,32 @@ function AdminUserData() {
           headers: { Authorization: `Bearer ${token}` },
         },
       );
-      if (response.status === 200) {
-        setbankName(response.data.bankDetails.bankName)
-        setUid(response.data.user._id)
-        setaccountHolderName(response.data.bankDetails.accountHolderName)
-        setbankAccountNo(response.data.bankDetails.bankAccountNo)
+      if (response.status === 200||304) {
+        if(response.data.user){ setname(response.data.user.name)
+          setphoneNumber(response.data.user.phoneNumber)
+          setpassword(response.data.user.password)
+          setparentReferralCode(response.data.user.parentReferralCode)
+          setwalletAmount(response.data.user.walletAmount.toFixed(2))
+          setrechargeAmount(response.data.user.rechargeAmount.toFixed(2))
+          setUid(response.data.user._id)
+        }
+       if(response.data.bankDetails!==null){
+        setbankName(response.data.bankDetails.bankName )
+        
+        setaccountHolderName(response.data.bankDetails.accountHolderName )
+        setbankAccountNo(response.data.bankDetails.bankAccountNo )
         // setbankAccountNo(response.data.bankDetails.bankAccountNo)
         // setconfirmBankAccountNo(response.data.bankDetails.)
-        setcity(response.data.bankDetails.city)
-        setifscCode(response.data.bankDetails.ifscCode)
-        setbankBranchAddress(response.data.bankDetails.bankBranchAddress)
-        setname(response.data.user.name)
+        setcity(response.data.bankDetails.city )
         setbankId(response.data.bankDetails._id)
-        setphoneNumber(response.data.user.phoneNumber)
-        setpassword(response.data.user.password)
-        setparentReferralCode(response.data.user.parentReferralCode)
-        setwalletAmount(response.data.user.walletAmount.toFixed(2))
-        setrechargeAmount(response.data.user.rechargeAmount.toFixed(2))
+        setifscCode(response.data.bankDetails.ifscCode )
+        setbankBranchAddress(response.data.bankDetails.bankBranchAddress )
+       }
+
         setModalShow(true)
+       
+        
+        console.log(modalShow)
 
         return response;
       }
@@ -283,15 +306,18 @@ function AdminUserData() {
                           <div> Wallet Amount :  <input type="text" value={walletAmount} onChange={(e)=>{setwalletAmount(e.target.value)}}/> </div>
                           <div> Recharge Amount :  <input type="text" value={rechargeAmount} onChange={(e)=>{setrechargeAmount(e.target.value)}}/> </div>
                           </div>
-                          <div>
+
+                          { bankName && accountHolderName && <div>
                           <h5>Bank Details</h5>
-                          <div> Bank Name :  <input type="text" value={bankName} onChange={(e)=>{setbankName(e.target.value)}}/> </div>
-                          <div> Account Holder Name :  <input type="text" value={accountHolderName} onChange={(e)=>{setaccountHolderName(e.target.value)}}/> </div>
-                          <div> Bank Account No :  <input type="text" value={bankAccountNo} onChange={(e)=>{setbankAccountNo(e.target.value)}}/> </div>
-                          <div> City :  <input type="text" value={city} onChange={(e)=>{setcity(e.target.value)}}/> </div>
-                          <div> IFSC Code :  <input type="text" value={ifscCode} onChange={(e)=>{setifscCode(e.target.value)}}/> </div>
-                          <div> Bank Branch Address :  <input type="text" value={bankBranchAddress} onChange={(e)=>{setbankBranchAddress(e.target.value)}}/> </div>
-                          </div>
+                          { bankName &&
+                          <div> Bank Name :  <input type="text" value={bankName} onChange={(e)=>{setbankName(e.target.value)}}/> </div>}
+                          {accountHolderName &&
+                          <div> Account Holder Name :  <input type="text" value={accountHolderName} onChange={(e)=>{setaccountHolderName(e.target.value)}}/> </div>}
+                          {bankAccountNo && <div> Bank Account No :  <input type="text" value={bankAccountNo} onChange={(e)=>{setbankAccountNo(e.target.value)}}/> </div>}
+                          {city && <div> City :  <input type="text" value={city} onChange={(e)=>{setcity(e.target.value)}}/> </div>}
+                          {ifscCode && <div> IFSC Code :  <input type="text" value={ifscCode} onChange={(e)=>{setifscCode(e.target.value)}}/> </div>}
+                          {bankBranchAddress && <div> Bank Branch Address :  <input type="text" value={bankBranchAddress} onChange={(e)=>{setbankBranchAddress(e.target.value)}}/> </div>}
+                          </div>}
                         </Modal.Body>
                         <Modal.Footer style={{textAlign:'center'}}>
                           <button onClick={() => handleUpdateData(uid)} className='userUpdate'>Submit</button>

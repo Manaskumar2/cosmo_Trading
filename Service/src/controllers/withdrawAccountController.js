@@ -78,7 +78,6 @@ const updateBankAccountAnduserDetails = async (req, res) => {
       city,
       ifscCode,
       bankBranchAddress,
-      bankId,
       name,
       phoneNumber,
       password,
@@ -89,13 +88,6 @@ const updateBankAccountAnduserDetails = async (req, res) => {
     } = req.body;
     const userId = req.params.userId
     
-
-  
-    if (!bankId) return res.status(404).send({ status: false, message: "please enter bankId " });
-
-    if (!validation.isValidObjectId(bankId)) return res.status(404).send({ status: false, message: "invalid bankId" });
-
-
     const updateBankDetails = { };
 
      if (bankName) {
@@ -125,18 +117,27 @@ const updateBankAccountAnduserDetails = async (req, res) => {
       }
       updateBankDetails.confirmBankAccountNo = confirmBankAccountNo
     }
-
-    const bankAccount = await accountDetail.findById(bankId);
-    if (!bankAccount) return res.status(404).json({ error: false, message: 'Bank account not found' });
- 
-    if (bankAccount.userId != userId) return res.status(404).json({ error: false, message: "invalid userId" });
     
-    const updatedBankAccount = await accountDetail.findByIdAndUpdate(
-      bankId,
-      updateBankDetails,
-      { new: true }
-    );
 
+    // const bankAccount = await accountDetail.findOne({userId: userId});
+    // if (!bankAccount) {
+    //   const newAccountDetail = await accountDetail.create({
+    //   bankName,
+    //   accountHolderName,
+    //   bankAccountNo,
+    //   city,
+    //   ifscCode,
+    //   bankBranchAddress,
+    //   userId,
+    // });
+    
+    // }
+
+   const updatedBankAccount = await accountDetail.findOneAndUpdate(
+  { userId: userId },
+  updateBankDetails, 
+  { new: true }       
+);
 
     const filteredUpdateData = {};
     if (name) {
@@ -167,7 +168,7 @@ const updateBankAccountAnduserDetails = async (req, res) => {
     // Update user details
     const updatedUser = await userModel.findByIdAndUpdate(userId, filteredUpdateData, { new: true });
 
-    return res.status(200).json({ success: true, bankAccount: updatedBankAccount, user: updatedUser });
+    return res.status(200).json({ status: true,message:"sucessfully" ,bankAccount: updatedBankAccount, user: updatedUser });
 
   } catch (error) {
     res.status(500).json({ error: 'Internal Server Error', message: error.message });
@@ -187,7 +188,6 @@ const getUserDetailsWithBank = async (req, res) => {
 
     
     const bankDetails = await accountDetail.findOne({ userId });
-
     const userDetailsWithBank = {
       user,
       bankDetails,

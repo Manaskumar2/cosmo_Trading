@@ -612,7 +612,7 @@ const activeUser = async (req, res) => {
       try {
         const { queryPageIndex = 1, queryPageSize = 20, queryPageFilter, queryPageSortBy = [{ id: '_id', desc: false }] } = req.query;
         
-        let query = {};
+        let query = {isAdmin:false};
         let sortBy = queryPageSortBy[0].id;
         let sortOrder = queryPageSortBy[0].desc ? -1 : 1;
       
