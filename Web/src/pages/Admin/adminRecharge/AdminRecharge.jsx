@@ -22,27 +22,36 @@ function AdminRecharge() {
   const [status, setStatus] = useState('confirmed')
   const authData = useRecoilValue(AdminAuthState)
   const [user, setUser] = useState(null)
+  const [file, setfile] = useState(null);
   const [upiId, setUpiId] = useState('')
-  const [qrCode, setQrCode] = useState('')
   const [withdrawData, setWithdrawData] = useState(null)
 
 
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    setfile(file);
+    console.log(file)
+  };
 
-  const handleQr = async (e) => {
-    e.preventDefault()
+  const handleQr = async () => {
+
     try {
+      const formData = new FormData();
+      formData.append('image', file);
+      formData.append('upiId', upiId);
+
       let uploadedBy = authData._id
       let token = authData.authToken;
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}admin/uploadQrcode/${uploadedBy}`, { upiId, qrCode },
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}admin/uploadQrcode/${uploadedBy}`,formData,
         {
           headers: { Authorization: `Bearer ${token}` },
+          'Content-Type': 'multipart/form-data',
         },
       );
       if (response.status === 201) {
         toast.success("Qr code uploaded!", { ...toastProps });
         setUpiId("")
-        setQrCode("")
-
+        setfile(null)
         return response;
       }
     } catch (error) {
@@ -100,7 +109,6 @@ function AdminRecharge() {
   }
   useEffect(() => { handlePaymentRequest() }, [status])
 
-
   return (
     <div>
       <AdminNav />
@@ -108,17 +116,17 @@ function AdminRecharge() {
         <Side />
         <div className='admin-rightSection'>
           <Toaster />
-          <form onSubmit={handleQr} className='form-rechrge' >
+          <form className='form-rechrge' >
             <h3 className='text-centre'>Submit Qr Code</h3>
-            <label >Enter Qr Code Link</label>
+            <label >Enter Qr Code Image</label>
 
-            <input type="text" value={qrCode} placeholder='Enter QR code' onChange={(e) => { setQrCode(e.target.value) }} />
+            <input type="file" accept=".jpg, .jpeg, .png, .svg" onChange={handleImageChange}/>
 
             <label >Enter UPI Id</label>
 
             <input type="text" value={upiId} placeholder='Enter UPI Id' onChange={(e) => { setUpiId(e.target.value) }} />
 
-            <button type='submit'>Submit</button>
+            <button onClick={handleQr}>Submit</button>
           </form>
           <div className='row tab-btns'>
 

@@ -64,6 +64,9 @@ const Premium= lazy(()=>
 import('../../src/pages/premium/Premium'))
 const PremiumApply= lazy(()=>
 import('../../src/pages/premiumApply/PremiumApply'))
+const ResetPasswordAdmin= lazy(()=>
+import('../../src/pages/Admin/aminResetPassword/AdminResetPassword'))
+
 const Security= lazy(()=>
 import('../../src/pages/accountSecurity/AccountSecurity'))
 const RiseUp= lazy(()=>
@@ -80,4 +83,4 @@ const UploadPopUpAndNews= lazy(()=>
 import('../../src/pages/Admin/uploadPopUpAndNews/UploadPopUpAndNews'))
 
 
-export {Login,Register,Forgot,OTP,Reset,Success,Home,Growup,ProfileComponent,Promotion,Recharge,UPI,Withdraw,BankCard,Wallet,Gift,BeginnerTutorial,About,Customer,Message,Transection,Launch,AdminHome,AdminUser,AdminRecharge,AdminWithdraw,AdminLogin,Terms,SRegister,AdminPrime,Premium,PremiumApply,Security,RiseUp,WidthdrawHistory,RechargeHistory,WalletTransfer,PremiumUser,UploadPopUpAndNews}
+export {Login,Register,Forgot,OTP,Reset,Success,Home,Growup,ProfileComponent,Promotion,Recharge,UPI,Withdraw,BankCard,Wallet,Gift,BeginnerTutorial,About,Customer,Message,Transection,Launch,AdminHome,AdminUser,AdminRecharge,AdminWithdraw,AdminLogin,Terms,SRegister,AdminPrime,Premium,PremiumApply,Security,RiseUp,WidthdrawHistory,RechargeHistory,WalletTransfer,PremiumUser,UploadPopUpAndNews,ResetPasswordAdmin}

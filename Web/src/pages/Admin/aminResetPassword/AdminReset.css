@@ -1,0 +1,31 @@
+.sucurity-body{background: #001C3E;padding: 1.5rem;min-height: 100vh;display: flex;justify-content: center;}
+.sucurity-body p{color: #FFF;font-family: 'Montserrat';font-size: 1.2rem;margin-top: 1rem;}
+.sucurity-body input{padding: .4rem;font-family: 'Montserrat';margin-top: 1rem;width: 100%;background: #001C3E;color: #26B5E2;border: 1px solid #26B5E2;outline: none; border-radius: 5px;}
+.sucurity-body button{border-radius: 12.5rem;
+    border: 1px solid #FFF;
+    background: linear-gradient(143deg, #C82F36 0%, #EC4E55 100%);
+    box-shadow: 0px 4px 5px 0px rgba(200, 47, 54, 0.40);
+    width: 100%;color: #FFF;font-family: 'Montserrat';font-size: 1rem;margin-top: 2rem; padding: .5rem 0;font-weight: 600;}
+.security-form {
+    margin-top: 5rem;
+    width: 25rem;
+    padding: 1.2rem;
+    height: max-content;
+    border-radius: 0.8125rem;
+    border: 2px solid #FFDD54;
+    box-shadow: 0px 2px 4px 0px rgba(38, 181, 226, 0.80);
+    
+}
+.modal-body-w2w{background-color: #133B77; padding: 1rem; min-height: 80vh;}
+.modal-body-w2w .confirm ,.userDetaisW2W{ font-size: 1rem ; color: #fff;font-family: 'Montserrat'}
+.modal-body-w2w .close{margin: 2rem 0; font-size: 1rem ; color: #fff;font-family: 'Montserrat' ;   border-radius: 12.5rem;
+    border: 1px solid #FFF;
+    background: linear-gradient(143deg, #C82F36 0%, #EC4E55 100%);
+    box-shadow: 0px 4px 5px 0px rgba(200, 47, 54, 0.40);
+    width: 100%;padding: .5rem 0;}
+.modal-body-w2w .confirm{border-radius: 12.5rem;
+    border: 1px solid #FFF;
+    background: linear-gradient(143deg, #296DAC 0%, #2FB0E7 100%);
+    width: 100%;margin-top: 2rem; padding: .5rem 0;}
+.ReactModal__Content{margin: auto;background: #133B77;}
+.ReactModal__Overlay .ReactModal__Overlay--after-open{display: flex;justify-content: center;align-items: center; }

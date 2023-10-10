@@ -1,10 +1,10 @@
-import React from 'react'
-import { useState } from 'react'
-import './AdminLogin.css'
-import axios from 'axios'
+import React, { useState } from 'react';
+import './AdminLogin.css';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import logo from './Logo-22.png'
+import logo from './Logo-22.png';
 import toast, { Toaster } from "react-hot-toast";
+
 export const toastProps = {
     position: "top-center",
     duration: 2000,
@@ -16,23 +16,23 @@ export const toastProps = {
 };
 
 function Adminlogin() {
+    const navigate = useNavigate();
+    const [phoneNumber, setPhone] = useState('');
+    const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
 
-    const navigate = useNavigate()
-    const [phoneNumber, setPhone] = useState('')
-    const [password, setPassword] = useState('')
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             const response = await axios.post(`${import.meta.env.VITE_API_URL}admin/signIn`, {
                 phoneNumber, password
-            }
-            );
+            });
             if (response.status === 200) {
                 toast.success("Welcome Admin", { ...toastProps });
                 sessionStorage.setItem('authToken', JSON.stringify(response.data.data));
                 setPhone('');
                 setPassword('');
-                navigate('/admin/home')
+                navigate('/admin/home');
                 window.location.reload();
                 return response;
             }
@@ -41,28 +41,43 @@ function Adminlogin() {
             toast.error(errorMessage || "Something went wrong", { ...toastProps });
         }
     }
+
     return (
         <div className='admin-login'>
-            
-            
             <Toaster />
             <form onSubmit={handleSubmit} className='admin-form'>
-            <div className='text-center'><img src={logo} alt="" /></div>
+                <div className='text-center'><img src={logo} alt="" /></div>
                 <h2>Welcome Admin</h2>
                 <p>Phone No</p>
-                <input type="number" placeholder='Enter Number' value={phoneNumber} onChange={(e) => { setPhone(e.target.value) }} />
+                <input
+                    type="number"
+                    placeholder='Enter Number'
+                    style={{ width: "90%" }}
+                    value={phoneNumber}
+                    onChange={(e) => { setPhone(e.target.value) }}
+                />&nbsp;
+                <i className='icon-mobile'></i>
                 <p>Password</p>
-                <input type="password" placeholder='Enter Password' value={password} onChange={(e) => { setPassword(e.target.value) }} />
+                <div className="password-input">
+                    <input
+                        type={showPassword ? "text" : "password"}
+                        placeholder='Enter Password'
+                        value={password}
+                        onChange={(e) => { setPassword(e.target.value) }}
+                        style={{ width: "90%" }}
+                    />&nbsp;
+                    <i
+                        className='icon-eye'
+                        onClick={() => setShowPassword(!showPassword)}
+                    ></i>
+                </div>
                 <br />
-                
-                <button class="Btn" type='submit'>
-  LOGIN
-  
-</button>
-
+                <button className="Btn" type='submit'>
+                    LOGIN
+                </button>
             </form>
         </div>
     )
 }
 
-export default Adminlogin
+export default Adminlogin;

@@ -1,3 +1,5 @@
+.navbar{display: flex;justify-content: space-between;width: 100%;}
+.btn-danger{margin-right: 2rem;}
 @media(max-width:500px) {
     .nav {
         width: 7rem;

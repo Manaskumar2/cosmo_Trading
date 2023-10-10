@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { useEffect } from "react";
 import { Navigate, Route, Routes , useNavigate} from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { Login, Register, Forgot, OTP, Reset, Success, Home, Growup ,ProfileComponent, Promotion,Recharge, UPI, Withdraw, BankCard,Wallet,Gift,BeginnerTutorial,About,Customer,Message,Transection,Launch,Terms,SRegister,Premium,PremiumApply,Security,RiseUp,WidthdrawHistory,RechargeHistory,WalletTransfer} from "./importPages";
+import { Login, Register, Forgot, OTP, Reset, Success, Home, Growup ,ProfileComponent, Promotion,Recharge, UPI, Withdraw, BankCard,Wallet,Gift,BeginnerTutorial,About,Customer,Message,Transection,Launch,Terms,SRegister,Premium,PremiumApply,Security,RiseUp,WidthdrawHistory,RechargeHistory,WalletTransfer,ResetPasswordAdmin} from "./importPages";
 import { AuthState } from "../Atoms/AuthState";
 import Loader from '../components/loader/Loader'
 // import { PrivateRoute } from "./PrivateRoute";
@@ -206,6 +206,7 @@ export const AppRoutes = () => {
                             </Suspense>
                         }
                     />
+                    
                     
                 </>
             )}

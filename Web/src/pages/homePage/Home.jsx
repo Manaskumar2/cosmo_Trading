@@ -77,30 +77,16 @@ function Home() {
             document.body.style.overflow = 'hidden';
         }
     }, []);
-
-
-
-    // const timerId = setTimeout(() => {
-    //     const popupShown = localStorage.getItem('showPopUp');
-    //     console.log(showPopup)
-    //     console.log(popupShown)
-    //     if (popupShown === 'true') {
-    //         setShowPopup(true);
-    //         console.log(showPopup)
-    //     } 
-    // }, 1000);
-
-    // return () => clearTimeout(timerId);
     return (
         <div className="main-background main-background-Home">
-            {showPopup &&
+            {showPopup && popUpImage &&
                 <div className="popup-Home popup">
                     <div className="popup-body-home">
                     <button className="popup-close" onClick={handleClosePopup}>
                         <CgCloseO />
                     </button>
-                    {popUpImage &&
-                    <img src={popUpImage} alt="Popup" />}
+                    
+                    <img src={popUpImage} alt="Popup" />
                     </div>
                     
 

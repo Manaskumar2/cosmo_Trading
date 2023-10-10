@@ -32,11 +32,12 @@ function banner({news}) {
                 <div className='img_marquee'>
                     <img src={mic} alt="" />
                 </div>
+                {news &&
                 <div className='marquee_text'>
                     <marquee direction="left" >
-                        {news && news.newsText}
+                         {news.newsText}
                     </marquee>
-                </div>
+                </div>}
             </div>
             </div>
 

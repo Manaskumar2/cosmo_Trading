@@ -116,7 +116,7 @@ function Upi() {
                 </div>
 
                 <div className='upiId-container container'>
-                    {upiData && <img src={upiData[currentUpiDataIndex].qrCode} alt="" className='qr-img'/>}
+                    {upiData && <img src={upiData[upiData.length-1].qrCode} alt="" className='qr-img'/>}
                 
                     <div className='row'>
                     
