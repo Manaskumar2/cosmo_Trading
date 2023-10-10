@@ -42,7 +42,7 @@ function AdminRecharge() {
 
       let uploadedBy = authData._id
       let token = authData.authToken;
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}admin/uploadQrcode/${uploadedBy}`,formData,
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/admin/uploadQrcode/${uploadedBy}`,formData,
         {
           headers: { Authorization: `Bearer ${token}` },
           'Content-Type': 'multipart/form-data',
@@ -61,7 +61,7 @@ function AdminRecharge() {
   const handleUser = async (userId) => {
     try {
       let token = authData.authToken;
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}admin/getUserDetails/${userId}`, {
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/getUserDetails/${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (response.status === 200) {
@@ -75,7 +75,7 @@ function AdminRecharge() {
   const handlePaymentRequest = async () => {
     try {
       let token = authData.authToken;
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}admin/payment-request?status=${status}`,
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/payment-request?status=${status}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         },
@@ -92,7 +92,7 @@ function AdminRecharge() {
   const handlePayment = async (paymentId, status) => {
     try {
       let token = authData.authToken;
-      const response = await axios.patch(`${import.meta.env.VITE_API_URL}admin/confirm-payment/${paymentId}`, { status },
+      const response = await axios.patch(`${import.meta.env.VITE_API_URL}/admin/confirm-payment/${paymentId}`, { status },
         {
           headers: { Authorization: `Bearer ${token}` },
         },

@@ -30,7 +30,7 @@ function AdminPrime() {
     try {
       let token = authData.authToken;
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}admin/getPremiumRequest?status=${status}`,
+        `${import.meta.env.VITE_API_URL}/admin/getPremiumRequest?status=${status}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -49,7 +49,7 @@ function AdminPrime() {
   const handleUser = async (userId) => {
     try {
       let token = authData.authToken;
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}admin/getUserDetails/${userId}`, {
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/getUserDetails/${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (response.status === 200) {
@@ -66,7 +66,7 @@ function AdminPrime() {
     try {
       let token = authData.authToken;
       const response = await axios.put(
-        `${import.meta.env.VITE_API_URL}admin/updatePremiumRequest/${userId}`,
+        `${import.meta.env.VITE_API_URL}/admin/updatePremiumRequest/${userId}`,
         {  adminStatus: status ,premiumId:premiumId },
         {
           headers: { Authorization: `Bearer ${token}` },

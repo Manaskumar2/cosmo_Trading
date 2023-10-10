@@ -74,7 +74,9 @@ function Home() {
         const popupShown = localStorage.getItem('showPopUp') || null;
         if (popupShown) {
             setShowPopup(true);
-            document.body.style.overflow = 'hidden';
+            if(popUpImage){document.body.style.overflow = 'hidden';}
+            else{document.body.style.overflow ='auto'}
+            
         }
     }, []);
     return (
