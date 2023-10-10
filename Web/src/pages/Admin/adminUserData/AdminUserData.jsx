@@ -55,7 +55,7 @@ function AdminUserData() {
   const handleUpdateData = async (userId) => {
     try {
       let token = authData.authToken;
-      const response = await axios.put(`${import.meta.env.VITE_API_URL}admin/updateUser/${userId}`,{
+      const response = await axios.put(`${import.meta.env.VITE_API_URL}/admin/updateUser/${userId}`,{
       bankName,
       accountHolderName,
       bankAccountNo,
@@ -96,7 +96,7 @@ function AdminUserData() {
     
     try {
       let token = authData.authToken;
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}admin/getAllUsers`,
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/getAllUsers`,
         {
           headers: { Authorization: `Bearer ${token}` },
           params: { queryPageIndex, queryPageFilter }
@@ -114,7 +114,7 @@ function AdminUserData() {
     
     try {
       let token = authData.authToken;
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}admin/userAndBankData/${userId}`,
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/userAndBankData/${userId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         },
@@ -157,7 +157,7 @@ function AdminUserData() {
     try {
       let token = authData.authToken;
       const response = await axios.patch(
-        `${import.meta.env.VITE_API_URL}admin/activateUser/${userId}`, {},
+        `${import.meta.env.VITE_API_URL}/admin/activateUser/${userId}`, {},
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -182,7 +182,7 @@ function AdminUserData() {
       let adminId = authData._id
 
       const response = await axios.patch(
-        `${import.meta.env.VITE_API_URL}admin/deactivateUser/${userId}`, {},
+        `${import.meta.env.VITE_API_URL}/admin/deactivateUser/${userId}`, {},
         {
           headers: { Authorization: `Bearer ${token}` },
         }

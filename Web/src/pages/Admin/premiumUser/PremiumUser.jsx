@@ -32,7 +32,7 @@ function PremiumUser() {
         try {
             let token = authData.authToken;
             const response = await axios.get(
-                `${import.meta.env.VITE_API_URL}admin/getPremiumUsers`,
+                `${import.meta.env.VITE_API_URL}/admin/getPremiumUsers`,
                 {
                     headers: { Authorization: `Bearer ${token}` },
                 }
@@ -52,7 +52,7 @@ function PremiumUser() {
     const handleDistribution = async () => {
         try {
             let token = authData.authToken;
-            const response = await axios.post(`${import.meta.env.VITE_API_URL}admin/franchisecommissions`,{amount}, {
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/admin/franchisecommissions`,{amount}, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             if (response.status === 200) {

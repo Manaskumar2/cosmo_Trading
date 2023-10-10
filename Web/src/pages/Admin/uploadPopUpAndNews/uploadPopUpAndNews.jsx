@@ -32,7 +32,7 @@ function UploadPopUpAndNews() {
         try {
             let token = authData.authToken;
             const response = await axios.post(
-                `${import.meta.env.VITE_API_URL}admin/uploads`,
+                `${import.meta.env.VITE_API_URL}/admin/uploads`,
                 formData, 
                 {
                     headers: {
@@ -55,7 +55,7 @@ function UploadPopUpAndNews() {
         e.preventDefault()
         try {
             let token = authData.authToken;
-            const response = await axios.post(`${import.meta.env.VITE_API_URL}admin/articles`, { newsText },
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/admin/articles`, { newsText },
                 {
                     headers: { Authorization: `Bearer ${token}` },
                 },
@@ -72,7 +72,7 @@ function UploadPopUpAndNews() {
     const handleDelete = async () => {
         try {
             let token = authData.authToken;
-            const response = await axios.delete(`${import.meta.env.VITE_API_URL}admin/deleteImage`,
+            const response = await axios.delete(`${import.meta.env.VITE_API_URL}/admin/deleteImage`,
                 {
                     headers: { Authorization: `Bearer ${token}` },
                 },

@@ -16,7 +16,7 @@ function AdminHome() {
   const handleCosmoData = async () => {
     try {
       let token = authData.authToken;
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}admin/companyDetails`, {
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/companyDetails`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (response.status === 200) {
@@ -30,7 +30,7 @@ function AdminHome() {
   const handleTransactionData = async () => {
     try {
       let token = authData.authToken;
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}admin/totalTransactions`, {
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/totalTransactions`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (response.status === 200) {
@@ -44,7 +44,7 @@ function AdminHome() {
   const handleRiseUp = async () => {
     try {
       let token = authData.authToken;
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}admin/riseUpbet `, {
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/riseUpbet `, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (response.status === 200) {
@@ -58,7 +58,7 @@ function AdminHome() {
   const handleGrowUp = async () => {
     try {
       let token = authData.authToken;
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}admin/growUpbetAmount`, {
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/growUpbetAmount`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (response.status === 200) {

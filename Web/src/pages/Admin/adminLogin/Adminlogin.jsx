@@ -24,7 +24,7 @@ function Adminlogin() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post(`${import.meta.env.VITE_API_URL}admin/signIn`, {
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/admin/signIn`, {
                 phoneNumber, password
             });
             if (response.status === 200) {

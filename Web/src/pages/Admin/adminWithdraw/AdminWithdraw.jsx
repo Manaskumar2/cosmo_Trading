@@ -29,7 +29,7 @@ function AdminWithdraw() {
   const handleUser = async (userId) => {
     try {
       let token = authData.authToken;
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}admin/getUserDetails/${userId}`, {
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/getUserDetails/${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (response.status === 200) {
@@ -44,7 +44,7 @@ function AdminWithdraw() {
   const handlePaymentRequest = async () => {
     try {
       let token = authData.authToken;
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}admin/getWithdrawRequest?status=${status}`,
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/getWithdrawRequest?status=${status}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         },
@@ -61,7 +61,7 @@ function AdminWithdraw() {
   const handleBankData = async (userId) => {
     try {
       let token = authData.authToken;
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}admin/getbankDetails/${userId}`,
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/getbankDetails/${userId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         },
@@ -78,7 +78,7 @@ function AdminWithdraw() {
   const handleConfirm = async (requestId, status) => {
     try {
       let token = authData.authToken;
-      const response = await axios.put(`${import.meta.env.VITE_API_URL}admin/conformWithdrawRequest/${requestId}`, { newStatus: status },
+      const response = await axios.put(`${import.meta.env.VITE_API_URL}/admin/conformWithdrawRequest/${requestId}`, { newStatus: status },
         {
           headers: { Authorization: `Bearer ${token}` },
         },
