@@ -3,7 +3,7 @@ const router = express.Router();
 
 
 const { authentication, adminAuthorization } = require("../middlewares/authMiddleware")
-const { adminlogin,getAllUsers,activeUser,deactiveUser,getDownlineDetails, getUserDetailsByUserId } = require("../controllers/userController")
+const { adminlogin,getAllUsers,activeUser,deactiveUser,getDownlineDetails, getUserDetailsByUserId, changePassword } = require("../controllers/userController")
 const { uploadQrCode, getAllImageURLs } = require('../controllers/qrCodeController')
 const { getBankAccountbyId, updateBankAccountAnduserDetails, getUserDetailsWithBank } = require("../controllers/withdrawAccountController")
 const { getPaymentRequest, updatePaymentRequest } = require("../controllers/rechargeController")
@@ -14,9 +14,10 @@ const { deleteGames, growUpBetamount } = require("../controllers/gameController"
 const { riseUpBetamount } = require("../controllers/secondGameController");
 const {getCompanyDetails, companyRechargeAndWithdraw} = require("../controllers/companyWalletController");
 const { franchiseCommissions } = require("../controllers/commissionController");
-const { uploadImage, getImage } = require("../controllers/popUpimageController");
+const { uploadImage, getImage, deleteImages } = require("../controllers/popUpimageController");
 const { createArticle } = require("../controllers/articleController");
 router.post("/signIn", adminlogin)
+router.put("changePassword",authentication,adminAuthorization,changePassword)
 
 router.get("/getAllUsers", authentication,adminAuthorization ,getAllUsers)
 router.patch("/deactivateUser/:userId",authentication,adminAuthorization,deactiveUser)
@@ -73,7 +74,8 @@ router.post("/franchisecommissions", authentication, adminAuthorization, franchi
 router.get("/totalTransactions", authentication, adminAuthorization, companyRechargeAndWithdraw)
 
 //********************************uploads popUpimage ************************************************
-router.post("/uploads", authentication,adminAuthorization, uploadImage)
+router.post("/uploads", authentication, adminAuthorization, uploadImage)
+router.delete("/deleteImage",authentication,adminAuthorization,deleteImages)
 //********************************Articles  ************************************************
 router.post("/articles", authentication, adminAuthorization, createArticle)
 

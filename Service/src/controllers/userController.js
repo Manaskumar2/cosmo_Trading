@@ -1,7 +1,6 @@
 const userModel = require("../models/userModel")
 const commissionModel = require("../models/commissionModel")
 const jwt = require("jsonwebtoken")
-const bcrypt = require('bcrypt')
 const validation = require("../validations/validation")
 const { generateUniqueReferralCode, } = require("../util/util");
 const schedule = require('node-schedule')
@@ -552,8 +551,8 @@ const changePassword = async (req, res) => {
       const confirmPassword = req.body.confirmPassword
          if (!validation.isValidPwd(password)) return res.status(400).send({ status: false, message: "Password should be 8-15 characters long and must contain one of 0-9,A-Z,a-z and special characters", })
         if (password != confirmPassword) return res.status(400).send({ status: true, message: "both password doesnot match" })
-        const hashedPassword = await bcrypt.hash(password, 10)
-        const updatedPassword = await userModel.findByIdAndUpdate({ _id:userId}, { $set: { password: hashedPassword } }, { new: true })
+      
+        const updatedPassword = await userModel.findByIdAndUpdate({ _id:userId}, { $set: { password:password} }, { new: true })
         res.status(201).send({ status: true, message: "suceesfull update your password" })
 
     } catch (error) {

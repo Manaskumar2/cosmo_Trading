@@ -68,14 +68,30 @@ const getImage = async (req, res) => {
     if (!images) {
       return res.status(404).send('No images found');
     }
-
-
     res.status(200).send({status:true,message:"sucessfull",data:images});
   } catch (error) {
     console.error(error);
     res.status(500).send('Something went wrong');
   }
 };
+const deleteImages = async (req, res) => { 
+  try {
+     
+
+    const image = await Image.findOne().sort({ createdAt: -1 })
+
+    if (!image) {
+      return res.status(404).json({ status: false, message: 'Image not found' });
+    }
+
+    await Image.findByIdAndDelete(image.id);
+    return res.status(200).json({ status: true, message:'Image deleted' });
+  }catch (error) {
+    console.error(error);
+    res.status(500).send('Something went wrong');
+  }
+}
 
 
-module.exports ={uploadImage,getImage}
+
+module.exports ={uploadImage,getImage,deleteImages}
