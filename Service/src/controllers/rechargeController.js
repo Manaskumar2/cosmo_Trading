@@ -9,8 +9,7 @@ const createRecharge = async (req, res) => {
     const { upiId, upiReferenceNo, amount, qrCode } = req.body;
     const userId = req.decodedToken.userId
     const rechargeAmount = parseInt(amount)
-
-    if(rechargeAmount<500) return res.status(401).send({status:false,message:"minimum recharge amount 500"})
+    if(rechargeAmount<500) return res.status(403).send({status:false,message:"minimum amount Rs/-500 to recharge"})
 
     if (!upiReferenceNo) return res.status(404).send({ status: false, messsage: "please enter your sucessfull payment reference No" })
     if(!validation.isTransactionId(upiReferenceNo)) return res.status(404).send({ status: false,message:"please enter valid transaction number" })

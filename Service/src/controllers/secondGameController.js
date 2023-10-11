@@ -89,7 +89,7 @@ for (const key in groups) {
 
   
       if (groups["A"].users.length === 0 && groups["B"].users.length == groups["C"].users.length !== 0 && groups["B"].totalAmount == groups["C"].totalAmount) {
-        if (!groups["B"].totalAmount && !groups["c"].totalAmount) {
+        if (groups["B"].totalAmount>0 && groups["C"].totalAmount>0) {
           const randomIndex = Math.floor(Math.random() * 2); // 0 or 1
           if (randomIndex === 0) {
             winnerGroup = "B";
@@ -101,8 +101,9 @@ for (const key in groups) {
     
           }
         }
-      } else if (groups["B"].users.length === 0 && groups["A"].users.length == groups["C"].users.length !== 0 && groups["C"].totalAmount && groups["A"].totalAmoun) {
-        if (!groups["A"].totalAmount && !groups["C"].totalAmount) {
+      } else if (groups["B"].users.length === 0 && groups["A"].users.length == groups["C"].users.length !== 0 && groups["C"].totalAmount && groups["A"].totalAmount) {
+        
+        if (groups["A"].totalAmount>0 && groups["C"].totalAmount>0) {
           const randomIndex = Math.floor(Math.random() * 2); // 0 or 1
           if (randomIndex === 0) {
             winnerGroup = "A";
@@ -115,7 +116,7 @@ for (const key in groups) {
           }
         }
       } else if (groups["C"].users.length === 0 && groups["B"].users.length == groups["A"].users.length !== 0 && groups["B"].totalAmount==groups["A"].totalAmount) {
-        if (!groups["B"].totalAmount && !groups["A"].totalAmount) {
+        if (groups["B"].totalAmount>0 && groups["A"].totalAmount>0) {
           const randomIndex = Math.floor(Math.random() * 2); // 0 or 1
           if (randomIndex === 0) {
             winnerGroup = "A";
@@ -127,7 +128,7 @@ for (const key in groups) {
         }
       }
             if (groups["A"].users.length === 0 && groups["B"].users.length == groups["C"].users.length !== 0 && groups["B"].totalAmount==groups["C"].totalAmount) {
-        if (!groups["B"].totalAmount && !groups["C"].totalAmount) {
+        if (groups["B"].totalAmount>0 && groups["C"].totalAmount>0) {
     
           const randomIndex = Math.floor(Math.random() * 2); // 0 or 1
           if (randomIndex === 0) {
@@ -140,8 +141,8 @@ for (const key in groups) {
     
           }
         }
-      } else if (groups["B"].users.length === 0 && groups["A"].users.length == groups["C"].users.length !== 0  && groups["A"].totalAmount==groups["C"].totalAmount ) {
-        if (!groups["A"].totalAmount && !groups["C"].totalAmount) {
+      } else if (groups["B"].users.length === 0 && groups["A"].users.length === groups["C"].users.length  && groups["A"].totalAmount==groups["C"].totalAmount ) {
+        if (!groups["A"].totalAmount && !groups["C"].totalAmount  &&!groups["A"].users.length && !groups["C"].users.length) {
           const randomIndex = Math.floor(Math.random() * 2); // 0 or 1
           if (randomIndex === 0) {
             winnerGroup = "A";
