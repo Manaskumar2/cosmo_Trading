@@ -112,6 +112,9 @@ function RiseUp() {
     }
 
     const handleSubmit = async () => {
+        setSmShow(false);
+        setLgShow(false);
+        setGmShow(false);
         let token = auth.authToken;
 
         if (countDownRiseup < 5) {
@@ -143,19 +146,22 @@ function RiseUp() {
                 }
                 toast.success(`Bet created Successfully! on ${message}`, { ...toastProps });
                 setGroup('');
-                setAmount(1);
                 setSmShow(false);
                 setLgShow(false);
                 setGmShow(false);
+                setAmount(1);
                 setMultiplier(1)
                 setMoney(1)
                 handleUserMoney();
                 return response;
             }
         } catch (error) {
+            setAmount(1);
+            setMultiplier(1)
+            setMoney(1)
             setSmShow(false);
-                setLgShow(false);
-                setGmShow(false);
+            setLgShow(false);
+            setGmShow(false);
             let message;
                 if (group === 'A') {
                     message = 'Alpha';

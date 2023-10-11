@@ -206,6 +206,9 @@ function Growup() {
     }
 
     const handleSubmit = async () => {
+        setSmShow(false)
+        setLgShow(false)
+
         let token = auth.authToken
         if (countDownGrowup < 10) {
             toast.error("Wait for the next game", { ...toastProps });
@@ -226,16 +229,19 @@ function Growup() {
                 toast.success("Bet created Successfully!", { ...toastProps });
                 setSmShow(false)
                 setLgShow(false)
-                setMoney(1)
-                setGroup('');
                 setAmount(1);
                 setMultiplier(1)
+                setMoney(1)
+                setGroup('');
                 handleUserMoney()
                 return response;
             }
         } catch (error) {
             setSmShow(false)
                 setLgShow(false)
+                setAmount(1);
+                setMultiplier(1)
+                setMoney(1)
             const errorMessage = error.response ? error.response.data.message : error.message;
             toast.error(errorMessage || "Something went wrong", { ...toastProps });
         }
