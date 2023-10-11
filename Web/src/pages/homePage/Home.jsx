@@ -97,9 +97,8 @@ function Home() {
                     <div className="container">
                         <div className="row home-row">
                             <div className="col-2 download">
-                                <a href="https://whatsapp.com/channel/0029VaAOCUm2Jl8C4oYY1u0M" target="_blank" rel="noopener noreferrer">
+                                
                                     <img src={wp} alt="" style={{ width: '2.5rem' }} />
-                                </a>
                             </div>
                             <div className="col-8">
                                 <img src={logo} alt="" />
