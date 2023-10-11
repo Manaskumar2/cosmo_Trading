@@ -153,6 +153,9 @@ function RiseUp() {
                 return response;
             }
         } catch (error) {
+            setSmShow(false);
+                setLgShow(false);
+                setGmShow(false);
             let message;
                 if (group === 'A') {
                     message = 'Alpha';

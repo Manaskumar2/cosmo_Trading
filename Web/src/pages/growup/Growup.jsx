@@ -234,6 +234,8 @@ function Growup() {
                 return response;
             }
         } catch (error) {
+            setSmShow(false)
+                setLgShow(false)
             const errorMessage = error.response ? error.response.data.message : error.message;
             toast.error(errorMessage || "Something went wrong", { ...toastProps });
         }

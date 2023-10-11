@@ -74,6 +74,7 @@ const endIndex = startIndex + itemsPerPage;
             });
             if (response.status === 200) {
                 setGameHistoryList(response.data.data)
+                console.log(response.data.data)
                 return response;
             }
         } catch (error) {
@@ -156,7 +157,7 @@ const endIndex = startIndex + itemsPerPage;
                                                                 <img src={Beta} alt="Beta" />
                                                             ) : item.winnerGroup === 'C' ? (
                                                                 <img src={Gama} alt="Gamma" />
-                                                            ) : item.winnerGroup === null ? (
+                                                            ) : item.winnerGroup === null && item.losersGroup === null && item.runnerUpGroup === null ?(
                                                                 item.gameUID % 3 === 2 || item.gameUID % 3 === 5 || item.gameUID % 3 === 9 ? (
                                                                     <img src={Gama} alt="Alpha"  style={{ height: "2rem", width: "2rem" }}/>
                                                                 ) : item.gameUID % 3 === 1 || item.gameUID % 3 === 4 || item.gameUID % 3 === 7 || item.gameUID % 3 === 8 ? (
@@ -164,7 +165,16 @@ const endIndex = startIndex + itemsPerPage;
                                                                 ) : item.gameUID % 3 === 0 || item.gameUID % 3 === 3 || item.gameUID % 3 === 6 ? (
                                                                     <img src={Beta} alt="Gamma"  style={{ height: "2rem", width: "2rem" }}/>
                                                                 ) : null
-                                                            ) : null}
+                                                            ) :item.winnerGroup === null && item.losersGroup != null && item.runnerUpGroup === null ? (
+                                                                item.losersGroup === 'A' ? (
+                                                                    <img src={Gama} alt="Gamma" style={{ height: "2rem", width: "2rem" }} />
+                                                                ) : item.losersGroup === 'B' ? (
+                                                                    <img src={Alpha} alt="Alpha" style={{ height: "2rem", width: "2rem" }} />
+                                                                ) : item.losersGroup === 'C' ? (
+                                                                    <img src={Beta} alt="Beta" style={{ height: "2rem", width: "2rem" }} />
+                                                                ) : null
+                                                            )
+                                                            : null}
                                                                 {/* {item.winnerGroup === 'A' ? (
                                                                     <img src={Alpha} alt="Alpha" style={{ height: "2rem", width: "2rem" }} />
                                                                 ) : item.winnerGroup === 'B' ? (
@@ -180,28 +190,48 @@ const endIndex = startIndex + itemsPerPage;
                                                                 ) : null} */}
 
                                                             </span>
-                                                            {/* {item.runnerUpGroup && <span className="icon_rate">
-                                                                {item.runnerUpGroup === 'A' ? (
-                                                                    <img src={Alpha} alt="Alpha" />
-                                                                ) : item.runnerUpGroup === 'B' ? (
-                                                                    <img src={Beta} alt="Beta" />
-                                                                ) : item.runnerUpGroup === 'C' ? (
-                                                                    <img src={Gama} alt="Gamma" />
-                                                                ) : item.runnerUpGroup === null && item.gameUID % 2 === 1 ? (
-                                                                    <img src={Alpha} alt="Alpha" />
-                                                                ) : item.runnerUpGroup === null && item.gameUID % 2 === 0 ? (
-                                                                    <img src={Beta} alt="Beta" />
-                                                                ) : item.runnerUpGroup === null && item.gameUID % 5 === 0 ? (
-                                                                    <img src={Gama} alt="Gamma" />
-                                                                ) : null} 
-                                                           </span>} */}
-                                                            {item.runnerUpGroup === 'A' ? (
+                                                            { 
+                                                            // <span className="icon_rate">
+                                                            // {item.winnerGroup === 'A' ? (
+                                                            //     <img src={Alpha} alt="Alpha" />
+                                                            // ) : item.winnerGroup === 'B' ? (
+                                                            //     <img src={Beta} alt="Beta" />
+                                                            // ) : item.winnerGroup === 'C' ? (
+                                                            //     <img src={Gama} alt="Gamma" />
+                                                            // ) : item.winnerGroup === null ? (
+                                                            //     item.gameUID % 3 === 2 || item.gameUID % 3 === 5 || item.gameUID % 3 === 9 ? (
+                                                            //         <img src={Gama} alt="Alpha"  style={{ height: "2rem", width: "2rem" }}/>
+                                                            //     ) : item.gameUID % 3 === 1 || item.gameUID % 3 === 4 || item.gameUID % 3 === 7 || item.gameUID % 3 === 8 ? (
+                                                            //         <img src={Alpha} alt="Beta"  style={{ height: "2rem", width: "2rem" }}/>
+                                                            //     ) : item.gameUID % 3 === 0 || item.gameUID % 3 === 3 || item.gameUID % 3 === 6 ? (
+                                                            //         <img src={Beta} alt="Gamma"  style={{ height: "2rem", width: "2rem" }}/>
+                                                            //     ) : null
+                                                            // ) : null}
+                                                            //     {/* {item.winnerGroup === 'A' ? (
+                                                            //         <img src={Alpha} alt="Alpha" style={{ height: "2rem", width: "2rem" }} />
+                                                            //     ) : item.winnerGroup === 'B' ? (
+                                                            //         <img src={Beta} alt="Beta" style={{ height: "2rem", width: "2rem" }} />
+                                                            //     ) : item.winnerGroup === 'C' ? (
+                                                            //         <img src={Gama} alt="Gamma" style={{ height: "2rem", width: "2rem" }} />
+                                                            //     ) : item.winnerGroup === null && item.gameUID % 2 === 1 ? (
+                                                            //         <img src={Alpha} alt="Alpha" style={{ height: "2rem", width: "2rem" }} />
+                                                            //     ) : item.winnerGroup === null && item.gameUID % 2 === 0 ? (
+                                                            //         <img src={Beta} alt="Beta" style={{ height: "2rem", width: "2rem" }} />
+                                                            //     ) : item.winnerGroup === null && item.gameUID % 3 === 0 ? (
+                                                            //         <img src={Gama} alt="Gamma" style={{ height: "2rem", width: "2rem" }} />
+                                                            //     ) : null} */}
+
+                                                            // </span> 
+                                                            }
+
+                                                            {
+                                                            item.runnerUpGroup === 'A' ? (
                                                                 <img src={Alpha} alt="Alpha" />
                                                             ) : item.runnerUpGroup === 'B' ? (
                                                                 <img src={Beta} alt="Beta" />
                                                             ) : item.runnerUpGroup === 'C' ? (
                                                                 <img src={Gama} alt="Gamma" />
-                                                            ) : item.runnerUpGroup === null ? (
+                                                            ) :item.winnerGroup === null && item.losersGroup=== null && item.runnerUpGroup === null  ? (
                                                                 item.gameUID % 3 === 2 || item.gameUID % 3 === 5 || item.gameUID % 3 === 9 ? (
                                                                     <img src={Alpha} alt="Alpha" />
                                                                 ) : item.gameUID % 3 === 1 || item.gameUID % 3 === 4 || item.gameUID % 3 === 7 || item.gameUID % 3 === 8 ? (
@@ -209,7 +239,29 @@ const endIndex = startIndex + itemsPerPage;
                                                                 ) : item.gameUID % 3 === 0 || item.gameUID % 3 === 3 || item.gameUID % 3 === 6 ? (
                                                                     <img src={Gama} alt="Gamma" />
                                                                 ) : null
-                                                            ) : null}
+                                                            ):
+                                                            item.winnerGroup === null && item.losersGroup != null && item.runnerUpGroup === null ? (
+                                                                item.losersGroup === 'A' ? (
+                                                                    <img src={Beta} alt="Beta" />
+                                                                    
+                                                                ) : item.losersGroup === 'B' ? (
+                                                                    <img src={Gama} alt="Gamma" />
+                                                                    
+                                                                ) : item.losersGroup === 'C' ? (
+                                                                    <img src={Alpha} alt="Alpha"  />
+                                                                ) : null
+                                                            ):
+                                                            item.winnerGroup !== null && item.losersGroup !== null && item.runnerUpGroup === null ? (
+                                                                item.winnerGroup === 'A' && item.losersGroup === 'B' || item.winnerGroup === 'B' && item.losersGroup === 'A' ? (
+                                                                    <img src={Gama} alt="Gamma" />
+                                                                ) : item.winnerGroup === 'B' && item.losersGroup === 'C' || item.winnerGroup === 'C' && item.losersGroup === 'B' ? (
+                                                                    <img src={Alpha} alt="Alpha" />
+                                                                ) : item.winnerGroup === 'A' && item.losersGroup === 'C'|| item.winnerGroup === 'C' && item.losersGroup === 'A' ? (
+                                                                    <img src={Beta} alt="Beta" />
+                                                                ) : null
+                                                            ) : null
+                                                            
+                                                            }
 
                                                         </div>
                                                     </td>
