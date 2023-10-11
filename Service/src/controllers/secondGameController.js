@@ -801,7 +801,7 @@ const get2ndGame = async (req, res) => {
 
 
     const game = await Game.findOne({ duration: duration, isCompleted: false }).sort({createdAt: -1}).select({ isCompleted: 1, endTime: 1, startTime: 1 ,gameUID:1})
-    if (!game) return res.status(404).send({ status: false, message: "Game was ended" })
+    if (!game) return res.status(404).send({ status: false })
     
   
   
