@@ -3,6 +3,7 @@ require("moment-timezone");
 const userModel = require("../models/userModel");
 const Game = require("../models/secondGameModel");
 const Wallet = require("../models/companywallet");
+const commissionModel = require("../models/commissionModel")
 
 const { generateUniqueNumber2 } = require("../util/util");
 let walletId = "650daaa42b2122794a524f24";
@@ -532,6 +533,59 @@ async function distributeComissionToAll(game) {
   });
 }
 
+// async function distributeComission(user, amount) {
+//   let currentUser = user;
+//   let distributedAmount = 0;
+
+//   for (let i = 0; i < 10; i++) {
+//     if (currentUser.parentReferralCode != null) {
+//       let parentUser = await userModel.findOne({
+//         referralCode: currentUser.parentReferralCode,
+//       });
+
+//       if (!parentUser) {
+//         return distributedAmount;
+//       }
+
+//       let dAmount = roundDown(amount * (downloadResult[i] / 100), 2);
+      
+//       let dailyCommission = {
+//         date: new Date(),
+//         amount: dAmount,
+//       };
+
+//       parentUser.commissions.push(dailyCommission);
+
+//       let newWalletAmount = parentUser.walletAmount + dAmount;
+//       let newCommissionAmount = parentUser.commissionAmount + dAmount;
+//       distributedAmount += dAmount;
+
+//       await userModel.updateOne(
+//         { _id: parentUser._id },
+//         {
+//           walletAmount: newWalletAmount,
+//           commissionAmount: newCommissionAmount,
+//           $push: { commissions: dailyCommission },
+//         }
+//       );
+
+//       currentUser = parentUser;
+
+//       if (i == 9) {
+//         return distributedAmount;
+//       }
+//     } else {
+//       return distributedAmount;
+//     }
+//   }
+
+//   return distributedAmount;
+// }
+
+// function roundDown(num, decimalPlaces = 2) {
+//   const factor = 10 ** decimalPlaces;
+//   return Math.floor(num * factor) / factor;
+// }
 async function distributeComission(user, amount) {
   let currentUser = user;
   let distributedAmount = 0;
@@ -548,29 +602,35 @@ async function distributeComission(user, amount) {
 
       let dAmount = roundDown(amount * (downloadResult[i] / 100), 2);
       
-      let dailyCommission = {
-        date: new Date(),
-        amount: dAmount,
-      };
+      try {
+        let dailyCommission = await commissionModel.create({
+          date: new Date(),
+          amount: dAmount,
+          userId: parentUser._id,
+          commissionType:"AGENT"
+        });
 
-      parentUser.commissions.push(dailyCommission);
+        let newWalletAmount = parentUser.walletAmount + dAmount;
+        let newCommissionAmount = parentUser.commissionAmount + dAmount;
+        distributedAmount += dAmount;
 
-      let newWalletAmount = parentUser.walletAmount + dAmount;
-      let newCommissionAmount = parentUser.commissionAmount + dAmount;
-      distributedAmount += dAmount;
+        await Promise.all([
+          userModel.updateOne(
+            { _id: parentUser._id },
+            {
+              walletAmount: newWalletAmount,
+              commissionAmount: newCommissionAmount,
+            }
+          ),
+        ]);
 
-      await userModel.updateOne(
-        { _id: parentUser._id },
-        {
-          walletAmount: newWalletAmount,
-          commissionAmount: newCommissionAmount,
-          $push: { commissions: dailyCommission }, 
+        currentUser = parentUser;
+
+        if (i == 9) {
+          return distributedAmount;
         }
-      );
-
-      currentUser = parentUser;
-
-      if (i == 9) {
+      } catch (error) {
+        console.error("Error creating commission:", error);
         return distributedAmount;
       }
     } else {
