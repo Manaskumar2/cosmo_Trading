@@ -3,7 +3,7 @@ const commissionModel = require("../models/commissionModel")
 const jwt = require("jsonwebtoken")
 const validation = require("../validations/validation")
 const { generateUniqueReferralCode, } = require("../util/util");
-const schedule = require('node-schedule')
+// const schedule = require('node-schedule')
 
 
 const twilio = require('twilio')("ACfe32400dd6c9efafd446cecf70102c0b", "7a4d599d44148524de82afe08e75b4d2");
@@ -814,15 +814,15 @@ const walletToWalletTransactions = async (req, res) => {
   }
 }
 
-const job = schedule.scheduleJob('0 0 * * *', async () => {
-  try {
+// const job = schedule.scheduleJob('0 0 * * *', async () => {
+//   try {
   
-    await userModel.updateMany({}, { $unset: { commissions: 1 } });
-    console.log('Commissions field deleted for all users.');
-  } catch (error) {
-    console.error('Error deleting commissions field:', error);
-  }
-})
+//     await userModel.updateMany({}, { $unset: { commissions: 1 } });
+//     console.log('Commissions field deleted for all users.');
+//   } catch (error) {
+//     console.error('Error deleting commissions field:', error);
+//   }
+// })
 
 module.exports = {
   signIn,
