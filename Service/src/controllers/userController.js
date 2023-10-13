@@ -384,16 +384,16 @@ const getUserDetailsByUserId = async (req, res) => {
     }
 
   
-    const commissionDetails = userDetails.commissions.map((commission) => ({
-      date: commission.date,
-      amount: commission.amount,
-    }));
+    // const commissionDetails = userDetails.commissions.map((commission) => ({
+    //   date: commission.date,
+    //   amount: commission.amount,
+    // }));
 
     return res.status(200).send({
       status: true,
       data: {
         userDetails,
-        commissionDetails,
+  
       },
     });
   } catch (error) {

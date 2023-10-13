@@ -297,12 +297,14 @@ async function distributeCommission(user, amount) {
       let dAmount = roundDown(amount * (downloadResult[i] / 100), 2);
       
       try {
-        let dailyCommission = await commissionModel.create({
-          date: new Date(),
-          amount: dAmount,
-          userId: parentUser._id,
-          commissionType:"AGENT"
-        });
+           if (dAmount>0) {
+          let dailyCommission = await commissionModel.create({
+            date: new Date(),
+            amount: dAmount,
+            userId: parentUser._id,
+            commissionType: "AGENT"
+          });
+        }
 
         let newWalletAmount = parentUser.walletAmount + dAmount;
         let newCommissionAmount = parentUser.commissionAmount + dAmount;

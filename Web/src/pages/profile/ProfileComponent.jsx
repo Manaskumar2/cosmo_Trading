@@ -38,7 +38,7 @@ function Profile() {
     const [userData, setUserData] = useRecoilState(UserDetails)
 
     const logout = () => {
-        sessionStorage.removeItem('authUserToken');
+        localStorage.removeItem('authUserToken');
         setAuth(null)
         navigate('/signIn')
     };

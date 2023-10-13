@@ -5,8 +5,9 @@
 
 .table{border:1px solid #0B5A8F;}
 
-.table td{font-size:12px;font-weight:400;font-family: Montserrat;vertical-align:middle;color:#FFF; white-space: nowrap; background-color: transparent; border-bottom:1px solid #0B5A8F;border-left:0px ;border-right:0px;}
+.table td{font-size:12px;font-weight:400;font-family: Montserrat;vertical-align:middle;color:#FFF; white-space: nowrap; background-color: transparent; border-bottom:1px solid #0B5A8F;border-left:0px ;border-right:0px;max-height: 1rem;}
 
+.table tr{max-height: 1rem;}
 .table tr:nth-child(odd){background-color: #012A4C;}
 .table tr:nth-child(even){background-color: #001C3E;}
 
@@ -15,3 +16,8 @@
 .table td h5 i{font-size: 10px;}
 
 .table td h6{color: rgba(255, 255, 255, 0.5);font-size:12px;margin: 0;}
+.carousel-control-prev , .carousel-indicators{display: none;}
+.carousel-control-next{display: none;}
+
+
+  

@@ -84,7 +84,6 @@ function TimeSection1({ uid }) {
             }
         } catch (error) {
             const errorMessage = error.response ? error.response.data.message : error.message;
-            toast.error(errorMessage || 'Something went wrong', { ...toastProps });
         }
     };
     const startTime = momentTz(new Date()).tz("Asia/Kolkata").toISOString()

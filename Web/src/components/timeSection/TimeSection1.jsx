@@ -48,7 +48,6 @@ function TimeSection1() {
             }
         } catch (error) {
             const errorMessage = error.response ? error.response.data.message : error.message;
-            toast.error(errorMessage || 'Something went wrong', { ...toastProps });
         }
     };
 

@@ -1,6 +1,6 @@
 import {atom} from 'recoil';
 
-const authData = JSON.parse(sessionStorage.getItem("authUserToken")) || null;
+const authData = JSON.parse(localStorage.getItem("authUserToken")) || null;
 
 
 

@@ -35,4 +35,30 @@ const franchiseCommissions = async (req, res) => {
   }
 };
 
-module.exports = { franchiseCommissions };
+const getCommissionDetails = async (req, res) => {
+  try {
+    const userId =  req.decodedToken.userId
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+   
+  const skip = (page - 1) * limit;
+     const count = await commissionModel.countDocuments({ userId:userId })
+    const commissionDetails = await commissionModel.find({ userId:userId })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+    
+          const response = {
+      currentPage: page,
+      totalPages: Math.ceil(count / limit),
+     commissionDetails
+    };
+
+    return res.status(200).send({status:true,message:"success",data:response});
+
+  } catch (error) {
+      console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+module.exports = { franchiseCommissions ,getCommissionDetails};

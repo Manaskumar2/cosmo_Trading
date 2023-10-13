@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React,{ useState,useEffect } from 'react';
 import axios from 'axios';
 import toast, { Toaster } from "react-hot-toast";
 import { AuthState } from '../../Atoms/AuthState'
@@ -150,13 +150,28 @@ const endIndex = startIndex + itemsPerPage;
                                                     <img src={Winner} alt="Winner" />
                                                 </span>
                                                 <p>
-                                                    {item.winnerGroup === 'SMALL' ? 'Alpha' : (item.winnerGroup === 'BIG' ? 'Beta' :
-                                                        (item.winnerGroup === null ? (item.gameUID % 2 === 1 ? 'Alpha' : 'Beta') : ''))}
-                                                </p>
-                                                <span className="icon_rate">
-                                                    <img src={item.winnerGroup === 'SMALL' ? Alpha : (item.winnerGroup === 'BIG' ? Beta :
-                                                        (item.winnerGroup === null ? (item.gameUID % 2 === 1 ? Alpha : Beta) : ''))} />
-                                                </span>
+  {item.winnerGroup === 'SMALL'
+    ? 'Alpha'
+    : item.winnerGroup === 'BIG'
+    ? 'Beta'
+    : item.winnerGroup === null && ( (item.gameUID % 3 === 0 || item.gameUID % 5 === 0 || item.gameUID % 7 === 0))
+    ? 'Alpha'
+    : 'Beta'}
+</p>
+<span className="icon_rate">
+  <img
+    src={
+      item.winnerGroup === 'SMALL'
+        ? Alpha
+        : item.winnerGroup === 'BIG'
+        ? Beta
+        : item.winnerGroup === null && ( (item.gameUID % 3 === 0 || item.gameUID % 5 === 0 || item.gameUID % 7 === 0))
+        ? Alpha
+        : Beta
+    }
+  />
+</span>
+
                                             </div>
                                         </td>
                                     </tr>

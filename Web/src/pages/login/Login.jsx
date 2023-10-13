@@ -45,7 +45,7 @@ function Login() {
 
       if (response.status === 200) {
         toast.success('Welcome to our Gaming Zone', { ...toastProps });
-        sessionStorage.setItem('authUserToken', JSON.stringify(response.data.data));
+        localStorage.setItem('authUserToken', JSON.stringify(response.data.data));
         localStorage.setItem('showPopUp', JSON.stringify('show'));
         setPhone('');
         setPassword('');

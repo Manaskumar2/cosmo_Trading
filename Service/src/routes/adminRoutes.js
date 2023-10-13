@@ -16,6 +16,7 @@ const {getCompanyDetails, companyRechargeAndWithdraw} = require("../controllers/
 const { franchiseCommissions } = require("../controllers/commissionController");
 const { uploadImage, getImage, deleteImages } = require("../controllers/popUpimageController");
 const { createArticle } = require("../controllers/articleController");
+const { createGiftCode } = require("../controllers/giftCodeController");
 router.post("/signIn", adminlogin)
 router.put("changePassword",authentication,adminAuthorization,changePassword)
 
@@ -81,5 +82,7 @@ router.post("/articles", authentication, adminAuthorization, createArticle)
 
 //********************************get and update user details and bank account ********************************
 router.put("/updateUser/:userId", authentication, adminAuthorization, updateBankAccountAnduserDetails)
-router.get("/userAndBankData/:userId", authentication,adminAuthorization,getUserDetailsWithBank)
+router.get("/userAndBankData/:userId", authentication, adminAuthorization, getUserDetailsWithBank)
+//**************************************************giftCode */
+router.post("/giftCode",authentication,adminAuthorization,createGiftCode)
 module.exports =router

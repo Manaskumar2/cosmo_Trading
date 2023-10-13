@@ -263,7 +263,6 @@ function Growup() {
                 return null
             } else {
                 const errorMessage = error.response ? error.response.data.message : error.message;
-                toast.error(errorMessage || "Something went wrong", { ...toastProps });
             }
         }
     };

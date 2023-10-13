@@ -11,6 +11,8 @@ const { withdrawrequest, withdrawalHistory } = require("../controllers/userWithd
 const { get2ndGame, bet2ndController, get2ndGameHistory, riseUpUserBettingHistory,update2ndGameUid } = require("../controllers/secondGameController");
 const { getImage } = require("../controllers/popUpimageController");
 const { getArticle } = require("../controllers/articleController");
+const { getCommissionDetails } = require("../controllers/commissionController");
+const { claimGiftcode } = require("../controllers/giftCodeController");
 // const multer = require('multer');
 // const path = require('path');
 
@@ -36,7 +38,7 @@ router.post("/updateUserProfile", authentication, updateUserProfile)
 router.get("/getUserProfile/:UID", authentication, getUserDetails)
 router.get("/getReferralStats/:referralID", authentication, getReferralStats)
 router.post("/walletToWallet", authentication, walletToWalletTransactions)
-router.patch("/changePassword", authentication,changePassword)
+router.patch("/changePassword", authentication, changePassword)
 
 router.post("/bet", authentication, gameController.betController)
 router.get("/bettingHistory/:userId", authentication, gameController.growUpUserBettingHistory)
@@ -92,5 +94,10 @@ router.get("/images",authentication,getImage)
 //................................articles ********************************
 
 router.get("/articles", authentication, getArticle)
+//................................commissions history ********************************
 
+router.get("/commissionHistory", authentication,getCommissionDetails)
+//................................claim gift codes ********************************
+
+router.post("/claimGiftCode", authentication,claimGiftcode)
 module.exports =router

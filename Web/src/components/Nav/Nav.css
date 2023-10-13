@@ -6,7 +6,7 @@
 .nav-Link{display: flex; flex-direction: column; justify-content: center; align-items: center; padding:10px 12px; gap:4px; margin: .5rem 0;color: #8BBCDF;font-family: Montserrat;font-size: 12px;font-weight: 500;}
 .link-container .col-3 a p{margin: 0;}
 .link-container .link :hover{border-radius:5px;background: linear-gradient(180deg, #FB4040 0%, #E0CA02 100%);box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.20);color: #FFF;}
-.active{border-radius:5px; background: linear-gradient(180deg, #FB4040 0%, #E0CA02 100%);box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.20);color: #FFF;}
+.link .active{border-radius:5px; background: linear-gradient(180deg, #FB4040 0%, #E0CA02 100%);box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.20);color: #FFF;}
 .link-container .link a img{height: 20px;}
 .navBar .link-container .link .activeLink{border-radius: 0.625rem;border-radius: 10px;background: linear-gradient(180deg, #FB4040 0%, #E0CA02 100%);box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.20);color: #d31414}
 .link-container{display: flex;align-items: center;justify-content: space-between;padding: 0 10px;}
