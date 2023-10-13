@@ -4,7 +4,6 @@ import './Withdraw.css'
 import {data} from './WithdrawData'
 import { useState , useEffect} from 'react'
 
-import 'swiper/css';
 function WithdrawSection() {
   const [displayedData, setDisplayedData] = useState(data.slice(0, 5));
   const [startIndex, setStartIndex] = useState(10);
