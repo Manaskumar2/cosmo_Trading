@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { AdminHome, AdminUser, AdminRecharge, AdminWithdraw, AdminLogin, AdminPrime ,PremiumUser,UploadPopUpAndNews,ResetPasswordAdmin} from './importPages';
+import { AdminHome, AdminUser, AdminRecharge, AdminWithdraw, AdminLogin, AdminPrime ,PremiumUser,UploadPopUpAndNews,ResetPasswordAdmin,CreateGiftCard} from './importPages';
 import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import AdminLoader from '../pages/Admin/adminLoading/AdminLoading';
 import { Suspense } from 'react';
@@ -100,6 +100,14 @@ function AdminRoute() {
             element={
               <Suspense fallback={<AdminLoader />}>
                 <UploadPopUpAndNews/>
+              </Suspense>
+            }
+          />
+          <Route
+            path="/admin/createGiftCard"
+            element={
+              <Suspense fallback={<AdminLoader />}>
+                <CreateGiftCard/>
               </Suspense>
             }
           />

@@ -24,6 +24,7 @@ export const toastProps = {
     },
 };
 
+
 function GameHistory({ duration }) {
     const [page, setPage] = useState(1)
     const itemsPerPage = 10; 
@@ -62,7 +63,7 @@ const endIndex = startIndex + itemsPerPage;
             }
         } catch (error) {
             const errorMessage = error.response ? error.response.data.message : error.message;
-            toast.error(errorMessage || "Something went wrong", { ...toastProps });
+
         }
     }
     const getGameHistory = async () => {
@@ -74,12 +75,11 @@ const endIndex = startIndex + itemsPerPage;
             });
             if (response.status === 200) {
                 setGameHistoryList(response.data.data)
-                console.log(response.data.data)
                 return response;
             }
         } catch (error) {
             const errorMessage = error.response ? error.response.data.message : error.message;
-            toast.error(errorMessage || "Something went wrong", { ...toastProps });
+
         }
     }
     useEffect(() => {
@@ -90,12 +90,6 @@ const endIndex = startIndex + itemsPerPage;
         const fetchData = setInterval(getUserGameHistory, 3500)
         return () => { clearInterval(fetchData) }
     }, [page])
-
-    // useEffect(() => {
-    //     if(countDownRiseup===59){
-    //         getGameHistory()
-    //     }
-    // }, [countDownRiseup]);
 
     useEffect(() => {
         getUserGameHistory()
@@ -108,6 +102,12 @@ const endIndex = startIndex + itemsPerPage;
     const handleTabClick = (tabIndex) => {
         setActiveTab(tabIndex);
     };
+    
+    useEffect(() => {
+    if (second < 5) {
+        setHistoryPage(1);
+    }
+}, [second]);
 
     return (
         <div className="gameHistory">
@@ -134,7 +134,7 @@ const endIndex = startIndex + itemsPerPage;
                             <thead>
                                 <tr>
                                     <th>Period</th>
-                                    <th width="140">Winner</th>
+                                    <th width="200">Winner & RunnerUp</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -391,9 +391,9 @@ const endIndex = startIndex + itemsPerPage;
                                     <img src={right} alt="" />
                                 </button>
 
-                                {userGames && <div className='page-count'>  {page}/{userGames.data.totalPages} </div>}
+                                {userGames && <div className='page-count'>  {page}/4 </div>}
                                 {/* {page}/{item.totalPage} */}
-                                <button className='increaseBtn' onClick={() => { setPage(Math.min(page + 1, userGames.data.totalPages)); }}>
+                                <button className='increaseBtn' onClick={() => { setPage(Math.min(page + 1, 4)); }}>
                                     <img src={left} alt="" />
                                 </button>
 

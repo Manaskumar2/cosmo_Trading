@@ -14,7 +14,7 @@ function GameSection() {
                     <Link to='/growUp'>
                         <div className='game-banner'>
                             <img src={game1} alt="" />
-                            <div className="game_user_row1">
+                            {/* <div className="game_user_row1">
                                 <div className="game_user_col">
                                     <div className="game_user_img">
                                         <img src={Profile} alt="" />
@@ -32,13 +32,13 @@ function GameSection() {
                                         Win 300.00
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
                         </Link>
                         <Link to='/riseUp'>
                         <div className='game-banner trx'>
                         <img src={game2} alt="" className='game-banner-image'/>
-                        <div className="game_user_row">
+                        {/* <div className="game_user_row">
                             <div className="game_user_col">
                                 <div className="game_user_img">
                                     <img src={Profile} alt="" />
@@ -56,7 +56,7 @@ function GameSection() {
                                     Win 260.00
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
                         </div>
                         </Link>
                 </div>

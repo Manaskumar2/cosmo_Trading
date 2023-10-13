@@ -64,7 +64,6 @@ const endIndex = startIndex + itemsPerPage;
             }
         } catch (error) {
             const errorMessage = error.response ? error.response.data.message : error.message;
-            toast.error(errorMessage || "Something went wrong", { ...toastProps });
         }
     }
 
@@ -82,7 +81,6 @@ const endIndex = startIndex + itemsPerPage;
             }
         } catch (error) {
             const errorMessage = error.response ? error.response.data.message : error.message;
-            toast.error(errorMessage || "Something went wrong", { ...toastProps });
         }
     }
 
@@ -102,6 +100,11 @@ const endIndex = startIndex + itemsPerPage;
         getGameHistory()
     }, [historyPage])
     
+    useEffect(() => {
+        if (countDownGrowup < 5) {
+            setHistoryPage(1);
+        }
+    }, [countDownGrowup]);
 
 
     const handleTabClick = (tabIndex) => {
@@ -280,10 +283,10 @@ const endIndex = startIndex + itemsPerPage;
                                     <img src={right} alt="" />
                                 </button>
 
-                                {userGames && <div className='page-count'>  {page}/{userGames.data.totalPages} </div>}
+                                {userGames && <div className='page-count'>  {page}/4 </div>}
                                 {/* {page}/{item.totalPage} */}
 
-                                <button className='increaseBtn' onClick={() => { setPage(Math.min(page + 1, userGames.data.totalPages)); }}>
+                                <button className='increaseBtn' onClick={() => { setPage(Math.min(page + 1, 4)); }}>
                                     <img src={left} alt="" />
                                 </button>
 

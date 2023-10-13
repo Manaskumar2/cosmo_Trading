@@ -11,7 +11,7 @@ function CommissionHistory() {
   const [page, setPage]=useState(1)
 
   useEffect(() => {
-    const getCommissionHistory = async () => {
+    const getCommissionHistory = async (page) => {
       try {
         let token = auth.authToken;
         const response = await axios.get(`${import.meta.env.VITE_API_URL}/commissionHistory`, {
@@ -20,22 +20,21 @@ function CommissionHistory() {
         });
         if (response.status === 200) {
           setData(response.data.data); 
-          console.log(response.data.data); 
         }
       } catch (error) {
         const errorMessage = error.response ? error.response.data.message : error.message;
       }
     };
 
-    getCommissionHistory();
+    getCommissionHistory(page);
   }, [page]); 
 
   return (
     <div className='CommissionHistory'>
       <div className="container">
       <div className="row headingCommission" >
-    <div className="col-4" style={{textAlign:'left'}}>Date</div>
-    <div className="col-4"  style={{textAlign:'center'}}>Amount</div>
+    <div className="col-5" style={{textAlign:'left'}}>Date</div>
+    <div className="col-3"  style={{textAlign:'center'}}>Amount</div>
     <div className="col-4" style={{textAlign:'center'}}>
   Commission Type
 </div>
@@ -44,8 +43,8 @@ function CommissionHistory() {
   </div>
       {data && data.commissionDetails.map((item, index) => (
   <div className="row commissionHistoryRow" key={index}>
-    <div className="col-4">{new Date(item.createdAt).toLocaleString()}</div>
-    <div className="col-4"  style={{textAlign:'center'}}>Rs: {item.amount}</div>
+    <div className="col-5">{new Date(item.createdAt).toLocaleString()}</div>
+    <div className="col-3"  style={{textAlign:'center'}}>Rs: {item.amount}</div>
     <div className="col-4" style={{ color: item.commissionType === 'AGENT' ? '#00F2DE' : item.commissionType === 'PREMIUM' ? 'golden' : 'white' , textAlign:'center' }}>
   {item.commissionType}
 </div>
@@ -53,7 +52,7 @@ function CommissionHistory() {
 
   </div>
 ))}
-<div className='pagination-buttons-container' style={{marginTop:'2rem'}}>
+<div className='pagination-buttons-container' style={{margin:'2rem 0 5rem 0'}}>
                             <div className='pagination-buttons'>
                                 <button className='decreaseBtn' onClick={() => { setPage(Math.max(page - 1, 1)); }}>
                                     <img src={right} alt="" />
