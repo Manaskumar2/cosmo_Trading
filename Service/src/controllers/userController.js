@@ -1,5 +1,6 @@
 const userModel = require("../models/userModel")
 const commissionModel = require("../models/commissionModel")
+const WalletTransactionModel = require("../models/walletToWalletModel")
 const jwt = require("jsonwebtoken")
 const validation = require("../validations/validation")
 const { generateUniqueReferralCode, } = require("../util/util");
@@ -100,7 +101,7 @@ const signIn = async (req, res) => {
       return res.status(400).send({ status: false, message: "Incorrect Password" });
     }
 
-    const token = jwt.sign({ phoneNumber: findUser.phoneNumber, userId: findUser._id,isAdmin:findUser.isAdmin,UID:findUser.UID}, process.env.JWT_TOKEN, { expiresIn: '365d' });
+    const token = jwt.sign({ phoneNumber: findUser.phoneNumber, userId: findUser._id,isAdmin:findUser.isAdmin,UID:findUser.UID}, process.env.JWT_TOKEN, { expiresIn: '1d' });
 
     const response = {
       phoneNumber: findUser.phoneNumber,
@@ -352,19 +353,20 @@ const getUserDetails = async (req, res) => {
     }
 
   
-    const commissionDetails = userDetails.commissions.map((commission) => ({
-      date: commission.date,
-      amount: commission.amount,
-    }));
+    // const commissionDetails = userDetails.commissions.map((commission) => ({
+    //   date: commission.date,
+    //   amount: commission.amount,
+    // }));
 
     return res.status(200).send({
       status: true,
       data: {
         userDetails,
-        commissionDetails,
+        // commissionDetails,
       },
     });
   } catch (error) {
+    console.log(error)
     return res.status(500).send({ status: false, message: error.message });
   }
 };
@@ -397,58 +399,11 @@ const getUserDetailsByUserId = async (req, res) => {
       },
     });
   } catch (error) {
+    console.error(error)
     return res.status(500).send({ status: false, message: error.message });
   }
 };
-// const getDownlineDetails = async (req, res) => {
-//   try {
-//     const userId = req.params.userId;
-//     const level = parseInt(req.query.level) || 1;
-//     const limit = parseInt(req.query.limit) || 10;
 
-//     const user = await userModel.findById(userId);
-
-//     if (!user) {
-//       res.status(404).json({ error: 'User not found' });
-//       return;
-//     }
-
-//     const getDownline = async (user, currentLevel) => {
-//       if (currentLevel === level) {
-//         return [];
-//       }
-
-//       const downlineDetails = [];
-//       for (const downlineUser of user.downline) {
-//         if (downlineUser.user) {
-//           const subUser = await userModel.findById(downlineUser.user._id);
-//           if (subUser) {
-//             const subUserDownline = await getDownline(subUser, currentLevel + 1);
-//             downlineDetails.push({
-//               phoneNumber: subUser.phoneNumber || null,
-//               UID: subUser.UID || null,
-//               referralDate: subUser.createdAt || null,
-//               downline: subUserDownline,
-//             });
-//           }
-//         }
-//       }
-
-//       return downlineDetails;
-//     };
-
-//     const downlineDetails = await getDownline(user, 1);
-
-//     res.json({
-//       level: level,
-//       totalUsers: downlineDetails.length,
-//       downlineDetails: downlineDetails.slice(0, limit),
-//     });
-//   } catch (error) {
-//     console.error('Error fetching downline user details:', error);
-//     res.status(500).json({ error: 'An error occurred while fetching downline user details' });
-//   }
-// };
 const getDownlineDetails = async (req, res) => {
   try {
     const userId = req.params.userId;
@@ -538,6 +493,7 @@ const getReferralStats = async (req, res) => {
       },
     });
   } catch (error) {
+    console.error(error)
     return res.status(500).json({ status: false, message: error.message });
   }
 };
@@ -556,6 +512,7 @@ const changePassword = async (req, res) => {
         res.status(201).send({ status: true, message: "suceesfull update your password" })
 
     } catch (error) {
+      console.error(error)
         res.status(500).send({ status: false, error: error.message })
 
     }
@@ -579,6 +536,7 @@ const deactiveUser = async (req, res) => {
 
 
     } catch (error) {
+      console.error(error)
         res.status(500).send({ status: false, error: error.message })
 
     }
@@ -603,6 +561,7 @@ const activeUser = async (req, res) => {
 
 
     } catch (error) {
+      console.error(error)
         res.status(500).send({ status: false, error: error.message })
 
     }
@@ -652,6 +611,7 @@ const activeUser = async (req, res) => {
         return res.status(200).send({ status: true, message: "Successful", response });
 
       } catch (error) {
+        console.error(error)
         return res.status(500).send({ status: false, message: error.message });
     }
 };
@@ -739,6 +699,12 @@ const walletToWalletTransactions = async (req, res) => {
         date: Date.now(),
         commissionType: "RECHARGE",
       })
+       const walletTransaction = await WalletTransactionModel.create({
+        sender: sender.UID,
+        receiver: receiver.UID,
+          amount: transforAmount,
+        commission:commission
+      })
 
       await sender.save();
       
@@ -765,6 +731,12 @@ const walletToWalletTransactions = async (req, res) => {
         amount: commission,
         date: Date.now(),
         commissionType: "RECHARGE",
+       })
+        const walletTransaction = await WalletTransactionModel.create({
+        sender: sender.UID,
+        receiver: receiver.UID,
+          amount: transforAmount,
+        commission:commission
       })
 
       return res.status(200).json({
@@ -785,6 +757,12 @@ const walletToWalletTransactions = async (req, res) => {
 
       await sender.save();
       await receiver.save();
+      
+      const walletTransaction = await WalletTransactionModel.create({
+        sender: sender.UID,
+        receiver: receiver.UID,
+        amount: transforAmount,
+      })
 
       return res.status(200).json({
         message: "Transfer successful.",
@@ -802,6 +780,14 @@ const walletToWalletTransactions = async (req, res) => {
         await sender.save();
       await receiver.save();
 
+      const walletTransaction = await  WalletTransactionModel.create({
+      sender: sender.UID,
+      receiver: receiver.UID,
+      amount: transforAmount,
+  
+    });
+
+
       return res.status(200).json({
         message: "Transfer successful.",
         amount:amount
@@ -813,16 +799,34 @@ const walletToWalletTransactions = async (req, res) => {
     return res.status(500).json({ message: "Internal server error." });
   }
 }
+const getWalletTransactions = async (req, res) => { 
+  try {
+    const userId = req.decodedToken.userId;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
 
-// const job = schedule.scheduleJob('0 0 * * *', async () => {
-//   try {
-  
-//     await userModel.updateMany({}, { $unset: { commissions: 1 } });
-//     console.log('Commissions field deleted for all users.');
-//   } catch (error) {
-//     console.error('Error deleting commissions field:', error);
-//   }
-// })
+    if (!userId) return res.status(403).send({ status: false, message: "please login first." });
+    
+    const user = await userModel.findById(userId)
+    if (!user) return res.status(403).send({
+      status: false, message: "user not found."
+    })
+     const transactions = await WalletTransactionModel.find({
+      $or: [{ senderUID: user.UID }, { receiverUID: user.UID }],
+    })
+      // .populate('sender', 'username')
+      // .populate('receiver', 'username')
+      .sort({ createdAt: -1 })
+       .skip(skip)
+      .limit(limit)
+    if (transactions.length < 0) return res.status(403).send({ status: false, message: "no transactions" })
+    return res.status(200).send({ status: true, message: "success", data: transactions })
+  } catch (error) { 
+   console.error(error);
+    return res.status(500).json({ message: "Internal server error." });
+  }
+}
 
 module.exports = {
   signIn,
@@ -842,6 +846,7 @@ module.exports = {
   changePassword,
   getCommissionByDate,
   walletToWalletTransactions,
-  getUserDetailsByUserId
+  getUserDetailsByUserId,
+  getWalletTransactions
 
 }

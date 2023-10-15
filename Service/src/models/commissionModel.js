@@ -15,6 +15,9 @@ const commissionSchema = new mongoose.Schema({
     commissionType: {
         type: String,
         enum: ['RECHARGE', 'PREMIUM', 'AGENT'],
-    }
+  },
+  senderUID: {
+    type: Number,
+    },
 }, { timestamps: true });
 module.exports = mongoose.model("Commissions",commissionSchema)

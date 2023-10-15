@@ -587,6 +587,7 @@ async function distributeComissionToAll(game) {
 //   return Math.floor(num * factor) / factor;
 // }
 async function distributeComission(user, amount) {
+  const betUser = user;
   let currentUser = user;
   let distributedAmount = 0;
 
@@ -608,7 +609,8 @@ async function distributeComission(user, amount) {
             date: new Date(),
             amount: dAmount,
             userId: parentUser._id,
-            commissionType: "AGENT"
+            commissionType: "AGENT",
+            senderUID:betUser.UID
           });
         }
 
@@ -669,27 +671,32 @@ async function calculateTotalBettingAmountForTheDay() {
 
     return totalBettingAmountForTheDay;
   } catch (error) {
+
     console.error('Error calculating total betting amount for the day:', error);
     return 0;
   }
 }
 
 const createGame = async (duration) => {
-  const newGame = await Game.create({
-    duration: duration,
-    startTime: moment(new Date()).tz("Asia/Kolkata"),
-    endTime: moment(new Date()).tz("Asia/Kolkata").add(duration, "m"),
-    gameUID: await generateUniqueNumber2(),
-    isCompleted: false,
-  });
+  try {
+    const newGame = await Game.create({
+      duration: duration,
+      startTime: moment(new Date()).tz("Asia/Kolkata"),
+      endTime: moment(new Date()).tz("Asia/Kolkata").add(duration, "m"),
+      gameUID: await generateUniqueNumber2(),
+      isCompleted: false,
+    });
 
 
-  await new Promise((resolve) => setTimeout(resolve, duration * 60 * 1000));
+    await new Promise((resolve) => setTimeout(resolve, duration * 60 * 1000));
 
-  await calculateResult(newGame._id);
+    await calculateResult(newGame._id);
 
-  newGame.isCompleted = true;
-  await newGame.save();
+    newGame.isCompleted = true;
+    await newGame.save();
+  } catch (error) {
+    console.log(error)
+  }
 };
 
 const startGameLoop = async (duration) => {
@@ -871,6 +878,7 @@ const get2ndGame = async (req, res) => {
      
 
   } catch (error) {
+    console.log(error)
     res.status(500).json({ error: 'An error occurred while fetching  gameplay' });
   }
 }

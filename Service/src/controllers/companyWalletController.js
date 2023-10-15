@@ -11,6 +11,7 @@ const getCompanyDetails = async (req, res) => {
         return res.status(200).send({ status: true, message: "success", data: companyDetails })
         
     } catch (error) {
+      console.error(error)
         res.status(500).send({status:false,message:"Error getting company details"})
     }
 }

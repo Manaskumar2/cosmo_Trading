@@ -6,13 +6,13 @@ const createGiftCode = async (req, res) => {
       try {
     const { code, maxClaims, amount } = req.body;
 
-          if (!code) return res.status(400).send({ status: false, message: "Please enter code" })
-          if (!maxClaims) return res.status(400).send({ status: false, message: "Please enter max claims" })
-          if (!amount) return res.status(400).send({ status: false, message: "Please enter amount" })
+          if (!code) return res.status(400).json({ status: false, message: "Please Enter Code" })
+          if (!maxClaims) return res.status(400).json({ status: false, message: "Please enter max claims" })
+          if (!amount) return res.status(400).json({ status: false, message: "Please enter amount" })
           
     const existingCode = await giftCodeModel.findOne({ code });
     if (existingCode) {
-      return res.status(400).json({ error: 'Gift code with this code already exists.' });
+      return res.status(400).json({ status: false, message: "Gift card already exist" });
           }
           const claimAmount = parseInt(amount)
           const maxClaim = parseInt(maxClaims)
@@ -21,7 +21,7 @@ const createGiftCode = async (req, res) => {
               maxClaims: maxClaim,
               amount:claimAmount
           })
-          return res.status(201).send({status:true,message:"success",data:createCode})
+          return res.status(200).json({status:true,message:"success",data:createCode})
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Server error. Failed to create the gift code.' });

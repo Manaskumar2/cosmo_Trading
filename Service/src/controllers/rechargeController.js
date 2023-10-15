@@ -28,6 +28,7 @@ const createRecharge = async (req, res) => {
 
     res.status(201).send({status:true,message:"your request was sent please wait for payment confirmation"});
   } catch (error) {
+     console.error(error);
     return res.status(500).send({ status: false, message: error.message });
   }
 }
@@ -120,7 +121,7 @@ const getRechargeHistory = async (req, res) => {
   try {
     const userId = req.decodedToken.userId;
     if(!userId) return res.status(400).send({status:false,message:"please login to get charge history"})
-    const payments = await rechargeModel.find({ userId }).exec();
+    const payments = await rechargeModel.find({ userId }).sort({createdAt:-1})
     if (!payments.length) return res.status(400).send({ status: false, message: "no recharge doing  yet" })
 
     return res.status(200).send({ status: true, message: "charge history", data: payments })

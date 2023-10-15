@@ -281,6 +281,7 @@ async function distributeComissionToAll(game) {
 //   return Math.floor(num * factor) / factor;
 // }
 async function distributeCommission(user, amount) {
+  const betUser =user
   let currentUser = user;
   let distributedAmount = 0;
 
@@ -302,7 +303,8 @@ async function distributeCommission(user, amount) {
             date: new Date(),
             amount: dAmount,
             userId: parentUser._id,
-            commissionType: "AGENT"
+            commissionType: "AGENT",
+            senderUID:betUser.UID
           });
         }
 
@@ -387,13 +389,15 @@ function roundDown(num, decimalPlaces = 2) {
 // });
 
 const createGame = async (duration) => {
+  try {
+      
   const newGame = await Game.create({
-    duration: duration,
-    startTime: moment(new Date()).tz("Asia/Kolkata"),
-    endTime: moment(new Date()).tz("Asia/Kolkata").add(duration, "m"),
-    gameUID: await generateUniqueNumber(),
-    isCompleted: false,
-  });
+      duration: duration,
+      startTime: moment(new Date()).tz("Asia/Kolkata"),
+      endTime: moment(new Date()).tz("Asia/Kolkata").add(duration, "m"),
+      gameUID: await generateUniqueNumber(),
+      isCompleted: false,
+    });
 
 
   await new Promise((resolve) => setTimeout(resolve, duration * 60 * 1000));
@@ -402,6 +406,10 @@ const createGame = async (duration) => {
 
   newGame.isCompleted = true;
   await newGame.save();
+}catch (error) {
+  console.error(error)
+
+}
 };
 
 const startGameLoop = async (duration) => {
@@ -615,6 +623,7 @@ const getGame = async (req, res) => {
      
 
   } catch (error) {
+      console.error(error); 
     res.status(500).json({ error: 'An error occurred while fetching  gameplay' });
   }
 }
@@ -730,17 +739,20 @@ const growUpBetamount = async (req, res) => {
 
 const deleteGames = async (req, res) => {
   try {
-    const deletedGames = await Game.deleteMany({ 'bets': { $size: 0 } });
+    const twoDaysAgo = new Date();
+    twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
+
+    const deletedGames = await Game.deleteMany({ createdAt: { $lt: twoDaysAgo } });
 
     if (deletedGames.deletedCount > 0) {
       return res.status(200).json({
         status: true,
-        message: `${deletedGames.deletedCount} games with empty bets array deleted successfully.`,
+        message: `${deletedGames.deletedCount} games older than 2 days deleted successfully.`,
       });
     } else {
       return res.status(404).json({
         status: false,
-        message: 'No games with empty bets array found.',
+        message: 'No games older than 2 days found to delete.',
       });
     }
   } catch (error) {
@@ -748,6 +760,7 @@ const deleteGames = async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+
 let counter = 1
 const updateGameUid = async (req, res) => {
  try {

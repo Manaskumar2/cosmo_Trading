@@ -55,7 +55,7 @@ function AdminWithdraw() {
       }
     } catch (error) {
       const errorMessage = error.response ? error.response.data.message : error.message;
-      toast.error(errorMessage || 'Something went wrong', { ...toastProps });
+
     }
   }
   const handleBankData = async (userId) => {

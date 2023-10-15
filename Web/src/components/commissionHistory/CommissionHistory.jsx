@@ -33,17 +33,18 @@ function CommissionHistory() {
     <div className='CommissionHistory'>
       <div className="container">
       <div className="row headingCommission" >
-    <div className="col-5" style={{textAlign:'left'}}>Date</div>
+    <div className="col-5" style={{textAlign:'left'}}>Date & UID</div>
     <div className="col-3"  style={{textAlign:'center'}}>Amount</div>
     <div className="col-4" style={{textAlign:'center'}}>
   Commission Type
 </div>
-
-
   </div>
       {data && data.commissionDetails.map((item, index) => (
   <div className="row commissionHistoryRow" key={index}>
-    <div className="col-5">{new Date(item.createdAt).toLocaleString()}</div>
+    <div className="col-5">
+      {item.senderUID && <p>UID: {item.senderUID} </p> }
+      {new Date(item.createdAt).toLocaleString()}
+      </div>
     <div className="col-3"  style={{textAlign:'center'}}>Rs: {item.amount}</div>
     <div className="col-4" style={{ color: item.commissionType === 'AGENT' ? '#00F2DE' : item.commissionType === 'PREMIUM' ? 'golden' : 'white' , textAlign:'center' }}>
   {item.commissionType}

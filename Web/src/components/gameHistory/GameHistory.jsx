@@ -11,6 +11,7 @@ import Winner from '../../images/icon-winner.svg'
 import Alpha from '../../images/icon-alpha.svg'
 import Beta from '../../images/icon-beta.svg'
 import { UserGameHistory } from '../../Atoms/UserGameHistory';
+import {useNavigate} from 'react-router-dom'
 // import { useRecoilValue } from 'recoil';
 import { CountDownGrowup } from '../../Atoms/CountDownGrowup';
 export const toastProps = {
@@ -24,6 +25,7 @@ export const toastProps = {
 };
 
 function GameHistory({ duration  }) {
+    const navigate=useNavigate()
     const[historyPage,setHistoryPage]=useState(1)
 
     const countDownGrowup = useRecoilValue(CountDownGrowup)
@@ -63,6 +65,10 @@ const endIndex = startIndex + itemsPerPage;
                 return response;
             }
         } catch (error) {
+            if (error.response.status === 403) {
+                navigate('/signIn')
+                return response;
+            }
             const errorMessage = error.response ? error.response.data.message : error.message;
         }
     }

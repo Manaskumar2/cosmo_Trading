@@ -1,7 +1,7 @@
 .PromoNav{background: #001C3E; background-image: url('../../images/belips.png');background-position: bottom; background-repeat: no-repeat; padding:15px 1.5rem;border-bottom: 1px solid #133B77;}
 .PromoNav .row .col-8{color: #FFF;text-align: center;font-family: 'Montserrat';font-size: 1.1rem;font-weight: 500;letter-spacing: 0.00688rem;text-transform: capitalize;}
 .sucurity-body{background: #001C3E;padding: 1.5rem;min-height: 100vh;display: flex;justify-content: center;}
-.sucurity-body p{color: #FFF;font-family: 'Montserrat';font-size: 1.2rem;margin-top: 1rem;}
+.sucurity-body> p{color: #FFF;font-family: 'Montserrat';font-size: 1.2rem;margin-top: 1rem;}
 .sucurity-body input{padding: .4rem;font-family: 'Montserrat';margin-top: 1rem;width: 100%;background: #001C3E;color: #26B5E2;border: 1px solid #26B5E2;outline: none; border-radius: 5px;}
 .sucurity-body button{border-radius: 12.5rem;
     border: 1px solid #FFF;
@@ -31,6 +31,39 @@
 .ReactModal__Content{margin: auto;background: #133B77;}
 .ReactModal__Overlay .ReactModal__Overlay--after-open{display: flex;justify-content: center;align-items: center; }
 /*  */
+.pagination-buttons-container{width: 100%; display: flex; justify-content: center; align-items: center;}
+.pagination-buttons{display: flex; width: 10rem; justify-content: center; align-items: center;}
+.increaseBtn{display: flex;
+    width: 3.75rem;
+    height: 2.875rem;
+    justify-content: center;
+    align-items: center;
+    gap: 0.625rem;
+    background: #045B73;}
+.decreaseBtn{display: flex;
+    width: 3.75rem;
+    height: 2.875rem;
+    justify-content: center;
+    align-items: center;
+    gap: 0.625rem;
+    background: #045B73;}
+.page-count{display: flex;
+    width: 4.75rem;
+    height: 2.875rem;
+    justify-content: center;
+    align-items: center;}
+    .increaseBtn:hover{background: linear-gradient(180deg, #EA3038 0%, #F55860 100%);}
+    .decreaseBtn:hover{background: linear-gradient(180deg, #EA3038 0%, #F55860 100%);}
+    .text-red {
+        color: rgb(193, 12, 12) !important;
+      }
+      .text-green {
+        color: rgb(16, 175, 16) !important;
+      }
+      .transaction-heading{padding: 1rem 0; color: #068bbc;}
+      .transaction-data{padding: .3rem 0; color: #eaeaea; border: 1px solid #26B5E2; border-radius:5px ; }
+      .transaction-data > .col-6 , .transaction-data > .col-3{text-align: left; font-size: 1.1rem;display: flex;flex-direction: column;align-items: center;justify-content: center;}
+      .transaction-heading >.col-6{text-align: center;}
 @media(min-width:500px){
     .security{max-width:500px; margin:0 auto;}
     .ReactModal__Content{width:30vw;}

@@ -51,7 +51,7 @@
 /* .myTeam .inquries .options{} */
 
 .myTeam .table-responsive .tableBodyRow td{border-bottom: 0;}
-.myTeam .table-responsive .tableBodyRow td .details-btn{padding: 5px 10px;}
+.myTeam .table-responsive .tableBodyRow td .details-btn{padding: 5px 10px;    margin-top: 18px;}
 
 .myTeam .popup{background: #054476; padding: 50px 30px;}
 .myTeam .popup .popup-content{text-align: center;}

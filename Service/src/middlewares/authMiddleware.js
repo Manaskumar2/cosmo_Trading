@@ -15,7 +15,7 @@ const authentication = (req, res, next) => {
 
     jwt.verify(token, process.env.JWT_TOKEN, function (err, data) {
       if (err) {
-        return res.status(400).send({ status: false, message: err.message })
+        return res.status(403).send({ status: false, message: err.message })
       } else {
         req.decodedToken = data;
         next()

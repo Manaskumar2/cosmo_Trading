@@ -63,6 +63,7 @@ const getBankAccountbyId = async (req, res) => {
 
 
     } catch (error) {
+      console.error(error);
         res.status(500).json({ error: false, message: 'Internal Server Error' });
   }
   
@@ -171,6 +172,7 @@ const updateBankAccountAnduserDetails = async (req, res) => {
     return res.status(200).json({ status: true,message:"sucessfully" ,bankAccount: updatedBankAccount, user: updatedUser });
 
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: 'Internal Server Error', message: error.message });
   }
 };

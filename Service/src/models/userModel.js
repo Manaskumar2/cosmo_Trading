@@ -1,15 +1,4 @@
 const mongoose = require("mongoose");
-const commissionSchema = new mongoose.Schema({
-  date: {
-    type: Date,
-    required: true,
-  },
-  amount: {
-    type: Number,
-    required: true,
-  },
-}, { timestamps: true });
-
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -75,7 +64,6 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
-  commissions: [commissionSchema],
   isDeleted: {
     type: Boolean,
     default: false,
