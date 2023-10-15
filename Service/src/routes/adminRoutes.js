@@ -11,7 +11,7 @@ const { getPaymentRequest, updatePaymentRequest } = require("../controllers/rech
 const {getpremiumRequest,updatePremiumUser, getPremiumRequestById, getPremiumDetails} =  require("../controllers/premiumController")
 const { getWithdrawRequest, confirmRequest } = require("../controllers/userWithdrawController");
 const { deleteGames, growUpBetamount } = require("../controllers/gameController");
-const { riseUpBetamount } = require("../controllers/secondGameController");
+const { riseUpBetamount, delete2ndGames } = require("../controllers/secondGameController");
 const {getCompanyDetails, companyRechargeAndWithdraw} = require("../controllers/companyWalletController");
 const { franchiseCommissions } = require("../controllers/commissionController");
 const { uploadImage, getImage, deleteImages } = require("../controllers/popUpimageController");
@@ -56,13 +56,13 @@ router.get("/getWithdrawRequest", authentication, adminAuthorization, getWithdra
 router.get("/growUpbetAmount", authentication, adminAuthorization, growUpBetamount)
 
 
-router.delete("/delete", authentication,adminAuthorization,deleteGames)
+router.delete("/delete", authentication,deleteGames)
 //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>RiseUp<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<//
 router.get("/riseUpbet", authentication, adminAuthorization, riseUpBetamount)
 
 
 
-
+router.delete("/deleteRiseUp",authentication,delete2ndGames)
 //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>companyDetails<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<//
 
 router.get("/companyDetails",authentication,adminAuthorization,getCompanyDetails)

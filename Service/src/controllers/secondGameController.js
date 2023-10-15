@@ -914,17 +914,20 @@ const get2ndGameHistory = async (req, res) => {
 
 const delete2ndGames = async (req, res) => {
   try {
-    const deletedGames = await Game.deleteMany({ 'bets': { $size: 0 } });
+    const twoDaysAgo = new Date();
+    twoDaysAgo.setDate(twoDaysAgo.getDate() - 1);
+
+    const deletedGames = await Game.deleteMany({ createdAt: { $lt: twoDaysAgo } });
 
     if (deletedGames.deletedCount > 0) {
       return res.status(200).json({
         status: true,
-        message: `${deletedGames.deletedCount} games with empty bets array deleted successfully.`,
+        message: `${deletedGames.deletedCount} games older than 2 days deleted successfully.`,
       });
     } else {
       return res.status(404).json({
         status: false,
-        message: 'No games with empty bets array found.',
+        message: 'No games older than 2 days found to delete.',
       });
     }
   } catch (error) {

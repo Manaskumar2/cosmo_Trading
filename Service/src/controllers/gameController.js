@@ -740,7 +740,7 @@ const growUpBetamount = async (req, res) => {
 const deleteGames = async (req, res) => {
   try {
     const twoDaysAgo = new Date();
-    twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
+    twoDaysAgo.setDate(twoDaysAgo.getDate() - 1);
 
     const deletedGames = await Game.deleteMany({ createdAt: { $lt: twoDaysAgo } });
 
