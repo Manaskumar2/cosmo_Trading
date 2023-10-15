@@ -65,7 +65,7 @@ router.post('/submit-payment',authentication,createRecharge)
 
 router.get("/rechargeHistory", authentication,getRechargeHistory)
 
-router.get("/getCommissionDetails/:date", authentication,getCommissionByDate)
+// router.get("/getCommissionDetails/:date", authentication,getCommissionByDate)
 
 
 //...............................................withdrows****************//
