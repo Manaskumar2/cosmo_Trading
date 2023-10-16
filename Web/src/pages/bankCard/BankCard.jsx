@@ -19,6 +19,7 @@ export const toastProps = {
 };
 function BankCard() {
   const navigate =useNavigate()
+  const [userBankCard, setUserBankCard] = useState(null)
   const [bankName, setbankName] = useState('')
   const [accountHolderName, setaccountHolderName] = useState('')
   const [bankAccountNo, setbankAccountNo] = useState('')
@@ -30,6 +31,27 @@ function BankCard() {
 
   const auth = useRecoilValue(AuthState)
 
+  const getBankCard = async () => {
+    try {
+      let token = auth.authToken
+      let userId = auth._id
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/getBankCard/${userId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      }
+      );
+      if (response.status === 200) {
+        setUserBankCard(response.data.data)
+        return response;
+      }
+    } catch (error) {
+      if (error.response.status === 403) {
+        navigate('/signIn')
+        return response;
+    }
+      const errorMessage = error.response ? error.response.data.message : error.message;
+      toast.error(errorMessage || "Something went wrong", { ...toastProps });
+  }
+  }
   const handleBankData = async (e) => {
     e.preventDefault();
     if (bankAccountNo !== confirmBankAccountNo) {
@@ -66,8 +88,9 @@ function BankCard() {
       const errorMessage = error.response ? error.response.data.message : error.message;
       toast.error(errorMessage || "Something went wrong", { ...toastProps });
   }
-
   }
+  useEffect(()=>{getBankCard()},[])
+
 
   return (
     <div className='bankCard'>
@@ -81,6 +104,8 @@ function BankCard() {
           </div>
         </div>
       </div>
+
+      
       <div className='bankCardbody'>
 
         <div className="container">
@@ -89,6 +114,7 @@ function BankCard() {
             <div className="col-10">Add Bank Account</div>
           </div>
         </div>
+        
 <Toaster/>
 
         <div className="form-container">
@@ -99,7 +125,7 @@ function BankCard() {
             </div>
 
             <div className='bank-Card-box'>
-              <label className='label'>Your Full</label>
+              <label className='label'>Your Full Name</label>
               <input type="text" placeholder='It is required' value={accountHolderName} onChange={(e) => { setaccountHolderName(e.target.value) }} />
             </div>
 

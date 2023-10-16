@@ -5,7 +5,7 @@ const{authentication,adminAuthorization} = require("../middlewares/authMiddlewar
 const gameController = require("../controllers/gameController")
 const { uploadQrCode, getAllImageURLs } = require('../controllers/qrCodeController')
 const { createRecharge, getRechargeHistory } = require("../controllers/rechargeController")
-const { createBankAccount } = require("../controllers/withdrawAccountController");
+const { createBankAccount, getBankAccountbyId } = require("../controllers/withdrawAccountController");
 const { applyPremiumUser, getpremiumRequest } = require("../controllers/premiumController");
 const { withdrawrequest, withdrawalHistory } = require("../controllers/userWithdrawController");
 const { get2ndGame, bet2ndController, get2ndGameHistory, riseUpUserBettingHistory,update2ndGameUid } = require("../controllers/secondGameController");
@@ -65,15 +65,15 @@ router.post('/submit-payment',authentication,createRecharge)
 
 router.get("/rechargeHistory", authentication,getRechargeHistory)
 
-// router.get("/getCommissionDetails/:date", authentication,getCommissionByDate)
+router.get("/getCommissionDetails/:date", authentication,getCommissionByDate)
 
 
 //...............................................withdrows****************//
 
 router.post("/createbankAccount", authentication, createBankAccount)
 router.post("/createWithdrawalRequest", authentication, withdrawrequest)
-router.get("/getWithdrawalHistory/:userId", authentication,withdrawalHistory)
-
+router.get("/getWithdrawalHistory/:userId", authentication, withdrawalHistory)
+router.get("/getBankCard/:userId",authentication,getBankAccountbyId)
 
 //...............................................premium ********************************//
 

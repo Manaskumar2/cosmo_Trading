@@ -7,8 +7,10 @@ import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { AuthState } from '../../Atoms/AuthState'
 import { useRecoilValue, useRecoilState } from 'recoil'
+import { useNavigate } from 'react-router-dom'
 
 function WIthdrawHistoryPage() {
+  const navigate = useNavigate()
   const auth = useRecoilValue(AuthState)
   const [rechargeHistory, setRechargeHistory] = useState(null)
   const getStatusColor = (status) => {
@@ -33,6 +35,10 @@ function WIthdrawHistoryPage() {
         return response;
       }
     } catch (error) {
+      if (error.response.status === 403) {
+        navigate('/signIn')
+        return response;
+    }
       const errorMessage = error.response ? error.response.data.message : error.message;
 
     }

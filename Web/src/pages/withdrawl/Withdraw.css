@@ -2,6 +2,7 @@
 .PromoNav .row .col-8{color: #FFF;text-align: center;font-family: 'Montserrat';font-size: 1.1rem;font-weight: 500;letter-spacing: 0.00688rem;text-transform: capitalize;}
 .recharge{background: #001C3E;overflow: hidden;}
 .payment-heading{color: #FFF;font-family: Montserrat;font-size: 1.125rem;font-style: normal;font-weight: 500;margin-bottom: 1.5rem;}
+.bankCardBox{color: #fff; background: linear-gradient(143deg, #296DAC 0%, #2FB0E7 100%);padding: 1.2rem; margin: 1.2rem 0;border-radius: 1rem; border: 2px solid #FFD700;}
 .recharge-btn .row .col-10 {border: 0; outline: none;background: #033066; padding: 1rem;width: 93%;}
 .recharge-btn .row .col-10 :hover .col-6{background: linear-gradient(180deg, #E82A33 0%, #F55961 100%);}
 .recharge-btn .row button p{color: #FFF;font-family: Montserrat;font-size: 1rem;font-style: normal;font-weight: 400;letter-spacing: 0.02rem; margin-top: .5rem;}

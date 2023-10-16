@@ -67,7 +67,9 @@ const updatePaymentRequest = async (req, res) => {
   try {
     const paymentId  = req.params.paymentId;
   
-    const { status } = req.body;
+    const { status, approvedBy } = req.body;
+    if (!approvedBy) return res.status(400).send({ status: false, message: "please enter your name to approved" })
+    if (!validation.isValidName(approvedBy)) return res.status(400).send({ status: false, message:"Please enter valid name" })
 
     const manualPayment = await rechargeModel.findById(paymentId);
 
@@ -78,6 +80,7 @@ const updatePaymentRequest = async (req, res) => {
 
     if (status === 'confirm') {
       manualPayment.status = 'confirmed';
+      manualPayment.approvedBy = approvedBy;
 
 
       const user = await userModel.findById(manualPayment.userId);
@@ -105,6 +108,7 @@ const updatePaymentRequest = async (req, res) => {
       await user.save();
     } else if (status === 'cancel') {
       manualPayment.status = 'cancelled';
+      manualPayment.approvedBy = approvedBy;
     } else {
       return res.status(400).json({ error: 'Invalid status' });
     }

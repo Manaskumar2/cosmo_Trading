@@ -11,6 +11,7 @@ import { useRecoilValue, useRecoilState } from 'recoil'
 import { AuthState } from '../../Atoms/AuthState'
 import { PremiumState } from '../../Atoms/Premium'
 import '../accountSecurity/AccountSecurity.css'
+import {useNavigate} from 'react-router-dom'
 export const toastProps = {
     position: "top-center",
     duration: 2000,
@@ -22,6 +23,7 @@ export const toastProps = {
 };
 
 function PremiumApply() {
+    const navigate = useNavigate()
     const [userData,setUserData]=useState(null)
     const auth = useRecoilValue(AuthState);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -58,7 +60,10 @@ function PremiumApply() {
                 return response;
             }
         } catch (error) {
-            
+            if (error.response.status === 403) {
+                navigate('/signIn')
+                return response;
+            }
             const errorMessage = error.response ? error.response.data.message : error.message;
             toast.error(errorMessage || "Something went wrong", { ...toastProps });
         }

@@ -17,8 +17,10 @@ import { AuthState } from '../../Atoms/AuthState';
 import wp from './wp.svg';
 import axios from 'axios';
 import { CgCloseO } from 'react-icons/cg';
+import { useNavigate } from 'react-router-dom'; 
 
 function Home() {
+    const navigate = useNavigate()
     const auth = useRecoilValue(AuthState);
     const [showPopup, setShowPopup] = useState(false);
     const [popUpImage, setImage] = useState('');
@@ -61,6 +63,10 @@ function Home() {
                 return response;
             }
         } catch (error) {
+            if (error.response.status === 403) {
+                navigate('/signIn')
+                return response;
+            }
             const errorMessage = error.response ? error.response.data.message : error.message;
 
         }

@@ -56,13 +56,13 @@ router.get("/getWithdrawRequest", authentication, adminAuthorization, getWithdra
 router.get("/growUpbetAmount", authentication, adminAuthorization, growUpBetamount)
 
 
-router.delete("/delete", authentication,deleteGames)
+router.delete("/delete", authentication,adminAuthorization,deleteGames)
 //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>RiseUp<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<//
 router.get("/riseUpbet", authentication, adminAuthorization, riseUpBetamount)
 
 
 
-router.delete("/deleteRiseUp",authentication,delete2ndGames)
+router.delete("/deleteRiseUpGameHistory",authentication,adminAuthorization,delete2ndGames)
 //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>companyDetails<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<//
 
 router.get("/companyDetails",authentication,adminAuthorization,getCompanyDetails)

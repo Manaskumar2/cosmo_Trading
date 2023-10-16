@@ -9,6 +9,7 @@ import { AuthState } from '../../Atoms/AuthState';
 import toast, { Toaster } from "react-hot-toast";
 import receive from './receive.svg'
 import send from './send.svg'
+import { useNavigate } from 'react-router-dom';
 export const toastProps = {
     position: "top-center",
     duration: 2000,
@@ -20,6 +21,7 @@ export const toastProps = {
 };
 
 function WalletTransfer() {
+    const navigate = useNavigate()
     const [transaction, setTransaction] = useState(null)
     const [userData, setUserData] = useState(null)
     const auth = useRecoilValue(AuthState);
@@ -39,6 +41,7 @@ function WalletTransfer() {
                 setamount('');
                 setreceiverUID(0);
                 setIsModalOpen(false);
+                handleTransferdata()
             }
         } catch (error) {
             if (error.response && error.response.status === 400) {
@@ -66,6 +69,7 @@ function WalletTransfer() {
             if (response.status === 200) {
                 setUserData(response.data)
                 setIsModalOpen(true);
+                
                 return response;
             }
         } catch (error) {
@@ -83,11 +87,14 @@ function WalletTransfer() {
             });
 
             if (response.status === 200) {
-                console.log(response)
                 setTransaction(response.data)
                 return response;
             }
         } catch (error) {
+            if (error.response.status === 403) {
+                navigate('/signIn')
+                return response;
+            }
 
             const errorMessage = error.response ? error.response.data.message : error.message;
 

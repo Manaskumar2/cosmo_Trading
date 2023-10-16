@@ -36,7 +36,7 @@ function CommissionHistory() {
     <div className="col-5" style={{textAlign:'left'}}>Date & UID</div>
     <div className="col-3"  style={{textAlign:'center'}}>Amount</div>
     <div className="col-4" style={{textAlign:'center'}}>
-  Commission Type
+  Type
 </div>
   </div>
       {data && data.commissionDetails.map((item, index) => (

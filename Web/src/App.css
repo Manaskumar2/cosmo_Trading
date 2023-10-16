@@ -15,6 +15,7 @@
 .PromoNav {
   padding-left: 15px !important;
 }
+.name-input-admin{padding: .3rem .5rem; border:1px solid #073771;background-color: #133B77;color: #fff;border-radius: .2rem;width: 100%;margin-top: 1rem ;}
 .login-user{background-color: rgb(33, 116, 223);color: #fff; padding: .3rem 1rem;border: 0;outline: none;width: 6rem;}
 .admin-rightSection{padding: 1.5rem;background-color:#001C3E;width: 100%;}
 .activate{background-color: rgb(43, 224, 43);color: #fff; padding: .3rem 1rem;border: 0;outline: none;width: 6rem;}

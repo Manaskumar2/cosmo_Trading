@@ -10,6 +10,7 @@ background: #CC4217;height: 3rem; width: 3rem;display: flex; justify-content: ce
 .bank-Card-box input{    border: 1px solid #1A5E9D;background: #04285F;width: 100%;display: flex;height: 3.125rem;padding: 0.5rem;align-items: center;margin-top: .5rem;color: #FFF;font-family: Montserrat;font-size: 1rem;
 font-weight: 400;letter-spacing: 0.02rem;}
 .label{color: #1494A9;font-family: Montserrat;font-size: 0.875rem;font-style: normal;font-weight: 400;line-height: normal;}
+
 .withdraw-Button button{border-radius: 6.25rem;
     border: 2px solid #FFF;
     background: linear-gradient(139deg, #0F7A2D 0%, #148C20 55.21%, #40CB78 100%);border: 0; outline: none; width: 100%;padding: 0.875rem 1.25rem;color: #FFF;

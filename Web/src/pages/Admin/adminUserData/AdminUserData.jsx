@@ -22,6 +22,7 @@ export const toastProps = {
 };
 
 function AdminUserData() {
+  const [uidFilter, setUidFilter] = useState('');
   const [modalShow, setModalShow] = React.useState(false);
   const handleClose=()=>{setModalShow(false);setbankName('');
   setaccountHolderName('');
@@ -93,23 +94,32 @@ function AdminUserData() {
     }
   }
   const handleUser = async () => {
-    
     try {
       let token = authData.authToken;
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/getAllUsers`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-          params: { queryPageIndex, queryPageFilter }
-        },
-      );
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/getAllUsers`, {
+        headers: { Authorization: `Bearer ${token}` },
+        params: { queryPageIndex, queryPageSortBy },
+      });
+  
       if (response.status === 200) {
-        setAllUser(response)
-        return response;
+        const lowerCaseQuery = queryPageFilter.toLowerCase();
+        const filteredUsers = response.data.response.getUsers.filter((user) => {
+          const phoneNumberMatch = user.phoneNumber.includes(lowerCaseQuery);
+          const uidMatch = user.UID.toString().toLowerCase().includes(lowerCaseQuery);
+          return phoneNumberMatch || uidMatch;
+        });
+  
+        setAllUser({ ...response, data: { ...response.data, response: { ...response.data.response, getUsers: filteredUsers } } });
       }
     } catch (error) {
       const errorMessage = error.response ? error.response.data.message : error.message;
+      console.error("An error occurred:", errorMessage);
     }
-  }
+  };
+  
+  
+  
+  
   const getAllUserData = async (userId) => {
     
     try {
@@ -248,7 +258,13 @@ function AdminUserData() {
         <Side />
         <div className='admin-rightSection'>
           <Toaster />
-          <input type="number" className='user-input' value={queryPageFilter} onChange={(e) => { setqueryPageFilter(e.target.value) }} placeholder='Search Number / UID' />
+          <input
+  type="text"
+  className="user-input"
+  value={uidFilter}
+  onChange={(e) => setUidFilter(e.target.value)}
+  placeholder="Search UID"
+/>
 
           <table>
             <thead>
@@ -268,8 +284,12 @@ function AdminUserData() {
               </tr>
             </thead>
             <tbody>
-              {allUser &&
-                allUser.data.response.getUsers.map((user, index) => (
+            {allUser &&
+  allUser.data.response.getUsers
+    .filter((user) =>
+      String(user.UID).toLowerCase().includes(uidFilter.toLowerCase())
+    )
+    .map((user, index) => (
                   <tr key={index} className='table-row'>
                     <td>{user.UID}</td>
                     <td>{user.name}</td>

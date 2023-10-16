@@ -37,6 +37,10 @@ function Wallet() {
                 return response;
             }
         } catch (error) {
+            if (error.response.status === 403) {
+                navigate('/signIn')
+                return response;
+            }
             const errorMessage = error.response ? error.response.data.message : error.message;
 
         }
@@ -56,6 +60,10 @@ function Wallet() {
                 return response;
             }
         } catch (error) {
+            if (error.response.status === 403) {
+                navigate('/signIn')
+                return response;
+            }
             const errorMessage = error.response ? error.response.data.message : error.message;
 
         }

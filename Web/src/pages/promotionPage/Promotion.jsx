@@ -13,9 +13,10 @@ import back from '../../images/back-button 1.svg';
 import gift from '../../../../SVG/gift-box 1.svg';
 import paper from './papers 1.svg';
 import line from './Line 28.svg';
-
+import { useNavigate } from 'react-router-dom';
 // /getReferralStats/:referralID
 function Promotion() {
+    const navigate=useNavigate()
     const auth = useRecoilValue(AuthState)
     const [userData, setUserdata] = useRecoilState(UserDetails)
     const [activeTab, setActiveTab] = useState(1)
@@ -47,6 +48,10 @@ function Promotion() {
                 return response;
             }
         } catch (error) {
+            if (error.response.status === 403) {
+                navigate('/signIn')
+                return response;
+            }
             const errorMessage = error.response ? error.response.data.message : error.message;
 
         }

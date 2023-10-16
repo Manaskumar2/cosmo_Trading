@@ -19,6 +19,8 @@ export const toastProps = {
 };
 
 function AdminRecharge() {
+
+  const [approvedBy, setapprovedBy] = useState('')
   const [status, setStatus] = useState('confirmed')
   const authData = useRecoilValue(AdminAuthState)
   const [user, setUser] = useState(null)
@@ -90,22 +92,24 @@ function AdminRecharge() {
     }
   }
   const handlePayment = async (paymentId, status) => {
+    if(approvedBy!==''){
     try {
       let token = authData.authToken;
-      const response = await axios.patch(`${import.meta.env.VITE_API_URL}/admin/confirm-payment/${paymentId}`, { status },
+      const response = await axios.patch(`${import.meta.env.VITE_API_URL}/admin/confirm-payment/${paymentId}`, { status ,approvedBy },
         {
           headers: { Authorization: `Bearer ${token}` },
         },
       );
       if (response.status === 200) {
         toast.success("Recharge request confirmed", { ...toastProps });
+        setapprovedBy('')
         handlePaymentRequest()
         return response;
       }
     } catch (error) {
       const errorMessage = error.response ? error.response.data.message : error.message;
       toast.error(errorMessage || 'Something went wrong', { ...toastProps });
-    }
+    }}else{toast.error( 'Write Your Name First', { ...toastProps });}
   }
   useEffect(() => { handlePaymentRequest() }, [status])
 
@@ -143,6 +147,8 @@ function AdminRecharge() {
                   <p style={{ marginRight: "3.5rem" }}>Order: {item._id}</p>
                   <p style={{ marginRight: "3.5rem" }}>Amount: {item.amount}</p>
                   <p style={{ marginRight: "3.5rem" }}>Status: {item.status}</p>
+                  {status !== 'pending' && <p style={{ marginRight: "3.5rem" }}>Action Done By: {item.approvedBy}</p>}
+                  
                   {/* <p style={{ marginRight: ".8rem" }}>Time: {item.createdAt}</p> */}
                   
 
@@ -152,8 +158,9 @@ function AdminRecharge() {
                   <p>Phone: {user && user.data.data.userDetails.phoneNumber}</p>
                   <p>Upi ReferenceNo: {item.upiReferenceNo}</p>
                   <p>Upi Id: {item.upiId}</p>
+                  {/* <p>Action Done By: {item.approvedBy}</p> */}
                   {item.status !== 'confirmed' && item.status !== 'cancelled' && (
-  <>
+  <> <div > <input type="text" value={approvedBy}  onChange={(e)=>{setapprovedBy(e.target.value)}} placeholder='Enter Name' className='name-input-admin' style={{width:'14rem'}}/> </div>
     <button className='prime-approve-btn' onClick={() => { handlePayment(item._id, 'confirm') }}>Approve</button>
     <button onClick={() => { handlePayment(item._id, 'cancel') }} className='prime-reject-btn'>Reject</button>
   </>

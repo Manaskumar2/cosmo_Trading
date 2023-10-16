@@ -31,6 +31,9 @@ const manualPaymentSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
+    approvedBy: {
+        type: String,
+    },
     
   
 },{timestamps:true});

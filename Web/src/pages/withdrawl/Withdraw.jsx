@@ -32,10 +32,28 @@ export const toastProps = {
 
 
 function Withdraw() {
+  const [userBankCard, setUserBankCard] = useState(null);
   const [userData, setUserData] = useState(null);
   const auth = useRecoilValue(AuthState)
   const [withdrawAmount, setAmount] = useState(0);
   const [selectedRoute, setSelectedRouteButton] = useState(true);
+  const getBankCard = async () => {
+    try {
+      let token = auth.authToken
+      let userId = auth._id
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/getBankCard/${userId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      }
+      );
+      if (response.status === 200) {
+        setUserBankCard(response.data.data)
+        return response;
+      }
+    } catch (error) {
+      const errorMessage = error.response ? error.response.data.message : error.message;
+      toast.error(errorMessage || "Something went wrong", { ...toastProps });
+  }
+  }
 
   const handleUserdata = async () => {
     try {
@@ -55,6 +73,7 @@ function Withdraw() {
     }
   }
   useEffect(() => {
+    getBankCard()
     handleUserdata()
   }, []);
 
@@ -85,6 +104,10 @@ function Withdraw() {
             return response;
         }
     } catch (error) {
+      if (error.response.status === 403) {
+        navigate('/signIn')
+        return response;
+    }
         const errorMessage = error.response ? error.response.data.message : error.message;
         toast.error(errorMessage || "Something went wrong", { ...toastProps });
     }
@@ -125,20 +148,49 @@ function Withdraw() {
       <div className="container recharge-btn">
         <div className="row">
           <button
-            className={`col-10 ${selectedRoute === false ? 'transaction' : ''}`}
+            className='col-10 transaction'
             style={{ borderRight: "1px solid #024672", borderBottom: "1px solid #024672", borderRadius: "10px " }}
             onClick={() => setSelectedRouteButton(!selectedRoute)}
           >
             <img src={icon} alt="" />
             <p>Bank Card</p>
           </button>
+          {/* <button
+            className={`col-10 ${selectedRoute === false ? 'transaction' : ''}`}
+            style={{ borderRight: "1px solid #024672", borderBottom: "1px solid #024672", borderRadius: "10px " }}
+            onClick={() => setSelectedRouteButton(!selectedRoute)}
+          >
+            <img src={icon} alt="" />
+            <p>Bank Card</p>
+          </button> */}
 
         </div>
       </div>
 
 
       <div className="container-fluid recharge-bottom">
+      {userBankCard ?
+      <div className="container">
+      <div className="bankCardBox">
+        <>
+        <h3>Your bank Card</h3>
+        <p>User Name: {userBankCard.accountHolderName} </p>
+        <p>Bank Name: {userBankCard.bankName} </p>
+        <p>Account Number: {String(userBankCard.bankAccountNo).slice(0, 4) + 'X'.repeat(String(userBankCard.bankAccountNo).length - 6) + String(userBankCard.bankAccountNo).slice(-4)}</p>
+        <p>IFSC Code: {userBankCard.ifscCode} </p>
+        </>
+      </div>
+    </div>:<div className="container">
+      <div className="bankCardBox">
+        <>
+        <h4>You have not added your Bank Card.</h4>
+        <h4>Please add Bank Card first.</h4>
+        
+        </>
+      </div>
+    </div>}
         <div className="container" style={{ display: 'flex', justifyContent: 'center' }}>
+        
           <div className="row inputRow">
             <div className="col-2"><img src={rupee} alt="" /></div>
             <div className='col-10'><input value={withdrawAmount} type="number" onChange={(e) => { setAmount(e.target.value) }} placeholder='Enter the amount' /></div>

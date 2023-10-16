@@ -10,7 +10,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import { AuthState } from '../../Atoms/AuthState';
 import { useRecoilValue } from 'recoil';
 import { RechargeAmount } from '../../Atoms/RechargeAmount';
-
+import {useNavigate} from 'react-router-dom'
 export const toastProps = {
     position: 'top-center',
     duration: 2000,
@@ -22,6 +22,7 @@ export const toastProps = {
 };
 
 function Upi() {
+    const navigate=useNavigate()
     const auth = useRecoilValue(AuthState);
     const money = useRecoilValue(RechargeAmount);
     const [upiData, setUpiData] = useState(null);
@@ -65,6 +66,10 @@ function Upi() {
                     setUpiData(response.data);
                 }
             } catch (error) {
+                if (error.response.status === 403) {
+                    navigate('/signIn')
+                    return response;
+                }
                 const errorMessage = error.response ? error.response.data.message : error.message;
                 toast.error(errorMessage || 'Something went wrong', { ...toastProps });
             }

@@ -5,9 +5,23 @@ import count3 from '../../images/count3.svg';
 import './Count.css';
 
 function OnlineCount() {
+  const [number, setNumber] = useState(543);
+
+  useEffect(() => {
+    const currentDate = new Date();
+    const currentDay = currentDate.getDate();
+
+    // Define the number to increment by every day
+    const incrementBy = 13;
+
+    // Check if today is the 1st day of the month
+    if (currentDay === 1) {
+      setNumber((prevNumber) => prevNumber + incrementBy);
+    }
+  }, []);
     const playersNumbersArray = [5012, 5101, 5063, 5121, 5151, 5085, 5099, 5106, 5128, 5109, 5060, 5023];
   const [playersCount, setPlayersCount] = useState(playersNumbersArray[0]);
-  const onlineNumbersArray = [4013, 3614, 4095, 3916, 4077, 4218, 4339, 4020, 4321, 4022, 3523, 3664, 4013, 3614, 4095, 3916, 4077, 4218, 4339, 4020, 4321, 4022, 3523, 3664, 4013, 3614, 4095, 3916, 4077, 4218, 4339, 4020, 4321, 4022, 3523, 3664, 4013, 3614, 4095, 3916, 4077, 4013, 3614, 4095, 3916, 4077, 4218, 4339, 4020, 4321, 4022, 3523, 3664, 4013, 3614, 4095, 3916, 4077, 4218, 4339, 4020, 4321, 4022, 3523, 3664, 4218, 4339, 4020, 4321, 4022, 3523, 3664];
+  const onlineNumbersArray = [403, 484, 495, 516, 477, 418, 439, 420, 421, 422, 523, 464, 413, 414, 495, 516, 477, 418, 439, 420, 431, 422, 523, 464, 513, 514, 495, 516, 477, 428, 439, 420, 421, 422, 523, 564, 413, 514, 495, 516, 4077, 403, 526, 495, 316, 407, 421, 433, 420, 431, 402, 523, 564, 403, 414, 495, 516, 477, 421, 439, 420, 432, 422, 523, 464, 421, 439, 420, 421, 422, 523, 464];
 
   const [onlineCount, setOnlineCount] = useState(onlineNumbersArray[0]);
   
@@ -77,7 +91,7 @@ function OnlineCount() {
         <div className="online_count_row">
           <div className="online_count_col">
             <div className='count-logo'><img src={count3} alt="" /></div>
-            <div className='num'>{playersCount}</div>
+            <div className='num'>{number}</div>
             <p>Players</p>
           </div>
           <div className="online_count_col">

@@ -99,10 +99,11 @@ function AdminPrime() {
 <button className={status==='rejected'?'col-4 active-tab-btn-adminPage' : 'col-4 tab-btn'} onClick={() => { setStatus('rejected') }}>Reject List</button>
 </div>
         <Toaster/>
+        <Accordion >
           {premiumState && premiumState.data && premiumState.data.map((item, index) => (
-            <Accordion key={index}>
-              <Accordion.Item eventKey="0">
-                <Accordion.Header onClick={() => { handleUser(item.userId) }} className='admin-prime-head'>
+            
+              <Accordion.Item key={index} eventKey={index}>
+                <Accordion.Header onClick={() => { handleUser(item.userId) }} className='admin-prime-head' >
                   <div>user Id: {item.userId}</div>
                   <div>Amount: {item.amount}</div>
                   <div>Status: {item.status}</div>
@@ -122,8 +123,9 @@ function AdminPrime() {
 
                 </Accordion.Body>
               </Accordion.Item>
-            </Accordion>
+            
           ))}
+          </Accordion>
         </div>
       </div>
     </div>

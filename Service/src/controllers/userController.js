@@ -404,11 +404,63 @@ const getUserDetailsByUserId = async (req, res) => {
   }
 };
 
+// const getDownlineDetails = async (req, res) => {
+//   try {
+//     const userId = req.params.userId;
+//     const level = parseInt(req.query.level) || 1;
+//     const limit = parseInt(req.query.limit) || 10;
+
+//     const user = await userModel.findById(userId);
+
+//     if (!user) {
+//       res.status(404).json({ error: 'User not found' });
+//       return;
+//     }
+
+//     const getDownline = async (user, currentLevel) => {
+//       if (currentLevel === level) {
+//         return [
+//           {
+//             phoneNumber: user.phoneNumber || null,
+//             UID: user.UID || null,
+//             referralDate: user.createdAt || null,
+//             name: user.name || null,
+//             downline: [],
+//           }
+//         ];
+//       }
+
+//       const downlineDetails = [];
+//       for (const downlineUser of user.downline) {
+//         if (downlineUser.user) {
+//           const subUser = await userModel.findById(downlineUser.user._id);
+//           if (subUser) {
+//             const subUserDownline = await getDownline(subUser, currentLevel + 1);
+//             downlineDetails.push(...subUserDownline);
+//           }
+//         }
+//       }
+
+//       return downlineDetails;
+//     };
+
+//     const downlineDetails = await getDownline(user, 1);
+
+//     res.json({
+//       level: level,
+//       totalUsers: downlineDetails.length,
+//       downlineDetails: downlineDetails.slice(0, limit),
+//     });
+//   } catch (error) {
+//     console.error('Error fetching downline user details:', error);
+//     res.status(500).json({ error: 'An error occurred while fetching downline user details' });
+//   }
+// };
+
 const getDownlineDetails = async (req, res) => {
   try {
     const userId = req.params.userId;
     const level = parseInt(req.query.level) || 1;
-    const limit = parseInt(req.query.limit) || 10;
 
     const user = await userModel.findById(userId);
 
@@ -449,14 +501,13 @@ const getDownlineDetails = async (req, res) => {
     res.json({
       level: level,
       totalUsers: downlineDetails.length,
-      downlineDetails: downlineDetails.slice(0, limit),
+      downlineDetails: downlineDetails,
     });
   } catch (error) {
     console.error('Error fetching downline user details:', error);
     res.status(500).json({ error: 'An error occurred while fetching downline user details' });
   }
 };
-
 
 const getReferralStats = async (req, res) => {
   try {
@@ -616,45 +667,45 @@ const activeUser = async (req, res) => {
     }
 };
 
-// const getCommissionByDate = async (req, res) => {
-//   try {
+const getCommissionByDate = async (req, res) => {
+  try {
     
-//     const requestedDate = new Date(req.params.date);
+    const requestedDate = new Date(req.params.date);
 
-//     if (isNaN(requestedDate)) {
-//       return res.status(400).json({ status: false, message: "Invalid date format" });
-//     }
+    if (isNaN(requestedDate)) {
+      return res.status(400).json({ status: false, message: "Invalid date format" });
+    }
 
     
-//     const userId = req.decodedToken.userId;
+    const userId = req.decodedToken.userId;
 
 
-//     const user = await userModel.findById(userId);
+    const user = await userModel.findById(userId);
 
-//     if (!user) {
-//       return res.status(404).json({ status: false, message: "User not found" });
-//     }
+    if (!user) {
+      return res.status(404).json({ status: false, message: "User not found" });
+    }
 
-//     const commissionsForDate = user.commissions.filter((commission) => {
-//       const commissionDate = new Date(commission.date);
-//       return commissionDate.toDateString() === requestedDate.toDateString();
-//     });
+    const commissionsForDate = user.commissions.filter((commission) => {
+      const commissionDate = new Date(commission.date);
+      return commissionDate.toDateString() === requestedDate.toDateString();
+    });
 
-//     const totalCommissionAmount = commissionsForDate.reduce((total, commission) => {
-//       return total + commission.amount;
-//     }, 0);
+    const totalCommissionAmount = commissionsForDate.reduce((total, commission) => {
+      return total + commission.amount;
+    }, 0);
 
-//     return res.status(200).json({
-//       status: true,
-//       message: "Commission amount for the specified date",
-//       date: requestedDate,
-//       totalCommissionAmount,
-//     });
-//   } catch (error) {
-//     console.error("Error getting commission by date:", error);
-//     return res.status(500).json({ status: false, message: "Internal server error" });
-//   }
-// };
+    return res.status(200).json({
+      status: true,
+      message: "Commission amount for the specified date",
+      date: requestedDate,
+      totalCommissionAmount,
+    });
+  } catch (error) {
+    console.error("Error getting commission by date:", error);
+    return res.status(500).json({ status: false, message: "Internal server error" });
+  }
+};
 const walletToWalletTransactions = async (req, res) => { 
   try {
     const { receiverUID, amount } = req.body;
@@ -689,8 +740,10 @@ const walletToWalletTransactions = async (req, res) => {
       sender.walletAmount -= transforAmount;
       receiver.walletAmount += transforAmount
       receiver.rechargeAmount+=transforAmount
-      sender.walletAmount += commission
+
+      
       sender.commissionAmount += commission;
+      sender.walletAmount+=commission
       await commissionModel.create({
         userId: sender._id,
         amount: commission,
@@ -719,8 +772,8 @@ const walletToWalletTransactions = async (req, res) => {
       sender.walletAmount -= transforAmount;
       
       receiver.walletAmount +=transforAmount;
-      receiver.walletAmount += commission
       receiver.commissionAmount += commission;
+      receiver.walletAmount+=commission
 
       await sender.save();
       await receiver.save();
@@ -810,10 +863,11 @@ const getWalletTransactions = async (req, res) => {
     if (!user) return res.status(403).send({
       status: false, message: "user not found."
     })
-      const UID = parseInt(user.UID)
+    const UID = parseInt(user.UID)
      const transactions = await WalletTransactionModel.find({
       $or: [{ sender: UID }, { receiver:UID }],
      })
+     
       // .populate('sender', 'username')
       // .populate('receiver', 'username')
       .sort({ createdAt: -1 })
@@ -843,7 +897,7 @@ module.exports = {
   activeUser,
   deactiveUser,
   changePassword,
-  // getCommissionByDate,
+  getCommissionByDate,
   walletToWalletTransactions,
   getUserDetailsByUserId,
   getWalletTransactions

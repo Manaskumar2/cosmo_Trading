@@ -12,6 +12,7 @@ import Winner from '../../images/icon-winner.svg'
 import Alpha from '../../images/icon-alpha.svg'
 import Beta from '../../images/icon-beta.svg'
 import Gama from './gama.svg'
+import {useNavigate} from 'react-router-dom'
 import { CountDownRiseup } from '../../Atoms/CountDownRiseup';
 
 export const toastProps = {
@@ -26,6 +27,7 @@ export const toastProps = {
 
 
 function GameHistory({ duration }) {
+    const navigate=useNavigate()
     const [page, setPage] = useState(1)
     const itemsPerPage = 10; 
 
@@ -62,6 +64,10 @@ const endIndex = startIndex + itemsPerPage;
                 return response;
             }
         } catch (error) {
+            if (error.response.status === 403) {
+                navigate('/signIn')
+                return response;
+            }
             const errorMessage = error.response ? error.response.data.message : error.message;
 
         }

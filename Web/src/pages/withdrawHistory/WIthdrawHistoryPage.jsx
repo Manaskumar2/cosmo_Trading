@@ -8,8 +8,9 @@ import { useRecoilState, useRecoilValue } from 'recoil'
 import { AuthState } from '../../Atoms/AuthState'
 import axios from 'axios'
  import { useEffect } from 'react'
-
+import {useNavigate} from 'react-router-dom'
 function WIthdrawHistoryPage() {
+  const navigate=useNavigate()
   const auth=useRecoilValue(AuthState)
   const [withdrawHistory, setWithdrawHistory] = useRecoilState(WithdrawHistory)
   const getStatusColor = (status) => {
@@ -37,6 +38,10 @@ function WIthdrawHistoryPage() {
             return response;
         }
     } catch (error) {
+      if (error.response.status === 403) {
+        navigate('/signIn')
+        return response;
+    }
         const errorMessage = error.response ? error.response.data.message : error.message;
 
     }

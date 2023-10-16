@@ -62,11 +62,12 @@ const getWithdrawRequest = async (req, res) => {
 const confirmRequest = async (req, res) => {
     try {
         const requestId = req.params.requestId;
-        const { newStatus } = req.body;
+        const { newStatus,approvedBy } = req.body;
 
         if (!newStatus || !["confirmed", "cancelled"].includes(newStatus)) {
             return res.status(400).send({ status: false, message: "Invalid status provided" });
-        }
+      }
+      if (!approvedBy) return res.status(400).send({ status: false, message: "please enter your name to approved" })
 
         const request = await withdrawModel.findById(requestId);
         if (!request) {
@@ -80,7 +81,8 @@ const confirmRequest = async (req, res) => {
 
         if (newStatus === "confirmed") {
 
-            request.status = newStatus;
+          request.status = newStatus;
+          request.approvedBy = approvedBy;
             await request.save();
 
             return res.status(200).send({ status: true, message: "Withdraw request marked as success" });
@@ -89,7 +91,8 @@ const confirmRequest = async (req, res) => {
             user.walletAmount += request.withdrawAmount;
 
             await user.save();
-            request.status = newStatus;
+          request.status = newStatus;
+          request.approvedBy = approvedBy;
             await request.save();
 
             return res.status(200).send({ status: true, message: "Withdraw request marked as cancelled, amount refunded" });

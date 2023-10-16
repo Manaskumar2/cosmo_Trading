@@ -19,6 +19,7 @@ export const toastProps = {
 };
 
 function AdminWithdraw() {
+  const [approvedBy, setapprovedBy] = useState('')
   const [status, setStatus] = useState('confirmed')
   const [user, setUser] = useState(null)
   const [withDrawdata, setWithdrawData] = useState(null)
@@ -76,23 +77,26 @@ function AdminWithdraw() {
     }
   }
   const handleConfirm = async (requestId, status) => {
+    if(approvedBy!==''){
     try {
       let token = authData.authToken;
-      const response = await axios.put(`${import.meta.env.VITE_API_URL}/admin/conformWithdrawRequest/${requestId}`, { newStatus: status },
+      const response = await axios.put(`${import.meta.env.VITE_API_URL}/admin/conformWithdrawRequest/${requestId}`, { newStatus: status ,approvedBy},
         {
           headers: { Authorization: `Bearer ${token}` },
         },
       );
       if (response.status === 200) {
+        setapprovedBy('')
         toast.success("Withdraw request confirmed", { ...toastProps });
         handlePaymentRequest()
+        
 
         return response;
       }
     } catch (error) {
       const errorMessage = error.response ? error.response.data.message : error.message;
       toast.error(errorMessage || 'Something went wrong', { ...toastProps });
-    }
+    }}else{toast.error( 'Write Your Name first', { ...toastProps });}
   }
   useEffect(() => { handlePaymentRequest() }, [status])
   return (
@@ -111,19 +115,22 @@ function AdminWithdraw() {
 
           </div>
           <Toaster />
+          <Accordion >
           {withDrawdata && withDrawdata.data.map((item, index) => (
-            <Accordion key={index}>
-              <Accordion.Item eventKey={index}>
-                <Accordion.Header onClick={() => { handleBankData(item.userId); handleUser(item.userId) }} >
+            
+              <Accordion.Item eventKey={index} key={index}>
+                <Accordion.Header onClick={() => { handleBankData(item.userId); handleUser(item.userId) }} className='acc-head'>
                   <div className='admin-Widthdraw-box'>
                     <p>Order : {item._id}</p>
                     <p>Amount : {item.withdrawAmount}</p>
                     <p>Status : {item.status}</p>
+                    {status!=='pending' && <p>Action done by : {item.approvedBy}</p> }
+                    
                   </div>
 
                 </Accordion.Header>
                 <Accordion.Body>
-                  <div className='flex-div'>
+                  <div style={{display:'flex'}}>
 
                     <div className='admin-withdraw-data'>
                       <h3>User Details</h3>
@@ -147,6 +154,7 @@ function AdminWithdraw() {
 
                         {item.status !== 'confirmed' && item.status !== 'cancelled' && (
                           <>
+                            <div > <input type="text" value={approvedBy}  onChange={(e)=>{setapprovedBy(e.target.value)}} placeholder='Enter Name' className='name-input-admin'/> </div>
                             <div className='flex-div'><button onClick={() => { handleConfirm(item._id, "confirmed") }} className='prime-approve-btn'>Approve</button> <button onClick={() => { handleConfirm(item._id, "cancelled") }} className='prime-reject-btn'>Reject</button></div>
                           </>
                         )}
@@ -157,8 +165,9 @@ function AdminWithdraw() {
 
                 </Accordion.Body>
               </Accordion.Item>
-            </Accordion>
+            
           ))}
+          </Accordion>
         </div>
 
       </div>
