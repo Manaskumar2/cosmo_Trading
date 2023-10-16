@@ -689,7 +689,8 @@ const walletToWalletTransactions = async (req, res) => {
       sender.walletAmount -= transforAmount;
       receiver.walletAmount += transforAmount
       receiver.rechargeAmount+=transforAmount
-      sender.walletAmount+=commission
+      sender.walletAmount += commission
+      sender.commissionAmount += commission;
       await commissionModel.create({
         userId: sender._id,
         amount: commission,
@@ -718,7 +719,8 @@ const walletToWalletTransactions = async (req, res) => {
       sender.walletAmount -= transforAmount;
       
       receiver.walletAmount +=transforAmount;
-      receiver.walletAmount+=commission
+      receiver.walletAmount += commission
+      receiver.commissionAmount += commission;
 
       await sender.save();
       await receiver.save();
