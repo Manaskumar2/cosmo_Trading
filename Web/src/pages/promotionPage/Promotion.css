@@ -13,9 +13,9 @@
 .commission p{color: #DEAC4C; margin-bottom: 1.5rem;}
 .commission-row{padding: .7rem 0;border-top: 1px solid #164781;}
 .commission-bot-row{padding: .7rem 0;border-bottom: 1px solid #164781;}
-.commission-row .col-10{color: #0AE2FF;font-family: 'Montserrat';font-size: 1rem;}
+.commission-row .col-10,.commission-row .col-9 {color: #0AE2FF;font-family: 'Montserrat';font-size: 1rem;}
 .commission-bot-row .col-10{color: #0AE2FF;font-family: 'Montserrat';font-size: 1rem;}
-.commission-row .col-2{color: #FFF;font-family: 'Montserrat';font-size: 1rem;text-align: center;}
+.commission-row .col-2,.commission-row .col-3{color: #FFF;font-family: 'Montserrat';font-size: 1rem;text-align: center;}
 .commission-bot-row .col-2{color: #FFF;font-family: 'Montserrat';font-size: 1rem;text-align: center;}
 .total-commission{color: #FFF; padding: .8rem 0; font-size: 1rem; font-weight: 480;font-family: 'Montserrat';border-top: 2px solid #DCB17F; display: flex;flex-direction: column;justify-content: center;align-items: center;}
 

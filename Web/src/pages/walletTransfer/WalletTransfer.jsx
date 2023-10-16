@@ -143,35 +143,28 @@ function WalletTransfer() {
                                 </div>
                             </div>
                         ))}
-
                 </div>
             </div>
 
             {/* Modal */}
             <Modal isOpen={isModalOpen} onRequestClose={closeModal}>
-
-                <div className='modal-body-w2w'>
-
+            <div className='modal-body-w2w'>
+                    
                     <div>
-                        {transaction &&
-                            transaction.data.map((item, i) => (
-                                <div className="transaction-item" key={i}>
-                                    <div className={`transaction-sender ${auth.UID === item.sender ? "text-red" : "text-green"}`}>
-                                        {item.sender}
-                                    </div>
-                                    <div className={`transaction-receiver ${auth.UID === item.sender ? "text-red" : "text-green"}`}>
-                                        {item.receiver}
-                                    </div>
-                                    <div className="transaction-amount">{item.amount}</div>
-                                    <div className={`transaction-status ${auth.UID === item.sender ? "text-red" : "text-green"}`}>
-                                        {auth.UID === item.sender ? "Sent" : "Received"}
-                                    </div>
-                                </div>
-                            ))}
+                    {userData && (
+                            <div className='userDetaisW2W'>
+                                <h2>User Details</h2>
+                                <p>Name: {userData.data.userDetails.name}</p>
+                                <p>UID: {userData.data.userDetails.UID}</p>
+                                <p>Phone no: {userData.data.userDetails.phoneNumber}</p>
+                                <p>Amount: {amount}</p>
+                                
+                            </div>
+                        )}
                     </div>
 
-                    <button className='confirm' onClick={handleSubmit}>Confirm Submit</button>
-                    <button className='close' onClick={closeModal}>Close</button>
+                <button className='confirm' onClick={handleSubmit}>Confirm Submit</button>
+                <button className='close' onClick={closeModal}>Close</button>
                 </div>
             </Modal>
         </div>
