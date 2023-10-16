@@ -689,9 +689,6 @@ const walletToWalletTransactions = async (req, res) => {
       sender.walletAmount -= transforAmount;
       receiver.walletAmount += transforAmount
       receiver.rechargeAmount+=transforAmount
-
-      
-      sender.commissionAmount += commission;
       sender.walletAmount+=commission
       await commissionModel.create({
         userId: sender._id,
@@ -721,7 +718,6 @@ const walletToWalletTransactions = async (req, res) => {
       sender.walletAmount -= transforAmount;
       
       receiver.walletAmount +=transforAmount;
-      receiver.commissionAmount += commission;
       receiver.walletAmount+=commission
 
       await sender.save();
@@ -812,9 +808,10 @@ const getWalletTransactions = async (req, res) => {
     if (!user) return res.status(403).send({
       status: false, message: "user not found."
     })
+      const UID = parseInt(user.UID)
      const transactions = await WalletTransactionModel.find({
-      $or: [{ senderUID: user.UID }, { receiverUID: user.UID }],
-    })
+      $or: [{ sender: UID }, { receiver:UID }],
+     })
       // .populate('sender', 'username')
       // .populate('receiver', 'username')
       .sort({ createdAt: -1 })
