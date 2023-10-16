@@ -91,7 +91,7 @@ function OnlineCount() {
         <div className="online_count_row">
           <div className="online_count_col">
             <div className='count-logo'><img src={count3} alt="" /></div>
-            <div className='num'>{number}</div>
+            <div className='num'>5017</div>
             <p>Players</p>
           </div>
           <div className="online_count_col">
@@ -101,7 +101,7 @@ function OnlineCount() {
           </div>
           <div className="online_count_col">
             <div className='count-logo'><img src={count1} alt="" /></div>
-            <div className='num'>{onlineCount}</div>
+            <div className='num'>4181</div>
             <p>Online</p>
           </div>
         </div>

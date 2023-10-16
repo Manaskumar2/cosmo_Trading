@@ -27,6 +27,18 @@
 .inquries{margin-top: 1.2rem;}
 .total-bet-row{border-top: 1px solid #1E5D81;border-bottom: 1px solid #1E5D81;margin-top: 1.2rem;}
 .total-bet-row .col-6{display: flex;padding: 0.625rem .5rem;justify-content: center;align-items: center;color: #fff; text-align: center;font-family: Montserrat;font-size: .8rem;}
+input[type="date"]::-webkit-calendar-picker-indicator {
+    background: transparent;
+    bottom: 0;
+    color: transparent;
+    cursor: pointer;
+    height: auto;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: auto;
+}
 .details-btn{border-radius: 0.25rem;
     background: #0E6FA6;display: flex;
     padding: 0.125rem 0.3125rem;

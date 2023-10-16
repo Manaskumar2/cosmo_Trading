@@ -50,7 +50,7 @@ function AccountSecurity() {
                     <Link to='/profile' className="col-2">
                         <img src={back} alt="" />
                     </Link>
-                    <div className="col-8">
+                    <div className="col-8" style={{color:'#fff'}}>
                         Security
                     </div>
                     <div className="col-2">
@@ -59,9 +59,9 @@ function AccountSecurity() {
             </div>
             <div className='sucurity-body'>
                 <div className='security-form'>
-                    <p>Password</p>
+                    <p style={{color:'#fff'}}>Password</p>
                     <input type="text" placeholder='Enter Password' value={password} onChange={(e)=>{setPassword(e.target.value)}}/>
-                    <p>Confirm Password</p>
+                    <p style={{color:'#fff'}}>Confirm Password</p>
                     <input type="text" placeholder='Confirm Password' value={confirmPassword} onChange={(e)=>{setConfirmPassword(e.target.value)}}/>
                     <button onClick={handleSubmit}>Submit</button>
                 </div>
