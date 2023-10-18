@@ -18,7 +18,6 @@ function BonusCount() {
 
         if (response.status === 200) {
           setplayer(response.data)
-          console.log(response.data)
             return response;
         }
     } catch (error) {

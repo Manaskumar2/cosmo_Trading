@@ -82,7 +82,7 @@ import('../../src/pages/walletTransfer/WalletTransfer'))
 const PremiumUser= lazy(()=>
 import('../../src/pages/Admin/premiumUser/PremiumUser'))
 const UploadPopUpAndNews= lazy(()=>
-import('../../src/pages/Admin/uploadPopUpAndNews/UploadPopUpAndNews'))
+import('../../src/pages/Admin/uploadPopUpAndNews/uploadPopUpAndNews'))
 
 
 export {Login,Register,Forgot,OTP,Reset,Success,Home,Growup,ProfileComponent,Promotion,Recharge,UPI,Withdraw,BankCard,Wallet,Gift,BeginnerTutorial,About,Customer,Message,Transection,Launch,AdminHome,AdminUser,AdminRecharge,AdminWithdraw,AdminLogin,Terms,SRegister,AdminPrime,Premium,PremiumApply,Security,RiseUp,WidthdrawHistory,RechargeHistory,WalletTransfer,PremiumUser,UploadPopUpAndNews,ResetPasswordAdmin,CreateGiftCard}

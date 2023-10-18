@@ -112,14 +112,14 @@ function Wallet() {
                             <h2 style={{ color: '#fff',letterSpacing: 0.15,fontSize: 27,fontFamily: 'Montserrat',display:'flex', fontWeight: 600}}><img src={rupee} alt="" />{userData && userData.data.data.userDetails.walletAmount.toFixed(2)} <img src={reload} alt="" style={{marginLeft:10,}} onClick={handleUserdata}/></h2>
                         </div>
                         <div className="container">
-                            <div className="row history-row">
-                                <div className="col-6">
+                            <div className="row history-row ">
+                                <div className="col-6" style={{padding:"0"}}>
                                     <h6>Total Withdraw</h6>
                                     {withdrawHistory && <p>&#8377; {withdrawHistory.data.totalWithdrawAmount}</p>}
                                     
                                     
                                 </div>
-                                <div className="col-6">
+                                <div className="col-6" style={{padding:"0"}}>
                                 <h6>Today's Withdraw</h6>
                                 {withdrawHistory && <p>&#8377; {withdrawHistory.data.todayTotalWithdrawAmount}</p>}
                                 </div>

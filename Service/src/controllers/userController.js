@@ -976,8 +976,19 @@ const getWalletTransactions = async (req, res) => {
       .sort({ createdAt: -1 })
        .skip(skip)
       .limit(limit)
+    
+        const count = await WalletTransactionModel.countDocuments({
+      $or: [{ sender: UID }, { receiver:UID }],
+     });
+
+    const response = {
+      currentPage: page,
+      totalPages: Math.ceil(count / limit),
+      transactions
+    };
+    
     if (transactions.length < 0) return res.status(403).send({ status: false, message: "no transactions" })
-    return res.status(200).send({ status: true, message: "success", data: transactions })
+    return res.status(200).send({ status: true, message: "success", data:response })
   } catch (error) { 
    console.error(error);
     return res.status(500).json({ message: "Internal server error." });

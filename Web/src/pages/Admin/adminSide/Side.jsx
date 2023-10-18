@@ -10,8 +10,8 @@ function Side() {
                 <Link to='/admin/user'>All Users</Link>
                 <Link to='/admin/recharge'> Recharge Requests</Link>
                 <Link to='/admin/withdraw'> Withdraw Requests</Link>
-                <Link to='/admin/prime'> Premium Membership</Link>
-                <Link to='/admin/premiumUsers'> Premium Users</Link>
+                <Link to='/admin/prime'> Prime Membership</Link>
+                <Link to='/admin/premiumUsers'> Prime Commission</Link>
                 <Link to='/admin/uploadNewsAndImage'>Update Ui</Link>
                 <Link to='/admin/createGiftCard'>Gift Card</Link>
                 <Link to='/admin/adminResetPassword'>Reset Password</Link>

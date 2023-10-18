@@ -79,7 +79,11 @@ function Register() {
     } catch (error) {
       const errorMessage = error.response ? error.response.data.message : error.message;
       toast.error(errorMessage || 'Something went wrong', { ...toastProps });
+      setPhone('');
+        setPassword('');
+        setUserName('')
     }
+    
   };
 
   const handleCheckboxChange = () => {

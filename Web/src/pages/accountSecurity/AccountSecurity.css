@@ -63,6 +63,9 @@
       .transaction-data{padding: .3rem 0; color: #eaeaea; border: 1px solid #26B5E2; border-radius:5px ; }
       .transaction-data > .col-6 , .transaction-data > .col-3{text-align: left; font-size: 1.1rem;display: flex;flex-direction: column;align-items: center;justify-content: center;}
       .transaction-heading >.col-6{text-align: center;}
+      .pagination-buttons-p2p{display: flex;justify-content: center;align-items: center;gap: 1rem;margin-top: 2rem;color: #fff;}
+
+      .pagination-buttons-p2p button{background:linear-gradient(143deg, #C82F36 0%, #EC4E55 100%);outline: none; border: 0; width: 2rem;height: 2rem;display: flex;justify-content: center;align-items: center;margin: 0;color: #fff;font-weight: 600;font-size: 1.2rem;border-radius: 2px;}
 @media(min-width:500px){
     .security{max-width:500px; margin:0 auto;}
     .ReactModal__Content{width:30vw;}

@@ -17,14 +17,34 @@ import { AuthState } from '../../Atoms/AuthState';
 import wp from './wp.svg';
 import axios from 'axios';
 import { CgCloseO } from 'react-icons/cg';
-import { useNavigate } from 'react-router-dom'; 
-
+import { useNavigate } from 'react-router-dom';
+import { TotalTeam } from '../../Atoms/TotalTeam';
 function Home() {
     const navigate = useNavigate()
     const auth = useRecoilValue(AuthState);
     const [showPopup, setShowPopup] = useState(false);
     const [popUpImage, setImage] = useState('');
     const [news, setNews] = useState('');
+    const[commission,setCommission]=useRecoilState(TotalTeam)
+
+
+    const handleCommission = async () => {
+        try {
+            let token = auth.authToken
+            let userId = auth._id
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/getTotalTeam/${userId}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            }
+            );
+            if (response.status === 200) {
+                // setCommission(response.data.totalUsersIn10Levels)
+                localStorage.setItem('total',response.data.totalUsersIn10Levels)
+                return response;
+            }
+        } catch (error) {
+            const errorMessage = error.response ? error.response.data.message : error.message;
+        }
+    }
 
     const handleClosePopup = () => {
         setShowPopup(false);
@@ -73,6 +93,7 @@ function Home() {
     };
 
     useEffect(() => {
+        handleCommission()
         getGameHistory();
         getPopUpImage()
     }, []);
@@ -80,9 +101,9 @@ function Home() {
         const popupShown = localStorage.getItem('showPopUp') || null;
         if (popupShown) {
             setShowPopup(true);
-            if(popUpImage){document.body.style.overflow = 'hidden';}
-            else{document.body.style.overflow ='auto'}
-            
+            if (popUpImage) { document.body.style.overflow = 'hidden'; }
+            else { document.body.style.overflow = 'auto' }
+
         }
     }, []);
     return (
@@ -90,44 +111,41 @@ function Home() {
             {showPopup && popUpImage &&
                 <div className="popup-Home popup">
                     <div className="popup-body-home">
-                    <button className="popup-close" onClick={handleClosePopup}>
-                        <CgCloseO />
-                    </button>
-                    
-                    <img src={popUpImage} alt="Popup" />
+                        <button className="popup-close" onClick={handleClosePopup}>
+                            <CgCloseO />
+                        </button>
+
+                        <img src={popUpImage} alt="Popup" />
                     </div>
-                    
+
 
                 </div>}
-<> <div className="home">
-                    <div className="container">
-                        <div className="row home-row">
-                            <div className="col-2 download">
-                                
-                                    <img src={wp} alt="" style={{ width: '2.5rem' }} />
-                            </div>
-                            <div className="col-8">
-                                <img src={logo} alt="" />
-                            </div>
-                            <div className="col-2 download">
-                                <a href="https://t.me/cosmotradeofficial" target="_blank" rel="noopener noreferrer">
-                                    <img src={telegram} alt="" />
-                                </a>
-                            </div>
+            <> <div className="home">
+                <div className="container">
+                    <div className="row home-row">
+                        <div className="col-2 download">
+
+                            <img src={wp} alt="" style={{ width: '2.5rem' }} />
+                        </div>
+                        <div className="col-8">
+                            <img src={logo} alt="" />
+                        </div>
+                        <div className="col-2 download">
+                            <a href="https://t.me/cosmotradeofficial" target="_blank" rel="noopener noreferrer">
+                                <img src={telegram} alt="" />
+                            </a>
                         </div>
                     </div>
                 </div>
-                    <Banner news={news} />
-                    <GameSection />
-                    <OnlineCount />
-                    {/* <BonusCount /> */}
-                    <RunningTime />
-                    <WithdrawSection />
-                    <Accordian />
-                    <Nav /></>
-
-
-
+            </div>
+                <Banner news={news} />
+                <GameSection />
+                <OnlineCount />
+                {/* <BonusCount /> */}
+                <RunningTime />
+                <WithdrawSection />
+                <Accordian />
+                <Nav /></>
         </div>
     );
 }

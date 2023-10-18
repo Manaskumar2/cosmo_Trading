@@ -688,22 +688,19 @@ const createGame = async (duration) => {
     });
 
 
-    await new Promise((resolve) => setTimeout(resolve, duration * 60 * 1000));
-
+    await new Promise((resolve) => setTimeout(resolve, 55 * 1000));
+ 
     await calculateResult(newGame._id);
-
     newGame.isCompleted = true;
     await newGame.save();
+
   } catch (error) {
     console.log(error)
   }
 };
 
 const startGameLoop = async (duration) => {
-  while (true) {
-  
-    await createGame(duration);
-  }
+  setInterval(() => { createGame(duration) }, 60 * 1000);
 };
 
 const durationOptions = [1];

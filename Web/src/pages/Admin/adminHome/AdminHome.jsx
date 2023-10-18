@@ -93,139 +93,146 @@ function AdminHome() {
         <div className='admin-rightSection'>
           <div className='container admin-home'>
             {cosmo &&
-            <div>
-              <div className="row">
-                <div className='col-12'><h2 className='heading'>Cosmo Trade</h2></div>
+              <div>
+                <div className="row">
+                  <div className='col-12'><h2 className='heading'>Cosmo Trade</h2></div>
+                </div>
+                <div className="row">
+                  <div className="col-4">
+                    <div className='admin-home-box'>
+                      <h5>Company Profit</h5>
+                      <p>{cosmo.data.data[0].amount.toFixed(2)}</p>
+                    </div>
+                  </div>
+                  <div className="col-4">
+                    <div className='admin-home-box'>
+                      <h5>Total Betting Amount</h5>
+                      <p>{cosmo.data.data[0].totalBettingAmount.toFixed(2)}</p>
+                    </div>
+                  </div>
+                  <div className="col-4">
+                    <div className='admin-home-box'>
+                      <h5>Today Betting Amount</h5>
+                      <p>{cosmo.data.data[0].everydayBettingAmount.toFixed(2)}</p>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className="row">
-                <div className="col-4">
-                  <div className='admin-home-box'>
-                    <h5>Company Profit</h5>
-                    <p>{cosmo.data.data[0].amount.toFixed(2)}</p>
-                  </div>
-                </div>
-                <div className="col-4">
-                  <div className='admin-home-box'>
-                  <h5>Total Betting Amount</h5>
-                  <p>{cosmo.data.data[0].totalBettingAmount.toFixed(2)}</p>
-                  </div>
-                </div>
-                <div className="col-4">
-                <div className='admin-home-box'>
-                  <h5>Today Betting Amount</h5>
-                  <p>{cosmo.data.data[0].everydayBettingAmount.toFixed(2)}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-              }
+            }
             {transaction &&
-            <div>
-              <div className="row">
-                <div className="col-4">
-                  <div className='admin-home-box'>
-                    <h5>Today Recharge</h5>
-                    <p>{transaction.todayTotalRecharge.toFixed(2)}</p>
+              <div>
+                <div className="row">
+                  <div className="col-4">
+                    <div className='admin-home-box'>
+                      <h5>Today Recharge</h5>
+                      <p>{transaction.todayTotalRecharge.toFixed(2)}</p>
+                    </div>
                   </div>
-                </div>
-                <div className="col-4">
-                  <div className='admin-home-box'>
-                  <h5>Total Recharge</h5>
-                  <p>{transaction.overallTotalRecharge.toFixed(2)}</p>
+                  <div className="col-4">
+                    <div className='admin-home-box'>
+                      <h5>Total Recharge</h5>
+                      <p>{transaction.overallTotalRecharge.toFixed(2)}</p>
+                    </div>
                   </div>
-                </div>
-                <div className="col-4">
-                <div className='admin-home-box'>
-                  <h5>Today Withdraw</h5>
-                  <p>{transaction.todayTotalWithdraw.toFixed(2)}</p>
+                  <div className="col-4">
+                    <div className='admin-home-box'>
+                      <h5>Today Withdraw</h5>
+                      <p>{transaction.todayTotalWithdraw.toFixed(2)}</p>
+                    </div>
                   </div>
-                </div>
-                <div className="col-4">
-                <div className='admin-home-box'>
-                  <h5>Total Withdraw</h5>
-                  <p>{transaction.overallTotalWithdraw.toFixed(2)}</p>
+                  <div className="col-4">
+                    <div className='admin-home-box'>
+                      <h5>Total Withdraw</h5>
+                      <p>{transaction.overallTotalWithdraw.toFixed(2)}</p>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-              }
+            }
             {growUp &&
-            <div>
-              <div className="row">
-              <div className='col-12'><h2 className='heading'>Grow Up</h2></div>
-            </div>
-              <div className="row">
-              <div className="col-3 ">
-                <div className='admin-home-box'>
-                  <h5>Today Betting Amount on Alpha</h5>
-                  <p>{growUp.data.data.todayBetAmounts.small.toFixed(2)}</p>
+              <div>
+                <div className="row">
+                  <div className='col-12'><h2 className='heading'>Grow Up</h2></div>
                 </div>
-                </div>
-                <div className="col-3">
-                  <div className='admin-home-box'>
-                  <h5>Today Betting Amount on Beta</h5>
-                  <p>{growUp.data.data.todayBetAmounts.big.toFixed(2)}</p>
+                <div className="row">
+                  <div className="row">
+                  <div className="col-4 ">
+                    <div className='admin-home-box'>
+                      <h5>Today Betting Amount on Alpha</h5>
+                      <p>{growUp.data.data.todayBetAmounts.small.toFixed(2)}</p>
+                    </div>
                   </div>
+                  <div className="col-4">
+                    <div className='admin-home-box'>
+                      <h5>Today Betting Amount on Beta</h5>
+                      <p>{growUp.data.data.todayBetAmounts.big.toFixed(2)}</p>
+                    </div>
+                  </div>
+                  
+                  </div>
+                  <div className="row" >
+                    <div className="col-4 ">
+                      <div className='admin-home-box'>
+                        <h5>Current Betting Amount on Alpha</h5>
+                        <p>{growUp.data.data.totalBetAmounts.small.toFixed(2)}</p>
+                      </div>
+                    </div>
+                    <div className="col-4 ">
+                    <div className='admin-home-box'>
+                      <h5>Current Betting Amount on Beta</h5>
+                      <p>{growUp.data.data.totalBetAmounts.big.toFixed(2)}</p>
+                    </div>
+                  </div>
+                  </div>
+                
                 </div>
-                <div className="col-3 ">
-                <div className='admin-home-box'>
-                  <h5>Current Betting Amount on Alpha</h5>
-                  <p>{growUp.data.data.totalBetAmounts.small.toFixed(2)}</p>
-                </div>
-                </div>
+
               </div>
-              <div className="col-3 ">
-                <div className='admin-home-box'>
-                  <h5>Current Betting Amount on Beta</h5>
-                  <p>{growUp.data.data.totalBetAmounts.big.toFixed(2)}</p>
-                </div>
-                </div>
-              </div>
-              }
+            }
             {riseUp &&
-            <>  <div className="row">
-            <div className='col-12'><h2 className='heading'>Rise Up</h2></div>
-          </div>
-              <div className="row">
-                <div className="col-4 ">
-                  <div className='admin-home-box'>
-                  <h5>Current Betting Amount on Alpha</h5>
-                  <p>{riseUp.data.data.totalBetAmounts.A.toFixed(2)}</p>
+              <>  <div className="row">
+                <div className='col-12'><h2 className='heading'>Rise Up</h2></div>
+              </div>
+                <div className="row">
+                  <div className="col-4 ">
+                    <div className='admin-home-box'>
+                      <h5>Current Betting Amount on Alpha</h5>
+                      <p>{riseUp.data.data.totalBetAmounts.A.toFixed(2)}</p>
 
-                </div>
-                </div>
-                <div className="col-4 ">
-                  <div className='admin-home-box'>
-                  <h5>Current Betting Amount on Beta</h5>
-                  <p>{riseUp.data.data.totalBetAmounts.B.toFixed(2)}</p>
+                    </div>
+                  </div>
+                  <div className="col-4 ">
+                    <div className='admin-home-box'>
+                      <h5>Current Betting Amount on Beta</h5>
+                      <p>{riseUp.data.data.totalBetAmounts.B.toFixed(2)}</p>
 
-                </div>
-                </div>
-                <div className="col-4 ">
-                  <div className='admin-home-box'>
-                  <h5>Current Betting Amount on Gamma</h5>
-                  <p>{riseUp.data.data.totalBetAmounts.C.toFixed(2)}</p>
-                </div>
-                </div>
-                <div className="col-4 ">
-                  <div className='admin-home-box'>
-                  <h5>Today Betting Amount on Alpha</h5>
-                  <p>{riseUp.data.data.todayBetAmounts.A.toFixed(2)}</p>
-                </div>
-                </div>
-                <div className="col-4 ">
-                  <div className='admin-home-box'>
-                  <h5>Today Betting Amount on Beta</h5>
-                  <p>{riseUp.data.data.todayBetAmounts.B.toFixed(2)}</p>
-                </div>
-                </div>
-                <div className="col-4">
-                  <div className='admin-home-box'>
-                  <h5>Today Betting Amount on Gamma</h5>
-                  <p>{riseUp.data.data.todayBetAmounts.C.toFixed(2)}</p>
-                </div>
-                </div>
-              </div></>}
+                    </div>
+                  </div>
+                  <div className="col-4 ">
+                    <div className='admin-home-box'>
+                      <h5>Current Betting Amount on Gamma</h5>
+                      <p>{riseUp.data.data.totalBetAmounts.C.toFixed(2)}</p>
+                    </div>
+                  </div>
+                  <div className="col-4 ">
+                    <div className='admin-home-box'>
+                      <h5>Today Betting Amount on Alpha</h5>
+                      <p>{riseUp.data.data.todayBetAmounts.A.toFixed(2)}</p>
+                    </div>
+                  </div>
+                  <div className="col-4 ">
+                    <div className='admin-home-box'>
+                      <h5>Today Betting Amount on Beta</h5>
+                      <p>{riseUp.data.data.todayBetAmounts.B.toFixed(2)}</p>
+                    </div>
+                  </div>
+                  <div className="col-4">
+                    <div className='admin-home-box'>
+                      <h5>Today Betting Amount on Gamma</h5>
+                      <p>{riseUp.data.data.todayBetAmounts.C.toFixed(2)}</p>
+                    </div>
+                  </div>
+                </div></>}
 
           </div>
         </div>

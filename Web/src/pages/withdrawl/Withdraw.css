@@ -77,4 +77,10 @@ input[type="number"]::-ms-outer-spin-button {
 
 @media(min-width:500px){
     .recharge{max-width:500px; display: block; margin:0 auto;}
+
+    }
+@media(max-width:500px){
+    .withdraw-inc-dec{gap:.5rem}
+    
+    .inputRow .col-10 input{width:7rem;}
     }

@@ -8,7 +8,27 @@
 .btn-container{margin-top: 3rem;}
 .passwordChange-btn{margin-top: 3rem;}
 .back-btn{outline: none; border: 0; background-color: transparent;}
+input:-webkit-autofill {
+  -webkit-text-fill-color: white !important;
+-webkit-number-fill-color: white !important;
+}
 
+input[type="number"]:-webkit-autofill {
+  -webkit-text-fill-color: white !important;
+}
+input[type="number"]:-webkit-autofill {
+  caret-color: white;
+}
+
+input:-webkit-autofill {
+  caret-color: white;
+}
+input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
+      transition: background-color 5000000s ease-in-out 0s;color: #fff;
+  }
 .btn-container{margin-top:25px;}
 .register { min-height:100vh ;}
 .register .container-fluid{padding:40px 20px; padding-top: 20px;}

@@ -86,22 +86,22 @@ function TimeSection1({ uid }) {
             const errorMessage = error.response ? error.response.data.message : error.message;
         }
     };
-    const startTime = momentTz(new Date()).tz("Asia/Kolkata").toISOString()
 
     const endTime = timeData?.data?.data?.endTime || null;
 
     useEffect(() => {
+        let interval
         if (endTime) {
-            const startMillis = new Date(startTime).getTime();
+            const startMillis = new Date(momentTz(new Date()).tz("Asia/Kolkata").toISOString()).getTime();
             const endMillis = new Date(endTime).getTime();
             const intervalMillis = endMillis - startMillis;
+            console.log(intervalMillis / 1000);
     
             if (intervalMillis > 0) {
                 const intervalSeconds = Math.floor(intervalMillis / 1000);
                 setRemainingTime(intervalSeconds);
                 setSecond(intervalSeconds);
-    
-                const interval = setInterval(() => {
+                interval = setInterval(() => {
                     setRemainingTime(prevTime => {
                         if (prevTime > 0) {
                             if (prevTime === 6) {
@@ -111,26 +111,19 @@ function TimeSection1({ uid }) {
                             }
                             return prevTime - 1;
                         } else {
-                            if (prevTime === 0 || prevTime === 59 || prevTime === 58 || prevTime === 57) {
-                                handleGameData();
-                            }
+                            handleGameData();
                             return 0;
                         }
                     });
                 }, 1000);
-    
-                return () => clearInterval(interval);
             }
         }
-    }, [startTime, showCountDown]); 
+        return () => clearInterval(interval);
+    }, [endTime]); 
 
-    
-    if (remainingTime === 5 && !showCountDown) {
-        setShowCountDown(true);
-    }
-
-    useEffect(()=>{const fetchData=setInterval(handleGameData,1500)
-        return ()=>{clearInterval(fetchData)}},[])
+    useEffect(() => {
+        handleGameData();
+    }, []);
 
     const minutes = Math.floor(remainingTime / 60);
     const seconds = remainingTime % 60;

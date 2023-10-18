@@ -52,26 +52,26 @@ function CommissionHistory() {
     <div className='CommissionHistory'>
       <div className="container">
         <div className="row salary-commission-data">
-          
-          
+
+
           {commission && <div className='col-4'>
-            <div >Rs: 
-          {commission.totalRechargeCommission.toFixed(2)}
+            <div >Rs:
+              {commission.totalRechargeCommission.toFixed(2)}
             </div>
             <div>Recharge Commission</div>
-            </div>}
+          </div>}
           {commission && <div className='col-4'>
-            <div >Rs: 
-          {commission.totalPremiumCommission.toFixed(2)}
+            <div >Rs:
+              {commission.totalPremiumCommission.toFixed(2)}
             </div>
             <div>Premium Commission</div>
-            </div>}
+          </div>}
           {commission && <div className='col-4'>
-            <div >Rs: 
-          {commission.totalAgentCommission.toFixed(2)}
+            <div >Rs:
+              {commission.totalAgentCommission.toFixed(2)}
             </div>
             <div>Agent Commission</div>
-            </div>}
+          </div>}
         </div>
         <div className="row headingCommission" >
           <div className="col-5" style={{ textAlign: 'left' }}>Date & UID</div>
@@ -86,7 +86,7 @@ function CommissionHistory() {
               {item.senderUID && <p>UID: {item.senderUID} </p>}
               {new Date(item.createdAt).toLocaleString()}
             </div>
-            <div className="col-3" style={{ textAlign: 'center' }}>Rs: {item.amount}</div>
+            <div className="col-3" style={{ textAlign: 'center' }}>Rs: {item.amount.toFixed(2)}</div>
             <div className="col-4" style={{ color: item.commissionType === 'AGENT' ? '#00F2DE' : item.commissionType === 'PREMIUM' ? 'golden' : 'white', textAlign: 'center' }}>
               {item.commissionType}
             </div>
@@ -100,13 +100,14 @@ function CommissionHistory() {
               <img src={right} alt="" />
             </button>
 
-            {data && <div className='page-count'>  {page}/{data.totalPages} </div>}
-            {/* {page}/{item.totalPage} */}
-            <button className='increaseBtn' onClick={() => { setPage(Math.min(page + 1, data.totalPages)); }}>
+            {data && <div className='page-count'>{page}/{Math.min(data.totalPages, 50)}</div>}
+
+
+            <button className='increaseBtn' onClick={() => { setPage(Math.min(page + 1, 50)); }}>
               <img src={left} alt="" />
             </button>
-
           </div>
+
         </div>
 
       </div>

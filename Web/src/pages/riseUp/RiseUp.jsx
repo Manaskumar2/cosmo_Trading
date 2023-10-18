@@ -256,14 +256,14 @@ function RiseUp() {
             }
         }
     };
-    useEffect(() => {
-        if (countDownRiseup === 59) {
-            handleMin();
-        }
-    }, [countDownRiseup])
-    useEffect(() => { handleMin() }, [])
 
+    // useEffect(() => {
+    //     if (countDownRiseup === 59) {
+    //         handleMin();
+    //     }
+    // }, [countDownRiseup])
 
+    // useEffect(() => { handleMin() }, [])
 
     return (
         <div className="win">

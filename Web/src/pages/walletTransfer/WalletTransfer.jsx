@@ -9,6 +9,8 @@ import { AuthState } from '../../Atoms/AuthState';
 import toast, { Toaster } from "react-hot-toast";
 import receive from './receive.svg'
 import send from './send.svg'
+import left from '../../images/leftArr.svg'
+import right from '../../images/RightArr.svg'
 import { useNavigate } from 'react-router-dom';
 export const toastProps = {
     position: "top-center",
@@ -21,6 +23,7 @@ export const toastProps = {
 };
 
 function WalletTransfer() {
+    const[page,setPage]=useState(1)
     const navigate = useNavigate()
     const [transaction, setTransaction] = useState(null)
     const [userData, setUserData] = useState(null)
@@ -82,7 +85,8 @@ function WalletTransfer() {
     const handleTransferdata = async () => {
         try {
             let token = auth.authToken;
-            const response = await axios.get(`${import.meta.env.VITE_API_URL}/getwalletToWallet `, {
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/getwalletToWallet`, {
+                params:{page},
                 headers: { Authorization: `Bearer ${token}` },
             });
 
@@ -102,7 +106,7 @@ function WalletTransfer() {
         }
     }
 
-    useEffect(() => { handleTransferdata() }, [])
+    useEffect(() => { handleTransferdata() }, [page])
 
     return (
         <div className='security'>
@@ -128,7 +132,7 @@ function WalletTransfer() {
                 </div>
                 <div className='container' style={{margin:'2.5rem 0'}}>
                     {transaction &&
-                        transaction.data.map((item, i) => (
+                        transaction.data.transactions.map((item, i) => (
                             <div className="row transaction-data" key={i}>
                                 <div className='col-3'>
                                     {auth.UID === item.sender ? (
@@ -150,6 +154,12 @@ function WalletTransfer() {
                                 </div>
                             </div>
                         ))}
+                        {transaction &&
+                        <div className="pagination-buttons-p2p">
+                            <button onClick={() => { setPage(Math.max(page - 1, 1)); }}>  <img src={right} alt="" /> </button>
+                            {transaction.data.totalPages && <div>{page}/{transaction.data.totalPages}</div>}
+                            <button onClick={() => { setPage(Math.min(page + 1,transaction.data.totalPages)); }}>  <img src={left} alt="" /> </button>
+                        </div>}
                 </div>
             </div>
 

@@ -14,7 +14,7 @@ import alfa from '../../images/alfa.svg'
 import beta from '../../images/beta.svg'
 import bg from '../../images/Section.svg'
 import aModal from '../../images/A-modal.svg'
-import bModal from '../../../../SVG/betaBtn.svg'
+import bModal from '../../../../SVG/betabtn.svg'
 import { TimeSection } from '../../components/ComponentExport'
 import { UserDetails } from '../../Atoms/UserDetails'
 import axios from 'axios';

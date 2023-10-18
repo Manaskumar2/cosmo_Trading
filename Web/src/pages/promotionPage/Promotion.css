@@ -56,6 +56,7 @@
 .table-heading {display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 1rem;}
 .greenBg{background: #198D6B; }
 .tableBodyRow td{ text-align: center;}
+.promotion-heading-box h2{margin: 0;}
 .table-subHeading{color: #A4F8DE;
     text-align: center;
     font-family: Montserrat;

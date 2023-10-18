@@ -14,9 +14,10 @@ import gift from '../../../../SVG/gift-box 1.svg';
 import paper from './papers 1.svg';
 import line from './Line 28.svg';
 import { useNavigate } from 'react-router-dom';
+import { TotalTeam } from '../../Atoms/TotalTeam';
 // /getReferralStats/:referralID
 function Promotion() {
-    const[total,setTotal]=useState(0)
+    const [total, setTotal]=useState(0)
     const [commission,setCommission]=useState(0)
     const navigate=useNavigate()
     const auth = useRecoilValue(AuthState)
@@ -56,28 +57,28 @@ function Promotion() {
 
         }
     }
-    const handleTeam = async () => {
-        try {
-            let token = auth.authToken
-            let userId = auth._id
-            const response = await axios.get(`${import.meta.env.VITE_API_URL}/getTotalTeam/${userId}`, {
-                headers: { Authorization: `Bearer ${token}` }
-            }
-            );
-            if (response.status === 200) {
-                // toast.success("got user money data", { ...toastProps });
-                setTotal(response.data.totalUsersIn10Levels)
-                return response;
-            }
-        } catch (error) {
-            if (error.response.status === 403) {
-                navigate('/signIn')
-                return response;
-            }
-            const errorMessage = error.response ? error.response.data.message : error.message;
+    // const handleTeam = async () => {
+    //     try {
+    //         let token = auth.authToken
+    //         let userId = auth._id
+    //         const response = await axios.get(`${import.meta.env.VITE_API_URL}/getTotalTeam/${userId}`, {
+    //             headers: { Authorization: `Bearer ${token}` }
+    //         }
+    //         );
+    //         if (response.status === 200) {
+    //             // toast.success("got user money data", { ...toastProps });
+    //             setTotal(response.data.totalUsersIn10Levels)
+    //             return response;
+    //         }
+    //     } catch (error) {
+    //         if (error.response.status === 403) {
+    //             navigate('/signIn')
+    //             return response;
+    //         }
+    //         const errorMessage = error.response ? error.response.data.message : error.message;
 
-        }
-    }
+    //     }
+    // }
     const handleUserdata = async () => {
         try {
             let token = auth.authToken
@@ -126,7 +127,8 @@ function Promotion() {
         handleCommission()
         handleReferrelData();
         handleUserdata();
-        handleTeam()
+        setTotal(localStorage.getItem('total'));
+        // handleTeam()
         // }, 100);
     }, []);
 
@@ -258,7 +260,6 @@ function Promotion() {
                         
                         <h4 style={{ color: '#fff',padding:'.5rem' }} className='text-center'>Distribution Commission of &#x20B9;100k</h4>
                         <h6 style={{ color: '#d4af37', }} className='text-center'>Commission Calculation Method(Grow Up & Rise Up)</h6>
-                  
                         <div className="row chat-head">
                             <div className="col-4 text-center">Agent Level</div>
                             <div className="col-4 text-center">Commission</div>
@@ -314,17 +315,11 @@ function Promotion() {
                             <div className="col-4 text-center">0.04%</div>
                             <div className="col-4 text-center">&#x20B9;40</div>
                         </div>
-                        </div>
-
-
-                        
-
-                    
+                        </div>                    
                 </>}
             {activeTab == 2 && <MyTeam />}
             {activeTab == 3 && <PromotionHistory />}
             {activeTab == 4 && <CommissionHistory/>}
-
             <Nav style={{ marginTop: "2rem" }} />
         </div>
     )
