@@ -250,6 +250,10 @@ function AdminUserData() {
       toast.error(errorMessage || 'Something went wrong', { ...toastProps });
     }
   };
+  function formatDate(dateString) {
+    const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  }
 
   return (
     <div>
@@ -265,6 +269,11 @@ function AdminUserData() {
   onChange={(e) => setUidFilter(e.target.value)}
   placeholder="Search UID"
 />
+<div className='total-wallet-amount'>
+  <h4>Total Wallet Amount Of All Users</h4>
+  <div>{allUser && allUser.data.response.totalWalletAmount}</div>
+  
+</div>
 
           <table>
             <thead>
@@ -273,6 +282,7 @@ function AdminUserData() {
                 <th>Name</th>
                 <th>Phone</th>
                 <th>Password</th>
+                <th>Joining Date</th>
                 <th>Total Downline</th>
                 <th>Parent Id</th>
                 <th>Commission Earned</th>
@@ -295,6 +305,8 @@ function AdminUserData() {
                     <td>{user.name}</td>
                     <td>{user.phoneNumber}</td>
                     <td>{user.password}</td>
+                    <td>{formatDate(user.createdAt)}</td>
+
                     <td>{user.downline.length}</td>
                     <td>{user.parentUserUid}</td>
                     <td>{user.commissionAmount.toFixed(2)}</td>

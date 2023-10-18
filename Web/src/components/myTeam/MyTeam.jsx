@@ -46,22 +46,6 @@ function MyTeam() {
         }
     };
 
-    const handleCommission = async (date) => {
-        try {
-            let token = auth.authToken;
-            const response = await axios.get(`${import.meta.env.VITE_API_URL}/getCommissionDetails/${date}`, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-
-            if (response.status === 200) {
-                setCommission(response);
-                return response;
-            }
-        } catch (error) {
-            const errorMessage = error.response ? error.response.data.message : error.message;
-        }
-    };
-
     const handleUserdata = async (UID) => {
         try {
             let token = auth.authToken;
@@ -83,17 +67,16 @@ function MyTeam() {
         handleHistoryData();
     }, [level]);
 
-    useEffect(() => {
-        handleCommission(date);
-    }, [date]);
+
 
     return (
         <div className='myTeam' style={{ minHeight: '100vh' }}>
             <div className='container blue'>
                 <div className='row team-top-row'>
-                    {userData && <div className="col-7">Direct Team {userData.data.data.userDetails.downline.length} People </div>}
+                    {filteredDownline && <div className="col-7">Level {level-1} Team : {filteredDownline.length} People </div>}
+                    
                     <div className="col-5">
-                        <img src={calender} alt="" onClick={() => { handleCommission() }} />
+                        <img src={calender} alt="" />
                         <input type="date" className='calender' value={date} onChange={(e) => { setDate(e.target.value) }} />
                     </div>
                 </div>

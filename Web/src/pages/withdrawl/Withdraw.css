@@ -21,7 +21,7 @@
     font-style: normal;
     font-weight: 400;
     line-height: normal;
-    letter-spacing: 0.02rem;}
+    letter-spacing: 0.02rem;width: 10rem;}
     .inputRow .col-10{display: flex; align-items: center;}
 .recharge-Button button{border-radius: 6.25rem;
     border: 2px solid #FFF;
@@ -57,6 +57,12 @@ input[type="number"]::-webkit-outer-spin-button {
 .wallet {
     padding: 1rem;
 }
+.withdraw-inc-dec{display: flex;align-items: center;gap: .5rem;}
+.withdraw-inc-dec>input{width: 4rem !important;background-color:#001C3E !important; border-radius: 7px; text-align: center; }
+.withdraw-inc-dec > div{font-size: 1.1rem;color: #fff;font-weight: 550;}
+.withdraw-inc-dec > button{display: flex;align-items: center;justify-content: center;border-radius: 3px;padding: 5px;background-color: #fff;color: #001C3E;outline: none;font-weight: 600;font-size: 18px;min-width: 30px;border: 0;}
+.withdraw-inc-dec{display: flex;align-items: center;gap: 1.1rem;}
+.withdraw-inc-dec{display: flex;align-items: center;gap: 1.1rem;}
 /* For Firefox 
 input[type="number"] {
     -moz-appearance: textfield;

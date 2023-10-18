@@ -3,26 +3,31 @@ import './Bonus.css'
 import rupee from '../../images/rupee.svg'
 import WidthDrawBonus from '../../images/img-withdraw-bonus.svg'
 import {useState , useEffect} from 'react'
-
+  import { AuthState } from '../../Atoms/AuthState';
+import { useRecoilValue } from 'recoil';
+import axios from 'axios';
 function BonusCount() {
+  const [player,setplayer]=useState()
+  const auth = useRecoilValue(AuthState);
+  const handleFakedata = async () => {
+    try {
+        let token = auth.authToken;
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/getPlayers`, {
+            headers: { Authorization: `Bearer ${token}` }
+        });
 
-  const totalBettingNumbersArray = [97500,90500, 85130, 98000, 122100, 109800, 101200, 160900, 95100, 88100, 95500, 86800, 70000,77500,90500, 98500,92100, 11800, 101200, 99500, 95100, 125000, 88900, 20100, 21300, 222100, 199800, 301200, 99900, 95000,12800, 12300, 12500, 10700,];
-  const [totalBettingCount, setTotalBettingCount] = useState(totalBettingNumbersArray[0]);
+        if (response.status === 200) {
+          setplayer(response.data)
+          console.log(response.data)
+            return response;
+        }
+    } catch (error) {
+        const errorMessage = error.response ? error.response.data.message : error.message;
+    }
+};
 
   useEffect(() => {
-    const updateTotalBettingCount = () => {
-      const date = new Date();
-      const day = date.getDate();
-      setTotalBettingCount(totalBettingNumbersArray[day - 1]);
-    };
-
-    updateTotalBettingCount();
-
-    const intervalId = setInterval(updateTotalBettingCount, 3600000);
-
-    return () => {
-      clearInterval(intervalId);
-    };
+    handleFakedata()
   }, []);
 
   return (
@@ -32,7 +37,7 @@ function BonusCount() {
                 <img src={WidthDrawBonus} alt="" className="img_bonus" />
                 <div className="total_wdraw">
                     <p>Today Total Withdrawal</p>
-                    <h3><i className="icon-rupee"></i> {totalBettingCount}</h3>
+                    <h3><i className="icon-rupee"></i> {player?player.todayTotalWithdrawal:105800}</h3>
                 </div>
             </div>
         </div>

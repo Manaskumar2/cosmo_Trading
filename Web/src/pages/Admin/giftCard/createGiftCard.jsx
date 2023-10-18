@@ -8,7 +8,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { AdminAuthState } from '../../../Atoms/AdminAuthState'
 import AdminNav from '../adminNav/AdminNav';
 import Side from '../adminSide/Side';
-
+import Accordion from 'react-bootstrap/Accordion';
 
 export const toastProps = {
     position: "top-center",
@@ -21,6 +21,7 @@ export const toastProps = {
 };
 
 function createGiftCard() {
+    const [data, setData] = useState(null)
     const [giftData, setGiftData] = useState(null)
     const [isGiftCodeCopied, setIsGiftCodeCopied] = useState(false);
     const giftCodeInputRef = useRef(null);
@@ -31,7 +32,7 @@ function createGiftCard() {
             const parsedGiftData = JSON.parse(storedGiftData);
             setGiftData(parsedGiftData);
         } else {
-            setGiftData(null); 
+            setGiftData(null);
         }
     }, []);
 
@@ -41,6 +42,22 @@ function createGiftCard() {
     const [maxClaims, setmaxClaims] = useState(0)
     const [amount, setamount] = useState(0)
 
+    const codeHistory = async () => {
+        try {
+            let token = auth.authToken;
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/getGiftCode`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            if (response.status === 200) {
+                setData(response.data)
+                console.log(response.data)
+                return response;
+            }
+        } catch (error) {
+            const errorMessage = error.response ? error.response.data.message : error.message;
+            toast.error(errorMessage || "Gift card not Found.", { ...toastProps });
+        }
+    }
     const claimCode = async () => {
         try {
             let token = auth.authToken;
@@ -71,6 +88,7 @@ function createGiftCard() {
             }, 2000);
         }
     };
+    useEffect(() => { codeHistory() }, [])
 
     return (
         <div>
@@ -121,6 +139,25 @@ function createGiftCard() {
 
                         </div>
 
+
+                    </div>
+
+
+                    <div className='container'>
+                        <Accordion className=' gift-history'>
+                            {data && data.map((item, i) => (
+                                <Accordion.Item key={i} eventKey={i.toString()}>
+                                    <Accordion.Header> <p style={{ width: '30rem', marginRight: '5rem' }}>Gift Code: {item.code}</p> <p>Claimed By: {item.claimedByUsers.length}</p> </Accordion.Header>
+                                    <Accordion.Body>
+                                        {item.claimedByUsers.map((user, j) => (
+                                            <ol key={j}>
+                                            <div><span style={{marginRight:'5rem'}}>UID: {user.UID}</span>  <span>Name: {user.name} </span> </div>
+                                            </ol>
+                                        ))}
+                                    </Accordion.Body>
+                                </Accordion.Item>
+                            ))}
+                        </Accordion>
 
                     </div>
                 </div>

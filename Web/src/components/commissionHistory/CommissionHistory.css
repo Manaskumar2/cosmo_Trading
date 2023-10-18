@@ -2,3 +2,7 @@
 .CommissionHistory .container .row{padding: 0.25rem ; border-bottom: 1px solid rgb(21, 146, 242); }
 .commissionHistoryRow .col-4 , .commissionHistoryRow .col-3{display: flex; justify-content: center;align-items: center; }
 .headingCommission .col-4{font-weight: 500;}
+.salary-commission-data{display: flex;justify-content: space-between;margin: 1rem 0;}
+.salary-commission-data> .col-4{background: rgb(34,193,195);
+    background: linear-gradient(339deg, rgba(34,193,195,1) 49%, rgb(255 255 255) 94%); border-radius: 10px;
+display: flex;flex-direction: column;align-items: center;text-align: center;color: #10345F;padding: .5rem;font-weight: 650;width: 32%;}

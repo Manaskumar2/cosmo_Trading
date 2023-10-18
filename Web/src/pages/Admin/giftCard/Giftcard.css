@@ -56,3 +56,16 @@
     font-family: Montserrat;
     font-weight: 500;
     line-height: normal;display: flex; align-items: center;font-size: 1.2rem;}
+    .accordion-body {background-color: #0B5A8F;color: #fff;
+        font-family: Montserrat;
+        font-size: 1rem;}
+        .gift-history.accordion-button:not(.collapsed){background-color: #001C3E;color: #fff;}
+        .gift-history .accordion-button{background-color: #001C3E;color: #fff;}
+        .accordion-header{border-bottom: 1px solid #0B5A8F;
+            background: #001C3E;color: #fff;
+            font-family: Montserrat;
+            font-size: 1rem;}
+            .accordion-item:first-of-type .accordion-button{border-bottom: 1px solid #0B5A8F;
+            background: #001C3E;color: #fff;
+            font-family: Montserrat;
+            font-size: 1rem;}

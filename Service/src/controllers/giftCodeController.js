@@ -34,7 +34,7 @@ const claimGiftcode = async (req, res) => {
 
     if(!code) return res.status(400).send({ status: false, message: "Invalid code" })
          
-    const giftCode = await giftCodeModel.findOne({ code });
+    const giftCode = await giftCodeModel.findOne({ code:code ,isDeleted:false});
 
     if (!giftCode) {
       return res.status(404).json({ error: 'Gift code not found' });
@@ -50,7 +50,8 @@ const claimGiftcode = async (req, res) => {
       return res.status(400).json({ error: 'You have already claimed this gift code.' });
          }
          giftCode.claims += 1;
-         user.walletAmount+=giftCode.amount
+       user.walletAmount += giftCode.amount
+       giftCode.claimedBy.push(userId)
          await giftCode.save();
          await user.save();
 
@@ -60,5 +61,34 @@ const claimGiftcode = async (req, res) => {
     res.status(500).json({ error: 'Server error. Failed to claim the gift code.' });
   }
 }
+const getGiftCode = async (req, res) => {
+  try {
+    const giftCodes = await giftCodeModel.find({})
+      .populate({
+        path: 'claimedBy',
+        select: 'UID name', // Select the fields you want to retrieve from the User model
+      })
+      .sort({ createdAt: -1 })
+    
+    if (giftCodes.length < 0) return res.status(404).json({ status: false, message: "gift code not yet created" })
 
-module.exports = {createGiftCode,claimGiftcode}
+    const formattedGiftCodes = giftCodes.map((giftCode) => {
+      return {
+        code: giftCode.code,
+        claimedByUsers: giftCode.claimedBy.map((user) => {
+          return {
+            UID: user.UID,
+            name: user.name,
+          };
+        }),
+      };
+    });
+
+    res.status(200).json(formattedGiftCodes);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error. Failed to retrieve gift codes.' });
+  }
+};
+
+module.exports = {createGiftCode,claimGiftcode,getGiftCode}

@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { signUp, signIn,sendOtpPhone,verifyOtp,resetPassword,updateUserProfile,getUserDetails, getDownlineDetails,getReferralStats, getCommissionByDate, walletToWalletTransactions, changePassword, getWalletTransactions} = require("../controllers/userController")
+const { signUp, signIn,sendOtpPhone,verifyOtp,resetPassword,updateUserProfile,getUserDetails, getDownlineDetails,getReferralStats, getCommissionByDate, walletToWalletTransactions, changePassword, getWalletTransactions, getTotalTeams} = require("../controllers/userController")
 const{authentication,adminAuthorization} = require("../middlewares/authMiddleware")
 const gameController = require("../controllers/gameController")
 const { uploadQrCode, getAllImageURLs } = require('../controllers/qrCodeController')
@@ -11,8 +11,9 @@ const { withdrawrequest, withdrawalHistory } = require("../controllers/userWithd
 const { get2ndGame, bet2ndController, get2ndGameHistory, riseUpUserBettingHistory,update2ndGameUid } = require("../controllers/secondGameController");
 const { getImage } = require("../controllers/popUpimageController");
 const { getArticle } = require("../controllers/articleController");
-const { getCommissionDetails } = require("../controllers/commissionController");
+const { getCommissionDetails, commissonAmount } = require("../controllers/commissionController");
 const { claimGiftcode } = require("../controllers/giftCodeController");
+const { getPlayers } = require("../controllers/playerController");
 // const multer = require('multer');
 // const path = require('path');
 
@@ -37,6 +38,8 @@ router.post("/resetPassword", resetPassword)
 router.post("/updateUserProfile", authentication, updateUserProfile)
 router.get("/getUserProfile/:UID", authentication, getUserDetails)
 router.get("/getReferralStats/:referralID", authentication, getReferralStats)
+// new
+router.get("/getTotalTeam/:userId",authentication,getTotalTeams)
 
 router.patch("/changePassword", authentication, changePassword)
 
@@ -96,13 +99,18 @@ router.get("/images",authentication,getImage)
 router.get("/articles", authentication, getArticle)
 //................................commissions history ********************************
 
-router.get("/commissionHistory", authentication,getCommissionDetails)
+router.get("/commissionHistory", authentication, getCommissionDetails)
+
+// new
+router.get("/commissionAmount/:userId",authentication,commissonAmount)
 //................................claim gift codes ********************************
 
 router.post("/claimGiftCode", authentication, claimGiftcode)
 
 //................................ WALLET TO WALLET ********************************
 router.post("/walletToWallet", authentication, walletToWalletTransactions)
-router.get("/getwalletToWallet", authentication,getWalletTransactions)
+router.get("/getwalletToWallet", authentication, getWalletTransactions)
+//....................................getPlayers....................................
+router.get("/getPlayers",authentication,getPlayers)
 
 module.exports =router

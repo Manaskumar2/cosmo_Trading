@@ -28,6 +28,7 @@ import axios from 'axios'
 import { useEffect,useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import prime from './prime.svg'
+import transfer from './transfer.svg'
 function Profile() {
 
 
@@ -212,7 +213,7 @@ function Profile() {
                             <div className='col-2 backImg'><img src={next} alt="" /></div>
                         </div>
                         <div className='row' onClick={() => { navigate("/walletTransfer") }}>
-                            <div className='col-2'><div className='profile-logo-Wrapper'><img src={customer} alt="" /></div></div>
+                            <div className='col-2'><div className='profile-logo-Wrapper'><img src={transfer} alt="" /></div></div>
                             <div className='col-8' >Wallet to Wallet Transfer</div>
                             <div className='col-2 backImg'><img src={next} alt="" /></div>
                         </div>

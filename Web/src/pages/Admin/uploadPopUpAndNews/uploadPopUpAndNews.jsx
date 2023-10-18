@@ -18,6 +18,10 @@ export const toastProps = {
 };
 
 function UploadPopUpAndNews() {
+        const[totalPlayers,settotalPlayers]=useState(0)
+        const[TotalBetting,setTotalBetting]=useState(0)
+        const[onlinePlayers,setonlinePlayers]=useState(0)
+        const[todayTotalWithdrawal,settodayTotalWithdrawal]=useState(0)
     const [file, setfile] = useState(null);
     const authData = useRecoilValue(AdminAuthState)
     const [newsText, setnewsText] = useState('')
@@ -85,6 +89,26 @@ function UploadPopUpAndNews() {
             const errorMessage = error.response ? error.response.data.message : error.message;
         }
     }
+    const handleFakeData = async () => {
+        try {
+            let token = authData.authToken;
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/admin/fakePlayers`,{ totalPlayers,
+            TotalBetting,
+            onlinePlayers,
+            todayTotalWithdrawal },
+                {
+                    headers: { Authorization: `Bearer ${token}` },
+                },
+            )
+            if (response.status === 201) {
+                toast.success("Successfully Updated!", { ...toastProps });
+                
+                return response;
+            }
+        } catch (error) {
+            const errorMessage = error.response ? error.response.data.message : error.message;
+        }
+    }
     return (
         <div>
             <AdminNav />
@@ -104,6 +128,23 @@ function UploadPopUpAndNews() {
                     <input type="file" accept=".jpg, .jpeg, .png, .svg" onChange={handleImageChange}/>
                     <button onClick={handleImg}>Submit</button>
                     <button onClick={handleDelete} style={{background:"red"}}>Delete</button>
+                </div>
+                {/* totalPlayers,
+                    TotalBetting,
+                    onlinePlayers,
+                    todayTotalWithdrawal */}
+                <div  className='form-rechrge' >
+                    <h3 className='text-centre'>Update Players & Total Withdraw</h3>
+                    <label htmlFor="">Enter Total Players </label>
+                    <input type='number' onChange={(e)=>{settotalPlayers(e.target.value)}} placeholder='Enter Total Players'value={totalPlayers}/>
+                    <label htmlFor="">Enter Total Betting </label>
+                    <input type='number' onChange={(e)=>{setTotalBetting(e.target.value)}} placeholder='Enter Total Betting'value={TotalBetting}/>
+                    <label htmlFor="">Enter Total Online Players</label>
+                    <input type='number' onChange={(e)=>{setonlinePlayers(e.target.value)}} placeholder='Enter onlinePlayers' value={onlinePlayers}/>
+                    <label htmlFor="">Enter Total Withdraw </label>
+                    <input type='number' onChange={(e)=>{settodayTotalWithdrawal(e.target.value)}} placeholder='Enter Total Withdraw'value={todayTotalWithdrawal}/>
+                    <button onClick={handleFakeData}>Submit</button>
+                    
                 </div>
             </div>
             </div>

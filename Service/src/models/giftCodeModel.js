@@ -23,7 +23,7 @@ const giftCodeSchema = new mongoose.Schema({
     },
    claimedBy: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'users',
     }],
     isDeleted: {
         type: Boolean,

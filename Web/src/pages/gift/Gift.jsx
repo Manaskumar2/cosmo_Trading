@@ -34,10 +34,12 @@ function Gift() {
                 toast.success('You have successfully claimed the gift Card!', { ...toastProps });
                 return response;
             }
-           
         } catch (error) {
+            if (error.response.status === 404) {
+                toast.error('Gift Card already Claimed!', { ...toastProps })
+            }else{
             const errorMessage = error.response ? error.response.data.message : error.message;
-            toast.error(errorMessage || "Gift card not Found.", { ...toastProps });
+            toast.error(errorMessage || "Gift card not Found.", { ...toastProps });}
         }
     }
   return (

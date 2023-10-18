@@ -1,5 +1,7 @@
 const userModel = require("../models/userModel");
 const commissionModel = require("../models/commissionModel");
+const moment = require("moment-timezone")
+
 
 const franchiseCommissions = async (req, res) => {
   try {
@@ -61,4 +63,54 @@ const getCommissionDetails = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 }
-module.exports = { franchiseCommissions ,getCommissionDetails};
+const commissonAmount = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+   
+    const rechargeCommission = await commissionModel
+      .find({ userId: userId, commissionType: "RECHARGE" })
+      .select("amount");
+
+    const premiumCommission = await commissionModel
+      .find({ userId: userId, commissionType: "PREMIUM" })
+      .select("amount");
+
+    const agentCommission = await commissionModel
+      .find({ userId: userId, commissionType: "AGENT" })
+      .select("amount");
+
+    // Calculate today's start and end date
+    const istNow = moment().tz("Asia/Kolkata");
+    istNow.startOf("day");
+    const todayStart = istNow.toDate();
+    istNow.endOf("day");
+    const todayEnd = istNow.toDate();
+
+    // Find documents for today
+    const todayTotalCommission = await commissionModel
+      .find({
+        userId: userId,
+        date: { $gte: todayStart, $lte: todayEnd },
+      })
+      .select("amount");
+
+    // Calculate total amounts
+    const calculateTotal = (commissions) => {
+      return commissions.reduce((total, commission) => total + commission.amount, 0);
+    };
+
+    res.status(200).send({
+      status: true,
+      totalRechargeCommission: calculateTotal(rechargeCommission),
+      totalPremiumCommission: calculateTotal(premiumCommission),
+      totalAgentCommission: calculateTotal(agentCommission),
+      todayTotalCommission: calculateTotal(todayTotalCommission),
+    });
+  } catch (error) {
+    console.error("Error fetching commission information:", error);
+    res.status(500).json({ error: "An error occurred while fetching commission information" });
+  }
+};
+
+module.exports = { franchiseCommissions ,getCommissionDetails,commissonAmount};

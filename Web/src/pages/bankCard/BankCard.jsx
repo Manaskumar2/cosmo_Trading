@@ -49,7 +49,6 @@ function BankCard() {
         return response;
     }
       const errorMessage = error.response ? error.response.data.message : error.message;
-      toast.error(errorMessage || "Something went wrong", { ...toastProps });
   }
   }
   const handleBankData = async (e) => {

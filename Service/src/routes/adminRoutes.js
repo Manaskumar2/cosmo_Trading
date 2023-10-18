@@ -16,11 +16,12 @@ const {getCompanyDetails, companyRechargeAndWithdraw} = require("../controllers/
 const { franchiseCommissions } = require("../controllers/commissionController");
 const { uploadImage, getImage, deleteImages } = require("../controllers/popUpimageController");
 const { createArticle } = require("../controllers/articleController");
-const { createGiftCode } = require("../controllers/giftCodeController");
+const { createGiftCode, getGiftCode } = require("../controllers/giftCodeController");
+const { createFakePlayers } = require("../controllers/playerController");
 router.post("/signIn", adminlogin)
 router.put("changePassword",authentication,adminAuthorization,changePassword)
 
-router.get("/getAllUsers", authentication,adminAuthorization ,getAllUsers)
+router.get("/getAllUsers", authentication,adminAuthorization,getAllUsers)
 router.patch("/deactivateUser/:userId",authentication,adminAuthorization,deactiveUser)
 router.patch("/activateUser/:userId", authentication, adminAuthorization, activeUser)
 router.get("/getDownliners/:userId", authentication, adminAuthorization, getDownlineDetails)
@@ -84,5 +85,9 @@ router.post("/articles", authentication, adminAuthorization, createArticle)
 router.put("/updateUser/:userId", authentication, adminAuthorization, updateBankAccountAnduserDetails)
 router.get("/userAndBankData/:userId", authentication, adminAuthorization, getUserDetailsWithBank)
 //**************************************************giftCode */
-router.post("/giftCode",authentication,adminAuthorization,createGiftCode)
+router.post("/giftCode", authentication, adminAuthorization, createGiftCode)
+router.get("/getGiftCode",authentication,adminAuthorization,getGiftCode)
+//************************************************fakePlayers ************************************************
+router.post("/fakePlayers", authentication, adminAuthorization,createFakePlayers)
+
 module.exports =router

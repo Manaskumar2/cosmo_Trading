@@ -12,7 +12,7 @@ function Side() {
                 <Link to='/admin/withdraw'> Withdraw Requests</Link>
                 <Link to='/admin/prime'> Premium Membership</Link>
                 <Link to='/admin/premiumUsers'> Premium Users</Link>
-                <Link to='/admin/uploadNewsAndImage'>News And Image</Link>
+                <Link to='/admin/uploadNewsAndImage'>Update Ui</Link>
                 <Link to='/admin/createGiftCard'>Gift Card</Link>
                 <Link to='/admin/adminResetPassword'>Reset Password</Link>
 

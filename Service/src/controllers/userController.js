@@ -508,6 +508,50 @@ const getDownlineDetails = async (req, res) => {
     res.status(500).json({ error: 'An error occurred while fetching downline user details' });
   }
 };
+const getTotalTeams = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const maxLevels = 10;
+    const user = await userModel.findById(userId);
+
+    if (!user) {
+      res.status(404).json({ error: 'User not found' });
+      return;
+    }
+
+    const countDownline = async (user, currentLevel) => {
+      if (currentLevel === maxLevels) {
+        return 1;
+      }
+
+      let totalCount = 1;
+
+      for (const downlineUser of user.downline) {
+        
+        if (downlineUser.user) {
+          const subUser = await userModel.findById(downlineUser.user._id);
+          if (subUser) {
+            const subUserCount = await countDownline(subUser, currentLevel + 1);
+            totalCount += subUserCount;
+          }
+        }
+      }
+
+      return totalCount;
+    };
+
+    const totalUsersIn10Levels = await countDownline(user, 0);
+
+    res.json({
+      totalUsersIn10Levels: totalUsersIn10Levels,
+    });
+  } catch (error) {
+    console.error('Error fetching downline user details:', error);
+    res.status(500).json({ error: 'An error occurred while fetching downline user details' });
+  }
+};
+
+
 
 const getReferralStats = async (req, res) => {
   try {
@@ -617,54 +661,113 @@ const activeUser = async (req, res) => {
 
     }
 }
-    const  getAllUsers = async (req, res) => {
-      try {
-        const { queryPageIndex = 1, queryPageSize = 20, queryPageFilter, queryPageSortBy = [{ id: '_id', desc: false }] } = req.query;
+//     const  getAllUsers = async (req, res) => {
+//       try {
+//         const { queryPageIndex = 1, queryPageSize = 20, queryPageFilter, queryPageSortBy = [{ id: '_id', desc: false }] } = req.query;
         
-        let query = {isAdmin:false};
-        let sortBy = queryPageSortBy[0].id;
-        let sortOrder = queryPageSortBy[0].desc ? -1 : 1;
+//         let query = {isAdmin:false};
+//         let sortBy = queryPageSortBy[0].id;
+//         let sortOrder = queryPageSortBy[0].desc ? -1 : 1;
       
     
-        if (queryPageFilter) {
-          let searchRegex = new RegExp(queryPageFilter, "i");
-          query = {
-            $or: [
-              { phoneNumber: searchRegex },
-            ],
-          };
-        }
+//         if (queryPageFilter) {
+//           let searchRegex = new RegExp(queryPageFilter, "i");
+//           query = {
+//             $or: [
+//               { phoneNumber: searchRegex },
+//             ],
+//           };
+//         }
 
-        let getUsers;
+//         let getUsers;
         
-        const count = await userModel.countDocuments(query);
+//         const count = await userModel.countDocuments(query);
 
-        getUsers = await userModel
-          .find(query)
-          .sort({ [sortBy]: sortOrder })
-          .limit(parseInt(queryPageSize))
-          .skip((parseInt(queryPageIndex) - 1) * parseInt(queryPageSize))
-          .exec();
+//         getUsers = await userModel
+//           .find(query)
+//           .sort({ [sortBy]: sortOrder })
+//           .limit(parseInt(queryPageSize))
+//           .skip((parseInt(queryPageIndex) - 1) * parseInt(queryPageSize))
+//           .exec();
 
-        if (getUsers.length < 1) {
-          return res
-            .status(400)
-            .send({ status: false, message: "No user found" });
-        }
+//         if (getUsers.length < 1) {
+//           return res
+//             .status(400)
+//             .send({ status: false, message: "No user found" });
+//         }
 
-        const response = {
-          getUsers,
-          totalPages: Math.ceil(count / parseInt(queryPageSize)),
-          currentPage: parseInt(queryPageIndex),
-          totalCount: count,
-        };
+//         const response = {
+//           getUsers,
+//           totalPages: Math.ceil(count / parseInt(queryPageSize)),
+//           currentPage: parseInt(queryPageIndex),
+//           totalCount: count,
+//         };
 
-        return res.status(200).send({ status: true, message: "Successful", response });
+//         return res.status(200).send({ status: true, message: "Successful", response });
 
-      } catch (error) {
-        console.error(error)
-        return res.status(500).send({ status: false, message: error.message });
+//       } catch (error) {
+//         console.error(error)
+//         return res.status(500).send({ status: false, message: error.message });
+//     }
+// };
+const getAllUsers = async (req, res) => {
+  try {
+    const { queryPageIndex = 1, queryPageSize = 20, queryPageFilter, queryPageSortBy = [{ id: '_id', desc: false }] } = req.query;
+
+    let query = { isAdmin: false };
+    let sortBy = queryPageSortBy[0].id;
+    let sortOrder = queryPageSortBy[0].desc ? -1 : 1;
+
+    if (queryPageFilter) {
+      let searchRegex = new RegExp(queryPageFilter, "i");
+      query = {
+        $or: [
+          { phoneNumber: searchRegex },
+        ],
+      };
     }
+
+    const count = await userModel.countDocuments(query);
+
+    const getUsers = await userModel
+      .find(query)
+      .sort({ [sortBy]: sortOrder })
+      .limit(parseInt(queryPageSize))
+      .skip((parseInt(queryPageIndex) - 1) * parseInt(queryPageSize))
+      .exec();
+
+    if (getUsers.length < 1) {
+      return res.status(400).send({ status: false, message: "No user found" });
+    }
+
+    // Calculate the total walletAmount of all users using an aggregation pipeline
+    const totalWalletAmountResult = await userModel.aggregate([
+      {
+        $match: query,
+      },
+      {
+        $group: {
+          _id: null,
+          totalWalletAmount: { $sum: "$walletAmount" },
+        },
+      },
+    ]);
+
+    const totalWalletAmount = totalWalletAmountResult[0] ? totalWalletAmountResult[0].totalWalletAmount : 0;
+
+    const response = {
+      getUsers,
+      totalPages: Math.ceil(count / parseInt(queryPageSize)),
+      currentPage: parseInt(queryPageIndex),
+      totalCount: count,
+      totalWalletAmount, // Add total walletAmount to the response
+    };
+
+    return res.status(200).send({ status: true, message: "Successful", response });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({ status: false, message: error.message });
+  }
 };
 
 const getCommissionByDate = async (req, res) => {
@@ -900,6 +1003,7 @@ module.exports = {
   getCommissionByDate,
   walletToWalletTransactions,
   getUserDetailsByUserId,
-  getWalletTransactions
+  getWalletTransactions,
+  getTotalTeams
 
 }

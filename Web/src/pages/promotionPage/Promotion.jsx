@@ -16,6 +16,8 @@ import line from './Line 28.svg';
 import { useNavigate } from 'react-router-dom';
 // /getReferralStats/:referralID
 function Promotion() {
+    const[total,setTotal]=useState(0)
+    const [commission,setCommission]=useState(0)
     const navigate=useNavigate()
     const auth = useRecoilValue(AuthState)
     const [userData, setUserdata] = useRecoilState(UserDetails)
@@ -33,8 +35,50 @@ function Promotion() {
         setActiveTab(tabIndex);
 
     };
-    const handleUserdata = async () => {
+    const handleCommission = async () => {
+        try {
+            let token = auth.authToken
+            let userId = auth._id
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/commissionAmount/${userId}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            }
+            );
+            if (response.status === 200) {
+                setCommission(response.data.todayTotalCommission)
+                return response;
+            }
+        } catch (error) {
+            if (error.response.status === 403) {
+                navigate('/signIn')
+                return response;
+            }
+            const errorMessage = error.response ? error.response.data.message : error.message;
 
+        }
+    }
+    const handleTeam = async () => {
+        try {
+            let token = auth.authToken
+            let userId = auth._id
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/getTotalTeam/${userId}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            }
+            );
+            if (response.status === 200) {
+                // toast.success("got user money data", { ...toastProps });
+                setTotal(response.data.totalUsersIn10Levels)
+                return response;
+            }
+        } catch (error) {
+            if (error.response.status === 403) {
+                navigate('/signIn')
+                return response;
+            }
+            const errorMessage = error.response ? error.response.data.message : error.message;
+
+        }
+    }
+    const handleUserdata = async () => {
         try {
             let token = auth.authToken
             let UID = auth.UID
@@ -79,8 +123,10 @@ function Promotion() {
     useEffect(() => {
 
         // setTimeout(() => {
+        handleCommission()
         handleReferrelData();
         handleUserdata();
+        handleTeam()
         // }, 100);
     }, []);
 
@@ -142,9 +188,17 @@ function Promotion() {
                         <img src={gift} alt="" />
                         <p>My Reward</p>
                     </div>
-                    <div className='container commission'>
-                        {userData && <h2 className='text-center'>{userData.data.data.userDetails.commissionAmount.toFixed(2)}</h2>}
+                    <div className='container commission' style={{display:'flex',justifyContent:'space-evenly',alignItems:'center'}}>
+                        <div>
+                            {userData && <h2 className='text-center'>{userData.data.data.userDetails.commissionAmount.toFixed(2)}</h2>}
                         <p className='text-center'>Total Commission</p>
+                        </div>
+                        <div>
+                        <h2 className='text-center'>{commission.toFixed(2)}</h2>
+                            
+                            <p className='text-center'>Today's Commission</p>
+                        </div>
+                        
                         {/* <div className="container">
                             <div className="row commission-row">
                                 <div className="col-9">Direct Commission</div>
@@ -162,10 +216,10 @@ function Promotion() {
                                     {userData.data.data.userDetails.downline.length}
                                 </div>
                             </div>}
-                            {userData && <div className="row commission-bot-row">
-                                <div className="col-10">Total Invite </div>
+                            {total && <div className="row commission-bot-row">
+                                <div className="col-10">Total Invite Team </div>
                                 <div className="col-2">
-                                    {userData.data.data.userDetails.downline.length}
+                                    {total}
                                 </div>
                             </div>}
                             <div className="row commission-bot-row">
@@ -191,7 +245,7 @@ function Promotion() {
                             </div>
                         </div>
                         <h4 style={{ color: '#fff' }} className='text-center'>Invitation Link</h4>
-                        <div className='container' style={{ paddingBottom: "8rem" }}>
+                        <div className='container' style={{ paddingBottom: "2rem" }}>
                             <div className="row invitation-row"  >
                                 {userData && <div className="col-10">Copy Invitation Link</div>}
 
@@ -199,6 +253,73 @@ function Promotion() {
                             </div>
                         </div>
                     </div>
+                    <div className='container commission chart' style={{marginBottom:'6rem'}}>
+                        <div className='promotion-heading-box text-center'><h2 style={{ color: '#fff' }} className='text-center'>Level Income</h2></div>
+                        
+                        <h4 style={{ color: '#fff',padding:'.5rem' }} className='text-center'>Distribution Commission of &#x20B9;100k</h4>
+                        <h6 style={{ color: '#d4af37', }} className='text-center'>Commission Calculation Method(Grow Up & Rise Up)</h6>
+                  
+                        <div className="row chat-head">
+                            <div className="col-4 text-center">Agent Level</div>
+                            <div className="col-4 text-center">Commission</div>
+                            <div className="col-4 text-center">Value</div>
+                        </div>
+                        <div className="row ">
+                            <div className="col-4 text-center">Level-1</div>
+                            <div className="col-4 text-center">0.7%</div>
+                            <div className="col-4 text-center">&#x20B9;700</div>
+                        </div>
+                        <div className="row ">
+                            <div className="col-4 text-center">Level-2</div>
+                            <div className="col-4 text-center">0.5%</div>
+                            <div className="col-4 text-center">&#x20B9;500</div>
+                        </div>
+                        <div className="row ">
+                            <div className="col-4 text-center">Level-3</div>
+                            <div className="col-4 text-center">0.3%</div>
+                            <div className="col-4 text-center">&#x20B9;300</div>
+                        </div>
+                        <div className="row ">
+                            <div className="col-4 text-center">Level-4</div>
+                            <div className="col-4 text-center">0.2%</div>
+                            <div className="col-4 text-center">&#x20B9;200</div>
+                        </div>
+                        <div className="row ">
+                            <div className="col-4 text-center">Level-5</div>
+                            <div className="col-4 text-center">0.15%</div>
+                            <div className="col-4 text-center">&#x20B9;150</div>
+                        </div>
+                        <div className="row ">
+                            <div className="col-4 text-center">Level-6</div>
+                            <div className="col-4 text-center">0.1%</div>
+                            <div className="col-4 text-center">&#x20B9;100</div>
+                        </div>
+                        <div className="row ">
+                            <div className="col-4 text-center">Level-7</div>
+                            <div className="col-4 text-center">0.08%</div>
+                            <div className="col-4 text-center">&#x20B9;80</div>
+                        </div>
+                        <div className="row ">
+                            <div className="col-4 text-center">Level-8</div>
+                            <div className="col-4 text-center">0.06%</div>
+                            <div className="col-4 text-center">&#x20B9;60</div>
+                        </div>
+                        <div className="row ">
+                            <div className="col-4 text-center">Level-9</div>
+                            <div className="col-4 text-center">0.05%</div>
+                            <div className="col-4 text-center">&#x20B9;50</div>
+                        </div>
+                        <div className="row ">
+                            <div className="col-4 text-center">Level-10</div>
+                            <div className="col-4 text-center">0.04%</div>
+                            <div className="col-4 text-center">&#x20B9;40</div>
+                        </div>
+                        </div>
+
+
+                        
+
+                    
                 </>}
             {activeTab == 2 && <MyTeam />}
             {activeTab == 3 && <PromotionHistory />}

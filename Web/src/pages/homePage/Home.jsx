@@ -7,7 +7,7 @@ import Nav from '../../components/Nav/Nav';
 import Banner from '../../components/banner/Banner';
 import GameSection from '../../components/gameSection/GameSection';
 import OnlineCount from '../../components/onlineCount/OnlineCount';
-import BonusCount from '../../components/bonusCount/BonusCount';
+// import BonusCount from '../../components/bonusCount/BonusCount';
 import RunningTime from '../../components/runningTime/RunningTime';
 import WithdrawSection from '../../components/withdrawSection/WithdrawSection';
 import Accordian from '../../components/accordian/Accordian';
@@ -120,7 +120,7 @@ function Home() {
                     <Banner news={news} />
                     <GameSection />
                     <OnlineCount />
-                    <BonusCount />
+                    {/* <BonusCount /> */}
                     <RunningTime />
                     <WithdrawSection />
                     <Accordian />

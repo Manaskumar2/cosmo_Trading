@@ -8,7 +8,7 @@
 .tab-btn-container .active-Tab{border-bottom: 1.5px  solid #FBB040; color:  #fff;}
 .gift{width: 100%; background: #001C3E; display: flex; justify-content: center; align-items: center; flex-direction: column;padding:  1.5rem 0;gap: 1rem;}
 .gift p{color: #6CD7EE; font-weight: 450;font-family: 'Montserrat';}
-.commission{padding: 1rem 1rem 0rem 1rem; border:2px solid #295992;margin: 1rem; width: 93%; border-radius: 20px;}
+.commission{padding: 1rem 1rem 0rem 1rem; border:2px solid #295992;margin: 1rem  ; width: 93%; border-radius: 20px;}
 .commission h2{color: #fff;}
 .commission p{color: #DEAC4C; margin-bottom: 1.5rem;}
 .commission-row{padding: .7rem 0;border-top: 1px solid #164781;}
@@ -19,6 +19,31 @@
 .commission-bot-row .col-2{color: #FFF;font-family: 'Montserrat';font-size: 1rem;text-align: center;}
 .total-commission{color: #FFF; padding: .8rem 0; font-size: 1rem; font-weight: 480;font-family: 'Montserrat';border-top: 2px solid #DCB17F; display: flex;flex-direction: column;justify-content: center;align-items: center;}
 
+.chart {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0.625rem;
+    border: 2px solid #31C7DB;
+    box-shadow: 0px 4px 10px 0px rgba(49, 199, 219, 0.60);
+    margin-top: 2rem;
+}
+.promotion-heading-box {
+    width: max-content;
+    background:linear-gradient(143deg, #ae0e16 0%, #EC4E55 100%);
+    padding: 1rem;
+    border-radius: 10px;
+    border: 3px solid #DEAC4C;
+    margin-bottom: 1rem;
+}
+.chart .row {
+    width: 100%;
+    color: #fff;
+    padding: 1rem 0rem;
+    border-bottom: 1px solid #1B92AC;
+}
+.chat-head{font-weight: 600;color: #0AE2FF !important;}
 .invitation-row{border-radius: 12.5rem; margin:0 0 30px;
     border: 1px solid #FFF;
     background: linear-gradient(143deg, #C82F36 0%, #EC4E55 100%);
@@ -56,3 +81,8 @@
 .myTeam .popup{background: #054476; padding: 50px 30px;}
 .myTeam .popup .popup-content{text-align: center;}
 .myTeam .popup .popup-content .close-popup{margin-bottom: 20px; padding: 6px 20px;}
+.container.commission.chart h6{font-size: .9rem;}
+.promotion-heading-box{}
+@media (max-width: 500px) {
+    .container.commission.chart h6{font-size: .8rem;}
+}
