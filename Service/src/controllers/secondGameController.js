@@ -700,7 +700,10 @@ const createGame = async (duration) => {
 };
 
 const startGameLoop = async (duration) => {
-  setInterval(() => { createGame(duration) }, 60 * 1000);
+  while (true) {
+  
+    await createGame(duration);
+  }
 };
 
 const durationOptions = [1];
