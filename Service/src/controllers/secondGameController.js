@@ -688,7 +688,7 @@ const createGame = async (duration) => {
     });
 
 
-    await new Promise((resolve) => setTimeout(resolve, 55 * 1000));
+    await new Promise((resolve) => setTimeout(resolve, 60 * 1000));
  
     await calculateResult(newGame._id);
     newGame.isCompleted = true;
