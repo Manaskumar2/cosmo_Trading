@@ -33,7 +33,7 @@ function GameHistory({ duration }) {
 
 const startIndex = (page - 1) * itemsPerPage;
 const endIndex = startIndex + itemsPerPage;
-    const [second, setSecond] = useRecoilState(CountDownRiseup)
+    const second = useRecoilValue(CountDownRiseup)
     const [expandedRowIndex, setExpandedRowIndex] = useState(null);
     const toggleRow = (index) => {
         if (expandedRowIndex === index) {
@@ -47,11 +47,9 @@ const endIndex = startIndex + itemsPerPage;
     const auth = useRecoilValue(AuthState)
     const [gameHistoryList, setGameHistoryList] = useRecoilState(GameHistoryListRiseUp)
     const [userGames, setUserGames] = useRecoilState(UserGameHistoryRiseUp)
-   
     const [historyPage, setHistoryPage] = useState(1)
 
     const getUserGameHistory = async () => {
-
         try {
             let userId = auth._id;
             let token = auth.authToken;
@@ -60,7 +58,7 @@ const endIndex = startIndex + itemsPerPage;
                 headers: { Authorization: `Bearer ${token}` },
             });
             if (response.status === 200) {
-                setUserGames(response)
+                setUserGames(response.data)
                 return response;
             }
         } catch (error) {
@@ -72,6 +70,7 @@ const endIndex = startIndex + itemsPerPage;
 
         }
     }
+    
     const getGameHistory = async () => {
         try {
             let token = auth.authToken;
@@ -88,32 +87,37 @@ const endIndex = startIndex + itemsPerPage;
 
         }
     }
-    useEffect(() => {
-        const fetchData = setInterval(getGameHistory, 3500)
-        return () => { clearInterval(fetchData) }
-    }, [historyPage])
-    useEffect(() => {
-        const fetchData = setInterval(getUserGameHistory, 3500)
-        return () => { clearInterval(fetchData) }
-    }, [page])
+
+    // useEffect(() => {
+    //     const fetchData = setInterval(getGameHistory, 3500)
+    //     return () => { clearInterval(fetchData) }
+    // }, [historyPage])
+
+    // useEffect(() => {
+    //     const fetchData = setInterval(getUserGameHistory, 3500)
+    //     return () => { clearInterval(fetchData) }
+    // }, [page])
 
     useEffect(() => {
-        getUserGameHistory()
+        getUserGameHistory();
     }, [page])
+    
     useEffect(() => {
-        getGameHistory()
-    }, [historyPage])
+        if(activeTab === 1){
+            getGameHistory()
+        }
+    }, [historyPage, activeTab])
 
 
     const handleTabClick = (tabIndex) => {
         setActiveTab(tabIndex);
     };
-    
+
     useEffect(() => {
-    if (second < 5) {
-        setHistoryPage(1);
-    }
-}, [second]);
+        if (second < 5) {
+            setHistoryPage(1);
+        }
+    }, [second]);
 
     return (
         <div className="gameHistory">
@@ -309,7 +313,7 @@ const endIndex = startIndex + itemsPerPage;
                                 </thead>
                                 
                                 <tbody>
-                                {userGames.data.history.slice(startIndex, endIndex).map((item, index) => (
+                                {userGames.history.slice(startIndex, endIndex).map((item, index) => (
                                             <React.Fragment key={index}>
                                                 <tr onClick={() => toggleRow(index)}>
                                                     <td>{item.gameUID}</td>
@@ -317,7 +321,7 @@ const endIndex = startIndex + itemsPerPage;
                                                         item.isCompleted
                                                             ? item.group === item.winnerGroup
                                                                 ? 'Win'
-                                                                : item.group === item.loserGroup
+                                                                : item.group === item.losersGroup
                                                                     ? 'Lose'
                                                                     : item.group === item.runnerUpGroup
                                                                         ? 'Runner Up'
@@ -369,7 +373,7 @@ const endIndex = startIndex + itemsPerPage;
                                                                             item.isCompleted
                                                                                 ? item.group === item.winnerGroup
                                                                                     ? 'Win'
-                                                                                    : item.group === item.loserGroup
+                                                                                    : item.group === item.losersGroup
                                                                                         ? 'Lose'
                                                                                         : item.group === item.runnerUpGroup
                                                                                             ? 'Runner Up'
@@ -379,7 +383,7 @@ const endIndex = startIndex + itemsPerPage;
 
                                                                     </p>
                                                                 </div>
-                                                                <div className='flex-div-space-Betn' ><p>Order Time:</p><p>{new Date(item.startTime).toLocaleString()}</p></div>
+                                                                <div className='flex-div-space-Betn' ><p>Order Time:</p><p>{new Date(item.orderTime).toLocaleString()}</p></div>
                                                             </div>
                                                         </td>
                                                     </tr>

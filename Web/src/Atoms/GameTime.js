@@ -9,4 +9,10 @@ const TimeNo = atom({
     key: "TimeNo",
     default:1 
 })
-export {OneMinute, TimeNo}
+
+const GrowUpGameState = atom({
+    key: 'GrowUpGameState',
+    default: {}
+})
+
+export {OneMinute, TimeNo, GrowUpGameState}

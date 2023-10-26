@@ -13,14 +13,14 @@ import alfa from '../../images/alfaBtn.svg'
 import beta from '../../images/betaBtn.svg'
 import gama from '../../images/gama.svg'
 import { TimeSectionRiseUp } from '../../components/ComponentExport'
-import { UserDetails } from '../../Atoms/UserDetails'
+import { UserDetails, User_Wallet } from '../../Atoms/UserDetails'
 import axios from 'axios';
 import toast, { Toaster } from "react-hot-toast";
 import { AuthState } from '../../Atoms/AuthState'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import { Link } from 'react-router-dom'
 import { TimeNo } from '../../Atoms/GameTime'
-import { RiseUpTime } from '../../Atoms/GameTimeRiseup'
+import { RiseUpGame, RiseUpTime } from '../../Atoms/GameTimeRiseup'
 import { GameHistoryRiseUp } from '../../components/ComponentExport'
 import { useNavigate } from 'react-router-dom'
 import { CountDown } from '../../Atoms/CountDown';
@@ -30,6 +30,9 @@ import mute from '../../images/mute.svg'
 import { ShowCountDown } from '../../Atoms/ShowCountDown'
 import { CountDownRiseup } from '../../Atoms/CountDownRiseup'
 import animation from './RiseUP-Animation.gif'
+import initializeSocket from '../../sockets/socket'
+import { GameHistoryListRiseUp } from '../../Atoms/GameHistoryListRiseUp'
+import { UserGameHistoryRiseUp } from '../../Atoms/UserGameHistoryRiseUp'
 
 export const toastProps = {
     position: "top-center",
@@ -44,54 +47,97 @@ function RiseUp() {
     const countDownRiseup = useRecoilValue(CountDownRiseup)
     const [playSound, setPlaySound] = useRecoilState(PlaySound)
     const [isChecked, setIsChecked] = useState(true);
-
     const navigate = useNavigate()
-
-    const [userData, setUserData] = useRecoilState(UserDetails)
+    const setUserData = useSetRecoilState(UserDetails);
     const [activeTab, setActiveTab] = useState(1);
-
-    const setTimeNo = useSetRecoilState(TimeNo)
+    const setRiseUpGame = useSetRecoilState(RiseUpGame);
+    const [timeNo, setTimeNo] = useRecoilState(TimeNo)
     const setMinute = useSetRecoilState(RiseUpTime)
-
     const auth = useRecoilValue(AuthState)
     const [amount, setAmount] = useState(1);
     const [group, setGroup] = useState('');
     const [duration, setDuration] = useState(1);
     const [multiplier, setMultiplier] = useState(1);
-
     const [smShow, setSmShow] = useState(false);
     const [lgShow, setLgShow] = useState(false);
     const [gmShow, setGmShow] = useState(false);
-
-
-
     const showCountDown = useRecoilValue(ShowCountDown)
-
+    const [gameHistoryList, setGameHistoryList] = useRecoilState(GameHistoryListRiseUp);
+    const [userGames, setUserGames] = useRecoilState(UserGameHistoryRiseUp);
+    const [userWallet, setUserWallet] = useRecoilState(User_Wallet);
     const [money, setMoney] = useState(1)
     const handleTabClick = (tabIndex) => {
         setActiveTab(tabIndex);
     };
 
-    const [currentDateNumber, setCurrentDateNumber] = useState(null);
+    useEffect(() => {
+        const socket = initializeSocket(auth);
 
+        socket.emit('join_rise_up');
 
-    const getCurrentDateNumber = () => {
-        const currentDate = new Date();
-        const year = currentDate.getFullYear();
-        const month = currentDate.getMonth() + 1;
-        const date = currentDate.getDate();
-        const dateNumber = year * 10000 + month * 100 + date;
-        return dateNumber;
-    };
+        socket.on('rise_up_update', (data) => {
+            const riseUpData = JSON.parse(data);
+            const gameData = riseUpData.game;
+            if(gameHistoryList.currentPage === 1){
+                setGameHistoryList(prev => {
+                    const prevGames = [...prev.gamesWithSuccessfulBets];
+                    
+                    prevGames.unshift(gameData);
+                    if(prevGames?.length >= 10){
+                        prevGames.pop();
+                    }
+    
+                    return {...prev, gamesWithSuccessfulBets: prevGames, totalPages: riseUpData.totalPages };
+                })
+            }
+            
+            if(userGames.currentPage === 1){
+                setUserGames(prev => {
+                    const prevGames = [...prev.history];                    
+                    const updatedGames = prevGames.map(game => {
+                        if(game._id === gameData._id){
+                            console.log({...game, ...gameData})
+                            return {...game, ...gameData};
+                        } else {
+                            return game;
+                        }
+                    })
 
+                    return {...prev, history: updatedGames}
+                })
+            }
+        })
+
+        return () => {
+            socket.emit('leave_rise_up');
+            socket.off('rise_up_update');            
+        };
+    }, [JSON.stringify(gameHistoryList?.gamesWithSuccessfulBets), JSON.stringify(userGames.history)]);
+
+    useEffect(() => {
+        const socket = initializeSocket(auth);
+        socket.emit('get_rise_up', timeNo);
+        socket.on('updateUserWallet', (data) => {
+            const walletAmount = data;
+            setUserWallet(walletAmount);
+        })
+
+        socket.on('rise_up_game', (data) => {
+            const gameData = JSON.parse(data);
+            setRiseUpGame(gameData);
+        })
+
+        return () => {
+            socket.off('updateUserWallet');
+            socket.off('rise_up_game');
+        };
+    }, []);
 
     useEffect(() => {
         handleUserMoney()
-        const intervalId = setInterval(handleUserMoney, 4500);
-        return () => clearInterval(intervalId);
+        // const intervalId = setInterval(handleUserMoney, 4500);
+        // return () => clearInterval(intervalId);
     }, []);
-
-
 
     const handleUserMoney = async () => {
         try {
@@ -103,6 +149,7 @@ function RiseUp() {
             );
             if (response.status === 200) {
                 setUserData(response)
+                setUserWallet(response.data.data.userDetails.walletAmount.toFixed(2));
                 return response;
             }
         } catch (error) {
@@ -145,6 +192,18 @@ function RiseUp() {
                     message = 'Unknown Group';
                 }
                 toast.success(`Bet created Successfully! on ${message}`, { ...toastProps });
+                if(userGames.currentPage === 1){
+                    setUserGames(prev => {
+                        const prevGames = [...prev.history];
+                        
+                        prevGames.unshift(response.data.game);
+                        if(prevGames?.length >= 10){
+                            prevGames.pop();
+                        }
+        
+                        return {...prev, history: prevGames };
+                    })
+                }
                 setGroup('');
                 setSmShow(false);
                 setLgShow(false);
@@ -257,14 +316,6 @@ function RiseUp() {
         }
     };
 
-    // useEffect(() => {
-    //     if (countDownRiseup === 59) {
-    //         handleMin();
-    //     }
-    // }, [countDownRiseup])
-
-    // useEffect(() => { handleMin() }, [])
-
     return (
         <div className="win">
             <div className="container winNav">
@@ -294,7 +345,7 @@ function RiseUp() {
                             <p style={{ color: '#29CEE4', fontFamily: 'Montserrat' }}>Wallet balance</p>
                         </div>
                         <div className="col-4" style={{ textAlign: 'right' }}><img src={wallet} alt="" /></div>
-                        <h2 style={{ color: '#fff', letterSpacing: 0.15, fontSize: 27, fontFamily: 'Montserrat', display: 'flex', fontWeight: 600 }}><img src={rupee} alt="" /> {userData && userData.data.data.userDetails.walletAmount.toFixed(2)} <img src={reload} alt="" style={{ marginLeft: 10, }} onClick={handleUserMoney} /></h2>
+                        <h2 style={{ color: '#fff', letterSpacing: 0.15, fontSize: 27, fontFamily: 'Montserrat', display: 'flex', fontWeight: 600 }}><img src={rupee} alt="" /> {parseFloat(userWallet)?.toFixed(2)} <img src={reload} alt="" style={{ marginLeft: 10, }} onClick={handleUserMoney} /></h2>
                     </div>
 
                     <div className="container">

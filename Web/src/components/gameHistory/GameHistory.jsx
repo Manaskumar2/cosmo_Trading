@@ -10,7 +10,7 @@ import right from '../../images/RightArr.svg'
 import Winner from '../../images/icon-winner.svg'
 import Alpha from '../../images/icon-alpha.svg'
 import Beta from '../../images/icon-beta.svg'
-import { UserGameHistory } from '../../Atoms/UserGameHistory';
+import { GrowUpUserGameHistory, UserGameHistory } from '../../Atoms/UserGameHistory';
 import {useNavigate} from 'react-router-dom'
 // import { useRecoilValue } from 'recoil';
 import { CountDownGrowup } from '../../Atoms/CountDownGrowup';
@@ -42,7 +42,7 @@ function GameHistory({ duration  }) {
     const [activeTab, setActiveTab] = useState(1);
     const auth = useRecoilValue(AuthState)
     const [gameHistoryList, setGameHistoryList] = useRecoilState(GameHistoryList)
-    const [userGames, setUserGames] = useRecoilState(UserGameHistory)
+    const [userGames, setUserGames] = useRecoilState(GrowUpUserGameHistory);
     const [page, setPage] = useState(1)
     const itemsPerPage = 10; 
 
@@ -61,7 +61,7 @@ const endIndex = startIndex + itemsPerPage;
             });
 
             if (response.status === 200) {
-                setUserGames(response)
+                setUserGames(response.data)
                 return response;
             }
         } catch (error) {
@@ -90,18 +90,19 @@ const endIndex = startIndex + itemsPerPage;
         }
     }
 
-    useEffect(() => {
-        const fetchData = setInterval(getGameHistory, 3500)
-        return () => { clearInterval(fetchData) }
-    }, [historyPage])
-    useEffect(() => {
-        const fetchData = setInterval(getUserGameHistory, 3500)
-        return () => { clearInterval(fetchData) }
-    }, [page])
+    // useEffect(() => {
+    //     const fetchData = setInterval(getGameHistory, 3500)
+    //     return () => { clearInterval(fetchData) }
+    // }, [historyPage])
+    // useEffect(() => {
+    //     const fetchData = setInterval(getUserGameHistory, 3500)
+    //     return () => { clearInterval(fetchData) }
+    // }, [page])
 
     useEffect(() => {
         getUserGameHistory()
     }, [page])
+
     useEffect(() => {
         getGameHistory()
     }, [historyPage])
@@ -111,7 +112,6 @@ const endIndex = startIndex + itemsPerPage;
             setHistoryPage(1);
         }
     }, [countDownGrowup]);
-
 
     const handleTabClick = (tabIndex) => {
         setActiveTab(tabIndex);
@@ -221,8 +221,8 @@ const endIndex = startIndex + itemsPerPage;
                                 </thead>
                                 <tbody>
                                     {userGames &&
-                                        userGames.data &&
-                                        userGames.data.history.slice(startIndex, endIndex).map((item, index) => (
+                                        userGames &&
+                                        userGames.history.slice(startIndex, endIndex).map((item, index) => (
                                             <React.Fragment key={index}>
                                                 <tr onClick={() => toggleRow(index)}>
                                                     <td>{item.gameUID}</td>

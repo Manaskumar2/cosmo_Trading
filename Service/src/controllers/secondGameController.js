@@ -5,7 +5,8 @@ const Game = require("../models/secondGameModel");
 const Wallet = require("../models/companywallet");
 const commissionModel = require("../models/commissionModel")
 
-const { generateUniqueNumber2 } = require("../util/util");
+const { generateUniqueNumber2, updateUserWallet } = require("../util/util");
+const { updateRiseUp, createRiseUp } = require("../socket/sockets");
 let walletId = "650daaa42b2122794a524f24";
 
 let downloadResult = [0.7, 0.5, 0.3, 0.2, 0.15, 0.1, 0.08, 0.06, 0.05, 0.04];
@@ -316,6 +317,14 @@ if (
         }
       }
     }
+
+    game.winnerGroup = winnerGroup;
+    game.runnerUpGroup = runnerUpGroup;
+    game.losersGroup = loserGroup;
+    await game.save();
+    
+    updateRiseUp(game);
+
     if (runnerUpGroup !== null && loserGroup !== null && winnerGroup !== null) {
       const winner = groups[winnerGroup];
       const runnerUp = groups[runnerUpGroup];
@@ -334,10 +343,7 @@ if (
        await distributeComissionToOneUser(loser, game)
     }
 
-    game.winnerGroup = winnerGroup;
-    game.runnerUpGroup = runnerUpGroup;
-    game.losersGroup = loserGroup;
-    await game.save();
+
     const totalAmount = groups["A"].totalAmount + groups["B"].totalAmount + groups["C"].totalAmount 
     if (totalAmount > 0) {
       const wallet = await Wallet.findOne({ _id: walletId });
@@ -391,15 +397,16 @@ async function distributeComissionToThreeUsers(winner, runnerUp, losers, game, w
        totalAmount -= returnAmount;
 
       // Update the user's wallet with the win amount
-      await userModel.updateOne(
-        { _id: bet.user._id },
-        {
-          $inc: {
-            walletAmount: returnAmount,
-            winningAmount: returnAmount
-          }
-        }
-      );
+      await updateUserWallet({userId: bet.user._id, walletAmount: returnAmount, winningAmount: returnAmount});
+      // await userModel.updateOne(
+      //   { _id: bet.user._id },
+      //   {
+      //     $inc: {
+      //       walletAmount: returnAmount,
+      //       winningAmount: returnAmount
+      //     }
+      //   }
+      // );
     }
     
   }
@@ -419,15 +426,17 @@ async function distributeComissionToThreeUsers(winner, runnerUp, losers, game, w
       totalAmount -= returnAmount;
 
       // Update the user's wallet with the win amount
-      await userModel.updateOne(
-        { _id: bet.user._id },
-        {
-          $inc: {
-            walletAmount: returnAmount,
-            winningAmount: returnAmount
-          }
-        }
-      );
+      await updateUserWallet({userId: bet.user._id, walletAmount: returnAmount, winningAmount: returnAmount});
+
+      // await userModel.updateOne(
+      //   { _id: bet.user._id },
+      //   {
+      //     $inc: {
+      //       walletAmount: returnAmount,
+      //       winningAmount: returnAmount
+      //     }
+      //   }
+      // );
     }
   }
 
@@ -458,15 +467,17 @@ async function distributeComissionToTwoUsers(winner, losers, game,winnerGroup) {
       totalAmount -= returnAmount;
 
       // Update the user's wallet with the win amount
-      await userModel.updateOne(
-        { _id: bet.user._id },
-        {
-          $inc: {
-            walletAmount: returnAmount,
-            winningAmount: returnAmount
-          }
-        }
-      );
+      await updateUserWallet({userId: bet.user._id, walletAmount: returnAmount, winningAmount: returnAmount});
+
+      // await userModel.updateOne(
+      //   { _id: bet.user._id },
+      //   {
+      //     $inc: {
+      //       walletAmount: returnAmount,
+      //       winningAmount: returnAmount
+      //     }
+      //   }
+      // );
     }
   }
 
@@ -499,11 +510,13 @@ async function distributeComissionToOneUser(loser, game) {
    for (const bet of game.bets) {
     let winAmount = roundDown(bet.amount*0.97 * 0.70, 2);
     totalAmount -= winAmount;
-    await userModel.updateOne(
-      { _id: bet.user._id },
-       { walletAmount: bet.user.walletAmount + winAmount },
-       {winningAmount: bet.user.winningAmount + winAmount}
-    );
+    await updateUserWallet({userId: bet.user._id, walletAmount: winAmount, winningAmount: winAmount});
+
+    // await userModel.updateOne(
+    //   { _id: bet.user._id },
+    //    { walletAmount: bet.user.walletAmount + winAmount },
+    //    {winningAmount: bet.user.winningAmount + winAmount}
+    // );
     }
 
   let distributedAmount = await distributeComissionToAll(game);
@@ -619,13 +632,7 @@ async function distributeComission(user, amount) {
         distributedAmount += dAmount;
 
         await Promise.all([
-          userModel.updateOne(
-            { _id: parentUser._id },
-            {
-              walletAmount: newWalletAmount,
-              commissionAmount: newCommissionAmount,
-            }
-          ),
+          updateUserWallet({userId: parentUser._id, walletAmount: dAmount, commissionAmount: dAmount})
         ]);
 
         currentUser = parentUser;
@@ -687,12 +694,18 @@ const createGame = async (duration) => {
       isCompleted: false,
     });
 
+    createRiseUp({
+      isCompleted: newGame.isCompleted,
+      gameUID: newGame.gameUID,
+      endTime: newGame.endTime,
+      duration: newGame.duration
+    })
 
     await new Promise((resolve) => setTimeout(resolve, 60 * 1000));
  
-    await calculateResult(newGame._id);
     newGame.isCompleted = true;
     await newGame.save();
+    await calculateResult(newGame._id);
 
   } catch (error) {
     console.log(error)
@@ -700,10 +713,8 @@ const createGame = async (duration) => {
 };
 
 const startGameLoop = async (duration) => {
-  while (true) {
-  
-    await createGame(duration);
-  }
+  createGame(duration);
+  setInterval(() => { createGame(duration) }, 60 * 1000);
 };
 
 const durationOptions = [1];
@@ -784,9 +795,8 @@ const bet2ndController = async (req, res) => {
     game.bets.push({ user: user._id, amount, group });
 
 
-    await game.save(
-      
-    );
+    await game.save();
+
     await userModel.updateOne(
       { _id: user._id },
       {
@@ -796,7 +806,17 @@ const bet2ndController = async (req, res) => {
       }
     );
 
-        res.status(201).json({ status: true, message: "Bet placed successfully" });
+        res.status(201).json({ status: true, message: "Bet placed successfully", game: {
+          amount,
+          duration,
+          endTime : game.endTime,
+          gameUID : game.gameUID,
+          group,
+          isCompleted: game.isCompleted,
+          startTime: game.startTime, 
+          _id: game._id,
+          orderTime: Date.now()
+        }});
        
     } catch (error) {
         console.error(error);
@@ -810,7 +830,6 @@ const riseUpUserBettingHistory = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
-
     if (!userId) return res.status(400).send({ status: false, message: "please provide userId" });
     
     const user = await userModel.findOne({ _id: userId })
@@ -818,17 +837,16 @@ const riseUpUserBettingHistory = async (req, res) => {
 
     const games = await Game.find({ 'bets.user': userId })
       .sort({ createdAt: -1 })
-       .skip(skip)
+      .skip(skip)
       .limit(limit);
-
     const count = await Game.countDocuments({ 'bets.user': userId });
-
     const response = {
       currentPage: page,
       totalPages: Math.ceil(count / limit),
       history: [],
     };
 
+    let responseCount = 0;
     for (const game of games) {
       const userBets = game.bets.filter((bet) => bet.user.toString() === userId);
       if (userBets.length > 0) {
@@ -842,12 +860,20 @@ const riseUpUserBettingHistory = async (req, res) => {
             gameUID: game.gameUID,
             winnerGroup: game.winnerGroup,
             runnerUpGroup: game.runnerUpGroup,
-            loserGroup:game.losersGroup,
+            losersGroup:game.losersGroup,
             amount: userBet.amount, 
-            group: userBet.group,   
+            group: userBet.group,
+            orderTime: userBet.createdAt   
           };
           response.history.push(gameDetails);
+          responseCount++;
+          if(responseCount >= 10){
+            break;
+          }
         }
+      }
+      if(responseCount >= 10){
+        break;
       }
     }
     res.status(200).json(response);
@@ -858,9 +884,6 @@ const riseUpUserBettingHistory = async (req, res) => {
       .json({ error: 'An error occurred while fetching user gameplay history' });
   }
 };
-
-
-
 
 const get2ndGame = async (req, res) => { 
   try {
@@ -1058,6 +1081,7 @@ const riseUpBetamount = async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+
 module.exports = {
     bet2ndController,
     get2ndGame,
@@ -1066,5 +1090,4 @@ module.exports = {
   riseUpUserBettingHistory,
   update2ndGameUid,
   riseUpBetamount
-
 }

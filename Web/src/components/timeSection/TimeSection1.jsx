@@ -1,6 +1,6 @@
 import momentTz from 'moment-timezone';
-import { useRecoilValue, useRecoilState } from 'recoil';
-import { OneMinute, TimeNo } from '../../Atoms/GameTime';
+import { useRecoilValue, useRecoilState, useSetRecoilState } from 'recoil';
+import { GrowUpGameState, OneMinute, TimeNo } from '../../Atoms/GameTime';
 import './TimeSection.css';
 import { useState, useEffect } from 'react';
 import { AuthState } from '../../Atoms/AuthState';
@@ -20,20 +20,15 @@ export const toastProps = {
 };
 
 function TimeSection1() {
-    const [second , setSeconds]=useRecoilState(CountDownGrowup)
-    // const [coutDown, setCountDown] = useRecoilState(CountDown)
-    const [showCountDown,setShowCountDown]=useRecoilState(ShowCountDown)
-    const [timeData, setTimeData] = useRecoilState(OneMinute);
 
+    const [showCountDown,setShowCountDown] = useRecoilState(ShowCountDown);
+    const [growUpGame, setGrowUpGame] = useRecoilState(GrowUpGameState);
     const auth = useRecoilValue(AuthState);
     const timeNo = useRecoilValue(TimeNo);
+    const setSecond = useSetRecoilState(CountDownGrowup);
+
 
     const [remainingTime, setRemainingTime] = useState(0);
-
-    
-    const startTime = momentTz(new Date()).tz("Asia/Kolkata").toISOString()
-
-    const endTime = timeData?.data?.data?.endTime || null;
 
     const handleGameData = async () => {
         try {
@@ -43,7 +38,7 @@ function TimeSection1() {
             });
 
             if (response.status === 200) {
-                setTimeData(response);
+                setGrowUpGame(response.data.data);
                 return response;
             }
         } catch (error) {
@@ -52,40 +47,36 @@ function TimeSection1() {
     };
 
     useEffect(() => {
+        const endTime = growUpGame.endTime || null;
         if (endTime) {
-            const startMillis = new Date(startTime).getTime();
+            let interval
+            const startMillis = new Date(momentTz(new Date()).tz("Asia/Kolkata").toISOString()).getTime();
             const endMillis = new Date(endTime).getTime();
             const intervalMillis = endMillis - startMillis;
     
             if (intervalMillis > 0) {
                 const intervalSeconds = Math.floor(intervalMillis / 1000);
                 setRemainingTime(intervalSeconds);
-                setSeconds(intervalSeconds);
-    
-                const interval = setInterval(() => {
+                setSecond(intervalSeconds);
+                interval = setInterval(() => {
                     setRemainingTime(prevTime => {
                         if (prevTime > 0) {
                             if (prevTime === 6) {
-                                if (!showCountDown) {
-                                    setShowCountDown(true);
-                                }
+                                setShowCountDown(true);
                             }
+                            setSecond(prevTime - 1);
                             return prevTime - 1;
                         } else {
-                            if (prevTime === 0 || prevTime === 59 || prevTime === 58 || prevTime === 57) {
-                                handleGameData();
-                            }
+                            setSecond(0);
+                            handleGameData();
                             return 0;
                         }
                     });
                 }, 1000);
-    
-                return () => clearInterval(interval);
             }
+            return () => clearInterval(interval);
         }
-    }, [startTime, showCountDown]); 
-    
-    // ...
+    }, [growUpGame.endTime]);
     
     if (remainingTime === 5 && !showCountDown) {
         setShowCountDown(true);
@@ -93,18 +84,17 @@ function TimeSection1() {
 
     const minutes = Math.floor(remainingTime / 60);
     const seconds = remainingTime % 60;
-useEffect(()=>{const fetchData=setInterval(handleGameData,1000)
-return ()=>{clearInterval(fetchData)}},[])
+
     return (
         <div>
             <Toaster />
             <div className="container">
                 <div className="row time-play">
                     <div className="col-6 left">
-                        {timeData && timeNo ? (
+                        {growUpGame && timeNo ? (
                             <>
                                 <div className='selected-mint'>{timeNo} minute</div>
-                                <h3>{timeData?.data?.data?.gameUID}</h3>
+                                <h3>{growUpGame?.gameUID}</h3>
                             </>
                         ) : null}
                     </div>

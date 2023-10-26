@@ -508,6 +508,7 @@ const getDownlineDetails = async (req, res) => {
     res.status(500).json({ error: 'An error occurred while fetching downline user details' });
   }
 };
+
 const getTotalTeams = async (req, res) => {
   try {
     const userId = req.params.userId;

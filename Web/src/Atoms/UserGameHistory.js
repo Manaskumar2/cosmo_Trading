@@ -4,4 +4,10 @@ const UserGameHistory = atom({
     key: "UserGameHistory",
     default:''
 });
-export {UserGameHistory}
+
+const GrowUpUserGameHistory = atom({
+    key: "GrowUpUserGameHistory",
+    default: {}
+})
+
+export {UserGameHistory, GrowUpUserGameHistory}

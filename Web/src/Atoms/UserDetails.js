@@ -4,4 +4,10 @@ const UserDetails = atom({
     key: "UserDetails",
     default: ''
 })
-export {UserDetails}
+
+const User_Wallet = atom({
+    key: "User_Wallet",
+    default: 0
+})
+
+export {UserDetails, User_Wallet}

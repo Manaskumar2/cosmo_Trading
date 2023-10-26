@@ -1,4 +1,5 @@
-const userModel = require("../models/userModel")
+const userModel = require("../models/userModel");
+const { updateUserWalletSocket, users } = require("../socket/sockets");
 
 
 
@@ -90,10 +91,39 @@ async function generateUniqueNumber2() {
 
   return uniqueNumber;
 }
+
+const updateUserWallet = async({userId, walletAmount, commissionAmount, winningAmount}) => {
+  const updateData = {};
+  if(walletAmount){
+    updateData.walletAmount = walletAmount;
+  }
+  if(commissionAmount){
+    updateData.commissionAmount = commissionAmount;
+  }
+  if(winningAmount){
+    updateData.winningAmount = winningAmount;
+  }
+
+  const updatedUser = await userModel.findByIdAndUpdate(
+    userId,
+    {
+      $inc: updateData
+    },
+    {
+      new: true
+    }
+  );
+  const socketId = users[userId]; 
+  if(socketId){
+    updateUserWalletSocket(socketId, updatedUser.walletAmount);
+  }
+}
+
 module.exports = {
    generateUniqueReferralCode ,
   generateUniqueNumber,
   generateUID,
   setCurrentNumber,
-   generateUniqueNumber2
+   generateUniqueNumber2,
+   updateUserWallet
   }

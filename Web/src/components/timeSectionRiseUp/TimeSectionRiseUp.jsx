@@ -1,6 +1,6 @@
 import { useRecoilValue, useRecoilState } from 'recoil';
 import { TimeNo } from '../../Atoms/GameTime';
-import { RiseUpTime } from '../../Atoms/GameTimeRiseup';
+import { RiseUpGame, RiseUpTime } from '../../Atoms/GameTimeRiseup';
 import '../timeSection/TimeSection.css';
 import { useState, useEffect } from 'react';
 import { AuthState } from '../../Atoms/AuthState';
@@ -30,6 +30,7 @@ function TimeSection1({ uid }) {
     const [showCountDown, setShowCountDown] = useRecoilState(ShowCountDown )
 
     const [timeData, setTimeData] = useRecoilState(RiseUpTime);
+    const [riseUpGame,setRiseUpGame] = useRecoilState(RiseUpGame);
 
     const auth = useRecoilValue(AuthState);
 
@@ -80,6 +81,7 @@ function TimeSection1({ uid }) {
 
             if (response.status === 200) {
                 setTimeData(response);
+                setRiseUpGame(response.data.data);
                 return response;
             }
         } catch (error) {
@@ -87,15 +89,13 @@ function TimeSection1({ uid }) {
         }
     };
 
-    const endTime = timeData?.data?.data?.endTime || null;
-
     useEffect(() => {
-        let interval
+        const endTime = riseUpGame.endTime || null;
         if (endTime) {
+            let interval
             const startMillis = new Date(momentTz(new Date()).tz("Asia/Kolkata").toISOString()).getTime();
             const endMillis = new Date(endTime).getTime();
             const intervalMillis = endMillis - startMillis;
-            console.log(intervalMillis / 1000);
     
             if (intervalMillis > 0) {
                 const intervalSeconds = Math.floor(intervalMillis / 1000);
@@ -105,25 +105,21 @@ function TimeSection1({ uid }) {
                     setRemainingTime(prevTime => {
                         if (prevTime > 0) {
                             if (prevTime === 6) {
-                                
-                                    setShowCountDown(true);
-                                
+                                setShowCountDown(true);
                             }
+                            setSecond(prevTime - 1);
                             return prevTime - 1;
                         } else {
+                            setSecond(0);
                             handleGameData();
                             return 0;
                         }
                     });
                 }, 1000);
             }
+            return () => clearInterval(interval);
         }
-        return () => clearInterval(interval);
-    }, [endTime]); 
-
-    useEffect(() => {
-        handleGameData();
-    }, []);
+    }, [riseUpGame.endTime]); 
 
     const minutes = Math.floor(remainingTime / 60);
     const seconds = remainingTime % 60;
@@ -137,8 +133,8 @@ function TimeSection1({ uid }) {
 
                         <>
                             <div className='selected-mint'>{timeNo} minute</div>
-                            {timeData &&
-                                <h3>{timeData.data.data.gameUID}</h3>}
+                            {riseUpGame &&
+                                <h3>{riseUpGame.gameUID}</h3>}
                         </>
 
                     </div>

@@ -16,14 +16,14 @@ import bg from '../../images/Section.svg'
 import aModal from '../../images/A-modal.svg'
 import bModal from '../../../../SVG/betabtn.svg'
 import { TimeSection } from '../../components/ComponentExport'
-import { UserDetails } from '../../Atoms/UserDetails'
+import { UserDetails, User_Wallet } from '../../Atoms/UserDetails'
 import axios from 'axios';
 import toast, { Toaster } from "react-hot-toast";
 import { AuthState } from '../../Atoms/AuthState'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { Link } from 'react-router-dom'
 import { useSetRecoilState } from 'recoil'
-import { TimeNo, OneMinute } from '../../Atoms/GameTime'
+import { TimeNo, OneMinute, GrowUpGameState } from '../../Atoms/GameTime'
 import { GameHistory } from '../../components/ComponentExport'
 import { useNavigate } from 'react-router-dom'
 // import { CountDown } from '../../Atoms/CountDown';
@@ -33,6 +33,8 @@ import { PlaySound } from '../../Atoms/PlaySound';
 // import {  } from '../../Atoms/CountDownRiseup'
 import { CountDownGrowup } from '../../Atoms/CountDownGrowup'
 import { GameHistoryList } from '../../Atoms/GameHistory'
+import initializeSocket from '../../sockets/socket'
+import { GrowUpUserGameHistory } from '../../Atoms/UserGameHistory'
 
 export const toastProps = {
     position: "top-center",
@@ -56,7 +58,7 @@ function Growup() {
     const [userData, setUserData] = useRecoilState(UserDetails)
     const [activeTab, setActiveTab] = useState(1);
 
-    const setTimeNo = useSetRecoilState(TimeNo)
+    const [timeNo, setTimeNo] = useRecoilState(TimeNo);
     const setMinute = useSetRecoilState(OneMinute)
 
     const auth = useRecoilValue(AuthState)
@@ -74,7 +76,10 @@ function Growup() {
     const [lgShow2, setLgShow2] = useState(false);
     const [smShow3, setSmShow3] = useState(false);
     const [lgShow3, setLgShow3] = useState(false);
-
+    const [gameHistoryList, setGameHistoryList] = useRecoilState(GameHistoryList)
+    const [userGames, setUserGames] = useRecoilState(GrowUpUserGameHistory);
+    const setGrowUpGame = useSetRecoilState(GrowUpGameState);
+    const [userWallet, setUserWallet] = useRecoilState(User_Wallet);
 
     const showCountDown = useRecoilValue(ShowCountDown)
 
@@ -83,15 +88,75 @@ function Growup() {
         setActiveTab(tabIndex);
     };
 
+    useEffect(() => {
+        const socket = initializeSocket(auth);
+
+        socket.emit('join_grow_up');
+
+        socket.on('grow_up_update', (data) => {
+            const growUpData = JSON.parse(data);
+            const gameData = growUpData.game;
+            console.log(data);
+            if(gameHistoryList.currentPage === 1){
+                setGameHistoryList(prev => {
+                    const prevGames = [...prev.gamesWithSuccessfulBets];
+                    
+                    prevGames.unshift(gameData);
+                    if(prevGames?.length >= 10){
+                        prevGames.pop();
+                    }
+    
+                    return {...prev, gamesWithSuccessfulBets: prevGames, totalPages: growUpData.totalPages };
+                })
+            }
+            
+            if(userGames.currentPage === 1){
+                setUserGames(prev => {
+                    const prevGames = [...prev.history];                    
+                    const updatedGames = prevGames.map(game => {
+                        if(game._id === gameData._id){
+                            console.log({...game, ...gameData})
+                            return {...game, ...gameData};
+                        } else {
+                            return game;
+                        }
+                    })
+
+                    return {...prev, history: updatedGames}
+                })
+            }
+        })
+
+        return () => {
+            socket.emit('leave_grow_up');
+            socket.off('grow_up_update');            
+        };
+    }, [JSON.stringify(gameHistoryList?.gamesWithSuccessfulBets), JSON.stringify(userGames.history)]);
+
+    useEffect(() => {
+        const socket = initializeSocket(auth);
+        socket.emit('get_grow_up', timeNo);
+        socket.on('updateUserWallet', (data) => {
+            const walletAmount = data;
+            setUserWallet(walletAmount);
+        })
+
+        socket.on('grow_up_game', (data) => {
+            const gameData = JSON.parse(data);
+            setGrowUpGame(gameData);
+        })
+
+        return () => {
+            socket.off('updateUserWallet');
+            socket.off('grow_up_game');
+        };
+    }, []);
 
     useEffect(() => {
         handleUserMoney()
-        const intervalId = setInterval(handleUserMoney, 4500);
-        return () => clearInterval(intervalId);
     }, []);
 
 
-    ////////
     useEffect(() => {
         setAmount(money * multiplier);
     }, [money, multiplier]);
@@ -110,14 +175,6 @@ function Growup() {
         }
     };
 
-    ///////
-    useEffect(() => {
-        handleUserMoney()
-        const intervalId = setInterval(handleUserMoney, 4500);
-        return () => clearInterval(intervalId);
-    }, []);
-
-
     const getCurrentDateNumber = () => {
         const currentDate = new Date();
         const year = currentDate.getFullYear();
@@ -127,13 +184,8 @@ function Growup() {
         return dateNumber;
     };
     const [currentDateNumber, setCurrentDateNumber] = useState(getCurrentDateNumber());
-    // useEffect(() => {
-    //     getCurrentDateNumber()
-
-    // }, [])
 
     useEffect(() => {
-        handleMin()
         setCurrentDateNumber(getCurrentDateNumber());
     }, []);
 
@@ -189,6 +241,7 @@ function Growup() {
 
             if (response.status === 200) {
                 setUserData(response);
+                setUserWallet(response.data.data.userDetails.walletAmount.toFixed(2));
                 return response;
             } else if (response.status === 404) {
                 return null;
@@ -233,7 +286,19 @@ function Growup() {
                 setMultiplier(1)
                 setMoney(1)
                 setGroup('');
-                handleUserMoney()
+                handleUserMoney();
+                if(userGames.currentPage === 1){
+                    setUserGames(prev => {
+                        const prevGames = [...prev.history];
+                        
+                        prevGames.unshift(response.data.game);
+                        if(prevGames?.length >= 10){
+                            prevGames.pop();
+                        }
+        
+                        return {...prev, history: prevGames };
+                    })
+                }
                 return response;
             }
         } catch (error) {
@@ -246,40 +311,6 @@ function Growup() {
             toast.error(errorMessage || "Something went wrong", { ...toastProps });
         }
     }
-
-    const handleMin = async () => {
-        try {
-            let token = auth.authToken;
-            const response = await axios.get(`${import.meta.env.VITE_API_URL}/getgame/${duration}`, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-            if (response.status === 200) {
-                setTimeNo(duration)
-                setMinute(response)
-                return response;
-            }
-        } catch (error) {
-            if (error.response && error.response.status === 404) {
-                return null
-            } else {
-                const errorMessage = error.response ? error.response.data.message : error.message;
-            }
-        }
-    };
-
-    useEffect(() => {
-
-        const timer = setTimeout(async () => {
-
-            await handleMin();
-        }, 5000);
-        return () => {
-            clearTimeout(timer);
-        };
-        handleMin()
-    }, []);
-
-
 
     return (
         <div className="win">
@@ -311,7 +342,7 @@ function Growup() {
                             <p style={{ color: '#29CEE4', fontFamily: 'Montserrat' }}>Wallet balance</p>
                         </div>
                         <div className="col-4" style={{ textAlign: 'right' }}><img src={wallet} alt="" /></div>
-                        <h2 style={{ color: '#fff', letterSpacing: 0.15, fontSize: 27, fontFamily: 'Montserrat', display: 'flex', fontWeight: 600 }}><img src={rupee} alt="" /> {userData && userData.data.data.userDetails.walletAmount.toFixed(2)} <img src={reload} alt="" style={{ marginLeft: 10, }} onClick={handleUserMoney} /></h2>
+                        <h2 style={{ color: '#fff', letterSpacing: 0.15, fontSize: 27, fontFamily: 'Montserrat', display: 'flex', fontWeight: 600 }}><img src={rupee} alt="" /> {parseFloat(userWallet).toFixed(2)} <img src={reload} alt="" style={{ marginLeft: 10, }} onClick={handleUserMoney} /></h2>
                     </div>
 
                     <div className="container">
