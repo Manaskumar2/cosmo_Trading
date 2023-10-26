@@ -7,7 +7,7 @@ const cors = require('cors')
 const path = require('path');
 const server = require("http").Server(app)
 const mongoose = require('mongoose');
-
+const { initSocket } = require("./src/socket/sockets");
 const bodyParser = require('body-parser');
 const multer = require('multer');
 app.use(multer().any());
@@ -44,7 +44,7 @@ mongoose
   .connect(DATABASE, mongoDbConfig)
   .then(() => console.log("MongoDb is connected"))
   .catch((err) => console.log(err));
-
+initSocket(server);
 app.use("/api", route);
 app.use("/api/admin", admin);
 
