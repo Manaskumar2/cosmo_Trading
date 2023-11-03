@@ -7,9 +7,10 @@ const cors = require('cors')
 const path = require('path');
 const server = require("http").Server(app)
 const mongoose = require('mongoose');
-const { initSocket } = require("./src/socket/sockets");
+
 const bodyParser = require('body-parser');
 const multer = require('multer');
+const { initSocket } = require("./src/socket/sockets");
 app.use(multer().any());
 
 
@@ -17,7 +18,7 @@ app.use(multer().any());
 app.use(
   cors({
     credentials: true,
-    origin:  ["http://cosmotrade.live","https://cosmotrade.live/" ,"http://localhost:3000","http://localhost:3333"]
+    origin:  ["http://cosmotrade.com","https://cosmotrade.com/" ,"http://localhost:3000","http://localhost:3333"]
   })
 );
 app.use(express.json());
@@ -44,15 +45,31 @@ mongoose
   .connect(DATABASE, mongoDbConfig)
   .then(() => console.log("MongoDb is connected"))
   .catch((err) => console.log(err));
+
+
 initSocket(server);
+
 app.use("/api", route);
 app.use("/api/admin", admin);
 
 
+
+
+// if (
+//    process.env.NODE_ENV === "production"||process.env.NODE_ENV === "development"
+
+// ) {
+  // app.use(express.static("dist"));
+  // app.get("*", (req, res) => {
+  //   res.sendFile(path.join(rootDir, "../Web/dist/index.html"));
+  // });
+
   app.use(express.static(path.join(__dirname, "ui")));
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname + "ui/index.html"));
+  res.sendFile(path.join(__dirname + "..ui/index.html"));
 });
+
+
 app.use((req, res, next) => {
   const error = new Error("Path not found.");
   error.status = 404;

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import Auth from '../../components/modal/Auth';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import axios from 'axios';
 import './Promotion.css';
@@ -10,16 +11,21 @@ import MyTeam from '../../components/myTeam/MyTeam';
 import CommissionHistory from '../../components/commissionHistory/CommissionHistory';
 import PromotionHistory from '../../components/promotionHistory/PromotionHistory';
 import back from '../../images/back-button 1.svg';
-import gift from '../../../../SVG/gift-box 1.svg';
+import gift from './myCommission.svg';
 import paper from './papers 1.svg';
 import line from './Line 28.svg';
 import { useNavigate } from 'react-router-dom';
 import { TotalTeam } from '../../Atoms/TotalTeam';
-// /getReferralStats/:referralID
+
 function Promotion() {
+    
     const [total, setTotal]=useState(0)
     const [commission,setCommission]=useState(0)
     const navigate=useNavigate()
+    const handleBackButtonClick = () => {
+
+        navigate(-1);
+    };
     const auth = useRecoilValue(AuthState)
     const [userData, setUserdata] = useRecoilState(UserDetails)
     const [activeTab, setActiveTab] = useState(1)
@@ -45,7 +51,8 @@ function Promotion() {
             }
             );
             if (response.status === 200) {
-                setCommission(response.data.todayTotalCommission)
+                localStorage.setItem('commission', JSON.stringify(response.data));
+                setCommission(response.data)
                 return response;
             }
         } catch (error) {
@@ -156,7 +163,7 @@ function Promotion() {
         <div className='promotionContainer'>
             <div className="container-fluid PromoNav" >
                 <div className="row">
-                    <Link to='/' className="col-2">
+                    <Link  className="col-2" onClick={handleBackButtonClick}>
                         <img src={back} alt="" />
                     </Link>
                     <div className="col-8">
@@ -187,30 +194,22 @@ function Promotion() {
             {activeTab === 1 &&
                 <>
                     <div className='gift'>
-                        <img src={gift} alt="" />
-                        <p>My Reward</p>
+                        <img src={gift} alt="" className='my-commision-img'/>
+                        <p>My Commission Table</p>
                     </div>
                     <div className='container commission' style={{display:'flex',justifyContent:'space-evenly',alignItems:'center'}}>
                         <div>
-                            {userData && <h2 className='text-center'>{userData.data.data.userDetails.commissionAmount.toFixed(2)}</h2>}
+                            {commission && <h2 className='text-center'>{commission.overallTotalCommission.toFixed(2)}</h2>}
                         <p className='text-center'>Total Commission</p>
                         </div>
                         <div>
-                        <h2 className='text-center'>{commission.toFixed(2)}</h2>
+                        {commission && <h2 className='text-center'>{commission.totalTodayCommission.toFixed(2)}</h2>}
+                        
                             
                             <p className='text-center'>Today's Commission</p>
                         </div>
-                        
-                        {/* <div className="container">
-                            <div className="row commission-row">
-                                <div className="col-9">Direct Commission</div>
-                                {userData && <div className="col-3">{userData.data.data.userDetails.commissionAmount.toFixed(2)}</div>}
-                            </div>
-
-                        </div> */}
                     </div>
                     <div className='container commission'>
-
                         <div className="container">
                             {userData && <div className="row commission-bot-row">
                                 <div className="col-10">Number Of Direct Subordinates</div>
@@ -321,6 +320,7 @@ function Promotion() {
             {activeTab == 3 && <PromotionHistory />}
             {activeTab == 4 && <CommissionHistory/>}
             <Nav style={{ marginTop: "2rem" }} />
+            <Auth/>
         </div>
     )
 }

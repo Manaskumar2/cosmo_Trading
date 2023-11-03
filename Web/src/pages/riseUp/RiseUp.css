@@ -1,14 +1,15 @@
 .win{background: #001C3E; max-width:500px; display: block; margin:0 auto;}
-.plus-minus-input{border-radius: 0.25rem;
-    border: 1px solid #FFF;
-    background: #1B3C6B;width: 5rem;color: #FFF;
-    text-align: center;
-    font-family: Montserrat;
-    font-size: 1rem;
-    font-style: normal;
-    font-weight: 500;
-    line-height: normal;
-    letter-spacing: 0.05rem;}
+.plus-minus-input{border-radius: 0.25rem;height: 2.7rem;
+  border: 1px solid #FFF;
+  background: #1B3C6B;width: 7rem;color: #FFF;
+  text-align: center;
+  font-family: Montserrat;
+  font-size: 1.2rem;
+  font-style: normal;
+  padding: 0.625rem 0.75rem;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: 0.05rem;margin-right: 2.7rem;}
 .winNav{background: #001C3E; background-image: url('../../images/belips.png');background-position: bottom; background-repeat: no-repeat; padding:15px 2rem;border-bottom: 1px solid #133B77;}
 .winWallet{background: linear-gradient(180deg, rgba(5, 42, 86, 0.80) 0%, rgba(10, 171, 182, 0.80) 100%);padding: 1.5625rem;border-radius: 1.2rem;
 border:1px solid #295992}
@@ -188,7 +189,7 @@ backdrop-filter: blur(15px);}
     border: 1px solid #1B92AC;
     background: #145C7A;}
 
-.multiply{padding-left: 20px;padding-right: 20px; display: flex; justify-content: space-between; margin-top: 1.2rem;}
+.multiply{padding-left: 20px;padding-right: 20px; display: flex; justify-content: space-between; margin-top: 1.2rem;align-items: center;}
 
 .policy{
     font-family: 'Montserrat';

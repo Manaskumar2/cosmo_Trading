@@ -20,6 +20,7 @@ const withdrawSchema = new mongoose.Schema({
     approvedBy: {
         type:String,
     }
+    
 
 }, { timestamps: true }); 
 

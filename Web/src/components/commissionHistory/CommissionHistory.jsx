@@ -10,24 +10,14 @@ function CommissionHistory() {
   const auth = useRecoilValue(AuthState);
   const [data, setData] = useState(null)
   const [page, setPage] = useState(1)
-  const handleCommission = async () => {
-    try {
-      let token = auth.authToken
-      let userId = auth._id
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/commissionAmount/${userId}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      }
-      );
-      if (response.status === 200) {
-        setCommission(response.data)
-        return response;
-      }
-    } catch (error) {
-      const errorMessage = error.response ? error.response.data.message : error.message;
 
+  useEffect(() => {
+    const storedData = localStorage.getItem('commission');
+    if (storedData) {
+      const parsedData = JSON.parse(storedData);
+      setCommission(parsedData);
     }
-  }
-
+  }, []);
   useEffect(() => {
     const getCommissionHistory = async (page) => {
       try {
@@ -44,31 +34,27 @@ function CommissionHistory() {
       }
     };
 
-    getCommissionHistory(page);
-    handleCommission()
-  }, [page]);
+    getCommissionHistory(page);  }, [page]);
 
   return (
     <div className='CommissionHistory'>
       <div className="container">
         <div className="row salary-commission-data">
-
-
           {commission && <div className='col-4'>
             <div >Rs:
-              {commission.totalRechargeCommission.toFixed(2)}
+              {!commission.totalCommissions.RECHARGE ? "0": commission.totalCommissions.RECHARGE.toFixed(2)}
             </div>
             <div>Recharge Commission</div>
           </div>}
           {commission && <div className='col-4'>
             <div >Rs:
-              {commission.totalPremiumCommission.toFixed(2)}
+              {!commission.totalCommissions.PREMIUM ? "0":commission.totalCommissions.PREMIUM.toFixed(2)}
             </div>
             <div>Premium Commission</div>
           </div>}
           {commission && <div className='col-4'>
             <div >Rs:
-              {commission.totalAgentCommission.toFixed(2)}
+              {!commission.totalCommissions.AGENT ? "0": commission.totalCommissions.AGENT.toFixed(2)}
             </div>
             <div>Agent Commission</div>
           </div>}

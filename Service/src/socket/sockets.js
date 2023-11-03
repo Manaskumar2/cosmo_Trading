@@ -110,8 +110,8 @@ const createRiseUp = (game) => {
     io.to('rise_up').emit('rise_up_game', JSON.stringify(game));
 }
 
-const updateUserWalletSocket = async(socketId, amount) => {
-    io.to(socketId).emit('updateUserWallet', amount);
+const updateUserWalletSocket = async(socketId, data) => {
+    io.to(socketId).emit('updateUserWallet', data);
 }
 
 module.exports = { initSocket, users, updateRiseUp, updateUserWalletSocket, createRiseUp, createGrowUp, updateGrowUp };

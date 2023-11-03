@@ -102,20 +102,31 @@ function AdminUserData() {
         headers: { Authorization: `Bearer ${token}` },
         params: { queryPageIndex, queryPageSortBy },
       });
-
+  
       if (response.status === 200) {
-        const lowerCaseQuery = queryPageFilter.toLowerCase();
-        const filteredUsers = response.data.response.getUsers.filter((user) => {
-          const phoneNumberMatch = user.phoneNumber.includes(lowerCaseQuery);
-          const uidMatch = user.UID.toString().toLowerCase().includes(lowerCaseQuery);
-          return phoneNumberMatch || uidMatch;
-        });
-
-        setAllUser({ ...response, data: { ...response.data, response: { ...response.data.response, getUsers: filteredUsers } } });
+        console.log(response.data.response.getUsers); 
+        setAllUser(response); 
       }
     } catch (error) {
       const errorMessage = error.response ? error.response.data.message : error.message;
       console.error("An error occurred:", errorMessage);
+    }
+  };
+  
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSearch = async () => {
+    try {
+      
+      let token = authData.authToken;
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/getAllUsers?queryPageFilter=${searchQuery}`,{
+        headers: { Authorization: `Bearer ${token}` },
+      },);
+      if(response.status===200){
+      setAllUser(response)
+      setSearchQuery('')}
+    } catch (error) {
+      console.error('Error searching users:', error);
     }
   };
 
@@ -265,13 +276,22 @@ function AdminUserData() {
         <Side />
         <div className='admin-rightSection'>
           <Toaster />
+          <div className='all-user-top'>
           <input
-            type="text"
-            className="user-input"
-            value={uidFilter}
-            onChange={(e) => setUidFilter(e.target.value)}
-            placeholder="Search UID"
-          />
+          className="user-input"
+        type="text"
+        placeholder="Search by UID"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+      />
+      <button onClick={handleSearch} type="button" class="btn btn-primary">
+        Search
+      </button>
+      <button onClick={handleUser} type="button" class="btn btn-success">
+        All Users
+      </button>
+          </div>
+          
           <div className='total-wallet-amount'>
             <h4>Total Wallet Amount Of All Users</h4>
             <div>{allUser && allUser.data.response.totalWalletAmount}</div>

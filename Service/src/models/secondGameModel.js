@@ -12,8 +12,11 @@ const betSchema = new mongoose.Schema({
     type: String,
     enum: ["A", "B","C"],
     required: true
+  },
+  winningAmount: {
+    type: Number,
   }
-})
+},{timestamps:true})
 
 const GameSchema = new mongoose.Schema({
   duration: {

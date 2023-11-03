@@ -48,6 +48,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     font-family: Montserrat;color: #fff;
     }
     .calender{background: transparent;color: #fff;border: 0; outline: none;width: 6rem;}
-    .down-details{color: #fff;}
+    .down-details{color: #fff;display: flex;flex-direction: column;justify-content: flex-start !important;padding: .5rem;}
     .popup{position: absolute;top: 0;background-color: #4991D3;width: 100%;padding: 1rem;}
+    .down-details >p{text-align: left !important;}
     .close-popup{background-color: #EC4E55;color: #fff; border: 0;outline: none;padding: .2rem .8rem;}

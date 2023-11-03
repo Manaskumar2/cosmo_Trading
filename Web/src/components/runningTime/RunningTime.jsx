@@ -6,7 +6,7 @@ const RunningTime = () => {
     const secondRef = useRef(null);
 
     useEffect(() => {
-        const randomHour = Math.floor(Math.random() * (696545 - 651235 + 1) + 651235);
+        const randomHour = Math.floor(Math.random() * (5123 - 5100 + 1) + 5111);
         if (hourRef.current) {
             hourRef.current.textContent = randomHour;
         }

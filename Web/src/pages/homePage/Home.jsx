@@ -60,10 +60,6 @@ function Home() {
                 headers: { Authorization: `Bearer ${token}` },
             });
             if (response.status === 200) {
-                // const popUpImageData = response.data;
-                // const decodedPopUpImageData = atob(popUpImageData);
-                // const popUpBlob = new Blob([decodedPopUpImageData], { type: "image/jpeg" });
-                // const popUpImageUrl = URL.createObjectURL(popUpBlob);
                 setImage(response.data.data.imageUrl);
             }
         } catch (error) {

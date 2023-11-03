@@ -7,6 +7,8 @@ import axios from 'axios';
 import { UserDetails } from '../../Atoms/UserDetails';
 
 function MyTeam() {
+
+    const [searchData, setSearchData] = useState(null);
     const [searchUID, setSearchUID] = useState('');
     // const [downData, setDownData] = useState(null);
     const userData = useRecoilValue(UserDetails);
@@ -15,10 +17,18 @@ function MyTeam() {
     const [level, setLevel] = useState(2);
     const currentDate = new Date();
     const formattedCurrentDate = currentDate.toISOString().slice(0, 10);
+    const [accordionOpen, setAccordionOpen] = useState({});
 
-    const filteredDownline = downline.filter(item => {
-        return String(item.UID).includes(searchUID);
-    });
+    const toggleAccordion = (UID) => {
+        setAccordionOpen((prevState) => {
+            const updatedAccordion = { ...prevState };
+            for (const key in updatedAccordion) {
+                updatedAccordion[key] = false;}
+            updatedAccordion[UID] = !prevState[UID];
+            return updatedAccordion;});
+        handleUserdata(UID);
+    };
+
 
     const [date, setDate] = useState(formattedCurrentDate);
     const [commission, setCommission] = useState(null);
@@ -29,16 +39,42 @@ function MyTeam() {
         setLevel(e.target.value);
     };
 
-    const handleHistoryData = async () => {
+    const handleHistoryData = async (UID) => {
         try {
             let userId = auth._id;
             let token = auth.authToken;
-            const response = await axios.get(`${import.meta.env.VITE_API_URL}/getDownlinerDetails/${userId}?level=${level}`, {
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/getDownlinerDetails/${userId}?UID=${UID}&level=${level}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
-
+            if (response.status === 201) {
+                
+                console.log(response.data.data)
+                setSearchData(response.data.data)
+                setSearchUID("")
+            
+            }
             if (response.status === 200) {
                 setDownline(response.data.downlineDetails);
+                setSearchData(null)
+                return response;
+                
+            }
+            return response
+        } catch (error) {
+            const errorMessage = error.response ? error.response.data.message : error.message;
+        }
+    };
+    const handleHistoryDataUID = async (UID) => {
+        try {
+            let userId = auth._id
+            let token = auth.authToken;
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/getDownlinerDetails/${userId}?UID=${UID}`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            if (response.status === 200) {
+                setSearchUID("")
+                console.log(response.data.data)
+                setSearchData(response.data.data)
                 return response;
             }
         } catch (error) {
@@ -65,16 +101,21 @@ function MyTeam() {
 
     useEffect(() => {
         handleHistoryData();
-    }, [level]);
+        setSearchData(null)
+    }, []);
 
+    function maskPhoneNumber(phoneNumber) {
+        const maskedPhoneNumber = phoneNumber.substring(0, 2) + '****' + phoneNumber.substring(6);
+        return maskedPhoneNumber;
+    }
 
 
     return (
         <div className='myTeam' style={{ minHeight: '100vh' }}>
             <div className='container blue'>
                 <div className='row team-top-row'>
-                    {filteredDownline && <div className="col-7">Level {level-1} Team : {filteredDownline.length} People </div>}
-                    
+                    {downline && <div className="col-7">Level {level - 1} Team : {downline.length} People </div>}
+
                     <div className="col-5">
                         <img src={calender} alt="" />
                         <input type="date" className='calender' value={date} onChange={(e) => { setDate(e.target.value) }} />
@@ -106,65 +147,88 @@ function MyTeam() {
                             <option value={11}>Level 10</option>
                         </select>
                     </div>
-                    <div className="col-4"><button>Inquiries</button></div>
+                    <div className="col-4"><button onClick={() => { handleHistoryData(searchUID) }}>Inquiries</button></div>
                 </div>
             </div>
-            {/* <div className='container '>
-                <div className='row total-bet-row'>
-                    {userData && <div className="col-6" style={{ borderRight: '1px solid #1E5D81' }}>Total Winning Amount : &nbsp;<span style={{ color: "#FBB040" }}>{userData.data.data.userDetails.winningAmount}</span></div>}
-                    <div className="col-6">Total Commission Amount : &nbsp;{commission && <span style={{ color: "#FBB040" }}>{commission.data.totalCommissionAmount}</span>}</div>
-                </div>
-            </div> */}
-
-            <div className="table-responsive">
+            <div className="table-responsive" style={{marginBottom:'5rem'}}>
                 <table className="table table-striped">
                     <thead>
                         <tr className='greenBg'>
                             <th>UID</th>
                             <th>Nick Name</th>
-                            <th>Phone No</th>
+                            <th>Turn Over</th>
+                            <th>Status</th>
                             <th>Operate</th>
                         </tr>
                     </thead>
-                    <tbody className='tableBodyRow'>
-                        {filteredDownline.map((item, index) => {
-                            const phoneNumber = item.phoneNumber;
-                            const maskedPhoneNumber = phoneNumber.substring(0, 2) + '****' + phoneNumber.substring(6);
-
-                            return (
-                                <tr key={index}>
-                                    <td>{item.UID}</td>
-                                    <td>{item.name}</td>
-                                    <td style={{ paddingLeft: 0 }}>{maskedPhoneNumber}</td>
-                                    <td style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                        <button className='details-btn' onClick={() => handleUserdata(item.UID)} >Details</button>
-                                        
+                    {!searchData ?
+                        <tbody className='tableBodyRow' >
+                            {downline && downline.map((item, index) => {
+                                const phoneNumber = item.phoneNumber;
+                                const maskedPhoneNumber = phoneNumber.substring(0, 2) + '****' + phoneNumber.substring(6);
+                                return (
+                                    <React.Fragment key={index}>
+                                    <tr>
+                                        <td>{item.UID}</td>
+                                        <td>{item.name}</td>
+                                        <td style={{ paddingLeft: 0 }}>{item.bettingAmount===null?'0':item.bettingAmount}</td>
+                                        <td style={{ paddingLeft: 0 }}>{item.isDeleted===false?'Enable':'Disable'}</td>
+                                        <td style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                        <button className='details-btn' onClick={() => toggleAccordion(item.UID)}>Details</button>
+                                        </td>
+                                    </tr>
+                                    {accordionOpen[item.UID] && (
+                                        <tr>
+                                            <td colSpan="5">
+                                                <div className="accordion-content">
+                                                {selectedUserData && 
+                            <div className='down-details'>
+                                <p>Total Betting Amount: {selectedUserData.data.userDetails.bettingAmount.toFixed(2)}</p>
+                                <p>Registration Time: {new Date(selectedUserData.data.userDetails.createdAt).toLocaleString()} </p>
+                                <p>Number of Subordinates: {selectedUserData.data.userDetails.downline.length}</p>
+                                <p>Last Recharge Amount: {selectedUserData.data.userDetails.lastRechargeAmount}</p>
+                            </div>}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    )}
+                                    </React.Fragment>
+                                );
+                            })}
+                        </tbody> : <tbody className='tableBodyRow'>
+                            <tr>
+                                <td>{searchData.UID}</td>
+                                <td>{searchData.name}</td>
+                                <td style={{ paddingLeft: 0 }}>{searchData.bettingAmount===null?'0':searchData.bettingAmount}</td>
+                                <td style={{ paddingLeft: 0 }}>
+                                {searchData.isDeleted===false?'Enable':'Disable'}
+                                </td>
+                                <td style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                <button className='details-btn' onClick={() => toggleAccordion(searchData.UID)}>Details</button>
                                     </td>
-                                </tr>
-                            );
-                        })}
-                    </tbody>
+                            </tr>
+                            {accordionOpen[searchData.UID] && (
+                                        <tr>
+                                            <td colSpan="5">
+                                                <div className="accordion-content">
+                                                {selectedUserData && 
+                            <div className='down-details'>
+                                <p>Total Betting Amount: {selectedUserData.data.userDetails.bettingAmount.toFixed(2)}</p>
+                                <p>Registration Time: {new Date(selectedUserData.data.userDetails.createdAt).toLocaleString()} </p>
+                                <p>Number of Subordinates: {selectedUserData.data.userDetails.downline.length}</p>
+
+                                <p>Last Recharge Amount: {selectedUserData.data.userDetails.lastRechargeAmount}</p>
+                            </div>}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    )}
+                        </tbody>
+                    }
                 </table>
             </div>
-
-            {/* Popup */}
-            {showPopup && (
-                <div className="popup">
-                    <div className="popup-content">
-                        <button className="close-popup" onClick={() => setShowPopup(false)}>Close</button>
-                        {selectedUserData && (
-                            <div className='down-details'>
-                                <h2>User Details</h2>
-                                <p>UID: {selectedUserData.data.userDetails.UID}</p>
-                                <p>User Name: {selectedUserData.data.userDetails.name}</p>
-                                <p>commissionAmount: {selectedUserData.data.userDetails.commissionAmount}</p>
-                                <p>winningAmount: {selectedUserData.data.userDetails.winningAmount}</p>
-                                
-                            </div>
-                        )}
-                    </div>
-                </div>
-            )}
+            
+          
         </div>
     );
 }

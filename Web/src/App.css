@@ -255,3 +255,8 @@ input[type="number"]::-ms-outer-spin-button {
   border-width: 0 2px 2px 0;
   transform: rotate(45deg);
 }
+@media(max-width:960px){.umnico-widget-wrapper .widget__chat-preview.widget__chat-preview--open{margin: 5rem 0 0 0 !important;top: 5rem !important;}
+.widget__chat-close-btn {display: none !important;}
+.widget__chat-preview {
+  margin: 5rem 0 0 0 !important;
+   position: static !important;}}

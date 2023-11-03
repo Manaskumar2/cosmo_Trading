@@ -1,6 +1,6 @@
 
 const jwt = require("jsonwebtoken");
-const { trusted } = require("mongoose");
+const userModel = require("../models/userModel");
 
 const authentication = (req, res, next) => {
   try {
@@ -11,12 +11,15 @@ const authentication = (req, res, next) => {
     let token = bearerToken[1] ? bearerToken[1] : req.body.authToken;
 
 
+
   
 
     jwt.verify(token, process.env.JWT_TOKEN, function (err, data) {
       if (err) {
         return res.status(403).send({ status: false, message: err.message })
       } else {
+        // const user = await.findOne({ _id: data.userId, token: token });
+        // if(!user) return res.status(403).send({ status: false, message:"please login again." });
         req.decodedToken = data;
         next()
       }

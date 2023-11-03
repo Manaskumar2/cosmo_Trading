@@ -258,6 +258,7 @@ const endIndex = startIndex + itemsPerPage;
                                                                 <div className='flex-div-space-Betn'><p>Period :</p><p>  {item.gameUID}</p></div>
 
                                                                 <div className='flex-div-space-Betn'><p>Amount :</p><p>  {item.amount}</p></div>
+                                                                <div className='flex-div-space-Betn'><p>Winning Amount :</p><p>  {item.isCompleted ? item.winningAmount ? item.winningAmount.toFixed(2) : 0 : 'Pending'}</p></div>
 
                                                                 <div className='flex-div-space-Betn'><p>Betting Placed :</p><p> {item.group === 'small' ? 'Alpha' : 'Beta'}</p></div>
                                                                 <div className='flex-div-space-Betn'>

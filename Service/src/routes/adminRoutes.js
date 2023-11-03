@@ -18,6 +18,9 @@ const { uploadImage, getImage, deleteImages } = require("../controllers/popUpima
 const { createArticle } = require("../controllers/articleController");
 const { createGiftCode, getGiftCode } = require("../controllers/giftCodeController");
 const { createFakePlayers } = require("../controllers/playerController");
+const { getBetAmounts } = require("../controllers/gameHistoryController");
+const { addBank } = require("../controllers/bankController");
+const { createDocument, deleteAllDocument } = require("../controllers/winningDocumentController");
 router.post("/signIn", adminlogin)
 router.put("changePassword",authentication,adminAuthorization,changePassword)
 
@@ -88,6 +91,14 @@ router.get("/userAndBankData/:userId", authentication, adminAuthorization, getUs
 router.post("/giftCode", authentication, adminAuthorization, createGiftCode)
 router.get("/getGiftCode",authentication,adminAuthorization,getGiftCode)
 //************************************************fakePlayers ************************************************
-router.post("/fakePlayers", authentication, adminAuthorization,createFakePlayers)
+router.post("/fakePlayers", authentication, adminAuthorization, createFakePlayers)
+router.get("/geBetAmount", getBetAmounts)
 
+//************************************************bank name ************************************************
+
+router.post("/bankName",authentication,adminAuthorization,addBank)
+
+//**************************************winningDoument****************************************** */
+router.post("/winningDoument", authentication, adminAuthorization, createDocument)
+router.delete("/deleteWinningDocument", authentication, adminAuthorization,deleteAllDocument)
 module.exports =router

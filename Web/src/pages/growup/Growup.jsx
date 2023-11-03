@@ -7,6 +7,7 @@ import Audio from '../../images/audio.svg'
 import rupee from '../../images/rupee.svg'
 import reload from '../../images/reload 1.svg'
 import mute from '../../images/mute.svg'
+import Auth from '../../components/modal/Auth'
 import './Growup.css'
 import { useState, useMemo, useEffect } from 'react';
 import Modal from 'react-bootstrap/Modal';
@@ -96,7 +97,6 @@ function Growup() {
         socket.on('grow_up_update', (data) => {
             const growUpData = JSON.parse(data);
             const gameData = growUpData.game;
-            console.log(data);
             if(gameHistoryList.currentPage === 1){
                 setGameHistoryList(prev => {
                     const prevGames = [...prev.gamesWithSuccessfulBets];
@@ -115,7 +115,6 @@ function Growup() {
                     const prevGames = [...prev.history];                    
                     const updatedGames = prevGames.map(game => {
                         if(game._id === gameData._id){
-                            console.log({...game, ...gameData})
                             return {...game, ...gameData};
                         } else {
                             return game;
@@ -137,8 +136,22 @@ function Growup() {
         const socket = initializeSocket(auth);
         socket.emit('get_grow_up', timeNo);
         socket.on('updateUserWallet', (data) => {
-            const walletAmount = data;
+            const {walletAmount, winningAmount, betId} = JSON.parse(data);
             setUserWallet(walletAmount);
+            if(winningAmount && betId && userGames.currentPage === 1){
+                setUserGames(prev => {
+                    const prevGames = [...prev.history];                    
+                    const updatedGames = prevGames.map(game => {
+                        if(game.betId === betId){
+                            console.log({...game, winningAmount})
+                            return {...game, winningAmount};
+                        } else {
+                            return game;
+                        }
+                    })
+                    return {...prev, history: updatedGames}
+                })
+            }
         })
 
         socket.on('grow_up_game', (data) => {
@@ -150,7 +163,7 @@ function Growup() {
             socket.off('updateUserWallet');
             socket.off('grow_up_game');
         };
-    }, []);
+    }, [JSON.stringify(userGames.history)]);
 
     useEffect(() => {
         handleUserMoney()
@@ -229,7 +242,10 @@ function Growup() {
     //     }
     // }, [countDownGrowup])
 
-
+    const handleInputChange = (e) => {
+        const newValue = e.target.value.replace(/[^0-9]/g, '');
+        setAmount(newValue);
+    };
 
     const handleUserMoney = async () => {
         try {
@@ -262,8 +278,7 @@ function Growup() {
         setSmShow(false)
         setLgShow(false)
 
-        let token = auth.authToken
-        if (countDownGrowup < 10) {
+        if (countDownGrowup < 5) {
             toast.error("Wait for the next game", { ...toastProps });
             return null;
         }
@@ -311,6 +326,12 @@ function Growup() {
             toast.error(errorMessage || "Something went wrong", { ...toastProps });
         }
     }
+    useEffect(()=>{if(countDownGrowup <6){setSmShow(false)
+        setLgShow(false)
+        setAmount(1);
+        setMultiplier(1)
+        setMoney(1)
+        setGroup('');}},[countDownGrowup ])
 
     return (
         <div className="win">
@@ -387,9 +408,7 @@ function Growup() {
                         </button> */}
                     </div>
                 </div>
-
-
-
+<Auth/>
                 {activeTab === 1 &&
                     <>
                         <TimeSection />
@@ -472,25 +491,13 @@ function Growup() {
                                             </div>
                                             <div className='plus-minus'>
 
-                                                <input className='plus-minus-input' type="number" value={amount} onChange={(e) => { setAmount(e.target.value) }} />
+                                            <input className='plus-minus-input' type="number" value={amount} onChange={handleInputChange} step="1"/>
 
                                             </div>
                                         </div>
                                         <div className="hrline"></div>
                                         <div className="x-row-section">
-                                            <button
-                                                className={`x-section ${multiplier == 1 ? 'active-btn' : ''}`}
-
-                                                onClick={() => handleMultiplierChange('1')}
-                                            >
-                                                x1
-                                            </button>
-                                            <button
-                                                className={`x-section ${multiplier == 2 ? 'active-btn' : ''}`}
-                                                onClick={() => handleMultiplierChange('2')}
-                                            >
-                                                x2
-                                            </button>
+                                            
                                             <button
                                                 className={`x-section ${multiplier == 5 ? 'active-btn' : ''}`}
                                                 onClick={() => handleMultiplierChange('5')}
@@ -504,6 +511,14 @@ function Growup() {
                                                 x10
                                             </button>
                                             <button
+                                                className={`x-section ${multiplier == 25 ? 'active-btn' : ''}`}
+
+                                                onClick={() => handleMultiplierChange('25')}
+                                            >
+                                                x25
+                                            </button>
+                                            
+                                            <button
                                                 className={`x-section ${multiplier == 50 ? 'active-btn' : ''}`}
                                                 onClick={() => handleMultiplierChange('50')}
                                             >
@@ -515,6 +530,13 @@ function Growup() {
                                             >
                                                 x100
                                             </button>
+                                            <button
+                                                className={`x-section ${multiplier == 300 ? 'active-btn' : ''}`}
+                                                onClick={() => handleMultiplierChange('300')}
+                                            >
+                                                x300
+                                            </button>
+                                           
                                         </div>
                                         <div className="hrline"></div>
                                         <div className="custom_checkbox">
@@ -594,25 +616,12 @@ function Growup() {
                                             </div>
                                             <div className='plus-minus'>
 
-                                                <input className='plus-minus-input' type="number" value={amount} onChange={(e) => { setAmount(e.target.value) }} />
+                                            <input className='plus-minus-input' type="number" value={amount} onChange={handleInputChange} step="1"/>
 
                                             </div>
                                         </div>
                                         <div className="hrline"></div>
                                         <div className="x-row-section">
-                                            <button
-                                                className={`x-section ${multiplier == 1 ? 'active-btn' : ''}`}
-
-                                                onClick={() => handleMultiplierChange('1')}
-                                            >
-                                                x1
-                                            </button>
-                                            <button
-                                                className={`x-section ${multiplier == 2 ? 'active-btn' : ''}`}
-                                                onClick={() => handleMultiplierChange('2')}
-                                            >
-                                                x2
-                                            </button>
                                             <button
                                                 className={`x-section ${multiplier == 5 ? 'active-btn' : ''}`}
                                                 onClick={() => handleMultiplierChange('5')}
@@ -626,6 +635,14 @@ function Growup() {
                                                 x10
                                             </button>
                                             <button
+                                                className={`x-section ${multiplier == 25 ? 'active-btn' : ''}`}
+
+                                                onClick={() => handleMultiplierChange('25')}
+                                            >
+                                                x25
+                                            </button>
+                                            
+                                            <button
                                                 className={`x-section ${multiplier == 50 ? 'active-btn' : ''}`}
                                                 onClick={() => handleMultiplierChange('50')}
                                             >
@@ -636,6 +653,12 @@ function Growup() {
                                                 onClick={() => handleMultiplierChange('100')}
                                             >
                                                 x100
+                                            </button>
+                                            <button
+                                                className={`x-section ${multiplier == 300 ? 'active-btn' : ''}`}
+                                                onClick={() => handleMultiplierChange('300')}
+                                            >
+                                                x300
                                             </button>
                                         </div>
                                         <div className="hrline"></div>

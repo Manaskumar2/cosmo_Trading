@@ -33,7 +33,7 @@ import animation from './RiseUP-Animation.gif'
 import initializeSocket from '../../sockets/socket'
 import { GameHistoryListRiseUp } from '../../Atoms/GameHistoryListRiseUp'
 import { UserGameHistoryRiseUp } from '../../Atoms/UserGameHistoryRiseUp'
-
+import Auth from '../../components/modal/Auth'
 export const toastProps = {
     position: "top-center",
     duration: 2000,
@@ -69,6 +69,10 @@ function RiseUp() {
     const handleTabClick = (tabIndex) => {
         setActiveTab(tabIndex);
     };
+    const handleInputChange = (e) => {
+    const newValue = e.target.value.replace(/[^0-9]/g, '');
+    setAmount(newValue);
+  };
 
     useEffect(() => {
         const socket = initializeSocket(auth);
@@ -118,8 +122,22 @@ function RiseUp() {
         const socket = initializeSocket(auth);
         socket.emit('get_rise_up', timeNo);
         socket.on('updateUserWallet', (data) => {
-            const walletAmount = data;
+            const {walletAmount, winningAmount, betId} = JSON.parse(data);
             setUserWallet(walletAmount);
+            if(winningAmount && betId && userGames.currentPage === 1){
+                    setUserGames(prev => {
+                        const prevGames = [...prev.history];                    
+                        const updatedGames = prevGames.map(game => {
+                            if(game.betId === betId){
+                                return {...game, winningAmount};
+                            } else {
+                                return game;
+                            }
+                        })
+    
+                        return {...prev, history: updatedGames}
+                    })
+            }
         })
 
         socket.on('rise_up_game', (data) => {
@@ -131,7 +149,7 @@ function RiseUp() {
             socket.off('updateUserWallet');
             socket.off('rise_up_game');
         };
-    }, []);
+    }, [JSON.stringify(userGames.history)]);
 
     useEffect(() => {
         handleUserMoney()
@@ -180,6 +198,7 @@ function RiseUp() {
                     headers: { Authorization: `Bearer ${token}` }
                 }
             );
+            console.log(response);
             if (response.status === 201) {
                 let message;
                 if (group === 'A') {
@@ -281,6 +300,17 @@ function RiseUp() {
     useEffect(() => {
         setAmount(money * multiplier);
     }, [money, multiplier]);
+    useEffect(() => {
+        if(countDownRiseup<6){
+            setGroup('');
+            setSmShow(false);
+            setLgShow(false);
+            setGmShow(false);
+            setAmount(1);
+            setMultiplier(1)
+            setMoney(1)
+        }
+    }, [countDownRiseup]);
 
     const handleMoneyClick = (value) => {
         setMoney(value);
@@ -475,25 +505,13 @@ function RiseUp() {
                                         </div>
                                         <div className='plus-minus'>
 
-                                            <input className='plus-minus-input' type="number" value={amount} onChange={(e) => { setAmount(e.target.value) }} />
+                                        <input className='plus-minus-input' type="number" value={amount} onChange={handleInputChange} step="1"/>
 
                                         </div>
                                     </div>
                                     <div className="hrline"></div>
                                     <div className="x-row-section">
-                                        <button
-                                            className={`x-section ${multiplier == 1 ? 'active-btn' : ''}`}
-
-                                            onClick={() => handleMultiplierChange('1')}
-                                        >
-                                            x1
-                                        </button>
-                                        <button
-                                            className={`x-section ${multiplier == 2 ? 'active-btn' : ''}`}
-                                            onClick={() => handleMultiplierChange('2')}
-                                        >
-                                            x2
-                                        </button>
+                                        
                                         <button
                                             className={`x-section ${multiplier == 5 ? 'active-btn' : ''}`}
                                             onClick={() => handleMultiplierChange('5')}
@@ -507,6 +525,14 @@ function RiseUp() {
                                             x10
                                         </button>
                                         <button
+                                                className={`x-section ${multiplier == 25 ? 'active-btn' : ''}`}
+
+                                                onClick={() => handleMultiplierChange('25')}
+                                            >
+                                                x25
+                                            </button>
+                                          
+                                        <button
                                             className={`x-section ${multiplier == 50 ? 'active-btn' : ''}`}
                                             onClick={() => handleMultiplierChange('50')}
                                         >
@@ -518,6 +544,12 @@ function RiseUp() {
                                         >
                                             x100
                                         </button>
+                                        <button
+                                                className={`x-section ${multiplier == 300 ? 'active-btn' : ''}`}
+                                                onClick={() => handleMultiplierChange('300')}
+                                            >
+                                                x300
+                                            </button>
                                     </div>
                                     <div className="hrline"></div>
                                     <div className="custom_checkbox">
@@ -600,25 +632,12 @@ function RiseUp() {
                                         </div>
                                         <div className='plus-minus'>
 
-                                            <input className='plus-minus-input' type="number" value={amount} onChange={(e) => { setAmount(e.target.value) }} />
+                                        <input className='plus-minus-input' type="number" value={amount} onChange={handleInputChange} step="1"/>
 
                                         </div>
                                     </div>
                                     <div className="hrline"></div>
                                     <div className="x-row-section">
-                                        <button
-                                            className={`x-section ${multiplier == 1 ? 'active-btn' : ''}`}
-
-                                            onClick={() => handleMultiplierChange('1')}
-                                        >
-                                            x1
-                                        </button>
-                                        <button
-                                            className={`x-section ${multiplier == 2 ? 'active-btn' : ''}`}
-                                            onClick={() => handleMultiplierChange('2')}
-                                        >
-                                            x2
-                                        </button>
                                         <button
                                             className={`x-section ${multiplier == 5 ? 'active-btn' : ''}`}
                                             onClick={() => handleMultiplierChange('5')}
@@ -632,6 +651,14 @@ function RiseUp() {
                                             x10
                                         </button>
                                         <button
+                                                className={`x-section ${multiplier == 25 ? 'active-btn' : ''}`}
+
+                                                onClick={() => handleMultiplierChange('25')}
+                                            >
+                                                x25
+                                            </button>
+                                            
+                                        <button
                                             className={`x-section ${multiplier == 50 ? 'active-btn' : ''}`}
                                             onClick={() => handleMultiplierChange('50')}
                                         >
@@ -643,6 +670,12 @@ function RiseUp() {
                                         >
                                             x100
                                         </button>
+                                        <button
+                                                className={`x-section ${multiplier == 300 ? 'active-btn' : ''}`}
+                                                onClick={() => handleMultiplierChange('300')}
+                                            >
+                                                x300
+                                            </button>
                                     </div>
                                     <div className="hrline"></div>
                                     <div className="custom_checkbox">
@@ -650,11 +683,9 @@ function RiseUp() {
                                             type="checkbox"
                                             id="Agree"
                                             checked={isChecked}
-
                                         />
                                         <label for="Agree">I Agree <Link>Privacy Policy</Link></label>
                                     </div>
-
                                     <div className="hrline"></div>
                                     <button className='total-btn' onClick={handleSubmit}>Total Price: {amount}</button>
                                 </div>
@@ -724,26 +755,12 @@ function RiseUp() {
                                             <p>Custom Amount</p>
                                         </div>
                                         <div className='plus-minus'>
-
                                             <input className='plus-minus-input' type="number" value={amount} onChange={(e) => { setAmount(e.target.value) }} />
-
                                         </div>
                                     </div>
                                     <div className="hrline"></div>
                                     <div className="x-row-section">
-                                        <button
-                                            className={`x-section ${multiplier == 1 ? 'active-btn' : ''}`}
-
-                                            onClick={() => handleMultiplierChange('1')}
-                                        >
-                                            x1
-                                        </button>
-                                        <button
-                                            className={`x-section ${multiplier == 2 ? 'active-btn' : ''}`}
-                                            onClick={() => handleMultiplierChange('2')}
-                                        >
-                                            x2
-                                        </button>
+                                    
                                         <button
                                             className={`x-section ${multiplier == 5 ? 'active-btn' : ''}`}
                                             onClick={() => handleMultiplierChange('5')}
@@ -757,6 +774,13 @@ function RiseUp() {
                                             x10
                                         </button>
                                         <button
+                                                className={`x-section ${multiplier == 25 ? 'active-btn' : ''}`}
+                                                onClick={() => handleMultiplierChange('25')}
+                                            >
+                                                x25
+                                            </button>
+                                        
+                                        <button
                                             className={`x-section ${multiplier == 50 ? 'active-btn' : ''}`}
                                             onClick={() => handleMultiplierChange('50')}
                                         >
@@ -768,6 +792,12 @@ function RiseUp() {
                                         >
                                             x100
                                         </button>
+                                        <button
+                                                className={`x-section ${multiplier == 300 ? 'active-btn' : ''}`}
+                                                onClick={() => handleMultiplierChange('300')}
+                                            >
+                                                x300
+                                            </button>
                                     </div>
                                     <div className="hrline"></div>
                                     <div className="custom_checkbox">
@@ -785,7 +815,7 @@ function RiseUp() {
                                 </div>
                             </Modal.Body>
                         </Modal>
-
+<Auth/>
                     </>
                     <GameHistoryRiseUp duration={duration} />
                 </>

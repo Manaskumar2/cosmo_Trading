@@ -3,7 +3,8 @@ require("moment-timezone");
 const userModel = require("../models/userModel");
 const Game = require("../models/secondGameModel");
 const Wallet = require("../models/companywallet");
-const commissionModel = require("../models/commissionModel")
+const commissionModel = require("../models/commissionModel");
+const BettingHistoryModel = require("../models/battingHistoryModel")
 
 const { generateUniqueNumber2, updateUserWallet } = require("../util/util");
 const { updateRiseUp, createRiseUp } = require("../socket/sockets");
@@ -68,7 +69,7 @@ for (const key in groups) {
           winnerGroup= "A"
   
 
-        } else if (groups["C"].users.length === 0 && groups["B"].totalAmount< 0 && groups["A"].totalAmount) {
+        } else if (groups["C"].users.length === 0 && groups["A"].totalAmount>groups["B"].totalAmount) {
           loserGroup = "A"
           winnerGroup = "B"
 
@@ -82,7 +83,7 @@ for (const key in groups) {
           winnerGroup= "C"
   
 
-        } else if (groups["C"].users.length === 0 && groups["B"].totalAmount> 0 && groups["A"].totalAmount) {
+        } else if (groups["C"].users.length === 0 && groups["B"].totalAmount>groups["A"].totalAmount) {
           loserGroup = "B"
           winnerGroup = "A"
 
@@ -397,16 +398,9 @@ async function distributeComissionToThreeUsers(winner, runnerUp, losers, game, w
        totalAmount -= returnAmount;
 
       // Update the user's wallet with the win amount
-      await updateUserWallet({userId: bet.user._id, walletAmount: returnAmount, winningAmount: returnAmount});
-      // await userModel.updateOne(
-      //   { _id: bet.user._id },
-      //   {
-      //     $inc: {
-      //       walletAmount: returnAmount,
-      //       winningAmount: returnAmount
-      //     }
-      //   }
-      // );
+      await updateUserWallet({userId: bet.user._id, walletAmount: returnAmount, winningAmount: returnAmount, betId: bet._id});
+     bet.winningAmount =returnAmount;
+     await game.save();
     }
     
   }
@@ -426,17 +420,9 @@ async function distributeComissionToThreeUsers(winner, runnerUp, losers, game, w
       totalAmount -= returnAmount;
 
       // Update the user's wallet with the win amount
-      await updateUserWallet({userId: bet.user._id, walletAmount: returnAmount, winningAmount: returnAmount});
-
-      // await userModel.updateOne(
-      //   { _id: bet.user._id },
-      //   {
-      //     $inc: {
-      //       walletAmount: returnAmount,
-      //       winningAmount: returnAmount
-      //     }
-      //   }
-      // );
+      await updateUserWallet({ userId: bet.user._id, walletAmount: returnAmount, winningAmount: returnAmount , betId: bet._id});
+      bet.winningAmount =returnAmount;
+     await game.save();
     }
   }
 
@@ -467,17 +453,9 @@ async function distributeComissionToTwoUsers(winner, losers, game,winnerGroup) {
       totalAmount -= returnAmount;
 
       // Update the user's wallet with the win amount
-      await updateUserWallet({userId: bet.user._id, walletAmount: returnAmount, winningAmount: returnAmount});
-
-      // await userModel.updateOne(
-      //   { _id: bet.user._id },
-      //   {
-      //     $inc: {
-      //       walletAmount: returnAmount,
-      //       winningAmount: returnAmount
-      //     }
-      //   }
-      // );
+      await updateUserWallet({ userId: bet.user._id, walletAmount: returnAmount, winningAmount: returnAmount, betId: bet._id });
+    bet.winningAmount =returnAmount;
+     await game.save();
     }
   }
 
@@ -510,13 +488,9 @@ async function distributeComissionToOneUser(loser, game) {
    for (const bet of game.bets) {
     let winAmount = roundDown(bet.amount*0.97 * 0.70, 2);
     totalAmount -= winAmount;
-    await updateUserWallet({userId: bet.user._id, walletAmount: winAmount, winningAmount: winAmount});
-
-    // await userModel.updateOne(
-    //   { _id: bet.user._id },
-    //    { walletAmount: bet.user.walletAmount + winAmount },
-    //    {winningAmount: bet.user.winningAmount + winAmount}
-    // );
+     await updateUserWallet({ userId: bet.user._id, walletAmount: winAmount, winningAmount: winAmount, betId: bet._id });
+     bet.winningAmount = winAmount;
+     await game.save();
     }
 
   let distributedAmount = await distributeComissionToAll(game);
@@ -780,7 +754,7 @@ const bet2ndController = async (req, res) => {
                 .json({ status: false, message: "Insufficient funds" });
         }
     let walletAmount = user.walletAmount - amount;
-    // let bettingAmount = user.bettingAmount + amount;
+     let bettingAmount = user.bettingAmount + amount;
 
     let rechargeAmount = user.rechargeAmount
       if (rechargeAmount > 0) {
@@ -797,14 +771,23 @@ const bet2ndController = async (req, res) => {
 
     await game.save();
 
+    const latestUserBet = game.bets[game.bets.length - 1];
+
     await userModel.updateOne(
       { _id: user._id },
       {
         walletAmount: walletAmount,
-        // bettingAmount: bettingAmount,
+       bettingAmount: bettingAmount,
         rechargeAmount:rechargeAmount
       }
     );
+    const currentDate = new Date();
+    const bettingHistory = await BettingHistoryModel.create({
+      user: user._id,
+      date: currentDate,
+      amount: amount,
+      bettingFrom:"RiseUp"
+    });
 
         res.status(201).json({ status: true, message: "Bet placed successfully", game: {
           amount,
@@ -815,7 +798,8 @@ const bet2ndController = async (req, res) => {
           isCompleted: game.isCompleted,
           startTime: game.startTime, 
           _id: game._id,
-          orderTime: Date.now()
+          orderTime: Date.now(),
+          betId: latestUserBet._id
         }});
        
     } catch (error) {
@@ -863,7 +847,9 @@ const riseUpUserBettingHistory = async (req, res) => {
             losersGroup:game.losersGroup,
             amount: userBet.amount, 
             group: userBet.group,
-            orderTime: userBet.createdAt   
+            orderTime: userBet.createdAt,
+            winningAmount: userBet.winningAmount,
+            betId: userBet._id
           };
           response.history.push(gameDetails);
           responseCount++;

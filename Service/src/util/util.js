@@ -92,7 +92,7 @@ async function generateUniqueNumber2() {
   return uniqueNumber;
 }
 
-const updateUserWallet = async({userId, walletAmount, commissionAmount, winningAmount}) => {
+const updateUserWallet = async({userId, walletAmount, commissionAmount, winningAmount, betId}) => {
   const updateData = {};
   if(walletAmount){
     updateData.walletAmount = walletAmount;
@@ -115,7 +115,12 @@ const updateUserWallet = async({userId, walletAmount, commissionAmount, winningA
   );
   const socketId = users[userId]; 
   if(socketId){
-    updateUserWalletSocket(socketId, updatedUser.walletAmount);
+    const updatedData = {walletAmount: updatedUser.walletAmount};
+    if(winningAmount && betId){
+      updatedData.winningAmount = winningAmount;
+      updatedData.betId = betId;
+    }
+    updateUserWalletSocket(socketId, JSON.stringify(updatedData));
   }
 }
 

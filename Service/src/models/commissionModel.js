@@ -9,8 +9,9 @@ const commissionSchema = new mongoose.Schema({
     required: true,
     },
     userId: {
-        type: mongoose.Schema.Types.ObjectId, ref: 'users',
-        required: true
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'users',
+      required: true
     },
     commissionType: {
         type: String,

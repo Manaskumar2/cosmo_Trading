@@ -16,6 +16,8 @@
     box-shadow: 0px 2px 4px 0px rgba(38, 181, 226, 0.80);
     
 }
+.btn-sbtn .row{display: flex; justify-content: space-between;}
+.total-transection{display: flex;justify-content: center;align-items: center;flex-direction: column;border-radius: 1rem; border: 2px solid rgb(215, 215, 54);background: #045B73; color: #FFF; padding: 1rem;margin-top: 2rem;font-family: Montserrat;width: 47% !important;}
 .modal-body-w2w{background-color: #133B77; padding: 1rem; min-height: 80vh;}
 .modal-body-w2w .confirm ,.userDetaisW2W{ font-size: 1rem ; color: #fff;font-family: 'Montserrat'}
 .modal-body-w2w .close{margin: 2rem 0; font-size: 1rem ; color: #fff;font-family: 'Montserrat' ;   border-radius: 12.5rem;
@@ -66,6 +68,9 @@
       .pagination-buttons-p2p{display: flex;justify-content: center;align-items: center;gap: 1rem;margin-top: 2rem;color: #fff;}
 
       .pagination-buttons-p2p button{background:linear-gradient(143deg, #C82F36 0%, #EC4E55 100%);outline: none; border: 0; width: 2rem;height: 2rem;display: flex;justify-content: center;align-items: center;margin: 0;color: #fff;font-weight: 600;font-size: 1.2rem;border-radius: 2px;}
+      /* .wallet2wallet .activeTab{background: linear-gradient(143deg, #296DAC 0%, #2FB0E7 100%) !important;} */
+      .receive-btn {background: linear-gradient(143deg, #32ce0b 0%, #74eb70 100%) !important}
+      .sendBtn{background: linear-gradient(143deg, #e83420 0%, #e06948 100%) !important}
 @media(min-width:500px){
     .security{max-width:500px; margin:0 auto;}
     .ReactModal__Content{width:30vw;}

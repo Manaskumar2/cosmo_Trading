@@ -20,6 +20,7 @@ export const toastProps = {
 function BankCard() {
   const navigate =useNavigate()
   const [userBankCard, setUserBankCard] = useState(null)
+  const [bank, setBank] = useState(null)
   const [bankName, setbankName] = useState('')
   const [accountHolderName, setaccountHolderName] = useState('')
   const [bankAccountNo, setbankAccountNo] = useState('')
@@ -31,6 +32,27 @@ function BankCard() {
 
   const auth = useRecoilValue(AuthState)
 
+  const getBank = async () => {
+    try {
+      let token = auth.authToken
+      let userId = auth._id
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/getBankNames`, {
+        headers: { Authorization: `Bearer ${token}` }
+      }
+      );
+      if (response.status === 200) {
+        setBank(response.data.data)
+        console.log(response.data.data)
+        return response;
+      }
+    } catch (error) {
+      if (error.response.status === 403) {
+        navigate('/signIn')
+        return response;
+    }
+      const errorMessage = error.response ? error.response.data.message : error.message;
+  }
+  }
   const getBankCard = async () => {
     try {
       let token = auth.authToken
@@ -88,7 +110,7 @@ function BankCard() {
       toast.error(errorMessage || "Something went wrong", { ...toastProps });
   }
   }
-  useEffect(()=>{getBankCard()},[])
+  useEffect(()=>{getBank()},[])
 
 
   return (
@@ -120,7 +142,17 @@ function BankCard() {
           <form onSubmit={handleBankData}>
             <div className='bank-Card-box'>
               <label className='label'>Bank Name</label>
-              <input type="text" placeholder='It is required' value={bankName} onChange={(e) => { setbankName(e.target.value) }} />
+              {bank &&
+              <div><select
+          value={bankName} className='drop' onChange={(e) => { setbankName(e.target.value) }}
+          >
+            <option value="">Select a Bank</option>
+            {bank.map((item) => (
+              <option key={item.id} value={item.bankName}>
+                {item.bankName}
+              </option>
+            ))}
+          </select></div>}
             </div>
 
             <div className='bank-Card-box'>

@@ -8,9 +8,11 @@ import rupee from '../../images/rupee.svg'
 import reload from '../../images/reload 1.svg'
 import crown from '../profile/prime.svg'
 import Nav from '../../components/Nav/Nav'
+import Auth from '../../components/modal/Auth'
 import { AuthState } from '../../Atoms/AuthState'
 import { UserDetails } from '../../Atoms/UserDetails'
 import { useRecoilValue, useRecoilState } from 'recoil'
+import transfer from '../profile/transfer.svg'
 import axios from 'axios'
  import { useEffect } from 'react'
  import next from '../../../../SVG/next.svg'
@@ -149,10 +151,16 @@ function Wallet() {
                                 <div className='col-8 lvlContainer'>Withdraw Record</div>
                                 <div className='col-2 backImg'><img src={next} alt="" /></div>
                             </div>
+                        <div className='row' onClick={()=>{navigate('/walletTransfer')}}>
+                                <div className='col-2'><div className='profile-logo-Wrapper'><img src={transfer} alt="" /></div></div>
+                                <div className='col-8 lvlContainer'>Wallet to Wallet Transfer</div>
+                                <div className='col-2 backImg'><img src={next} alt="" /></div>
+                            </div>
                         </div>
                 </div>
                 
             </div>
+            
             <Nav/>
         </div>
     )

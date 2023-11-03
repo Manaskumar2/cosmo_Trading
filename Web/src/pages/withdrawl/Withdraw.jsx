@@ -18,7 +18,8 @@ import add from './add.svg';
 import axios from 'axios';
 import toast, { Toaster } from 'react-hot-toast';
 import { AuthState } from '../../Atoms/AuthState';
-
+import Modal from 'react-modal';
+import '../accountSecurity/AccountSecurity.css'
 export const toastProps = {
   position: 'top-center',
   duration: 2000,
@@ -30,12 +31,16 @@ export const toastProps = {
 };
 
 function Withdraw() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [userBankCard, setUserBankCard] = useState(null);
   const [userData, setUserData] = useState(null);
   const auth = useRecoilValue(AuthState);
-  const [withdrawAmount, setAmount] = useState(5);
+  const [withdrawAmount, setAmount] = useState(0);
   const [multiplier, setMultiplier] = useState(100);
   const [selectedRoute, setSelectedRouteButton] = useState(true);
+  const closeModal = () => {
+    setIsModalOpen(false);
+};
   const getBankCard = async () => {
     try {
       let token = auth.authToken;
@@ -79,9 +84,12 @@ function Withdraw() {
     }
   };
   useEffect(() => {
+    if(withdrawAmount > 0 && withdrawAmount<5){
+      setAmount(5)
+    }
     getBankCard();
     handleUserdata();
-  }, []);
+  }, [withdrawAmount]);
 
   const increaseAmount = () => {
     if(withdrawAmount<1000){
@@ -116,7 +124,7 @@ function Withdraw() {
       );
       if (response.status === 200) {
         toast.success('Withdraw Request Sent', { ...toastProps });
-
+        closeModal()
         setTimeout(() => {
           navigate('/wallet');
         }, 1200);
@@ -233,7 +241,7 @@ function Withdraw() {
         </div>
         <div className='container'>
           <div className='row recharge-Button'>
-            <button className='col-12' onClick={createPost}>
+            <button className='col-12'  onClick={()=>{setIsModalOpen(true);}}>
               Withdraw
             </button>
           </div>
@@ -289,6 +297,40 @@ function Withdraw() {
           </div>
         </div>
       </div>
+      <Modal isOpen={isModalOpen} onRequestClose={closeModal}>
+                <div className='modal-body-w2w'>
+
+                    <div>
+                        {userData && (
+                            <div className='userDetaisW2W'>
+                                <h2>User Details</h2>
+                                <p>Name: {userData.data.data.userDetails.name}</p>
+                                <p>UID: {userData.data.data.userDetails.UID}</p>
+                                <p>Phone no: {userData.data.data.userDetails.phoneNumber}</p>
+                               
+
+                            </div>
+
+                        )}
+                        {userBankCard &&
+          <div className='container'>
+            <div className='bankCardBox'>
+              <>
+                <h3>Your bank Card</h3>
+                <p>User Name: {userBankCard.accountHolderName} </p>
+                <p>Bank Name: {userBankCard.bankName} </p>
+                <p>Account Number: {String(userBankCard.bankAccountNo).slice(0, 4) + 'X'.repeat(String(userBankCard.bankAccountNo).length - 6) + String(userBankCard.bankAccountNo).slice(-4)}</p>
+                <p>IFSC Code: {userBankCard.ifscCode} </p>
+                <p>Amount: {withdrawAmount * multiplier}</p>
+              </>
+            </div>
+          </div>}
+                    </div>
+
+                    <button className='confirm' onClick={createPost}>Confirm Submit</button>
+                    <button className='close' onClick={closeModal}>Close</button>
+                </div>
+            </Modal>
     </div>
   );
 }

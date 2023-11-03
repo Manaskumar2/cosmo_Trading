@@ -8,6 +8,7 @@ import next from '../../../../SVG/next.svg'
 import './About.css'
 import second from './second.svg'
 function About() {
+    
     const navigate = useNavigate()
     return (
         <div className='about'>

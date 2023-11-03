@@ -1,6 +1,7 @@
 const userModel = require('../models/userModel');
 const withdrawlModel = require('../models/withdrawlModel');
-const withdrawModel = require('../models/withdrawlModel')
+const withdrawModel = require('../models/withdrawlModel');
+const accountModel =  require("../models/bankDetailsModel")
 
 const withdrawrequest = async (req, res) => {
   try {
@@ -17,6 +18,9 @@ const withdrawrequest = async (req, res) => {
     if (user.isPremiumUser) return res.status(400).send({ status: false, message: "You cannot withdraw money! You are a Premium User" });
     const totalWithdraw = user.walletAmount;
     if (totalWithdraw < wAmount) return res.status(400).send({ status: false, message: "Insufficient funds" });
+    const checkAccountDetails = await accountModel.findOne({ userId: userId })
+    if(!checkAccountDetails) return res.status(401).send({status:false,message:"Please add Bank Account details for withdraw"})
+
     
     const today = new Date();
     today.setHours(0, 0, 0, 0);

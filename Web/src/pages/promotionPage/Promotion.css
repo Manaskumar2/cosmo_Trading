@@ -9,6 +9,7 @@
 .gift{width: 100%; background: #001C3E; display: flex; justify-content: center; align-items: center; flex-direction: column;padding:  1.5rem 0;gap: 1rem;}
 .gift p{color: #6CD7EE; font-weight: 450;font-family: 'Montserrat';}
 .commission{padding: 1rem 1rem 0rem 1rem; border:2px solid #295992;margin: 1rem  ; width: 93%; border-radius: 20px;}
+.my-commision-img{width: 6rem; height: 6rem;}
 .commission h2{color: #fff;}
 .commission p{color: #DEAC4C; margin-bottom: 1.5rem;}
 .commission-row{padding: .7rem 0;border-top: 1px solid #164781;}

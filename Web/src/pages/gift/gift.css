@@ -1,7 +1,14 @@
 .giftPage{min-height: 100vh;background: #001C3E;}
+.bold-data{font-weight: 600; color: #3ed2ff;font-size: 1.3rem;}
 .gift-body{padding: 1rem;}
+.modal-header.gift-body{background:  #2086a5;color: #fff;border-top:0 !important ;}
+.modal-footer{background:  #2086a5;}
+
+
+
 .gift-body .box{padding: 2.5rem;border-radius: 1.25rem;
     background: linear-gradient(180deg, #07365D 0%, #0A607B 100%);display: flex; flex-direction: column;margin-top: 5rem;}
+    .modal-body.gift-body{background: linear-gradient(180deg, #07365D 0%, #0A607B 100%);display: flex; flex-direction: column;margin-top: 5rem;margin: 0 !important;}
 .gift-body .container h6{color: #C0E8FF;
     text-align: center;
     font-family: Montserrat;

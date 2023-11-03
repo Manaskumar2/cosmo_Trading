@@ -1,7 +1,8 @@
 const userModel = require("../models/userModel");
 const commissionModel = require("../models/commissionModel");
 const moment = require("moment-timezone")
-
+const mongoose = require("mongoose");
+const ObjectId = mongoose.Types.ObjectId;
 
 const franchiseCommissions = async (req, res) => {
   try {
@@ -63,49 +64,53 @@ const getCommissionDetails = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 }
-const commissonAmount = async (req, res) => {
+
+const commissionAmount = async (req, res) => {
   try {
     const userId = req.params.userId;
+    const limit = parseInt(req.query.limit) || 20
+    const page = parseInt(req.query.page) || 1
+    const skip = (page - 1) * limit
 
-   
-    const rechargeCommission = await commissionModel
-      .find({ userId: userId, commissionType: "RECHARGE" })
-      .select("amount");
 
-    const premiumCommission = await commissionModel
-      .find({ userId: userId, commissionType: "PREMIUM" })
-      .select("amount");
+    const todayStart = moment().tz("Asia/Kolkata").startOf("day").toDate();
+    const todayEnd = moment().tz("Asia/Kolkata").endOf("day").toDate();
 
-    const agentCommission = await commissionModel
-      .find({ userId: userId, commissionType: "AGENT" })
-      .select("amount");
-
-    // Calculate today's start and end date
-    const istNow = moment().tz("Asia/Kolkata");
-    istNow.startOf("day");
-    const todayStart = istNow.toDate();
-    istNow.endOf("day");
-    const todayEnd = istNow.toDate();
-
-    // Find documents for today
-    const todayTotalCommission = await commissionModel
-      .find({
-        userId: userId,
-        date: { $gte: todayStart, $lte: todayEnd },
-      })
-      .select("amount");
-
-    // Calculate total amounts
-    const calculateTotal = (commissions) => {
-      return commissions.reduce((total, commission) => total + commission.amount, 0);
+    const commissionDetails = await commissionModel
+      .find({ userId })
+      .select("amount commissionType date")
+      .limit(limit)
+      .skip(skip)
+      .exec();
+    const count = await commissionModel.countDocuments({ userId: userId })
+  const commissions = await commissionModel
+  .find({ userId })
+  .select("amount commissionType date")
+    const totalCommissions = {
+      totalTodayCommission: 0,
     };
+
+    commissions.reduce((commissions, commission) => {
+      commissions[commission.commissionType] = commissions[commission.commissionType] || 0;
+      commissions[commission.commissionType] += commission.amount;
+
+      if (commission.date >= todayStart && commission.date <= todayEnd) {
+        commissions.totalTodayCommission += commission.amount;
+      }
+
+      return commissions;
+    }, totalCommissions);
+
+    const overallTotalCommission = totalCommissions.totalTodayCommission + Object.values(totalCommissions).reduce((total, commission) => total + commission, 0);
 
     res.status(200).send({
       status: true,
-      totalRechargeCommission: calculateTotal(rechargeCommission),
-      totalPremiumCommission: calculateTotal(premiumCommission),
-      totalAgentCommission: calculateTotal(agentCommission),
-      todayTotalCommission: calculateTotal(todayTotalCommission),
+      totalTodayCommission: totalCommissions.totalTodayCommission,
+      overallTotalCommission,
+      totalCommissions,
+      commissionDetails,
+      currentPage: page,
+      totalPages: Math.ceil(count / limit),
     });
   } catch (error) {
     console.error("Error fetching commission information:", error);
@@ -113,4 +118,86 @@ const commissonAmount = async (req, res) => {
   }
 };
 
-module.exports = { franchiseCommissions ,getCommissionDetails,commissonAmount};
+
+
+
+
+const getCommission = async (req, res) => {
+  try {
+    const userId = req.decodedToken.userId;
+    const date = req.query.date;
+    const timezone = 'Asia/Kolkata';
+
+    if (date) {
+      const formattedDate = moment.tz(date, timezone);
+
+      const startOfDay = formattedDate.startOf('day');
+      const endOfDay = formattedDate.endOf('day');
+
+      const totalAmount = await commissionModel.aggregate([
+        {
+          $match: {
+            userId: new ObjectId(userId),
+            date: {
+              $gte: startOfDay.toDate(),
+              $lte: endOfDay.toDate(),
+            },
+          },
+        },
+        {
+          $group: {
+            _id: null,
+            totalCommission: { $sum: "$amount" },
+          },
+        },
+      ]);
+
+      return res.status(200).json({ status: true, message: "Successful", totalCommission: totalAmount[0] ? totalAmount[0].totalCommission : 0 });
+    } else {
+      const endDate = moment.tz(timezone);
+      const startDate = moment.tz(timezone).subtract(30, 'days');
+
+      const datewiseTotal = await commissionModel.aggregate([
+        {
+          $match: {
+            userId: new ObjectId(userId),
+            createdAt: {
+              $gte: startDate.toDate(),
+              $lte: endDate.toDate(),
+            },
+          },
+        },
+        {
+          $group: {
+            _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt", timezone } },
+            totalAmount: { $sum: "$amount" },
+          },
+        },
+        {
+          $match: {
+            totalAmount: { $gt: 0 },
+          },
+        },
+        {
+          $sort: { _id: -1 },
+        },
+      ]);
+
+      const datewiseTotalMap = {};
+      datewiseTotal.forEach((item) => {
+        datewiseTotalMap[item._id] = item.totalAmount;
+      });
+
+      return res.status(200).json({ status: true, message: "Successful", datewiseTotal: datewiseTotalMap });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "An error occurred while fetching commissions" });
+  }
+};
+
+
+
+
+
+module.exports = { franchiseCommissions ,getCommissionDetails,commissionAmount,getCommission};

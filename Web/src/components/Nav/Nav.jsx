@@ -1,7 +1,7 @@
 import React from 'react'; 
 import './Nav.css';
 import { NavLink } from 'react-router-dom';
-
+import Auth from '../modal/Auth';
 function Nav() {
     
     return (
@@ -26,6 +26,7 @@ function Nav() {
                     <NavLink to='/profile'  exact="true" className='nav-Link'>
                         <i className="icon-profile"></i> <p>Profile</p>
                     </NavLink>
+                    <Auth/>
                 </div>
             </div>
         </div>

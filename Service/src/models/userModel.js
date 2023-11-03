@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require("mongoose")
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -76,6 +76,13 @@ const userSchema = new mongoose.Schema({
   rechargeAmount: {
     type: Number,
     default: 0
+  },
+  lastRechargeAmount: {
+    type: Number,
+    default:0
+  },
+  token: {
+    type: String,
   }
 }, { timestamps: true });
 

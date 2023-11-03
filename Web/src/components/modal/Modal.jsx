@@ -35,7 +35,7 @@ function ModalComp() {
                 onHide={() => setSmShow(false)}
                 aria-labelledby="example-modal-sizes-title-lg"
             >
-                <Modal.Header closeButton>
+                <Modal.Header closeButton className='modal-head'>
                     <Modal.Title id="example-modal-sizes-title-lg">
                         small
                     </Modal.Title>

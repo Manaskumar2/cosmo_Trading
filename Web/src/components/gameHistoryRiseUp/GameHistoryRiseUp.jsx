@@ -57,6 +57,7 @@ const endIndex = startIndex + itemsPerPage;
                 params: { page },
                 headers: { Authorization: `Bearer ${token}` },
             });
+            console.log(response);
             if (response.status === 200) {
                 setUserGames(response.data)
                 return response;
@@ -364,6 +365,7 @@ const endIndex = startIndex + itemsPerPage;
                                                             <div className="expanded-content">
                                                                 <div className='flex-div-space-Betn'><p>Period :</p><p>  {item.gameUID}</p></div>
                                                                 <div className='flex-div-space-Betn'><p>Amount :</p><p>  {item.amount}</p></div>
+                                                                <div className='flex-div-space-Betn'><p>Winning Amount :</p><p>  {item.isCompleted ? item.winningAmount ? item.winningAmount.toFixed(2) : 0 : 'Pending'}</p></div>
                                                                 <div className='flex-div-space-Betn'><p>Betting Placed :</p><p> {item.group === 'A' ? 'Alpha' : item.group === 'B' ? 'Beta' : item.group === 'C' ? 'Gama' : 'Unknown'}</p></div>
 
                                                                 <div className='flex-div-space-Betn'>
