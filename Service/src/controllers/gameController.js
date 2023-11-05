@@ -58,7 +58,6 @@ async function calculateResult(gameId) {
         totalAmount = totalAmount - winAmount;
         await updateUserWallet({userId: bet.user._id, walletAmount: winAmount, winningAmount: winAmount, betId: bet._id});
        bet.winningAmount = winAmount;
-    await game.save();
       });
       
     } else if (winnerGroup == "big") {
@@ -67,7 +66,7 @@ async function calculateResult(gameId) {
         totalAmount = totalAmount - winAmount;
         await updateUserWallet({userId: bet.user._id, walletAmount: winAmount, winningAmount: winAmount, betId: bet._id});
       bet.winningAmount = winAmount;
-    await game.save();
+     ;
       });
     }
     
@@ -99,7 +98,6 @@ async function calculateResult(gameId) {
         totalAmount = totalAmount - winAmount;
         await updateUserWallet({userId: bet.user._id, walletAmount: winAmount, winningAmount: winAmount, betId: bet._id});
         bet.winningAmount = winAmount;
-    await game.save();
       });
       
     } else if (winnerGroup == "big") {
@@ -108,7 +106,6 @@ async function calculateResult(gameId) {
         totalAmount = totalAmount - winAmount;
         await updateUserWallet({userId: bet.user._id, walletAmount: winAmount, winningAmount: winAmount,  betId: bet._id});
       bet.winningAmount = winAmount;
-    await game.save();
       });
     
     }
@@ -134,7 +131,6 @@ async function calculateResult(gameId) {
     totalAmount -= winAmount;
     await updateUserWallet({userId: bet.user._id, walletAmount: winAmount, winningAmount: winAmount, betId: bet._id});
     bet.winningAmount = winAmount;
-    await game.save();
     }
     
   let distributedAmount = await distributeComissionToAll(game);
@@ -164,7 +160,7 @@ async function calculateResult(gameId) {
     
   } else if(bigAmount === 0 && smallAmount === 0){
     game.winnerGroup = null;
-    game.save();
+    await game.save();
     updateGrowUp(game);
   }
 }
