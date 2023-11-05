@@ -3,7 +3,9 @@ const riseUp = require("../models/secondGameModel");
 const moment = require("moment-timezone");
 
 const getBetAmounts = async (req, res) => {
-  // Set the time zone to Asia/Kolkata
+  try {
+    
+
   moment.tz.setDefault("Asia/Kolkata");
 
   const today = moment().startOf("day");
@@ -134,6 +136,9 @@ const overralBetAmounts =totalGrowUp+totalRiseUp
       
     },
   });
+      } catch (error) {
+    console.log(error);
+  }
 };
 
 module.exports = { getBetAmounts };

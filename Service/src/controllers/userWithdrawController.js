@@ -40,6 +40,7 @@ const withdrawrequest = async (req, res) => {
     await withdrawlModel.create({ withdrawAmount: wAmount, userId: userId, status: "pending" });
     return res.status(200).send({ status: false, message: "Waiting for payment confirmation" });
   } catch (error) {
+     console.log(error)
     return res.status(500).send({ status: false, message: error.message });
   }
 }

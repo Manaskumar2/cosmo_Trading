@@ -5,6 +5,7 @@ const createDocument = async (req, res) => {
     const createdDocuments = await Document.insertMany(documents);
     res.json({ message: 'Documents created successfully', createdDocuments });
   } catch (error) {
+     console.log(error)
     res.status(500).json({ error: 'An error occurred while creating documents' });
   }
 };
@@ -33,6 +34,7 @@ const getDocument =  async (req, res) => {
     const documents = await Document.find();
     res.json({ documents });
   } catch (error) {
+     console.log(error)
     res.status(500).json({ error: 'An error occurred while retrieving documents' });
   }
 };
@@ -42,6 +44,7 @@ const deleteAllDocument =  async (req, res) => {
     await Document.deleteMany({});
     res.json({ message: 'All documents have been deleted.' });
   } catch (error) {
+    console.log(error)
     res.status(500).json({ error: 'An error occurred while deleting documents.' });
   }
 };

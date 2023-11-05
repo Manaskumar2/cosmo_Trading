@@ -39,6 +39,7 @@ const getPlayers = async (req, res) => {
         if (!players) return res.status(404).json({ status: false, message: "Couldn't find players" })
        return res.status(200).json(players);
     } catch (error) {
+         console.log(error)
         res.status(500).json({ error: 'An error occurred while getting players' });
     }
 };
