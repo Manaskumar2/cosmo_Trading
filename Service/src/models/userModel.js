@@ -5,9 +5,12 @@ const userSchema = new mongoose.Schema({
   },
   phoneNumber: {
     type: String,
+    unique: true,
+    required: true,
   },
   password: {
     type: String,
+    required: true,
   },
   referralCode: {
     type: String,
@@ -19,7 +22,8 @@ const userSchema = new mongoose.Schema({
   },
   parentUserUid: {
     type: Number,
-    default:11111
+    default: 11111,
+    
   },
   profilePhoto: {
     type: String,
@@ -32,6 +36,7 @@ const userSchema = new mongoose.Schema({
     {
       user: {
         type: mongoose.Schema.Types.ObjectId,
+        unique: true,
         ref: 'users',
       },
       referralDate: {
@@ -43,6 +48,7 @@ const userSchema = new mongoose.Schema({
   UID: {
     type: Number,
     required: true,
+    unique: true,
   },
   walletAmount: {
     type: Number,

@@ -47,35 +47,34 @@ async function calculateResult(gameId) {
       
     }
     game.winnerGroup = winnerGroup.toUpperCase()
+    
+
+    if (winnerGroup == "small") {
+  for (const bet of smallUsers) {
+        const winAmount = roundDown(bet.amount * 1.94, 2);
+        totalAmount -= winAmount;
+        await updateUserWallet({ userId: bet.user._id, walletAmount: winAmount, winningAmount: winAmount, betId: bet._id });
+        bet.winningAmount = winAmount;
+      }
+      
+    } else if (winnerGroup == "big") {
+for (const bet of bigUsers) {
+        const winAmount = roundDown(bet.amount * 1.94, 2);
+        totalAmount -= winAmount;
+        await updateUserWallet({ userId: bet.user._id, walletAmount: winAmount, winningAmount: winAmount, betId: bet._id });
+        bet.winningAmount = winAmount;
+      }
+    }
+    
     await game.save();
 
     updateGrowUp(game);
-
-    if (winnerGroup == "small") {
-      ;
-      smallUsers.forEach(async (bet) => {
-        let winAmount = roundDown(bet.amount * 1.94, 2);
-        totalAmount = totalAmount - winAmount;
-        await updateUserWallet({userId: bet.user._id, walletAmount: winAmount, winningAmount: winAmount, betId: bet._id});
-       bet.winningAmount = winAmount;
-      });
-      
-    } else if (winnerGroup == "big") {
-      bigUsers.forEach(async (bet) => {
-        let winAmount = roundDown(bet.amount * 1.94, 2);
-        totalAmount = totalAmount - winAmount;
-        await updateUserWallet({userId: bet.user._id, walletAmount: winAmount, winningAmount: winAmount, betId: bet._id});
-      bet.winningAmount = winAmount;
-     ;
-      });
-    }
-    
-
     let distributedAmount = await distributeComissionToAll(game);
     let compnayFund = totalAmount - distributedAmount;
     const wallet = await Wallet.findOne({ _id: walletId });
     wallet.amount = wallet.amount + compnayFund;
     await wallet.save();
+    
   } else if (bigAmount > 0 && smallAmount > 0 && bigAmount == smallAmount) {
     let winnerGroup = "small";
     let totalAmount = bigAmount + smallAmount;
@@ -88,27 +87,28 @@ async function calculateResult(gameId) {
     }
 
     game.winnerGroup = winnerGroup.toUpperCase();
-    await game.save();
-    updateGrowUp(game);
+   
 
     if (winnerGroup == "small") {
   
-      smallUsers.forEach(async (bet) => {
-        let winAmount = roundDown(bet.amount * 1.94, 2);
-        totalAmount = totalAmount - winAmount;
-        await updateUserWallet({userId: bet.user._id, walletAmount: winAmount, winningAmount: winAmount, betId: bet._id});
+     for (const bet of smallUsers) {
+        const winAmount = roundDown(bet.amount * 1.94, 2);
+        totalAmount -= winAmount;
+        await updateUserWallet({ userId: bet.user._id, walletAmount: winAmount, winningAmount: winAmount, betId: bet._id });
         bet.winningAmount = winAmount;
-      });
+      }
       
     } else if (winnerGroup == "big") {
-      bigUsers.forEach(async (bet) => {
-        let winAmount = roundDown(bet.amount * 1.94, 2);
-        totalAmount = totalAmount - winAmount;
-        await updateUserWallet({userId: bet.user._id, walletAmount: winAmount, winningAmount: winAmount,  betId: bet._id});
-      bet.winningAmount = winAmount;
-      });
+    for (const bet of bigUsers) {
+        const winAmount = roundDown(bet.amount * 1.94, 2);
+        totalAmount -= winAmount;
+        await updateUserWallet({ userId: bet.user._id, walletAmount: winAmount, winningAmount: winAmount, betId: bet._id });
+        bet.winningAmount = winAmount;
+      }
     
     }
+     await game.save();
+    updateGrowUp(game);
 
     let distributedAmount = await distributeComissionToAll(game);
     let compnayFund = totalAmount - distributedAmount;
@@ -131,6 +131,7 @@ async function calculateResult(gameId) {
     totalAmount -= winAmount;
     await updateUserWallet({userId: bet.user._id, walletAmount: winAmount, winningAmount: winAmount, betId: bet._id});
     bet.winningAmount = winAmount;
+     await game.save();
     }
     
   let distributedAmount = await distributeComissionToAll(game);
@@ -222,7 +223,7 @@ async function distributeCommission(user, amount) {
         console.error("Error creating commission:", error);
         return distributedAmount;
       }
-    } else {
+    } else { 
       return distributedAmount;
     }
   }
