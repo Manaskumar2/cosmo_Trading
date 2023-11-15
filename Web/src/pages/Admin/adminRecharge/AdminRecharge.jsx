@@ -21,7 +21,8 @@ export const toastProps = {
 };
 
 function AdminRecharge() {
- 
+  const [options, setOptions] = useState('')
+  const [page, setPage] = useState(1)
   const [approvedBy, setapprovedBy] = useState('')
   const [status, setStatus] = useState('confirmed')
   const authData = useRecoilValue(AdminAuthState)
@@ -35,15 +36,15 @@ function AdminRecharge() {
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     setfile(file);
-    console.log(file)
   };
-
+const totalPages=withdrawData&& withdrawData.data.totalPages
   const handleQr = async () => {
 
     try {
       const formData = new FormData();
       formData.append('image', file);
       formData.append('upiId', upiId);
+      formData.append('options', options);
 
       let uploadedBy = authData._id
       let token = authData.authToken;
@@ -57,6 +58,7 @@ function AdminRecharge() {
         toast.success("Qr code uploaded!", { ...toastProps });
         setUpiId("")
         setfile(null)
+        setOptions('')
         return response;
       }
     } catch (error) {
@@ -81,7 +83,7 @@ function AdminRecharge() {
   const handlePaymentRequest = async () => {
     try {
       let token = authData.authToken;
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/payment-request?status=${status}`,
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/payment-request?status=${status}&page=${page}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         },
@@ -105,10 +107,13 @@ function AdminRecharge() {
           },
         );
         if (response.status === 200) {
-          toast.success("Recharge request confirmed", { ...toastProps });
           handleClose()
           setapprovedBy('')
           handlePaymentRequest()
+          if(status==='confirm'){
+            toast.success(`Recharge Request Confirmed`, { ...toastProps });}
+            if(status==='cancel'){
+            toast.error(`Recharge Request Rejected`, { ...toastProps });}
           return response;
         }
       } catch (error) {
@@ -117,7 +122,19 @@ function AdminRecharge() {
       }
     } else { toast.error('Write Your Name First', { ...toastProps }); }
   }
-  useEffect(() => { handlePaymentRequest() }, [status])
+  useEffect(() => { handlePaymentRequest() }, [status,page])
+  const handleDecrement = () => {
+    if (page > 1) {
+      setPage(page - 1);
+    }
+  };
+
+
+  const handleIncrement = () => {
+    if (page < totalPages) {
+      setPage(page + 1);
+    }
+  };
   return (
     <div>
       <AdminNav />
@@ -131,16 +148,28 @@ function AdminRecharge() {
             <input type="file" accept=".jpg, .jpeg, .png, .svg" onChange={handleImageChange} />
             <label >Enter UPI Id</label>
             <input type="text" value={upiId} placeholder='Enter UPI Id' onChange={(e) => { setUpiId(e.target.value) }} />
+            <div className="sort-dropdown">
+        <h5>Select Method Of UPI:</h5>
+        <select
+          onChange={(e) => setOptions(e.target.value)}
+          value={options}
+        >
+          <option value="">Select an Option</option>
+          <option value="Normal">Normal UPI</option>
+          <option value="Fast">Fast UPI</option>
+        </select>
+      </div>
             <button onClick={handleQr}>Submit</button>
           </form>
           <div className='row tab-btns'>
-            <button className={status === 'confirmed' ? 'col-4 active-tab-btn-adminPage' : 'col-4 tab-btn'} onClick={() => { setStatus('confirmed') }}>Approved List</button>
-            <button className={status === 'pending' ? 'col-4 active-tab-btn-adminPage' : 'col-4 tab-btn'} onClick={() => { setStatus('pending') }}>Pending List</button>
-            <button className={status === 'cancelled' ? 'col-4 active-tab-btn-adminPage' : 'col-4 tab-btn'} onClick={() => { setStatus('cancelled') }}>Reject List</button>
+            <button className={status === 'confirmed' ? 'col-4 active-tab-btn-adminPage' : 'col-4 tab-btn'} onClick={() => { setStatus('confirmed');setPage(1) }}>Approved List</button>
+            <button className={status === 'pending' ? 'col-4 active-tab-btn-adminPage' : 'col-4 tab-btn'} onClick={() => { setStatus('pending');setPage(1) }}>Pending List</button>
+            <button className={status === 'cancelled' ? 'col-4 active-tab-btn-adminPage' : 'col-4 tab-btn'} onClick={() => { setStatus('cancelled');setPage(1) }}>Reject List</button>
           </div>
           <table>
             <thead>
               <tr className='table-row'>
+                <th>Sl No</th>
                 <th>Transaction Id</th>
                 <th>Amount</th>
                 <th>Request Time</th>
@@ -151,8 +180,9 @@ function AdminRecharge() {
               </tr>
             </thead>
             <tbody>
-              {withdrawData && withdrawData.map((item, index) => (
+              {withdrawData && withdrawData.data.paymentsRequest.map((item, index) => (
                 <tr key={index} className='table-row'>
+                  <td>{(page - 1) * 20 + index + 1}</td>
                   <td>{item._id}</td>
                   <td> {item.amount}</td>
                   <td>{new Date(item.createdAt).toLocaleString()}</td>
@@ -169,6 +199,7 @@ function AdminRecharge() {
                     </Modal.Header>
                     <Modal.Body className='userModalBody'>
                       <div>
+                        
                       <p>Name: {user && user.data.data.userDetails.name}</p>
                       <p>UID: {user && user.data.data.userDetails.UID}</p>
                       <p>Phone: {user && user.data.data.userDetails.phoneNumber}</p>
@@ -186,9 +217,16 @@ function AdminRecharge() {
                     </Modal.Footer>
                   </Modal>
                 </tr>
-              ))}
+              ))
+              }
             </tbody>
           </table>
+          {withdrawData && withdrawData.data.paymentsRequest && withdrawData.data.paymentsRequest.length!=0 &&
+          <div className='inc-dec-btns'>
+            <button onClick={handleDecrement}>-</button>
+            <div>{page}/{totalPages}</div>
+            <button onClick={handleIncrement}>+</button>
+          </div> }
         </div>
       </div>
     </div>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Recharge.css';
+import { RechargeAtom } from '../../Atoms/RechargeAtom';
 import { UserDetails } from '../../Atoms/UserDetails';
 import { useRecoilValue, useRecoilState } from 'recoil';
 import { Link } from 'react-router-dom';
@@ -29,6 +30,7 @@ export const toastProps = {
 };
 function Recharge() {
   const auth = useRecoilValue(AuthState)
+  const[option , setOption]=useRecoilState(RechargeAtom)
   const [selectedButton, setSelectedButton] = useState(null);
   const [selectedRoute, setSelectedRouteButton] = useState(null);
   const [rechargeAmount, setRechargeAmount] = useRecoilState(RechargeAmount);
@@ -63,13 +65,18 @@ function Recharge() {
         return response;
     }
       const errorMessage = error.response ? error.response.data.message : error.message;
-
+  
     }
   }
   useEffect(() => {
     handleUserdata()
   }, []);
 
+  const handleUpiRedirect =()=>{
+    if(option!==''){
+      navigate('/upi')
+    }else{    toast.error("Please select a recharge option.", { ...toastProps });}
+  }
   return (
     <div className='recharge'>
       <div className="container-fluid PromoNav" >
@@ -84,7 +91,7 @@ function Recharge() {
           </div>
         </div>
       </div>
-
+        <Toaster/>
       <div className="wallet">
         <div className="container winWallet">
           <div className="row">
@@ -107,7 +114,7 @@ function Recharge() {
           <button
             className={`col-6 ${selectedRoute === 10 ? 'transaction' : ''}`}
             style={{ borderRight: "1px solid #024672", borderBottom: "1px solid #024672", borderRadius: "10px 0 0 0" }}
-            onClick={() => handleRouteButtonClick(10)}
+            onClick={() =>{ handleRouteButtonClick(10),setOption('Normal')}}
           >
             <img src={icon} alt="" />
             <p>Normal UPI</p>
@@ -115,10 +122,10 @@ function Recharge() {
           <button
             className={`col-6 ${selectedRoute === 11 ? 'transaction' : ''}`}
             style={{ borderBottom: "1px solid #024672", borderRadius: "0 10px 0 0" }}
-          // onClick={() => handleRouteButtonClick(11)}
+          onClick={() => {handleRouteButtonClick(11),setOption('Fast')}}
           >
-            <img src={qr} alt="" style={{ opacity: '0.2' }} />
-            <p style={{ opacity: '0.2' }}>Fast UPI</p>
+            <img src={qr} alt="" />
+            <p>Fast UPI</p>
           </button>
         </div>
       </div>
@@ -127,9 +134,9 @@ function Recharge() {
           <button
             className={`col-6 ${selectedRoute === 12 ? 'transaction' : ''}`}
             style={{ borderRight: "1px solid #024672", borderRadius: "0 0 0 10px " }}
-          // onClick={() => handleRouteButtonClick(12)}
+          // onClick={() => {handleRouteButtonClick(12),setOption('bankTransfer')}}
           >
-            <img src={balance} alt="" style={{ opacity: '0.2' }} />
+            <img src={balance} alt="" style={{ opacity: '0.2' }}/>
             <p style={{ opacity: '0.2' }}>Bank Transfer</p>
           </button>
           <button
@@ -197,7 +204,7 @@ function Recharge() {
         </div>
         <div className="container">
           <div className="row recharge-Button">
-            <button className="col-12" onClick={() => { navigate('/upi') }}>Recharge Now</button>
+            <button className="col-12" onClick={() => { handleUpiRedirect()}}>Recharge Now</button>
           </div>
         </div>
       </div>

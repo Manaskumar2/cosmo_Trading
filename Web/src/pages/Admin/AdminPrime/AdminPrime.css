@@ -44,3 +44,5 @@
     margin-bottom: 1.5rem;
     justify-content: space-between; outline: none;background: transparent;}
 .Amount-distribution-box h5{color: #fff;font-family: Montserrat; margin: 1rem 0;}
+.pagination-prime{margin-top: 2rem;color: #fff;}
+.pagination-prime > button{border-radius: 2px ; background: #C83E44;color: #fff;margin:0 2rem;outline: none; border: 0;height:2rem; width: 2rem;font-size: 1.2rem; font-weight: 600;}

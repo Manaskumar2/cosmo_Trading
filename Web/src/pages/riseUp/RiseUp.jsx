@@ -34,6 +34,7 @@ import initializeSocket from '../../sockets/socket'
 import { GameHistoryListRiseUp } from '../../Atoms/GameHistoryListRiseUp'
 import { UserGameHistoryRiseUp } from '../../Atoms/UserGameHistoryRiseUp'
 import Auth from '../../components/modal/Auth'
+import { GrowUpPage } from '../../Atoms/GrowUpPage'
 export const toastProps = {
     position: "top-center",
     duration: 2000,
@@ -45,6 +46,7 @@ export const toastProps = {
 };
 function RiseUp() {
     const countDownRiseup = useRecoilValue(CountDownRiseup)
+    const currentPage = useRecoilValue(GrowUpPage)
     const [playSound, setPlaySound] = useRecoilState(PlaySound)
     const [isChecked, setIsChecked] = useState(true);
     const navigate = useNavigate()
@@ -65,6 +67,7 @@ function RiseUp() {
     const [gameHistoryList, setGameHistoryList] = useRecoilState(GameHistoryListRiseUp);
     const [userGames, setUserGames] = useRecoilState(UserGameHistoryRiseUp);
     const [userWallet, setUserWallet] = useRecoilState(User_Wallet);
+
     const [money, setMoney] = useState(1)
     const handleTabClick = (tabIndex) => {
         setActiveTab(tabIndex);
@@ -82,7 +85,7 @@ function RiseUp() {
         socket.on('rise_up_update', (data) => {
             const riseUpData = JSON.parse(data);
             const gameData = riseUpData.game;
-            if(gameHistoryList.currentPage === 1){
+            if(currentPage === 1){
                 setGameHistoryList(prev => {
                     const prevGames = [...prev.gamesWithSuccessfulBets];
                     
@@ -95,7 +98,7 @@ function RiseUp() {
                 })
             }
             
-            if(userGames.currentPage === 1){
+            if(currentPage === 1){
                 setUserGames(prev => {
                     const prevGames = [...prev.history];                    
                     const updatedGames = prevGames.map(game => {
@@ -124,7 +127,7 @@ function RiseUp() {
         socket.on('updateUserWallet', (data) => {
             const {walletAmount, winningAmount, betId} = JSON.parse(data);
             setUserWallet(walletAmount);
-            if(winningAmount && betId && userGames.currentPage === 1){
+            if(winningAmount && betId && currentPage === 1){
                     setUserGames(prev => {
                         const prevGames = [...prev.history];                    
                         const updatedGames = prevGames.map(game => {
@@ -134,7 +137,6 @@ function RiseUp() {
                                 return game;
                             }
                         })
-    
                         return {...prev, history: updatedGames}
                     })
             }
@@ -211,7 +213,7 @@ function RiseUp() {
                     message = 'Unknown Group';
                 }
                 toast.success(`Bet created Successfully! on ${message}`, { ...toastProps });
-                if(userGames.currentPage === 1){
+                if(currentPage === 1){
                     setUserGames(prev => {
                         const prevGames = [...prev.history];
                         

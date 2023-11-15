@@ -38,11 +38,7 @@ function Customer() {
       </div>
       <div className="about-container">
         <div>
-          {/* {showChatWidget && (
-            <div>
-         
-            </div>
-          )} */}
+        <iframe src="https://tawk.to/chat/650fede6b1aaa13b7a78972f/1hb33ijko" width="100%" height="600" frameborder="0"></iframe>
         </div>
       </div>
     </div>

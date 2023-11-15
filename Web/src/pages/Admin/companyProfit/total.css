@@ -1,0 +1,40 @@
+.admin-total-head{display: flex;justify-content: space-between;align-items: center;}
+.admin-total-head {color: #fff; }
+.total-table-heading {color: #fff;background: #173A93;padding: 0.625rem 1.25rem;font-weight: 600;}
+.total-table-heading >.col-4{text-align: right;}
+.total-table{padding: 2rem 15rem;}
+.total-table-parent> div:nth-child(odd) {
+    background-color: #172957;color: #fff;}
+.total-table-parent> div {color: #fff;padding: 0.625rem 1.25rem;}
+.total-table-parent> .row>.col-4 {text-align: right;}
+.back-btn{display: flex;padding: 0.375rem 1.625rem;justify-content: center;align-items: center;gap: 0.625rem;background: #41B212;color: #fff;}
+.total-profit{background: #41B212;padding: .8rem 1.25rem;}
+.total-profit div{text-align: right; color: #fff;font-weight: 600;}
+.pagination-buttons-p2p{display: flex;justify-content: center;align-items: center;gap: 1rem;margin-top: 2rem;color: #fff;}
+.pagination-buttons-p2p button{background:linear-gradient(143deg, #C82F36 0%, #EC4E55 100%);outline: none; border: 0; width: 2rem;height: 2rem;display: flex;justify-content: center;align-items: center;margin: 0;color: #fff;font-weight: 600;font-size: 1.2rem;border-radius: 2px;}
+
+.profit-tab-btns{display: flex;justify-content: space-between;padding: .8rem 15rem;}
+.profit-tab-active{display: flex;
+    width: 12.5rem;
+    padding: 0.375rem 1.625rem;
+    justify-content: center;
+    align-items: center;border-radius: 6.25rem;font-size: 1.1rem;font-weight: 600;
+    background: linear-gradient(90deg, #DC1A21 2.5%, #FFDD54 100%);color: #fff;}
+.profit-tab{display: flex;
+    width: 12.5rem;font-size: 1.2rem;font-weight: 600;
+    padding: 0.375rem 1.625rem;
+    justify-content: center;
+    align-items: center;
+    border-radius: 6.25rem;font-size: 1.1rem;
+border: 2px solid #ED1C24;color: #fff;}
+.page-rightarr{border-radius: 0 1rem 1rem 0 !important; width: 2.75rem !important;
+    height: 2rem !important;}
+.page-leftarr{border-radius:  1rem 0 0 1rem !important; width: 2.75rem !important;
+    height: 2rem !important;}
+    .calender-input{padding: .35rem 0;
+        background: #DF992F;
+        color: #fff;
+        border: 0;
+        text-align: center;
+        font-weight: bold;}
+.arrow-img-admin {margin-left: 21rem !important;cursor: pointer;}

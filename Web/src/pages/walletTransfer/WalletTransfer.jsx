@@ -54,6 +54,9 @@ function WalletTransfer() {
             if (error.response && error.response.status === 400) {
                 const errorMessage = `You cannot send money until remaining bet amount 0`;
                 toast.error(errorMessage, { ...toastProps });
+            } else if (error.response.status === 403) {
+                toast.error('You can,t Withdraw Money! Your Account is Temporarily Banned. Please Contact Customer Care', { ...toastProps });
+
             } else {
                 const errorMessage = error.response ? error.response.data.message : error.message;
                 toast.error(errorMessage || "Something went wrong", { ...toastProps });
@@ -133,17 +136,17 @@ function WalletTransfer() {
 
                 <div className="container record-btn-container wallet2wallet btn-sbtn">
                     <div className='row'>
-                        {transaction && 
-                        <div className='col-6 total-transection '>
-                            <h5>Total Sent</h5>
-                            <h5>Rs: {transaction.totalSent}</h5>
-                            
-                        </div>}
-                        {transaction && 
-                        <div className='col-6 total-transection'>
-                            <h5>Total Receive</h5>
-<h5>Rs: {transaction.totalReceived}</h5>
-                        </div>}
+                        {transaction &&
+                            <div className='col-6 total-transection '>
+                                <h5>Total Sent</h5>
+                                <h5>Rs: {transaction.totalSent}</h5>
+
+                            </div>}
+                        {transaction &&
+                            <div className='col-6 total-transection'>
+                                <h5>Total Receive</h5>
+                                <h5>Rs: {transaction.totalReceived}</h5>
+                            </div>}
 
                     </div>
                 </div>
@@ -188,14 +191,14 @@ function WalletTransfer() {
                                             <span className="text-green">+ &#x20B9;{item.amount}</span>
                                         )}
                                     </div>
-                                    
+
                                 </div>
                             ))}
-<div className="pagination-buttons-p2p">
-                                        <button onClick={() => { setPage(Math.max(page - 1, 1)); }}>  <img src={right} alt="" /> </button>
-                                        {transaction && <div>{page}/{transaction.totalPages.senderTransactions}</div>}
-                                        <button onClick={() => { setPage(Math.min(page + 1, transaction.totalPages.senderTransactions)); }}>  <img src={left} alt="" /> </button>
-                                    </div>
+                        <div className="pagination-buttons-p2p">
+                            <button onClick={() => { setPage(Math.max(page - 1, 1)); }}>  <img src={right} alt="" /> </button>
+                            {transaction && <div>{page}/{transaction.totalPages.senderTransactions}</div>}
+                            <button onClick={() => { setPage(Math.min(page + 1, transaction.totalPages.senderTransactions)); }}>  <img src={left} alt="" /> </button>
+                        </div>
                     </div>
                     // p
                 }
@@ -230,11 +233,11 @@ function WalletTransfer() {
                                 </div>
                             ))}
 
-<div className="pagination-buttons-p2p">
-                                        <button onClick={() => { setPage(Math.max(page - 1, 1)); }}>  <img src={right} alt="" /> </button>
-                                        {transaction && <div>{page}/{transaction.totalPages.receiverTransactions}</div>}
-                                        <button onClick={() => { setPage(Math.min(page + 1, transaction.totalPages.receiverTransactions)); }}>  <img src={left} alt="" /> </button>
-                                    </div>
+                        <div className="pagination-buttons-p2p">
+                            <button onClick={() => { setPage(Math.max(page - 1, 1)); }}>  <img src={right} alt="" /> </button>
+                            {transaction && <div>{page}/{transaction.totalPages.receiverTransactions}</div>}
+                            <button onClick={() => { setPage(Math.min(page + 1, transaction.totalPages.receiverTransactions)); }}>  <img src={left} alt="" /> </button>
+                        </div>
                     </div>}
 
 

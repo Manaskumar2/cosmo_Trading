@@ -22,6 +22,7 @@ export const toastProps = {
 };
 
 function AdminUserData() {
+  const [currentPage, setCurrentPage] = useState(1);
   const [uidFilter, setUidFilter] = useState('');
   const [modalShow, setModalShow] = React.useState(false);
   const handleClose = () => {
@@ -34,6 +35,7 @@ function AdminUserData() {
     setbankBranchAddress('')
   }
 
+  const [bettingAmountSort, setbettingAmountSort] = useState('')
   const [bankName, setbankName] = useState('')
   const [accountHolderName, setaccountHolderName] = useState('')
   const [bankAccountNo, setbankAccountNo] = useState(0)
@@ -100,11 +102,12 @@ function AdminUserData() {
       let token = authData.authToken;
       const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/getAllUsers`, {
         headers: { Authorization: `Bearer ${token}` },
-        params: { queryPageIndex, queryPageSortBy },
+        params: { queryPageIndex, queryPageSortBy,bettingAmountSort },
       });
   
       if (response.status === 200) {
-        console.log(response.data.response.getUsers); 
+        console.log(response.data.response.getUsers);
+        console.log(response) 
         setAllUser(response); 
       }
     } catch (error) {
@@ -224,7 +227,7 @@ function AdminUserData() {
     }
   };
 
-  useEffect(() => { handleUser() }, [queryPageIndex, queryPageFilter, queryPageSortBy])
+  useEffect(() => { handleUser() }, [queryPageIndex, queryPageFilter, queryPageSortBy,bettingAmountSort])
 
 
 
@@ -291,16 +294,27 @@ function AdminUserData() {
         All Users
       </button>
           </div>
-          
+          <div className="sort-dropdown">
+        <h5>Sort by Betting Amount:</h5>
+        <select
+          onChange={(e) => setbettingAmountSort(e.target.value)}
+          value={bettingAmountSort}
+        >
+          <option value="">Select Sort By</option>
+          <option value="-1">Ascending</option>
+          <option value="1">Descending</option>
+        </select>
+      </div>
           <div className='total-wallet-amount'>
             <h4>Total Wallet Amount Of All Users</h4>
-            <div>{allUser && allUser.data.response.totalWalletAmount}</div>
+            <div>{allUser && allUser.data.response.totalWalletAmount.toFixed(2)}</div>
 
           </div>
 
           <table>
             <thead>
               <tr className='table-row'>
+                <th>Sl No</th>
                 <th>UID</th>
                 <th>Name</th>
                 <th>Phone</th>
@@ -310,7 +324,8 @@ function AdminUserData() {
                 <th>Parent Id</th>
                 <th>Commission Earned</th>
                 <th>Wallet Amount</th>
-                <th>Winning Amount</th>
+                <th>Total Betting Amount</th>
+                <th>Today Betting Amount</th>
                 <th>User Details</th>
                 <th>Actions</th>
                 <th>Login</th>
@@ -318,12 +333,13 @@ function AdminUserData() {
             </thead>
             <tbody>
               {allUser &&
-                allUser.data.response.getUsers
-                  .filter((user) =>
-                    String(user.UID).toLowerCase().includes(uidFilter.toLowerCase())
-                  )
-                  .map((user, index) => (
+                allUser.data.response.getUsers.filter((user) =>
+                String(user.UID).toLowerCase().includes(uidFilter.toLowerCase())
+              ).map((user, index) => (
                     <tr key={index} className='table-row'>
+                      <td>{(queryPageIndex - 1) * 20 + index + 1}</td>
+
+
                       <td>{user.UID}</td>
                       <td>{user.name}</td>
                       <td>{user.phoneNumber}</td>
@@ -334,7 +350,8 @@ function AdminUserData() {
                       <td>{user.parentUserUid}</td>
                       <td>{user.commissionAmount.toFixed(2)}</td>
                       <td>{(user.walletAmount).toFixed(2)}</td>
-                      <td>{(user.winningAmount).toFixed(2)}</td>
+                      <td>{user.bettingAmount ? (user.bettingAmount).toFixed(2):"0"}</td>
+                      <td>{(user.dailyTotalBettingAmount).toFixed(2)}</td>
                       <td>
                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter" variant="primary" onClick={() => { getAllUserData(user._id) }}>
                           Details
@@ -382,7 +399,6 @@ function AdminUserData() {
                       <td>
                         <button onClick={() => handleActive(user._id)} className='activate'>Activate</button>
                         <button onClick={() => handleDeactive(user._id)} className='deactivate'>Deactivate</button>
-
                       </td>
                       <td>
                         <button className='login-user' onClick={() => { handleLogin(user.phoneNumber, user.password) }}>Login</button>

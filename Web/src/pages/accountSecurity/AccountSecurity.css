@@ -56,10 +56,10 @@
     .increaseBtn:hover{background: linear-gradient(180deg, #EA3038 0%, #F55860 100%);}
     .decreaseBtn:hover{background: linear-gradient(180deg, #EA3038 0%, #F55860 100%);}
     .text-red {
-        color: rgb(193, 12, 12) !important;
+        color: rgb(213, 12, 12) !important;font-weight: 600;font-family: Montserrat;
       }
       .text-green {
-        color: rgb(16, 175, 16) !important;
+        color: rgb(15, 176, 15) !important;font-weight: 600;font-family: Montserrat;
       }
       .transaction-heading{padding: 1rem 0; color: #068bbc;}
       .transaction-data{padding: .3rem 0; color: #eaeaea; border: 1px solid #26B5E2; border-radius:5px ; }
@@ -69,9 +69,14 @@
 
       .pagination-buttons-p2p button{background:linear-gradient(143deg, #C82F36 0%, #EC4E55 100%);outline: none; border: 0; width: 2rem;height: 2rem;display: flex;justify-content: center;align-items: center;margin: 0;color: #fff;font-weight: 600;font-size: 1.2rem;border-radius: 2px;}
       /* .wallet2wallet .activeTab{background: linear-gradient(143deg, #296DAC 0%, #2FB0E7 100%) !important;} */
-      .receive-btn {background: linear-gradient(143deg, #32ce0b 0%, #74eb70 100%) !important}
-      .sendBtn{background: linear-gradient(143deg, #e83420 0%, #e06948 100%) !important}
+      .receive-btn {background: linear-gradient(143deg, #2d6911 0%, #11930d 100%) !important}
+      .sendBtn{background: linear-gradient(143deg, #c83c2c 0%, #e06948 100%) !important}
 @media(min-width:500px){
     .security{max-width:500px; margin:0 auto;}
     .ReactModal__Content{width:30vw;}
+    
+}
+@media(max-width:500px){
+    .total-transection h5 , .text-red , .text-green{ font-size: 1rem !important;}
+ .text-red , .text-green{ font-size: .8rem !important;}
 }

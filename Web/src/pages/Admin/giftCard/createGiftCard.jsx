@@ -147,7 +147,7 @@ function createGiftCard() {
                         <Accordion className=' gift-history'>
                             {data && data.map((item, i) => (
                                 <Accordion.Item key={i} eventKey={i.toString()}>
-                                    <Accordion.Header> <p style={{ width: '30rem', marginRight: '5rem' }}>Gift Code: {item.code}</p> <p>Claimed By: {item.claimedByUsers.length}</p> </Accordion.Header>
+                                    <Accordion.Header> <p style={{ width: '30rem', marginRight: '5rem' }}>Gift Code: {item.code}</p> <p style={{ width: '20rem', marginRight: '5rem' }}>Claimed By: {item.claimedByUsers.length}</p> <p>Remaining Claims: {item.maxClaim-item.claimedByUsers.length}</p> </Accordion.Header>
                                     <Accordion.Body>
                                         {item.claimedByUsers.map((user, j) => (
                                             <ol key={j}>

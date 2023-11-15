@@ -3,11 +3,38 @@
   padding: 0;
   box-sizing: border-box;
 }
+.sort-dropdown{display: flex;align-items: center;margin: 2rem 0;}
+.sort-dropdown  > h5{color: #fff;  margin-right: 2rem;}
+select {
+  width: 200px; 
+  padding:5px 8px ;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+  background-color: #fff;
+  cursor: pointer;
+
+}
+
+
+select option {
+  background-color: #fff;
+  color: #333;
+}
+
+
+select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
 .winNav {padding-left: 15px !important;}
 .ProNav {
   padding-left: 15px !important;
   padding-right: 15px !important;
 }
+.game-result-div{width: max-content; padding: 0.25rem 0.4125rem; border-radius: .32rem;margin: auto;}
 .winNav .col-2 img {
   max-width: 30px !important;
   max-height: 30px !important;
@@ -87,7 +114,8 @@ input[type="number"]::-webkit-outer-spin-button {
     -webkit-appearance: none;
     appearance: none;
 }
-
+.inc-dec-btns{display: flex;gap: 1.2rem; margin-top: 2rem;align-items: center;margin:0 auto;font-weight: 600; margin-top: 3rem;}
+.inc-dec-btns button{display: flex;justify-content: center;align-items: center; height: 2rem;width: 2rem;font-size: 1.5rem;}
 /* For Firefox */
 input[type="number"] {
     -moz-appearance: textfield;
@@ -128,7 +156,7 @@ input[type="number"]::-ms-outer-spin-button {
   font-style: normal;
   font-display: block;
 }
-
+.game-result-icon{height: 2rem;width: 2rem;}
 [class^="icon-"], [class*=" icon-"] {
   /* use !important to prevent issues with browser extensions that change fonts */
   font-family: 'icomoon' !important;

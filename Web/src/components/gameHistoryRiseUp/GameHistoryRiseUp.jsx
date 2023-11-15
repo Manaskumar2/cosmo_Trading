@@ -13,6 +13,7 @@ import Alpha from '../../images/icon-alpha.svg'
 import Beta from '../../images/icon-beta.svg'
 import Gama from './gama.svg'
 import {useNavigate} from 'react-router-dom'
+import { GrowUpPage } from '../../Atoms/GrowUpPage'; 
 import { CountDownRiseup } from '../../Atoms/CountDownRiseup';
 
 export const toastProps = {
@@ -28,7 +29,7 @@ export const toastProps = {
 
 function GameHistory({ duration }) {
     const navigate=useNavigate()
-    const [page, setPage] = useState(1)
+    const [page, setPage] = useRecoilState(GrowUpPage)
     const itemsPerPage = 10; 
 
 const startIndex = (page - 1) * itemsPerPage;
@@ -163,11 +164,11 @@ const endIndex = startIndex + itemsPerPage;
                                                             </span>
                                                             <span className="icon_rate">
                                                             {item.winnerGroup === 'A' ? (
-                                                                <img src={Alpha} alt="Alpha" />
+                                                                <img src={Alpha} alt="Alpha" style={{ height: "2rem", width: "2rem" }}/>
                                                             ) : item.winnerGroup === 'B' ? (
-                                                                <img src={Beta} alt="Beta" />
+                                                                <img src={Beta} alt="Beta" style={{ height: "2rem", width: "2rem" }}/>
                                                             ) : item.winnerGroup === 'C' ? (
-                                                                <img src={Gama} alt="Gamma" />
+                                                                <img src={Gama} alt="Gamma" style={{ height: "2rem", width: "2rem" }}/>
                                                             ) : item.winnerGroup === null && item.losersGroup === null && item.runnerUpGroup === null ?(
                                                                 item.gameUID % 3 === 2 || item.gameUID % 3 === 5 || item.gameUID % 3 === 9 ? (
                                                                     <img src={Gama} alt="Alpha"  style={{ height: "2rem", width: "2rem" }}/>
@@ -306,10 +307,9 @@ const endIndex = startIndex + itemsPerPage;
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
-                                        <th>Period</th>
+                                        <th>Game Period</th>
                                         <th width="140" style={{ textAlign: 'center' }}>Result</th>
-                                        <th style={{ textAlign: 'center' }}>Group</th>
-
+                                        <th style={{ textAlign: 'center' }}>Price</th>
                                     </tr>
                                 </thead>
                                 
@@ -317,8 +317,34 @@ const endIndex = startIndex + itemsPerPage;
                                 {userGames.history.slice(startIndex, endIndex).map((item, index) => (
                                             <React.Fragment key={index}>
                                                 <tr onClick={() => toggleRow(index)}>
-                                                    <td>{item.gameUID}</td>
-                                                    <td style={{ textAlign: 'center' }}> {
+                                                    <td><div style={{ display: 'flex',gap:'1.2rem' }}>
+                                                            <div className="icon_rate">
+                                                            {item.group === 'A' ? (
+                                                                    <img src={Alpha} alt="Alpha" style={{ height: "2rem", width: "2rem" }} />
+                                                                ) : item.group === 'B' ? (
+                                                                    <img src={Beta} alt="Beta" style={{ height: "2rem", width: "2rem" }} />
+                                                                ) : item.group === 'C' ? (
+                                                                    <img src={Gama} alt="Gamma" style={{ height: "2rem", width: "2rem" }} />
+                                                                ) : (
+                                                                    <img src={iconSources[Math.floor(Math.random() * iconSources.length)]} alt="Random Icon" />
+                                                                )}
+                                                            </div>
+                                                            <div><div style={{fontWeight:'600',fontSize:'.85rem'}}>{item.gameUID}</div><div style={{fontSize:'.62rem',  letterSpacing:'1px'}}>{new Date(item.orderTime).toLocaleString()}</div> </div>
+                                                        </div></td>
+                                                    <td style={{ textAlign: 'center' }}>
+                                                    
+                                                    <div className='game-result-div' style={{
+                                                            background: `${
+                                                                item.isCompleted
+                                                                    ? item.group === item.winnerGroup
+                                                                        ? '#05ac34'
+                                                                        : item.group === item.losersGroup
+                                                                            ? '#E8221f'
+                                                                            : item.group === item.runnerUpGroup
+                                                                                ? '#DEAF06'
+                                                                                : '#B2983C'
+                                                                    : '#B2983C'}`}}>
+                                                        {
                                                         item.isCompleted
                                                             ? item.group === item.winnerGroup
                                                                 ? 'Win'
@@ -328,35 +354,21 @@ const endIndex = startIndex + itemsPerPage;
                                                                         ? 'Runner Up'
                                                                         : 'Pending'
                                                             : 'Pending'
-                                                    }</td>
-                                                    <td>
-                                                        <div className="winners_col_row">
-                                                            <span className="icon_win">
-                                                                <img src={Winner} alt="Winner" />
-                                                            </span>
-                                                            <span className="icon_rate">
-                                                                {item.group === 'A' ? (
-                                                                    <img src={Alpha} alt="Alpha" style={{ height: "2rem", width: "2rem" }} />
-                                                                ) : item.group === 'B' ? (
-                                                                    <img src={Beta} alt="Beta" style={{ height: "2rem", width: "2rem" }} />
-                                                                ) : item.group === 'C' ? (
-                                                                    <img src={Gama} alt="Gamma" style={{ height: "2rem", width: "2rem" }} />
-                                                                ) : (
-                                                                    <img src={iconSources[Math.floor(Math.random() * iconSources.length)]} alt="Random Icon" />
-                                                                )}
-                                                            </span>
-                                                            {/* {item.runnerUpGroup && <span className="icon_rate">
-                                                                {item.runnerUpGroup === 'A' ? (
-                                                                    <img src={Alpha} alt="Alpha" />
-                                                                ) : item.runnerUpGroup === 'B' ? (
-                                                                    <img src={Beta} alt="Beta" />
-                                                                ) : item.runnerUpGroup === 'C' ? (
-                                                                    <img src={Gama} alt="Gamma" />
-                                                                ) : (
-                                                                    <img src={iconSources[Math.floor(Math.random() * iconSources.length)]} alt="Random Icon" />
-                                                                )}
-                                                            </span>} */}
+                                                    }
                                                         </div>
+                                                    </td>
+                                                    <td>
+                                                    <div style={{color: `${
+                                                                item.isCompleted
+                                                                    ? item.group === item.winnerGroup
+                                                                        ? '#279775'
+                                                                        : item.group === item.losersGroup
+                                                                            ? '#F24C54'
+                                                                            : item.group === item.runnerUpGroup
+                                                                                ? '#279775'
+                                                                                : '#B2983C'
+                                                                    : '#B2983C'}`,fontWeight:'bold',fontSize:'1.1rem',textAlign:'right'
+                                                                }}> {item.isCompleted ? item.winningAmount ? '+' : '-' : ''} {item.isCompleted ? item.winningAmount ? item.winningAmount.toFixed(2) :item.amount : 'Pending'}</div>
                                                     </td>
                                                 </tr>
                                                 {expandedRowIndex === index && (
@@ -365,12 +377,31 @@ const endIndex = startIndex + itemsPerPage;
                                                             <div className="expanded-content">
                                                                 <div className='flex-div-space-Betn'><p>Period :</p><p>  {item.gameUID}</p></div>
                                                                 <div className='flex-div-space-Betn'><p>Amount :</p><p>  {item.amount}</p></div>
-                                                                <div className='flex-div-space-Betn'><p>Winning Amount :</p><p>  {item.isCompleted ? item.winningAmount ? item.winningAmount.toFixed(2) : 0 : 'Pending'}</p></div>
+                                                                <div className='flex-div-space-Betn'><p >Winning Amount :</p><p style={{
+                                                            color: `${
+                                                                item.isCompleted
+                                                                    ? item.group === item.winnerGroup
+                                                                        ? '#279775'
+                                                                        : item.group === item.losersGroup
+                                                                            ? '#F24C54'
+                                                                            : item.group === item.runnerUpGroup
+                                                                                ? '#279775'
+                                                                                : '#B2983C'
+                                                                    : '#B2983C'}`}}>  {item.isCompleted ? item.winningAmount ? item.winningAmount.toFixed(2) : 0 : 'Pending'}</p></div>
                                                                 <div className='flex-div-space-Betn'><p>Betting Placed :</p><p> {item.group === 'A' ? 'Alpha' : item.group === 'B' ? 'Beta' : item.group === 'C' ? 'Gama' : 'Unknown'}</p></div>
-
                                                                 <div className='flex-div-space-Betn'>
                                                                     <p>Betting Status :</p>
-                                                                    <p style={{ textAlign: 'left' }}>
+                                                                    <p style={{
+                                                        color: `${
+                                                                item.isCompleted
+                                                                    ? item.group === item.winnerGroup
+                                                                        ? '#279775'
+                                                                        : item.group === item.losersGroup
+                                                                            ? '#F24C54'
+                                                                            : item.group === item.runnerUpGroup
+                                                                                ? '#279775'
+                                                                                : '#B2983C'
+                                                                    : '#B2983C'}`}}>
                                                                         {
                                                                             item.isCompleted
                                                                                 ? item.group === item.winnerGroup
@@ -382,10 +413,10 @@ const endIndex = startIndex + itemsPerPage;
                                                                                             : 'Pending'
                                                                                 : 'Pending'
                                                                         }
-
                                                                     </p>
                                                                 </div>
-                                                                <div className='flex-div-space-Betn' ><p>Order Time:</p><p>{new Date(item.orderTime).toLocaleString()}</p></div>
+                                                                <div className='flex-div-space-Betn' ><p>Result Time:</p><p>{item.isCompleted == true ? new Date(item.endTime).toLocaleString() : ' Pending'}</p></div>
+
                                                             </div>
                                                         </td>
                                                     </tr>

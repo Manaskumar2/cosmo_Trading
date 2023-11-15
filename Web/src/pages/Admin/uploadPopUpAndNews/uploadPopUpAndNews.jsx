@@ -19,14 +19,14 @@ export const toastProps = {
 
 function UploadPopUpAndNews() {
     const [editIndex, setEditIndex] = useState(-1);
-    const[winner , setWinner]=useState(null)
-    const initialDocuments = Array(10).fill({ name: '', winningAmount: 0 });
+    const [winner, setWinner] = useState(null)
+    const initialDocuments = Array(10).fill({ name: '', winningAmount: null });
     const [documents, setDocuments] = useState(initialDocuments);
-    const [totalPlayers, settotalPlayers] = useState(0)
+    const [totalPlayers, settotalPlayers] = useState(null)
     const [bankName, setBank] = useState('')
-    const [TotalBetting, setTotalBetting] = useState(0)
-    const [onlinePlayers, setonlinePlayers] = useState(0)
-    const [todayTotalWithdrawal, settodayTotalWithdrawal] = useState(0)
+    const [TotalBetting, setTotalBetting] = useState(null)
+    const [onlinePlayers, setonlinePlayers] = useState(null)
+    const [todayTotalWithdrawal, settodayTotalWithdrawal] = useState(null)
     const [file, setfile] = useState(null);
     const authData = useRecoilValue(AdminAuthState)
     const [newsText, setnewsText] = useState('')
@@ -34,7 +34,7 @@ function UploadPopUpAndNews() {
         const file = event.target.files[0];
         setfile(file);
     };
-    const handleEdit = (index) => {setEditIndex(index);};
+    const handleEdit = (index) => { setEditIndex(index); };
     const handleImg = async () => {
         const formData = new FormData();
         formData.append('image', file);
@@ -115,19 +115,25 @@ function UploadPopUpAndNews() {
     const handleFakeData = async () => {
         try {
             let token = authData.authToken;
-            const response = await axios.post(`${import.meta.env.VITE_API_URL}/admin/fakePlayers`, {
-                totalPlayers,
-                TotalBetting,
-                onlinePlayers,
-                todayTotalWithdrawal
-            },
+            const response = await axios.post(
+                `${import.meta.env.VITE_API_URL}/admin/fakePlayers`,
+                {
+                    totalPlayers,
+                    TotalBetting,
+                    onlinePlayers,
+                    todayTotalWithdrawal,
+                },
                 {
                     headers: { Authorization: `Bearer ${token}` },
-                },
-            )
+                }
+            );
             if (response.status === 201) {
-                toast.success("Successfully Updated!", { ...toastProps });
-
+                toast.success("All Data Successfully Updated!", { ...toastProps });
+                settodayTotalWithdrawal('')
+                settotalPlayers('');
+                setTotalBetting('');
+                setonlinePlayers('');
+    
                 return response;
             }
         } catch (error) {
@@ -201,7 +207,7 @@ function UploadPopUpAndNews() {
         setDocuments(updatedDocuments);
     }
 
-    useEffect(()=>{getWinner()},[])
+    useEffect(() => { getWinner() }, [])
     return (
         <div>
             <AdminNav />
@@ -252,7 +258,7 @@ function UploadPopUpAndNews() {
                                     <input
                                         type="text"
                                         placeholder={`Winner ${index + 1} Name`}
-                                        value={document.name} 
+                                        value={document.name}
                                         onChange={(event) => handleDocumentNameChange(index, event)}
                                     />
                                     <input
@@ -260,13 +266,13 @@ function UploadPopUpAndNews() {
                                         placeholder={`Winner ${index + 1} Winning Amount`}
                                         value={document.winningAmount}
                                         onChange={(event) => handleWinningAmountChange(index, event)}
-                                        style={{marginLeft:'12rem'}}
+                                        style={{ marginLeft: '12rem' }}
                                     />
                                 </div>
                             ))}
                         </form>
                         <button onClick={() => { handleWinner() }}>Save Documents</button>
-                        <button onClick={() => { handleDeleteWinner() }} style={{background:'red'}}>Delete Previous Data</button>
+                        <button onClick={() => { handleDeleteWinner() }} style={{ background: 'red' }}>Delete Previous Data</button>
                     </div>
                 </div>
             </div>

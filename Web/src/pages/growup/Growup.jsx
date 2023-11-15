@@ -26,6 +26,7 @@ import { Link } from 'react-router-dom'
 import { useSetRecoilState } from 'recoil'
 import { TimeNo, OneMinute, GrowUpGameState } from '../../Atoms/GameTime'
 import { GameHistory } from '../../components/ComponentExport'
+import { GrowUpPage } from '../../Atoms/GrowUpPage'
 import { useNavigate } from 'react-router-dom'
 // import { CountDown } from '../../Atoms/CountDown';
 import { ShowCountDown } from '../../Atoms/ShowCountDown'
@@ -50,6 +51,7 @@ function Growup() {
     // const [duration , setDuration]=useState(1)
 
     const countDownGrowup = useRecoilValue(CountDownGrowup)
+    const currentPage = useRecoilValue(GrowUpPage)
 
     const [playSound, setPlaySound] = useRecoilState(PlaySound)
     const [isChecked, setIsChecked] = useState(true);
@@ -97,7 +99,7 @@ function Growup() {
         socket.on('grow_up_update', (data) => {
             const growUpData = JSON.parse(data);
             const gameData = growUpData.game;
-            if(gameHistoryList.currentPage === 1){
+            if(currentPage === 1){
                 setGameHistoryList(prev => {
                     const prevGames = [...prev.gamesWithSuccessfulBets];
                     
@@ -110,7 +112,7 @@ function Growup() {
                 })
             }
             
-            if(userGames.currentPage === 1){
+            if(currentPage === 1){
                 setUserGames(prev => {
                     const prevGames = [...prev.history];                    
                     const updatedGames = prevGames.map(game => {
@@ -138,7 +140,7 @@ function Growup() {
         socket.on('updateUserWallet', (data) => {
             const {walletAmount, winningAmount, betId} = JSON.parse(data);
             setUserWallet(walletAmount);
-            if(winningAmount && betId && userGames.currentPage === 1){
+            if(winningAmount && betId && currentPage === 1){
                 setUserGames(prev => {
                     const prevGames = [...prev.history];                    
                     const updatedGames = prevGames.map(game => {
@@ -254,7 +256,6 @@ function Growup() {
             const response = await axios.get(`${import.meta.env.VITE_API_URL}/getUserProfile/${UID}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-
             if (response.status === 200) {
                 setUserData(response);
                 setUserWallet(response.data.data.userDetails.walletAmount.toFixed(2));
@@ -264,10 +265,8 @@ function Growup() {
             }
         } catch (error) {
             if (error.response && error.response.status === 404) {
-
                 return null;
             }
-
             const errorMessage = error.response ? error.response.data.message : error.message;
             toast.error(errorMessage || "Something went wrong", { ...toastProps });
         }
@@ -302,7 +301,7 @@ function Growup() {
                 setMoney(1)
                 setGroup('');
                 handleUserMoney();
-                if(userGames.currentPage === 1){
+                if(currentPage === 1){
                     setUserGames(prev => {
                         const prevGames = [...prev.history];
                         

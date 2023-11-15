@@ -9,7 +9,7 @@ import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { useRecoilValue, useRecoilState } from 'recoil'
 import { AdminAuthState } from '../../../Atoms/AdminAuthState'
-import Accordion from 'react-bootstrap/Accordion';
+import '../adminRecharge/ARecharge.css'
 import toast, { Toaster } from "react-hot-toast";
 export const toastProps = {
   position: "top-center",
@@ -22,9 +22,18 @@ export const toastProps = {
 };
 
 function AdminWithdraw() {
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  // bankName, ifscCode, accountHolderName, accountNumber
+
+  const [bankName, setbankName] = useState('');
+  const [ifscCode, setifscCode] = useState('');
+  const [accountHolderName, setaccountHolderName] = useState('');
+  const [accountNumber, setaccountNumber] = useState(null);
+  const [page, setPage] = useState(1);
+  const [showModal1, setShowModal1] = useState(false);
+  const [showModal2, setShowModal2] = useState(false);
+  const handleClose = () => { setShowModal1(false); setShowModal2(false); };
+  const handleShow1 = () => { setShowModal1(true); };
+  const handleShow2 = () => { setShowModal2(true); };
   const [approvedBy, setapprovedBy] = useState('')
   const [status, setStatus] = useState('confirmed')
   const [user, setUser] = useState(null)
@@ -33,6 +42,25 @@ function AdminWithdraw() {
 
   const authData = useRecoilValue(AdminAuthState)
 
+  const submitBankData = async () => {
+    try {
+      let token = authData.authToken;
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/admin/createBank`,{ bankName, IfscCode:ifscCode, accountHolderName, accountNumber }, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (response.status === 201) {
+        handleClose()
+        setbankName('')
+        setifscCode('')
+        setaccountHolderName('')
+        setaccountNumber('')
+        toast.success('Bank Details Successfully Updated', { ...toastProps });
+        return response;
+      }
+    } catch (error) {
+      const errorMessage = error.response ? error.response.data.message : error.message;
+      toast.error(errorMessage || 'Something went wrong', { ...toastProps });}};
+      
   const handleUser = async (userId) => {
     try {
       let token = authData.authToken;
@@ -45,10 +73,9 @@ function AdminWithdraw() {
         return response;
       }
     } catch (error) {
-      const errorMessage = error.response ? error.response.data.message : error.message;
+      const errorMessage = error.response ? error.response.data.message : error.message;}};
 
-    }
-  };
+
   const handlePaymentRequest = async () => {
     try {
       let token = authData.authToken;
@@ -77,7 +104,7 @@ function AdminWithdraw() {
       if (response.status === 200) {
         
         setBankData(response)
-        handleShow()
+        handleShow2()
         return response;
       }
     } catch (error) {
@@ -96,10 +123,11 @@ function AdminWithdraw() {
         if (response.status === 200) {
           handleClose()
           setapprovedBy('')
-          toast.success("Withdraw request confirmed", { ...toastProps });
           handlePaymentRequest()
-
-
+          if(status==='confirmed'){
+            toast.success(`Withdraw Request Confirmed`, { ...toastProps });}
+            if(status==='cancelled'){
+            toast.error(`Withdraw Request Rejected`, { ...toastProps });}
           return response;
         }
       } catch (error) {
@@ -109,16 +137,69 @@ function AdminWithdraw() {
     } else { toast.error('Write Your Name first', { ...toastProps }); }
   }
   useEffect(() => { handlePaymentRequest() }, [status])
+  const handleDecrement = () => {
+    if (page > 1) {
+      setPage(page - 1);
+    }
+  };
+  const totalPages=withDrawdata && withDrawdata.data && withDrawdata.data.totalPages
+
+  const handleIncrement = () => {
+    if (page < totalPages) {
+      setPage(page + 1);
+    }
+  };
   return (
     <div>
       <AdminNav />
       <div className='flex-div'>
         <Side />
+        {/* bankName, ifscCode, accountHolderName, accountNumber */}
+      
         <div className='admin-rightSection'>
+        <form className='form-rechrge' >
+            <h3 className='text-centre'>Submit Account Details</h3>
+            <label >Enter Bank Name</label>
+            <input type="text"  value={bankName} placeholder='Enter Bank Name' onChange={(e) => { setbankName(e.target.value) }}/>
+            <label >Enter Account Holder Name</label>
+            <input type="text"  value={accountHolderName} placeholder='Enter Name' onChange={(e) => { setaccountHolderName(e.target.value) }}/>
+            <label >Enter Account Number</label>
+            <input type="number" value={accountNumber} placeholder='Enter Account Number' onChange={(e) => { setaccountNumber(e.target.value) }} />
+            <label >Enter IFSC Code</label>
+            <input type="text" value={ifscCode} placeholder='Enter Account Number' onChange={(e) => { setifscCode(e.target.value) }} />
+            <button onClick={handleShow1}>Submit</button>
+            <Modal
+                    show={showModal1}
+                    onHide={handleClose}
+                    size="lg"
+                    centered>
+                    <Modal.Header closeButton>
+                      <Modal.Title>Bank Details</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body className='userModalBody'>
+                    <div className='admin-withdraw-data'>
+                          <h3>Confirm Bank Details</h3>
+                          <p>Bank Name: {bankName}</p>
+                          <p>Account Holder Name: {accountHolderName}</p>
+                          <p>Account Number: {accountNumber}</p>
+                          <p>IFSC Code: {ifscCode}</p>
+                          
+                        </div>
+                    </Modal.Body>
+                    <Modal.Footer>
+                      <Button variant="secondary" onClick={submitBankData} >
+                        Confirm Submit
+                      </Button>
+                      <Button variant="secondary" onClick={handleClose} >
+                        Close
+                      </Button>
+                    </Modal.Footer>
+                  </Modal>
+          </form>
           <div className='row tab-btns'>
-            <button className={status === 'confirmed' ? 'col-4 active-tab-btn-adminPage' : 'col-4 tab-btn'} onClick={() => { setStatus('confirmed') }}>Approved List</button>
-            <button className={status === 'pending' ? 'col-4 active-tab-btn-adminPage' : 'col-4 tab-btn'} onClick={() => { setStatus('pending') }}>Pending List</button>
-            <button className={status === 'cancelled' ? 'col-4 active-tab-btn-adminPage' : 'col-4 tab-btn'} onClick={() => { setStatus('cancelled') }}>Reject List</button>
+            <button className={status === 'confirmed' ? 'col-4 active-tab-btn-adminPage' : 'col-4 tab-btn'} onClick={() => { setStatus('confirmed'),setPage(1) }}>Approved List</button>
+            <button className={status === 'pending' ? 'col-4 active-tab-btn-adminPage' : 'col-4 tab-btn'} onClick={() => { setStatus('pending'),setPage(1) }}>Pending List</button>
+            <button className={status === 'cancelled' ? 'col-4 active-tab-btn-adminPage' : 'col-4 tab-btn'} onClick={() => { setStatus('cancelled'),setPage(1) }}>Reject List</button>
 
           </div>
           <Toaster />
@@ -126,6 +207,7 @@ function AdminWithdraw() {
           <table>
             <thead>
               <tr className='table-row'>
+                <th>Sl No</th>
                 <th>Transaction Id</th>
                 <th>Amount</th>
                 <th>Request Time</th>
@@ -136,8 +218,9 @@ function AdminWithdraw() {
               </tr>
             </thead>
             <tbody>
-              {withDrawdata && withDrawdata.data.map((item, index) => (
+              {withDrawdata && withDrawdata.data.pendingWithdrawRequests.map((item, index) => (
                 <tr key={index} className='table-row'>
+                  <td>{(page - 1) * 20 + index + 1}</td>
                   <td>{item._id}</td>
                   <td>  {item.withdrawAmount}</td>
                   <td>{new Date(item.createdAt).toLocaleString()}</td>
@@ -146,7 +229,7 @@ function AdminWithdraw() {
                   {status !== 'pending' && <td >{item.approvedBy}</td>}
                   <td> <button type="button" class="btn btn-primary" onClick={() => { handleBankData(item.userId); handleUser(item.userId) }}>Details</button> </td>
                   <Modal
-                    show={show}
+                    show={showModal2}
                     onHide={handleClose}
                     size="lg"
                     centered>
@@ -197,7 +280,12 @@ function AdminWithdraw() {
               ))}
             </tbody>
           </table>
-
+          {withDrawdata && withDrawdata.data && withDrawdata.data.pendingWithdrawRequests && withDrawdata.data.pendingWithdrawRequests.length!=0 &&
+          <div className='inc-dec-btns'>
+            <button onClick={handleDecrement}>-</button>
+            <div>{page}/{totalPages}</div>
+            <button onClick={handleIncrement}>+</button>
+          </div> }
           {/* <Accordion >
           {withDrawdata && withDrawdata.data.map((item, index) => (
             

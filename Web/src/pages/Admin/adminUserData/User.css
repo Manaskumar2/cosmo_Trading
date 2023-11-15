@@ -1,9 +1,8 @@
-.inc-dec-btns{display: flex;gap: 1.2rem; margin-top: 2rem;}
-.inc-dec-btns button{display: flex;justify-content: center;align-items: center;padding: .3rem;}
+
 .user-input{border: 0; outline: none; padding: .4rem;box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px; width: 20rem;}
 .admin-rightSection{padding: 1.5rem;background-color:#001C3E;width: 100%;}
 .table-row th{margin-left: 4rem;text-align: center;}
-.table-row td{margin-left: 5rem;text-align: center;}
+.table-row td{margin-left: 5rem;text-align: center;line-height: normal;}
 
 .total-wallet-amount{background: #fff; color:#001C3E;padding: 1.5rem; border-radius: 1rem;width: max-content;margin-bottom: 2rem;}
 .total-wallet-amount h4 , .total-wallet-amount div{text-align: center;}
@@ -21,6 +20,7 @@ line-height: normal;
     width: 4rem;
   }
   table td {
+    
     width: 4rem;
     padding: .8rem .5rem; 
     text-align: left;

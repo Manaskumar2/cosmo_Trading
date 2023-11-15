@@ -1,4 +1,4 @@
-import React,{ useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import toast, { Toaster } from "react-hot-toast";
 import { AuthState } from '../../Atoms/AuthState'
@@ -11,9 +11,10 @@ import Winner from '../../images/icon-winner.svg'
 import Alpha from '../../images/icon-alpha.svg'
 import Beta from '../../images/icon-beta.svg'
 import { GrowUpUserGameHistory, UserGameHistory } from '../../Atoms/UserGameHistory';
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 // import { useRecoilValue } from 'recoil';
 import { CountDownGrowup } from '../../Atoms/CountDownGrowup';
+import { GrowUpPage } from '../../Atoms/GrowUpPage';
 export const toastProps = {
     position: "top-center",
     duration: 2000,
@@ -24,9 +25,9 @@ export const toastProps = {
     },
 };
 
-function GameHistory({ duration  }) {
-    const navigate=useNavigate()
-    const[historyPage,setHistoryPage]=useState(1)
+function GameHistory({ duration }) {
+    const navigate = useNavigate()
+    const [historyPage, setHistoryPage] = useState(1)
 
     const countDownGrowup = useRecoilValue(CountDownGrowup)
 
@@ -43,11 +44,11 @@ function GameHistory({ duration  }) {
     const auth = useRecoilValue(AuthState)
     const [gameHistoryList, setGameHistoryList] = useRecoilState(GameHistoryList)
     const [userGames, setUserGames] = useRecoilState(GrowUpUserGameHistory);
-    const [page, setPage] = useState(1)
-    const itemsPerPage = 10; 
+    const [page, setPage] = useRecoilState(GrowUpPage)
+    const itemsPerPage = 10;
 
-const startIndex = (page - 1) * itemsPerPage;
-const endIndex = startIndex + itemsPerPage;
+    const startIndex = (page - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
 
     const getUserGameHistory = async () => {
 
@@ -78,7 +79,7 @@ const endIndex = startIndex + itemsPerPage;
         try {
             let token = auth.authToken;
             const response = await axios.get(`${import.meta.env.VITE_API_URL}/getSuccessFullGameHistory/${duration}`, {
-                params:{page : historyPage},
+                params: { page: historyPage },
                 headers: { Authorization: `Bearer ${token}` },
             });
             if (response.status === 200) {
@@ -106,7 +107,7 @@ const endIndex = startIndex + itemsPerPage;
     useEffect(() => {
         getGameHistory()
     }, [historyPage])
-    
+
     useEffect(() => {
         if (countDownGrowup < 5) {
             setHistoryPage(1);
@@ -135,60 +136,59 @@ const endIndex = startIndex + itemsPerPage;
             </div>
 
             {activeTab === 1 &&
-    <div className='period-heading'>
-        <div className="table-responsive game_history_table">
-            <table className="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Period</th>
-                        <th width="140">Winner</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {gameHistoryList &&
-                        Array.isArray(gameHistoryList.gamesWithSuccessfulBets) && 
-                        gameHistoryList.gamesWithSuccessfulBets
-                            .filter((item) => item.isCompleted)
-                            .map((item, index) => {
-                                return (
-                                    <tr key={index}>
-                                        <td>{item.gameUID}</td>
-                                        <td width="140">
-                                            <div className="winners_col_row">
-                                                <span className="icon_win">
-                                                    <img src={Winner} alt="Winner" />
-                                                </span>
-                                                <p>
-  {item.winnerGroup === 'SMALL'
-    ? 'Alpha'
-    : item.winnerGroup === 'BIG'
-    ? 'Beta'
-    : item.winnerGroup === null && ( (item.gameUID % 3 === 0 || item.gameUID % 5 === 0 || item.gameUID % 7 === 0))
-    ? 'Alpha'
-    : 'Beta'}
-</p>
-<span className="icon_rate">
-  <img
-    src={
-      item.winnerGroup === 'SMALL'
-        ? Alpha
-        : item.winnerGroup === 'BIG'
-        ? Beta
-        : item.winnerGroup === null && ( (item.gameUID % 3 === 0 || item.gameUID % 5 === 0 || item.gameUID % 7 === 0))
-        ? Alpha
-        : Beta
-    }
-  />
-</span>
-
-                                            </div>
-                                        </td>
-                                    </tr>
-                                );
-                            })}
-                </tbody>
-            </table>
-            <div className='pagination-buttons-container'>
+                <div className='period-heading'>
+                    <div className="table-responsive game_history_table">
+                        <table className="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Period</th>
+                                    <th width="140">Winner</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {gameHistoryList &&
+                                    Array.isArray(gameHistoryList.gamesWithSuccessfulBets) &&
+                                    gameHistoryList.gamesWithSuccessfulBets
+                                        .filter((item) => item.isCompleted)
+                                        .map((item, index) => {
+                                            return (
+                                                <tr key={index}>
+                                                    <td>{item.gameUID}</td>
+                                                    <td width="140">
+                                                        <div className="winners_col_row">
+                                                            <span className="icon_win">
+                                                                <img src={Winner} alt="Winner" />
+                                                            </span>
+                                                            <p>
+                                                                {item.winnerGroup === 'SMALL'
+                                                                    ? 'Alpha'
+                                                                    : item.winnerGroup === 'BIG'
+                                                                        ? 'Beta'
+                                                                        : item.winnerGroup === null && ((item.gameUID % 3 === 0 || item.gameUID % 5 === 0 || item.gameUID % 7 === 0))
+                                                                            ? 'Alpha'
+                                                                            : 'Beta'}
+                                                            </p>
+                                                            <span className="icon_rate">
+                                                                <img
+                                                                    src={
+                                                                        item.winnerGroup === 'SMALL'
+                                                                            ? Alpha
+                                                                            : item.winnerGroup === 'BIG'
+                                                                                ? Beta
+                                                                                : item.winnerGroup === null && ((item.gameUID % 3 === 0 || item.gameUID % 5 === 0 || item.gameUID % 7 === 0))
+                                                                                    ? Alpha
+                                                                                    : Beta
+                                                                    }
+                                                                />
+                                                            </span>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })}
+                            </tbody>
+                        </table>
+                        <div className='pagination-buttons-container'>
                             <div className='pagination-buttons'>
                                 <button className='decreaseBtn' onClick={() => { setHistoryPage(Math.max(historyPage - 1, 1)); }}>
                                     <img src={right} alt="" />
@@ -202,9 +202,9 @@ const endIndex = startIndex + itemsPerPage;
 
                             </div>
                         </div>
-        </div>
-    </div>
-}
+                    </div>
+                </div>
+            }
 
             {activeTab === 2 &&
                 <div>
@@ -213,10 +213,9 @@ const endIndex = startIndex + itemsPerPage;
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
-                                        <th>Period</th>
-                                        <th width="140" style={{textAlign:'center'}}>Result</th>
-                                        <th style={{textAlign:'center'}}>Group</th>
-
+                                        <th>Game Period</th>
+                                        <th width="140" style={{ textAlign: 'center' }}>Result</th>
+                                        <th style={{ textAlign: 'right' }}>Price</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -225,29 +224,39 @@ const endIndex = startIndex + itemsPerPage;
                                         userGames.history.slice(startIndex, endIndex).map((item, index) => (
                                             <React.Fragment key={index}>
                                                 <tr onClick={() => toggleRow(index)}>
-                                                    <td>{item.gameUID}</td>
-                                                    <td style={{textAlign:'center'}}>
-                                                        {item.isCompleted
-                                                            ? item.winnerGroup === item.group.toUpperCase()
-                                                                ? 'Win'
-                                                                : 'Lose'
-                                                            : 'Pending'}
-                                                    </td>
-                                                    <td>
-                                                        <div className="winners_col_row">
-                                                            <span className="icon_win">
-                                                                <img src={Winner} alt="Winner" />
-                                                            </span>
-                                                            <p style={{ textAlign: 'left' }}>
-                                                                {item.group === 'small' ? 'Alpha' : 'Beta'}
-                                                            </p>
-                                                            <span className="icon_rate">
+                                                    <td >
+                                                        <div style={{ display: 'flex',gap:'1.2rem' }}>
+                                                            <div className="icon_rate">
                                                                 <img
                                                                     src={item.group === 'small' ? Alpha : Beta}
                                                                     alt="Alpha or Beta"
-                                                                />
-                                                            </span>
+                                                                    className='game-result-icon' />
+                                                            </div>
+                                                            <div><div style={{fontWeight:'600',fontSize:'.85rem'}}>{item.gameUID}</div><div style={{fontSize:'.62rem',  letterSpacing:'1px'}}>{new Date(item.orderTime).toLocaleString()}</div> </div>
                                                         </div>
+                                                    </td>
+                                                    <td >
+                                                        <div className='game-result-div' style={{
+                                                            background: `${item.isCompleted
+                                                                ? item.winnerGroup === item.group.toUpperCase()
+                                                                    ?  '#05ac34'
+                                                                    : '#E8221f'
+                                                                : '#B2983C'}`
+                                                        }}>
+                                                            {item.isCompleted
+                                                                ? item.winnerGroup === item.group.toUpperCase()
+                                                                    ? 'Win'
+                                                                    : 'Lose'
+                                                                : 'Pending'}
+                                                        </div>
+
+                                                    </td>
+                                                    <td>
+<div style={{color: `${item.isCompleted ? item.winnerGroup === item.group.toUpperCase()
+                                                                        ? '#1BD09A'
+                                                                        : '#FF565E'
+                                                                        : '#F0C52C'}`,fontWeight:'bold',fontSize:'1.1rem',textAlign:'right'
+                                                                }}> {item.isCompleted ? item.winningAmount ? '+' : '-' : ''} {item.isCompleted ? item.winningAmount ? item.winningAmount.toFixed(2) :item.amount : 'Pending'}</div>
                                                     </td>
                                                 </tr>
                                                 {expandedRowIndex === index && (
@@ -258,21 +267,24 @@ const endIndex = startIndex + itemsPerPage;
                                                                 <div className='flex-div-space-Betn'><p>Period :</p><p>  {item.gameUID}</p></div>
 
                                                                 <div className='flex-div-space-Betn'><p>Amount :</p><p>  {item.amount}</p></div>
-                                                                <div className='flex-div-space-Betn'><p>Winning Amount :</p><p>  {item.isCompleted ? item.winningAmount ? item.winningAmount.toFixed(2) : 0 : 'Pending'}</p></div>
+                                                                <div className='flex-div-space-Betn'><p>Winning Amount :</p><p style={{
+                                                                    color: `${item.isCompleted ? item.winnerGroup === item.group.toUpperCase()
+                                                                        ? '#1BD09A'
+                                                                        : '#FF565E'
+                                                                        : '#F0C52C'}`
+                                                                }}>  {item.isCompleted ? item.winningAmount ? item.winningAmount.toFixed(2) : 0 : 'Pending'}</p></div>
 
                                                                 <div className='flex-div-space-Betn'><p>Betting Placed :</p><p> {item.group === 'small' ? 'Alpha' : 'Beta'}</p></div>
                                                                 <div className='flex-div-space-Betn'>
                                                                     <p>Betting Status :</p>
-                                                                    <p >{item.isCompleted
-                                                                        ? item.winnerGroup === item.group.toUpperCase()
-                                                                            ? 'Win'
-                                                                            : 'Lose'
-                                                                        : 'Pending'}</p>
+                                                                    <p style={{
+                                                                        color: `${item.isCompleted ? item.winnerGroup === item.group.toUpperCase()
+                                                                            ? '#1BD09A'
+                                                                            : '#FF565E'
+                                                                            : '#F0C52C'}`
+                                                                    }}>{item.isCompleted ? item.winnerGroup === item.group.toUpperCase() ? 'Win' : 'Lose' : 'Pending'}</p>
                                                                 </div>
-                                                                <div className='flex-div-space-Betn' ><p>Order Time:</p><p>{new Date(item.startTime).toLocaleString()}</p></div>
-
-
-
+                                                                <div className='flex-div-space-Betn' ><p>Result Time:</p><p>{item.isCompleted == true ? new Date(item.endTime).toLocaleString() : ' Pending'}</p></div>
                                                             </div>
                                                         </td>
                                                     </tr>

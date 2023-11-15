@@ -83,6 +83,14 @@ const PremiumUser= lazy(()=>
 import('../../src/pages/Admin/premiumUser/PremiumUser'))
 const UploadPopUpAndNews= lazy(()=>
 import('../../src/pages/Admin/uploadPopUpAndNews/uploadPopUpAndNews'))
+const TotalProfit= lazy(()=>
+import('../../src/pages/Admin/companyProfit/CompanyProfit'))
+const GrowAndRiseProfit= lazy(()=>
+import('../../src/pages/Admin/companyProfit/RiseUpAndgrowUp'))
+const TotalRecharge= lazy(()=>
+import('../../src/pages/Admin/companyProfit/TotalRecharge'))
+const TotalWithdraw= lazy(()=>
+import('../../src/pages/Admin/companyProfit/TotalWithdraw'))
 
 
-export {Login,Register,Forgot,OTP,Reset,Success,Home,Growup,ProfileComponent,Promotion,Recharge,UPI,Withdraw,BankCard,Wallet,Gift,BeginnerTutorial,About,Customer,Message,Transection,Launch,AdminHome,AdminUser,AdminRecharge,AdminWithdraw,AdminLogin,Terms,SRegister,AdminPrime,Premium,PremiumApply,Security,RiseUp,WidthdrawHistory,RechargeHistory,WalletTransfer,PremiumUser,UploadPopUpAndNews,ResetPasswordAdmin,CreateGiftCard}
+export {Login,Register,Forgot,OTP,Reset,Success,Home,Growup,ProfileComponent,Promotion,Recharge,UPI,Withdraw,BankCard,Wallet,Gift,BeginnerTutorial,About,Customer,Message,Transection,Launch,AdminHome,AdminUser,AdminRecharge,AdminWithdraw,AdminLogin,Terms,SRegister,AdminPrime,Premium,PremiumApply,Security,RiseUp,WidthdrawHistory,RechargeHistory,WalletTransfer,PremiumUser,UploadPopUpAndNews,ResetPasswordAdmin,CreateGiftCard,TotalProfit,GrowAndRiseProfit,TotalRecharge,TotalWithdraw}

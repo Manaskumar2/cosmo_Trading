@@ -11,6 +11,7 @@ import { AuthState } from '../../Atoms/AuthState';
 import { useRecoilValue } from 'recoil';
 import { RechargeAmount } from '../../Atoms/RechargeAmount';
 import {useNavigate} from 'react-router-dom'
+import { RechargeAtom } from '../../Atoms/RechargeAtom';
 export const toastProps = {
     position: 'top-center',
     duration: 2000,
@@ -23,6 +24,7 @@ export const toastProps = {
 
 function Upi() {
     const navigate=useNavigate()
+    const option = useRecoilValue(RechargeAtom);
     const auth = useRecoilValue(AuthState);
     const money = useRecoilValue(RechargeAmount);
     const [upiData, setUpiData] = useState(null);
@@ -47,7 +49,6 @@ function Upi() {
             if (response.status === 201) {
                 toast.success("Recharge request successfully Sent!", { ...toastProps });
                 setUpiReferenceNo("")
-    
             }
         } catch (error) {
             const errorMessage = error.response ? error.response.data.message : error.message;
@@ -63,7 +64,15 @@ function Upi() {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 if (response.status === 200) {
-                    setUpiData(response.data);
+                    const newUpiData = response.data;
+                   
+                    const matchingIndex = newUpiData.reverse().findIndex(item => item.options === option);
+                    if (matchingIndex !== -1) {
+                        setCurrentUpiDataIndex(matchingIndex);
+                        setUpiData(newUpiData);
+                    } else {
+                      
+                    }
                 }
             } catch (error) {
                 if (error.response.status === 403) {
@@ -74,21 +83,7 @@ function Upi() {
                 toast.error(errorMessage || 'Something went wrong', { ...toastProps });
             }
         };
-
-
         fetchData()
-
-
-        const intervalId = setInterval(() => {
-            if (upiData.length > 0) {
-                setCurrentUpiDataIndex((prevIndex) => (prevIndex + 1) % upiData.length);
-            }
-        },60*1000);
-
-        return () => {
-
-            clearInterval(intervalId);
-        };
     }, []);
     const handleCopyupiIdClick = () => {
         if (upiData && upiData[currentUpiDataIndex] && upiData[currentUpiDataIndex].upiId) {
@@ -121,7 +116,7 @@ function Upi() {
                 </div>
 
                 <div className='upiId-container container'>
-                    {upiData && <img src={upiData[upiData.length-1].qrCode} alt="" className='qr-img'/>}
+                    {upiData && <img src={upiData[currentUpiDataIndex].qrCode} alt="" className='qr-img'/>}
                 
                     <div className='row'>
                     
@@ -134,7 +129,6 @@ function Upi() {
                             <button onClick={copyToClipboard}>Copy</button>
                         </div>
                     </div>
-
                     <div className='row'>
                         <div className='col-9'>
                             <h6>UPI Account</h6>

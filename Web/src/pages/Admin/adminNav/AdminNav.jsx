@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useEffect} from 'react'
 import './AdminNav.css'
 import { useNavigate } from 'react-router-dom'
 import { AdminAuthState } from '../../../Atoms/AdminAuthState'
@@ -17,11 +17,14 @@ export const toastProps = {
 function AdminNav() {
   const [auth, setAuth]=useRecoilState(AdminAuthState)
   const navigate =useNavigate()
+  useEffect(()=>{
+    const loggedIn = sessionStorage.getItem('authToken')
+    if(!loggedIn){navigate('/admin')}
+  },[])
   const handleLogout=()=>{
     sessionStorage.removeItem('authToken')
     setAuth(null)
     navigate('/admin')
-    
   }
 
   const handleClearGrowup = async () => {
