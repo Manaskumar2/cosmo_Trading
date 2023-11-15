@@ -74,6 +74,7 @@ const getGiftCode = async (req, res) => {
 
     const formattedGiftCodes = giftCodes.map((giftCode) => {
       return {
+        maxClaim:giftCode.maxClaims,
         code: giftCode.code,
         claimedByUsers: giftCode.claimedBy.map((user) => {
           return {

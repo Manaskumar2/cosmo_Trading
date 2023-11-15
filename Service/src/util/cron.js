@@ -1,18 +1,21 @@
-// const cron = require("node-cron")
-// const {startAndCheckGame} =  require("../controllers/gameController")
+const cron = require("node-cron");
+const userModel = require("../models/userModel");
 
-// const startCron = async () => {
-//     console.log('cron started!');
-//     try {
-//         cron.schedule('* * * * *', () => {
-//           //  startAndCheckGame(1) ;
-//         }, {
-//         scheduled: true,
-//         timezone: 'Asia/Kolkata', 
-//         });
-//     } catch (err) {
-//       console.log('Error occurred:', err);
-//     }
-//   };
+const startCron = () => {
+  // Schedule a task to run every day at midnight in the Asia/Kolkata timezone
+  cron.schedule('0 0 * * *', async () => {
+    try {
+      
+      await userModel.updateMany({}, { dailyTotalBettingAmount: 0 });
+      console.log('Daily reset completed.');
+    } catch (error) {
+      console.error('Error during daily reset:', error);
+    }
+  }, {
+    scheduled: true,
+    timezone: "Asia/Kolkata"
+  });
+};
 
-//   module.exports = {startCron};
+module.exports = { startCron };
+

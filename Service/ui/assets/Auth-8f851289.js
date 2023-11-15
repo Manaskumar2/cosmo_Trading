@@ -1,1 +1,0 @@
-import{u as a,r as n,j as s}from"./index-70e3bcd7.js";function u(){const e=a();return n.useEffect(()=>{const t=()=>{(JSON.parse(localStorage.getItem("authUserToken"))||null)===null&&e("/signIn")};return t(),window.addEventListener("storage",t),()=>{window.removeEventListener("storage",t)}},[e]),s.jsx("div",{})}export{u as A};

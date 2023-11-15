@@ -51,12 +51,20 @@ const getPaymentRequest = async (req, res) => {
       return res.status(200).json(getPayentDetails)
     }
     else {
+     
       const paymentsRequest = await rechargeModel.find({ status:status }) .sort({ createdAt: -1 })
       .skip(skip)
-      .limit(limit);
+        .limit(limit);
+      
+       const count  =  await rechargeModel.countDocuments({status:status})
+        const response = {
+      currentPage: page,
+      totalPages: Math.ceil(count / limit),
+      paymentsRequest
+    };
 
       
-      res.status(200).json( paymentsRequest);
+      res.status(200).json({status:true,message:"Success",data:response});
     }
   } catch (error) {
     console.error(error);
@@ -139,4 +147,83 @@ const getRechargeHistory = async (req, res) => {
   }
 }
 
-module.exports = { createRecharge, updatePaymentRequest, getPaymentRequest,getRechargeHistory }
+
+
+const dateWiseRecharge = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const pageSize = parseInt(req.query.pageSize) || 10;
+    const specificDate = req.query.specificDate;
+   const currentDate = new Date();
+    const twoMonthsAgo = new Date(currentDate);
+    twoMonthsAgo.setMonth(currentDate.getMonth() - 2);
+    let matchCondition = {
+      status: 'confirmed',
+      createdAt: {
+        $gte: twoMonthsAgo,
+        $lt: currentDate,
+      },
+    };
+
+    if (specificDate) {
+      matchCondition = {
+        status: 'confirmed',
+        createdAt: {
+          $gte: new Date(specificDate),
+          $lt: new Date(specificDate + 'T23:59:59.999Z'), // End of the day
+        },
+      };
+    }
+
+const pipeline = [
+  {
+    $match: matchCondition,
+  },
+  {
+    $addFields: {
+      convertedCreatedAt: {
+        $cond: {
+          if: { $eq: [{ $type: '$createdAt' }, 'string'] },
+          then: {
+            $dateFromString: {
+              dateString: '$createdAt',
+              timezone: 'Asia/Kolkata',
+            },
+          },
+          else: '$createdAt',
+        },
+      },
+    },
+  },
+  {
+    $addFields: {
+      convertedCreatedAt: {
+        $dateToString: {
+          format: '%Y-%m-%d',
+          date: '$convertedCreatedAt',
+          timezone: 'Asia/Kolkata',
+        },
+      },
+    },
+  },
+  {
+    $group: {
+      _id: '$convertedCreatedAt',
+      totalAmount: { $sum: '$amount' },
+    },
+  },
+
+];
+
+
+    const result = await rechargeModel.aggregate(pipeline);
+
+    return res.json(result);
+  } catch (error) {
+    console.error('Error:', error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+
+module.exports = { createRecharge, updatePaymentRequest, getPaymentRequest,getRechargeHistory,dateWiseRecharge }

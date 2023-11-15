@@ -76,8 +76,11 @@ const userSchema = new mongoose.Schema({
   },
   bettingAmount: {
     type: Number,
-    required: true,
     default:0
+  },
+    dailyTotalBettingAmount: {
+    type: Number,
+    default: 0,
   },
   rechargeAmount: {
     type: Number,
@@ -90,6 +93,7 @@ const userSchema = new mongoose.Schema({
   token: {
     type: String,
   }
+
 }, { timestamps: true });
 
 module.exports = mongoose.model("users", userSchema);

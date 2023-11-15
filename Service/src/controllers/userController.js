@@ -10,75 +10,136 @@ const { generateUniqueReferralCode, } = require("../util/util");
 const twilio = require('twilio')("ACfe32400dd6c9efafd446cecf70102c0b", "7a4d599d44148524de82afe08e75b4d2");
 
 
-const signUp = async (req, res) => {
-  try {
-    let data = req.body;
+// const signUp = async (req, res) => {
+//   try {
+//     let data = req.body;
 
-    let { phoneNumber, password, referralCode,userName} = data
+//     let { phoneNumber, password, referralCode,userName} = data
 
-    if (validation.isValidBody(data)) return res.status(400).send({ status: false, message: "provide all required fields" })
-    if (!referralCode) return res.status(400).send({ status: false, message: "please provide refferal code" })
-    const checkrefferalCode = await userModel.findOne({ referralCode: referralCode })
-    if (!checkrefferalCode) return res.status(400).send({ status: false, message: "Invalid referral code" })
-    if (!userName) return res.status(404).send({ status: false, message: "please enter your Name" })
-   if (!validation.isValidName(userName)) return res.status(404).send({ status: false, messaage: "Please enter valid Name" })
+//     if (validation.isValidBody(data)) return res.status(400).send({ status: false, message: "provide all required fields" })
+//     if (!referralCode) return res.status(400).send({ status: false, message: "please provide refferal code" })
+//     const checkrefferalCode = await userModel.findOne({ referralCode: referralCode })
+//     if (!checkrefferalCode) return res.status(400).send({ status: false, message: "Invalid referral code" })
+//     if (!userName) return res.status(404).send({ status: false, message: "please enter your Name" })
+//    if (!validation.isValidName(userName)) return res.status(404).send({ status: false, messaage: "Please enter valid Name" })
     
 
 
-    if (!validation.isValid(phoneNumber)) return res.status(400).send({ status: false, message: `PhoneNumber  is Required` })
+//     if (!validation.isValid(phoneNumber)) return res.status(400).send({ status: false, message: `PhoneNumber  is Required` })
 
-    let uniquePhone = await userModel.findOne({ phoneNumber: phoneNumber})
-    if (!validation.isValidPhone(phoneNumber)) return res.status(400).send({ status: false, message: `This PhoneNumber is Invalid` })
+//     let uniquePhone = await userModel.findOne({ phoneNumber: phoneNumber})
+//     if (!validation.isValidPhone(phoneNumber)) return res.status(400).send({ status: false, message: `This PhoneNumber is Invalid` })
 
-    if (uniquePhone) return res.status(400).send({ status: false, message: `This PhoneNumber  has already registered Please Sign In`, })
+//     if (uniquePhone) return res.status(400).send({ status: false, message: `This PhoneNumber  has already registered Please Sign In`, })
 
-    if (!validation.isValidPwd(password)) return res.status(400).send({ status: false, message: "Password should be 8-15 characters long and must contain one of 0-9,A-Z,a-z and special characters", })
+//     if (!validation.isValidPwd(password)) return res.status(400).send({ status: false, message: "Password should be 8-15 characters long and must contain one of 0-9,A-Z,a-z and special characters", })
     
-    const parentDetails = await userModel.findOne({ referralCode: referralCode })
-    if (!parentDetails) return res.status(404).send({ status: false, message: "invalid referralcode" })
+//     const parentDetails = await userModel.findOne({ referralCode: referralCode })
+//     if (!parentDetails) return res.status(404).send({ status: false, message: "invalid referralcode" })
 
 
 
   
-    const latestUser = await userModel
-      .findOne()
-      .sort({ createdAt: -1 })
-    let latestUID = latestUser.UID
-    let  UID = latestUID+1;
+//     const latestUser = await userModel
+//       .findOne()
+//       .sort({ createdAt: -1 })
+//     let latestUID = latestUser.UID
+//     let  UID = latestUID+1;
    
     
-    if (!UID) return res.status(404).send({ status: false, message: "UID is not available" })
-    const createUser = await userModel.create({
-      phoneNumber: phoneNumber,
-      password:password,
-      parentReferralCode: referralCode,
-      referralCode: await generateUniqueReferralCode()+UID,
-      UID: UID,
-      name: userName,
-      parentUserUid:parentDetails.UID
-    })
+//     if (!UID) return res.status(404).send({ status: false, message: "UID is not available" })
+//     const createUser = await userModel.create({
+//       phoneNumber: phoneNumber,
+//       password:password,
+//       parentReferralCode: referralCode,
+//       referralCode: await generateUniqueReferralCode()+UID,
+//       UID: UID,
+//       name: userName,
+//       parentUserUid:parentDetails.UID
+//     })
    
-    if (referralCode) {
-      findParentUser = await userModel.findOne({ referralCode: referralCode })
+//     if (referralCode) {
+//       findParentUser = await userModel.findOne({ referralCode: referralCode })
 
-      if (!findParentUser) {
-        return res.status(400).send({ status: false, message: `Invalid Referal Code`, })
-      }
+//       if (!findParentUser) {
+//         return res.status(400).send({ status: false, message: `Invalid Referal Code`, })
+//       }
 
-      const newUserObjectId = createUser._id;
+//       const newUserObjectId = createUser._id;
      
 
-      findParentUser.downline.push({ user: newUserObjectId });
-      await findParentUser.save();
-    }
+//       findParentUser.downline.push({ user: newUserObjectId });
+//       await findParentUser.save();
+//     }
   
 
-    res.status(201).json({ status: true, message: "user create sucessfully", data: createUser })
+//     res.status(201).json({ status: true, message: "user create sucessfully", data: createUser })
+//   } catch (error) {
+//     console.log(error)
+//     res.status(500).send({ status: false, message: error.message })
+//   }
+// }
+const signUp = async (req, res) => {
+  try {
+    const data = req.body;
+    const { phoneNumber, password, referralCode, userName } = data;
+
+    // Validate input data
+    if (!phoneNumber || !password || !referralCode || !userName) {
+      return res.status(400).send({ status: false, message: "Please provide all required fields" });
+    }
+
+    if (!validation.isValidName(userName)) {
+      return res.status(400).send({ status: false, message: "Please enter a valid Name" });
+    }
+
+    if (!validation.isValidPhone(phoneNumber)) {
+      return res.status(400).send({ status: false, message: "Invalid phone number" });
+    }
+
+    if (!validation.isValidPwd(password)) {
+      return res.status(400).send({ status: false, message: "Password should be 8-15 characters long and contain a combination of numbers, letters, and special characters" });
+    }
+
+    // Check if the phoneNumber is already registered
+    const existingUser = await userModel.findOne({ phoneNumber });
+    if (existingUser) {
+      return res.status(400).send({ status: false, message: "This phone number is already registered. Please sign in." });
+    }
+
+    // Check if the referralCode is valid
+    const parentDetails = await userModel.findOne({ referralCode });
+    if (!parentDetails) {
+      return res.status(400).send({ status: false, message: "Invalid referral code" });
+    }
+
+    // Generate a unique referral code for the new user
+    const latestUser = await userModel.findOne().sort({ createdAt: -1 });
+    const latestUID = latestUser ? latestUser.UID : 0;
+    const UID = latestUID + 1;
+
+    // Create the user
+    const createUser = await userModel.create({
+      phoneNumber,
+      password,
+      parentReferralCode: referralCode,
+      referralCode: await generateUniqueReferralCode() + UID,
+      UID,
+      name: userName,
+      parentUserUid: parentDetails.UID
+    });
+
+    // Add the new user to the parent's downline
+    parentDetails.downline.push({ user: createUser._id });
+    await parentDetails.save();
+
+    res.status(201).json({ status: true, message: "User created successfully", data: createUser });
   } catch (error) {
-    console.log(error)
-    res.status(500).send({ status: false, message: error.message })
+    console.error(error);
+    res.status(500).send({ status: false, message: "An error occurred while processing the request" });
   }
 }
+
 
 const signIn = async (req, res) => {
   try {
@@ -89,10 +150,10 @@ const signIn = async (req, res) => {
       return res.status(400).send({ status: false, message: "Provide both phone number and password to login" });
     }
 
-    const findUser = await userModel.findOne({ phoneNumber: phoneNumber ,isDeleted:false});
+    const findUser = await userModel.findOne({ phoneNumber: phoneNumber });
 
     if (!findUser) {
-      return res.status(400).send({ status: false, message: "Invalid Phone Number or your Mobile No Has  ban" });
+      return res.status(400).send({ status: false, message: "Invalid Phone Number " });
     }
 
     const correctPassword = findUser.password;
@@ -574,7 +635,7 @@ const getDownlineDetails = async (req, res) => {
 
 const getTotalTeams = async (req, res) => {
   try {
-    const userId = req.params.userId;
+    const userId = req.decodedToken.userId;
     const maxLevels = 10;
     const user = await userModel.findById(userId);
 
@@ -583,37 +644,44 @@ const getTotalTeams = async (req, res) => {
       return;
     }
 
-    const countDownline = async (user, currentLevel) => {
-      if (currentLevel === maxLevels) {
-        return 1;
-      }
-
-      let totalCount = 1;
-
-      for (const downlineUser of user.downline) {
-        
-        if (downlineUser.user) {
-          const subUser = await userModel.findById(downlineUser.user._id);
-          if (subUser) {
-            const subUserCount = await countDownline(subUser, currentLevel + 1);
-            totalCount += subUserCount;
-          }
-        }
-      }
-
-      return totalCount;
-    };
-
-    const totalUsersIn10Levels = await countDownline(user, 0);
+    const totalUsersIn10Levels = await countDownlineIterative(user, maxLevels);
 
     res.json({
-      totalUsersIn10Levels: totalUsersIn10Levels-1,
+      totalUsersIn10Levels: totalUsersIn10Levels - 1,
     });
   } catch (error) {
     console.error('Error fetching downline user details:', error);
     res.status(500).json({ error: 'An error occurred while fetching downline user details' });
   }
 };
+
+const countDownlineIterative = async (user, maxLevels) => {
+  let totalCount = 1;
+  const stack = [];
+
+  stack.push({ user, level: 0 });
+
+  while (stack.length > 0) {
+    const { user, level } = stack.pop();
+
+    if (level === maxLevels) {
+      continue;
+    }
+
+    for (const downlineUser of user.downline) {
+      if (downlineUser.user) {
+        const subUser = await userModel.findById(downlineUser.user._id);
+        if (subUser) {
+          stack.push({ user: subUser, level: level + 1 });
+          totalCount += 1;
+        }
+      }
+    }
+  }
+
+  return totalCount;
+};
+
 
 
 
@@ -776,11 +844,13 @@ const activeUser = async (req, res) => {
 // };
 const getAllUsers = async (req, res) => {
   try {
-    const { queryPageIndex = 1, queryPageSize = 20, queryPageFilter, queryPageSortBy = [{ id: '_id', desc: false }] } = req.query;
+    let { queryPageIndex = 1, queryPageSize = 20, queryPageFilter, bettingAmountSort} = req.query;
 
-    let query = { isAdmin: false };
-    let sortBy = queryPageSortBy[0].id;
-    let sortOrder = queryPageSortBy[0].desc ? -1 : 1;
+    let query = {};
+    if(queryPageFilter){
+      query.UID=parseInt(queryPageFilter)
+    }
+
 
     // if (queryPageFilter) {
     //   let searchRegex = new RegExp(queryPageFilter, "i");
@@ -791,24 +861,7 @@ const getAllUsers = async (req, res) => {
     //     ],
     //   };
     // }
-    if(queryPageFilter){
-      query.UID=parseInt(queryPageFilter)
-    }
-    const count = await userModel.countDocuments(query);
-
-    const getUsers = await userModel
-      .find(query)
-      .sort({ [sortBy]: sortOrder })
-      .limit(parseInt(queryPageSize))
-      .skip((parseInt(queryPageIndex) - 1) * parseInt(queryPageSize))
-      .exec();
-
-    if (getUsers.length < 1) {
-      return res.status(400).send({ status: false, message: "No user found" });
-    }
-
-    // Calculate the total walletAmount of all users using an aggregation pipeline
-    const totalWalletAmountResult = await userModel.aggregate([
+       const totalWalletAmountResult = await userModel.aggregate([
       {
         $match: query,
       },
@@ -821,13 +874,74 @@ const getAllUsers = async (req, res) => {
     ]);
 
     const totalWalletAmount = totalWalletAmountResult[0] ? totalWalletAmountResult[0].totalWalletAmount : 0;
+      const count = await userModel.countDocuments(query);
 
+        if (bettingAmountSort) {
+            bettingAmountSort = bettingAmountSort.trim();
+            
+            if (["-1", "1"].indexOf(bettingAmountSort) < 0) {
+                return res.status(400).send({ status: false, message: "enter the Valid key for bettingAmount Sort", });
+            }
+            if (bettingAmountSort == "1") {
+              const getUsers = await userModel.find(query).sort({ dailyTotalBettingAmount: 1 })
+                .limit(parseInt(queryPageSize))
+                .skip((parseInt(queryPageIndex) - 1) * parseInt(queryPageSize))
+                .exec();
+              
     const response = {
       getUsers,
       totalPages: Math.ceil(count / parseInt(queryPageSize)),
       currentPage: parseInt(queryPageIndex),
       totalCount: count,
-      totalWalletAmount, // Add total walletAmount to the response
+      totalWalletAmount,
+    };
+                return res.status(200).send({
+                    status: true,
+                    message: 'Success',
+                    response
+                })
+            } else if (bettingAmountSort == "-1") {
+                
+              const getUsers = await userModel.find(query)
+                .sort({ dailyTotalBettingAmount: -1 })
+                .limit(parseInt(queryPageSize))
+                .skip((parseInt(queryPageIndex) - 1) * parseInt(queryPageSize))
+                .exec();
+              
+              
+             const response = {
+              getUsers,
+      totalPages: Math.ceil(count / parseInt(queryPageSize)),
+      currentPage: parseInt(queryPageIndex),
+      totalCount: count,
+      totalWalletAmount,
+    };
+                return res.status(200).send({
+                    status: true,
+                    message: 'Success',
+                    response
+                })
+            }
+        }
+  
+  
+
+    const getUsers = await userModel
+      .find(query)
+      .limit(parseInt(queryPageSize))
+      .skip((parseInt(queryPageIndex) - 1) * parseInt(queryPageSize))
+      .exec();
+
+    if (getUsers.length < 1) {
+      return res.status(400).send({ status: false, message: "No user found" });
+    }
+ 
+    const response = {
+      getUsers,
+      totalPages: Math.ceil(count / parseInt(queryPageSize)),
+      currentPage: parseInt(queryPageIndex),
+      totalCount: count,
+      totalWalletAmount,
     };
 
     return res.status(200).send({ status: true, message: "Successful", response });
@@ -936,8 +1050,10 @@ const walletToWalletTransactions = async (req, res) => {
         commission: commission,
         amount:transforAmount
       });
-    } else if(receiver.isPremiumUser && !sender.isPremiumUser) {
+    } else if (receiver.isPremiumUser && !sender.isPremiumUser) {
+      if(sender.isDeleted == true) return res.status(403).send({status:false,message:"your account is Temporary Ban Please contact your administrator"})
       if (sender.rechargeAmount != 0) return res.status(401).send({ status: false, messaage: "you can't money transfer please bet first" })
+
       const commission = (transforAmount * 0.01);
       sender.walletAmount -= transforAmount;
       
@@ -989,6 +1105,7 @@ const walletToWalletTransactions = async (req, res) => {
        
       });
     } else {
+        if(sender.isDeleted == true) return res.status(403).send({status:false,message:"your account is Temporary Ban Please contact your administrator"})
          if (sender.rechargeAmount != 0) return res.status(401).send({ status: false, messaage: "you can't money transfer please bet first" })
       
       sender.walletAmount -= transforAmount;

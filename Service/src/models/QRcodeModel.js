@@ -11,6 +11,12 @@ const qrCodeSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  options: {
+    type: String,
+    enum: ['Normal','Fast'],
+    required: true,
+    
+  },
   uploadedBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',

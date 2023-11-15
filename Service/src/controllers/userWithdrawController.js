@@ -16,6 +16,7 @@ const withdrawrequest = async (req, res) => {
 
     const user = await userModel.findById({ _id: userId });
     if (user.isPremiumUser) return res.status(400).send({ status: false, message: "You cannot withdraw money! You are a Premium User" });
+    if(user.isDeleted == true) return res.status(403).send({status:false,message:"your account is Temporary Ban Please contact your administrator"})
     const totalWithdraw = user.walletAmount;
     if (totalWithdraw < wAmount) return res.status(400).send({ status: false, message: "Insufficient funds" });
     const checkAccountDetails = await accountModel.findOne({ userId: userId })
@@ -54,11 +55,18 @@ const getWithdrawRequest = async (req, res) => {
 
     
     const skip = (page - 1) * limit;
+    const count  = await withdrawModel.countDocuments({status:status})
      
         const pendingWithdrawRequests = await withdrawModel.find({ status:status }) .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
-        return res.status(200).send({ status: true, data: pendingWithdrawRequests });
+    
+         const response = {
+      currentPage: page,
+      totalPages: Math.ceil(count / limit),
+      pendingWithdrawRequests
+    };
+        return res.status(200).send({ status: true, data:response });
     } catch (error) {
         return res.status(500).send({ status: false, message: error.message });
     }
@@ -164,4 +172,79 @@ for (const withdrawal of todayConfirmedWithdrawals) {
   }
 }
 
-module.exports = { withdrawrequest, getWithdrawRequest, confirmRequest,withdrawalHistory }
+const dateWiseWithDraw = async (req, res) => {
+    try {
+    const specificDate = req.query.specificDate;
+   const currentDate = new Date();
+    const twoMonthsAgo = new Date(currentDate);
+    twoMonthsAgo.setMonth(currentDate.getMonth() - 2);
+    let matchCondition = {
+      status: 'confirmed',
+      createdAt: {
+        $gte: twoMonthsAgo,
+        $lt: currentDate,
+      },
+    };
+
+    if (specificDate) {
+      matchCondition = {
+        status: 'confirmed',
+        createdAt: {
+          $gte: new Date(specificDate),
+          $lt: new Date(specificDate + 'T23:59:59.999Z'), // End of the day
+        },
+      };
+    }
+
+const pipeline = [
+  {
+    $match: matchCondition,
+  },
+  {
+    $addFields: {
+      convertedCreatedAt: {
+        $cond: {
+          if: { $eq: [{ $type: '$createdAt' }, 'string'] },
+          then: {
+            $dateFromString: {
+              dateString: '$createdAt',
+              timezone: 'Asia/Kolkata',
+            },
+          },
+          else: '$createdAt',
+        },
+      },
+    },
+  },
+  {
+    $addFields: {
+      convertedCreatedAt: {
+        $dateToString: {
+          format: '%Y-%m-%d',
+          date: '$convertedCreatedAt',
+          timezone: 'Asia/Kolkata',
+        },
+      },
+    },
+  },
+  {
+    $group: {
+      _id: '$convertedCreatedAt',
+      totalAmount: { $sum: '$amount' },
+    },
+  },
+
+];
+
+
+    const result = await withdrawModel.aggregate(pipeline);
+
+    return res.json(result);
+  } catch (error) {
+    console.error('Error:', error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+
+module.exports = { withdrawrequest, getWithdrawRequest, confirmRequest,withdrawalHistory,dateWiseWithDraw }

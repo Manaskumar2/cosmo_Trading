@@ -3,14 +3,6 @@ const qrCodeModel = require('../models/QRcodeModel')
 const validation = require('../validations/validation')
 const aws=require("aws-sdk");
 
-
-
-
-//  aws.config.update({
-//     accessKeyId: "AKIAY3L35MCRZNIRGT6N",
-//     secretAccessKey: "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",
-//     region: "ap-south-1"
-// })
  aws.config.update({
     accessKeyId: "AKIAYBX2OOU6YIKIMVOO",
     secretAccessKey: "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",
@@ -36,10 +28,7 @@ let uploadFile= async ( file) =>{
         console.log("file uploaded succesfully")
         return resolve(data.Location)
     })
-
-
-
-   })
+  })
 }
 
 
@@ -53,12 +42,19 @@ const uploadQrCode = async (req, res) => {
     if (!uploadedBy) return res.status(400).json({ status: false, message: 'Please log in to upload image' });
     uploadedData.uploadedBy = uploadedBy;
 
-    const { upiId} = req.body;
-    console.log(req.body)
+    const { upiId,options} = req.body;
+
+    
+    if (!options) {
+      return res.status(400).json({ status: false, message: 'please choose on of the options' });
+    }
+    if(!validation.isValidOptions(options)) return res.status(400).json({ status: false, message:"Invalid options. Options Should be ['Normal', 'Fast']"})
+    uploadedData.options = options
 
     if (!upiId) {
       return res.status(400).json({ status: false, message: 'No UPI ID provided' });
     }
+
 
     if (!validation.checkUpiId(upiId)) {
       return res.status(400).json({ status: false, message: 'Invalid UPI ID' });
@@ -95,7 +91,7 @@ const qrCodeData = await qrCodeModel.create(uploadedData);
 }
 const getAllImageURLs = async (req, res) => {
   try {
-    const imageUrls = await qrCodeModel.find();
+    const imageUrls = await qrCodeModel.find().sort({createdAt: -1});
 
     res.status(200).json(imageUrls);
   } catch (err) {

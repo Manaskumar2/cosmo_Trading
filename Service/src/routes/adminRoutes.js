@@ -6,10 +6,10 @@ const { authentication, adminAuthorization } = require("../middlewares/authMiddl
 const { adminlogin,getAllUsers,activeUser,deactiveUser,getDownlineDetails, getUserDetailsByUserId, changePassword } = require("../controllers/userController")
 const { uploadQrCode, getAllImageURLs } = require('../controllers/qrCodeController')
 const { getBankAccountbyId, updateBankAccountAnduserDetails, getUserDetailsWithBank } = require("../controllers/withdrawAccountController")
-const { getPaymentRequest, updatePaymentRequest } = require("../controllers/rechargeController")
+const { getPaymentRequest, updatePaymentRequest, dateWiseRecharge } = require("../controllers/rechargeController")
 // const { getWithdrawRequest, confirmRequest } = require("../controllers/userWithdrawController");
 const {getpremiumRequest,updatePremiumUser, getPremiumRequestById, getPremiumDetails} =  require("../controllers/premiumController")
-const { getWithdrawRequest, confirmRequest } = require("../controllers/userWithdrawController");
+const { getWithdrawRequest, confirmRequest, dateWiseWithDraw } = require("../controllers/userWithdrawController");
 const { deleteGames, growUpBetamount } = require("../controllers/gameController");
 const { riseUpBetamount, delete2ndGames } = require("../controllers/secondGameController");
 const {getCompanyDetails, companyRechargeAndWithdraw} = require("../controllers/companyWalletController");
@@ -18,9 +18,11 @@ const { uploadImage, getImage, deleteImages } = require("../controllers/popUpima
 const { createArticle } = require("../controllers/articleController");
 const { createGiftCode, getGiftCode } = require("../controllers/giftCodeController");
 const { createFakePlayers } = require("../controllers/playerController");
-const { getBetAmounts } = require("../controllers/gameHistoryController");
+const { getBetAmounts, getGameHistoryDateWise } = require("../controllers/gameHistoryController");
 const { addBank } = require("../controllers/bankController");
 const { createDocument, deleteAllDocument } = require("../controllers/winningDocumentController");
+const { createBankAccount } = require("../controllers/adminBankController");
+const { getCompanyProfit } = require("../controllers/companyProfitController");
 router.post("/signIn", adminlogin)
 router.put("changePassword",authentication,adminAuthorization,changePassword)
 
@@ -69,14 +71,19 @@ router.get("/riseUpbet", authentication, adminAuthorization, riseUpBetamount)
 router.delete("/deleteRiseUpGameHistory",authentication,adminAuthorization,delete2ndGames)
 //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>companyDetails<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<//
 
-router.get("/companyDetails",authentication,adminAuthorization,getCompanyDetails)
+router.get("/companyDetails", authentication, adminAuthorization, getCompanyDetails)
+router.get("/getComapnyProfits",authentication,getCompanyProfit)
 //********************************Frinchase ************************************************//
 
 router.get("/getPremiumUsers", authentication, adminAuthorization, getPremiumDetails)
 router.post("/franchisecommissions", authentication, adminAuthorization, franchiseCommissions)
 
 //******************************** total transaction  ************************************************//
+
+//********************************please check >> https**********
 router.get("/totalTransactions", authentication, adminAuthorization, companyRechargeAndWithdraw)
+router.get("/getDateWiseRecharge", authentication, adminAuthorization, dateWiseRecharge)
+router.get("/getDateWiseWithdraw", authentication, adminAuthorization,dateWiseWithDraw)
 
 //********************************uploads popUpimage ************************************************
 router.post("/uploads", authentication, adminAuthorization, uploadImage)
@@ -96,9 +103,17 @@ router.get("/geBetAmount", getBetAmounts)
 
 //************************************************bank name ************************************************
 
-router.post("/bankName",authentication,adminAuthorization,addBank)
+router.post("/bankName", authentication, adminAuthorization, addBank)
+
+//************************************************ bank name ************************************************
+router.post("/createBank", authentication, adminAuthorization, createBankAccount)
+
 
 //**************************************winningDoument****************************************** */
 router.post("/winningDoument", authentication, adminAuthorization, createDocument)
-router.delete("/deleteWinningDocument", authentication, adminAuthorization,deleteAllDocument)
+router.delete("/deleteWinningDocument", authentication, adminAuthorization, deleteAllDocument)
+
+// -------------------------------- datewise betting History --------------------------------
+
+router.get("/bettingHistory",authentication,adminAuthorization,getGameHistoryDateWise)
 module.exports =router

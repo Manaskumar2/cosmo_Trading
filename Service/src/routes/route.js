@@ -16,6 +16,7 @@ const { claimGiftcode } = require("../controllers/giftCodeController");
 const { getPlayers } = require("../controllers/playerController");
 const { getBankName } = require("../controllers/bankController");
 const { getDocument } = require("../controllers/winningDocumentController");
+const { getBankAccount } = require("../controllers/adminBankController");
 // const multer = require('multer');
 // const path = require('path');
 
@@ -122,5 +123,7 @@ router.get("/getPlayers", authentication, getPlayers)
 
 router.get("/getBankNames", authentication,getBankName)
 //............................getWinningDocuments................................
-router.get("/getWinningDocuments", authentication,getDocument)
+router.get("/getWinningDocuments", authentication, getDocument)
+//................................getBank Transfer data................................
+router.get("/getBankTransferData", authentication,getBankAccount)
 module.exports =router

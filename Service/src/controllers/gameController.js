@@ -1,15 +1,15 @@
 const userModel = require("../models/userModel");
-const jwt = require("jsonwebtoken");
 const Game = require("../models/gameModel");
-const cron = require("node-cron");
 const moment = require("moment");
 const commissionModel = require("../models/commissionModel")
 const {generateUniqueNumber, updateUserWallet} = require("../util/util")
 require("moment-timezone");
 const Wallet = require("../models/companywallet");
+const companyProfitModel = require("../models/companyModel")
 const { updateGrowUp, createGrowUp } = require("../socket/sockets");
 let walletId = "650daaa42b2122794a524f24";
 const BettingHistoryModel = require("../models/battingHistoryModel")
+const growUpModel = require("../models/growUpBetModel")
 
 let groupOptions = ["small", "big"];
 
@@ -61,7 +61,7 @@ async function calculateResult(gameId) {
 for (const bet of bigUsers) {
         const winAmount = roundDown(bet.amount * 1.94, 2);
         totalAmount -= winAmount;
-        await updateUserWallet({ userId: bet.user._id, walletAmount: winAmount, winningAmount: winAmount, betId: bet._id });
+        await updateUserWallet({ userId: bet.user._id, walletAmount: winAmount, winningAmount: winAmount, betId: bet._id});
         bet.winningAmount = winAmount;
       }
     }
@@ -71,6 +71,12 @@ for (const bet of bigUsers) {
     updateGrowUp(game);
     let distributedAmount = await distributeComissionToAll(game);
     let compnayFund = totalAmount - distributedAmount;
+    await companyProfitModel.create({
+      companyId: walletId,
+      profitAmount: compnayFund,
+      profitFrom:'GROWUP'
+      
+    })
     const wallet = await Wallet.findOne({ _id: walletId });
     wallet.amount = wallet.amount + compnayFund;
     await wallet.save();
@@ -94,16 +100,18 @@ for (const bet of bigUsers) {
      for (const bet of smallUsers) {
         const winAmount = roundDown(bet.amount * 1.94, 2);
         totalAmount -= winAmount;
-        await updateUserWallet({ userId: bet.user._id, walletAmount: winAmount, winningAmount: winAmount, betId: bet._id });
-        bet.winningAmount = winAmount;
+        await updateUserWallet({ userId: bet.user._id, walletAmount: winAmount, winningAmount: winAmount, betId: bet._id});
+       bet.winningAmount = winAmount;
+       await growUpModel.findOneAndUpdate(bet.user, { winningAmount: winAmount }, { new: true });
       }
       
     } else if (winnerGroup == "big") {
     for (const bet of bigUsers) {
         const winAmount = roundDown(bet.amount * 1.94, 2);
         totalAmount -= winAmount;
-        await updateUserWallet({ userId: bet.user._id, walletAmount: winAmount, winningAmount: winAmount, betId: bet._id });
-        bet.winningAmount = winAmount;
+        await updateUserWallet({ userId: bet.user._id, walletAmount: winAmount, winningAmount: winAmount, betId: bet._id});
+      bet.winningAmount = winAmount;
+      await growUpModel.findOneAndUpdate(bet.user, { winningAmount: winAmount }, { new: true });
       }
     
     }
@@ -112,6 +120,12 @@ for (const bet of bigUsers) {
 
     let distributedAmount = await distributeComissionToAll(game);
     let compnayFund = totalAmount - distributedAmount;
+    await companyProfitModel.create({
+      companyId: walletId,
+      profitAmount: compnayFund,
+      profitFrom:'GROWUP'
+      
+    })
     const wallet = await Wallet.findOne({ _id: walletId });
     wallet.amount = wallet.amount + compnayFund;
     
@@ -137,6 +151,13 @@ for (const bet of bigUsers) {
   let distributedAmount = await distributeComissionToAll(game);
     let compnayFund = totalAmount - distributedAmount;
     const totalBettingAmount = bigAmount + smallAmount;
+
+    await companyProfitModel.create({
+      companyId: walletId,
+      profitAmount: compnayFund,
+      profitFrom:'GROWUP'
+      
+    })
     const wallet = await Wallet.findOne({ _id: walletId });
    
     wallet.amount += compnayFund;
@@ -313,16 +334,10 @@ const betController = async (req, res) => {
     }
 
 
-   
-    game.bets.push({ user: user._id, amount, group });
- 
-
-     await game.save();
-
-     const latestUserBet = game.bets[game.bets.length - 1];
 
     let walletAmount = user.walletAmount - amount;
     let bettingAmount = user.bettingAmount + amount;
+    let dailyTotalBettingAmount=user.dailyTotalBettingAmount +amount;
     let rechargeAmount = user.rechargeAmount
       if (rechargeAmount > 0) {
       if (amount <= rechargeAmount) {
@@ -333,14 +348,21 @@ const betController = async (req, res) => {
         rechargeAmount -=deductAmount;
       }
     }
-    await userModel.updateOne(
+   const updateData = await userModel.updateOne(
       { _id: user._id },
       {
         walletAmount: walletAmount,
         rechargeAmount: rechargeAmount,
-        bettingAmount:bettingAmount
+        bettingAmount: bettingAmount,
+        dailyTotalBettingAmount:dailyTotalBettingAmount
       }
     );
+if(!updateData) return res.status(400).send({status:false,message:"technical issue. unabel to bet"})
+    game.bets.push({ user: user._id, amount, group });
+ 
+
+     await game.save();
+     const latestUserBet = game.bets[game.bets.length - 1];
     const currentDate = new Date();
     const bettingHistory = await BettingHistoryModel.create({
       user: user._id,
@@ -348,7 +370,14 @@ const betController = async (req, res) => {
       amount: amount,
       bettingFrom:"GrowUp"
     });
+    // await growUpModel.create({
+    //   amount: amount,
+    //   group: group,
+    //   gameId: game.id,
+    //   user:user._id
 
+    // })
+ 
     res.status(201).json({ status: true, message: "Bet placed successfully", game: {
       amount,
       duration,
@@ -371,6 +400,7 @@ const growUpUserBettingHistory = async (req, res) => {
   try {
     const userId = req.params.userId;
     const page = parseInt(req.query.page) || 1;
+    console.log(page)
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
 
@@ -380,18 +410,18 @@ const growUpUserBettingHistory = async (req, res) => {
     if (!user) return res.status(400).send({ status: false, message: "user not found" });
 
     const games = await Game.find({ 'bets.user': userId })
-      .sort({ createdAt: -1 })
-       .skip(skip)
-      .limit(limit);
+       .sort({ createdAt: -1 })
+      //  .skip(skip)
+      // .limit(limit);
     
 
     const count = await Game.countDocuments({ 'bets.user': userId });
 
     const response = {
-      currentPage: page,
-      totalPages: Math.ceil(count / limit),
+      // currentPage: page,
+      // totalPages: Math.ceil(count / limit),
       history: [],
-    };
+    }; 
 
     for (const game of games) {
       const userBets = game.bets.filter((bet) => bet.user.toString() === userId);

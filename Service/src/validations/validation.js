@@ -53,6 +53,8 @@ const isTransactionId = (transactionId) => {
   const pattern = /^[A-Za-z0-9]{12}$/;
   return pattern.test(transactionId);
 };
+const isValidOptions = (gender) => {
+    return ['Normal','Fast'].indexOf(gender) !== -1
+}
 
-
-module.exports = { isValid, isValidBody, isValidPhone, isValidEmail, isValidPwd, isValidObjectId, isValidName, isValidImage, isValidGender, PinCode, isUrlValid,regexSpaceChar ,isValidreqBody,checkUpiId,isTransactionId}
+module.exports = { isValid, isValidBody, isValidPhone, isValidEmail, isValidPwd, isValidObjectId, isValidName, isValidImage, isValidGender, PinCode, isUrlValid,regexSpaceChar ,isValidreqBody,checkUpiId,isTransactionId,isValidOptions}
