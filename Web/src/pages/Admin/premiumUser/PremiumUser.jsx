@@ -130,9 +130,8 @@ function PremiumUser() {
                                     <td>{user.UID}</td>
                                     <td>{user.name}</td>
                                     <td>{user.phoneNumber}</td>
-                                    <td>{user.bettingAmount.toFixed(2)}</td>
-                                    <td>{user.dailyTotalBettingAmount.toFixed(2)}</td>
-
+                                    {user.bettingAmount?<td>{user.bettingAmount.toFixed(2)}</td>:<td>0</td>}
+                                    {user.dailyTotalBettingAmount ?<td>{user.dailyTotalBettingAmount.toFixed(2)}</td>:<td>0</td>}
                                     <td>{user.commissionAmount.toFixed(2)}</td>
                                     <td>{user.walletAmount.toFixed(2)}</td>
                                     <td>
