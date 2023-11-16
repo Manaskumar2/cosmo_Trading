@@ -53,12 +53,22 @@ const getpremiumRequest = async (req, res) => {
     const limit = parseInt(req.query.limit) || 20;
 
 
-    const premiumCount = await userModel.countDocuments({isPremiumUser:true})
+    const count = await userModel.countDocuments({status: status })
     const skip = (page - 1) * limit;
     const premiumApplyRequest = await premiumModel.find({ status: status }).sort({ createdAt: -1 }).skip(skip)
       .limit(limit);
-        if (premiumApplyRequest.length < 0) return res.status(404).send({ status: false, message: "no premium request found." });
-        return res.status(200).send({ status: true, message: "success", data: premiumApplyRequest,premiumCount })
+    
+    
+    if (premiumApplyRequest.length < 0) return res.status(404).send({ status: false, message: "no premium request found." });
+    
+    const response = {
+          premiumApplyRequest ,
+      currentPage: page,
+      totalPages: Math.ceil(count / limit),
+          totalCount: count,
+          totalpremiumUsers:count
+        };
+        return res.status(200).send({ status: true, message: "success",response})
       
     } catch (error) {
         console.error('Error applying for premium status:', error);
@@ -144,8 +154,8 @@ const getPremiumRequestById = async (req, res) => {
 const getPremiumDetails = async (req, res) => {
   try {
        const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 20;
-    const skip = (page - 1) * limit;
+       const limit = parseInt(req.query.limit) || 20;
+       const skip = (page - 1) * limit;
 
        const count = await userModel.countDocuments({isPremiumUser:true});
 

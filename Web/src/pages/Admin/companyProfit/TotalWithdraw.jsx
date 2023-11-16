@@ -105,7 +105,7 @@ function TotalWithdraw() {
                                 ))}
                             </div>
                             {companyProfits && <div className='total-profit row'>
-<div className="col-10"> <h4>Total Profit : </h4> </div>
+<div className="col-10"> <h4>Total Withdraw : </h4> </div>
 <div className="col-2"> <h4> {calculateTotalProfit()} </h4> </div>
                             </div>}
                             <div>

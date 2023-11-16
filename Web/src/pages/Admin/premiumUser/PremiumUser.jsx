@@ -24,16 +24,19 @@ function PremiumUser() {
     const navigate = useNavigate();
     const [amount, setAmount] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
-    const usersPerPage = 20;
+  
 
+    const handlePageChange = (newPage) => {
+        setCurrentPage(newPage);
+      };
     const authData = useRecoilValue(AdminAuthState);
-    const [premiumState, setPremiumState] = useRecoilState(PremiumState);
+    const [premiumState, setPremiumState] = useState(null);
 
     const handlePrimeRequest = async () => {
         try {
             let token = authData.authToken;
             const response = await axios.get(
-                `${import.meta.env.VITE_API_URL}/admin/getPremiumUsers`,
+                `${import.meta.env.VITE_API_URL}/admin/getPremiumUsers?&page=${currentPage}`,
                 {
                     headers: { Authorization: `Bearer ${token}` },
                 }
@@ -69,14 +72,9 @@ function PremiumUser() {
 
     useEffect(() => {
         handlePrimeRequest();
-    }, []);
-    const handleIncreasePage = () => {
-        setCurrentPage((prevPage) => Math.min(prevPage + 1, Math.ceil(premiumState.response.getUsers.length / usersPerPage)));
-    };
-    const totalPages = premiumState && premiumState.response && premiumState.response.getUsers && Math.ceil(premiumState.response.getUsers.length / usersPerPage);
-    const handleDecreasePage = () => {
-        setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
-    };
+    }, [currentPage]);
+
+    
     const handleLogin = async (phoneNumber, password) => {
         try {
             const response = await axios.post(`${import.meta.env.VITE_API_URL}/signIn`, {
@@ -98,12 +96,6 @@ function PremiumUser() {
         }
     };
 
-    // Calculate current users for pagination
-    const indexOfLastUser = currentPage * usersPerPage;
-    const indexOfFirstUser = indexOfLastUser - usersPerPage;
-    const currentUsers = premiumState && premiumState.response && premiumState.response.getUsers.slice(indexOfFirstUser, indexOfLastUser);
-
-    const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
     return (
         <div>
@@ -130,7 +122,7 @@ function PremiumUser() {
                             </tr>
                         </thead>
                         <tbody>
-                            {currentUsers && currentUsers.map((user, index) => (
+                            {premiumState &&  premiumState.response &&  premiumState.response.getUsers && premiumState.response.getUsers.map((user, index) => (
                                 <tr key={index} className='table-row'>
                                     <td>{index + 1}</td>
                                     <td>{user.UID}</td>
@@ -149,11 +141,17 @@ function PremiumUser() {
                     </table>
 
                     {/* Pagination */}
-                    <div className="pagination-prime">
-                        <button onClick={handleDecreasePage}>-</button>
-                        <span>{currentPage}/{totalPages}</span>
-                        <button onClick={handleIncreasePage}>+</button>
-                    </div>
+                    {premiumState && premiumState.response && premiumState.response.totalPages &&  <div className='pagination-prime'>
+            <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>-</button>
+            <span>{currentPage} / {premiumState &&  premiumState.response &&  premiumState.response.getUsers && premiumState.response.totalPages}</span>
+            <button
+    onClick={() => handlePageChange(currentPage + 1)}
+    disabled={currentPage === premiumState.response.totalPages}
+>
+    +
+</button>
+
+          </div>}
                 </div>
             </div>
         </div>

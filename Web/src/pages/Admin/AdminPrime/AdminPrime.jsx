@@ -39,7 +39,7 @@ function AdminPrime() {
     try {
       let token = authData.authToken;
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/admin/getPremiumRequest?status=${status}&page=${currentPage}&pageSize=${itemsPerPage}`,
+        `${import.meta.env.VITE_API_URL}/admin/getPremiumRequest?status=${status}&page=${currentPage}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -47,6 +47,7 @@ function AdminPrime() {
 
       if (response.status === 200) {
         setPremiumState(response.data);
+        console.log(response.data);
         return response;
       }
     } catch (error) {
@@ -99,7 +100,7 @@ function AdminPrime() {
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
   };
-  const totalPages = Math.ceil((premiumState && premiumState.data ? premiumState.data.length : 0) / itemsPerPage);
+
   return (
     <div>
       <AdminNav />
@@ -125,7 +126,7 @@ function AdminPrime() {
               </tr>
             </thead>
             <tbody>
-              {premiumState && premiumState.data && premiumState.data.map((item, index) => (
+              {premiumState && premiumState.response && premiumState.response.premiumApplyRequest && premiumState.response.premiumApplyRequest.map((item, index) => (
                 <tr key={index} className='table-row'>
                   <td>{(currentPage - 1) * itemsPerPage + index + 1}</td>
                   <td>{item._id}</td>
@@ -168,11 +169,12 @@ function AdminPrime() {
               ))}
             </tbody>
           </table>
-          <div className='pagination-prime'>
+          {premiumState && premiumState.response && premiumState.response.totalPages &&  <div className='pagination-prime'>
             <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>-</button>
-            <span>{currentPage} / {totalPages}</span>
-            <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>+</button>
-          </div>
+            <span>{currentPage} / {premiumState && premiumState.response && premiumState.response.totalPages}</span>
+            <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === premiumState.response.totalPages}>+</button>
+          </div>}
+         
         </div>
       </div>
     </div>

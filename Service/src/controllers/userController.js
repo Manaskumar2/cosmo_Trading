@@ -846,7 +846,7 @@ const getAllUsers = async (req, res) => {
   try {
     let { queryPageIndex = 1, queryPageSize = 20, queryPageFilter, bettingAmountSort} = req.query;
 
-    let query = {};
+    let query = {isAdmin:false};
     if(queryPageFilter){
       query.UID=parseInt(queryPageFilter)
     }

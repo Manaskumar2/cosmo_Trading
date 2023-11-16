@@ -25,37 +25,14 @@ const toastProps = {
 function CompanyProfit() {
     const navigate=useNavigate()
     const [page,setPage]=useState(1)
-    const [specificDate, setSpecificDate] = useState(new Date());
-const [specificDay, setSpecificDay] = useState(new Date());
+    const [specificDate, setSpecificDate] = useState(new Date().toISOString().split('T')[0]);
+    const [specificDay, setSpecificDay] = useState(new Date().toISOString().split('T')[0]);
+    
 
     const [companyProfits, setCompanyProfits] = useState(null);
     const authData = useRecoilValue(AdminAuthState);
 
     const handleDate = async () => {
-        try {
-            let token = authData.authToken;
-            const response = await axios.get(
-                `${import.meta.env.VITE_API_URL}/admin/getComapnyProfits`,
-                {
-                    params: {
-                        specificDate: specificDate,
-                        specificDay: null
-                    },
-                    headers: { Authorization: `Bearer ${token}` },
-                }
-            );
-
-            if (response.status === 200) {
-                console.log(response.data)
-                setCompanyProfits(response.data);
-            }
-        } catch (error) {
-            const errorMessage = error.response
-                ? error.response.data.message
-                : error.message;
-        }
-    };
-    const handleDay = async () => {
         try {
             let token = authData.authToken;
             const response = await axios.get(
@@ -68,7 +45,32 @@ const [specificDay, setSpecificDay] = useState(new Date());
                     headers: { Authorization: `Bearer ${token}` },
                 }
             );
-
+    
+            if (response.status === 200) {
+                console.log(response.data)
+                setCompanyProfits(response.data);
+            }
+        } catch (error) {
+            const errorMessage = error.response
+                ? error.response.data.message
+                : error.message;
+        }
+    };
+    
+    const handleDay = async () => {
+        try {
+            let token = authData.authToken;
+            const response = await axios.get(
+                `${import.meta.env.VITE_API_URL}/admin/getComapnyProfits`,
+                {
+                    params: {
+                        specificDate: specificDate,
+                        specificDay: null
+                    },
+                    headers: { Authorization: `Bearer ${token}` },
+                }
+            );
+    
             if (response.status === 200) {
                 setCompanyProfits(response.data);
             }
@@ -78,6 +80,7 @@ const [specificDay, setSpecificDay] = useState(new Date());
                 : error.message;
         }
     };
+    
 
     useEffect(() => {
         handleDate();
@@ -97,21 +100,27 @@ const [specificDay, setSpecificDay] = useState(new Date());
                         <div className='admin-total-head'>
                             <div> <h4>Company Profit</h4> </div>
                             <div style={{ display: 'flex', gap: '2rem',alignItems:'center' }}>
-                                {/* <h5 style={{margin:'0'}}>Search By Month : </h5> */}
-                                {/* <DatePicker
-                                    selected={new Date(specificDay)}
-                                    onChange={(date) => { setSpecificDay(date.toISOString().split('T')[0]) }}
-                                    dateFormat="yyyy-MM"
-                                    showMonthYearPicker
-                                    className='calender-input'
-                                /> */}
-                           <h5 style={{margin:'0'}}>Search By Day : </h5>
+                                <h5 style={{margin:'0'}}>Search By Month : </h5>
+                                
                                 <DatePicker
-                                className='calender-input'
-                                    selected={new Date(specificDate)}
-                                    onChange={(date) => { setSpecificDate(date.toISOString().split('T')[0]) }}
-                                    dateFormat="yyyy-MM-dd"
-                                />
+    selected={new Date(specificDay)}
+    onChange={(newSpecificDay) => { setSpecificDay(newSpecificDay.toISOString()); }}
+    dateFormat="yyyy-MM"
+    showMonthYearPicker
+    className='calender-input'
+/>
+<h5 style={{ margin: '0' }}>Search By Day : </h5>
+<DatePicker
+    className='calender-input'
+    selected={new Date(specificDate)}
+    onChange={(newDate) => { 
+        console.log('newDate:', newDate);
+        setSpecificDate(newDate); 
+    }}
+    dateFormat="yyyy-MM-dd"
+/>
+
+
                                 <button className='back-btn' onClick={()=>{navigate('/admin/home')}}><img src={arr} alt="" /><p>Back</p></button>
                             </div>
                         </div>
@@ -135,12 +144,12 @@ const [specificDay, setSpecificDay] = useState(new Date());
 <div className="col-2"> <h4>{companyProfits &&companyProfits.overallTotalProfit.toFixed(2)}</h4> </div>
                             </div>}
                             <div>
-                                {/* {companyProfits && companyProfits.totalPages &&
+                                {companyProfits && companyProfits.totalPages &&
                             <div className="pagination-buttons-p2p">
                             <button onClick={() => { setPage(Math.max(page - 1, 1)); }} className='page-leftarr'>  <img src={right} alt="" /> </button>
                             {companyProfits && <div>{page}/{companyProfits.totalPages}</div>}
                             <button onClick={() => { setPage(Math.min(page + 1, companyProfits.totalPages)); }} className='page-rightarr'>  <img src={left} alt="" /> </button>
-                        </div>} */}
+                        </div>}
                             </div>
                         </div>
                     </div>

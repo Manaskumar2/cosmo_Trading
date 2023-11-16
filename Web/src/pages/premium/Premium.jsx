@@ -23,7 +23,8 @@ function Premium() {
                 headers: { Authorization: `Bearer ${token}` },
             });
             if (response.status === 200) {
-                setPremiumState(response);
+                setPremiumState(response.data);
+                console.log(response);
                 return response;
             }
         } catch (error) {
@@ -35,9 +36,9 @@ function Premium() {
         handlePrimeRequest();
     }, []);
 
-    const isPremiumLessThan50 = premiumState && premiumState.data.premiumCount < 50;
-    const isPremiumBetween50And100 =premiumState && premiumState.data.premiumCount >= 50 && premiumState.data.premiumCount < 100;
-    const isPremiumBetween100And150 =premiumState && premiumState.data.premiumCount >= 100 && premiumState.data.premiumCount <= 150;
+    const isPremiumLessThan50 = premiumState && premiumState  && premiumState.response && premiumState.response.totalpremiumUsers < 50;
+    const isPremiumBetween50And100 =premiumState && premiumState.response.totalpremiumUsers >= 50 && premiumState.response.totalpremiumUsers < 100;
+    const isPremiumBetween100And150 =premiumState && premiumState.response.totalpremiumUsers >= 100 && premiumState.response.totalpremiumUsers <= 150;
 
     return (
         <div className='premium'>
@@ -61,7 +62,7 @@ function Premium() {
                     <div className='prime-data'>
                         <h5>0 TO 50</h5>
                         {isPremiumLessThan50 && (
-                            <h5>Remaining seats {50 - premiumState.data.premiumCount}</h5>
+                            <h5>Remaining seats {50 - premiumState.response.totalpremiumUsers}</h5>
                         )}
                         <h4>&#8377; 10,000</h4>
                     </div>
@@ -75,7 +76,7 @@ function Premium() {
                     <div className='prime-data'>
                         <h5>50 TO 100</h5>
                         {isPremiumBetween50And100 && (
-                            <h5>Remaining seats {100 - premiumState.data.premiumCount}</h5>
+                            <h5>Remaining seats {100 - premiumState.response.totalpremiumUsers}</h5>
                         )}
                         <h4>&#8377; 20,000</h4>
                     </div>
@@ -89,7 +90,7 @@ function Premium() {
                     <div className='prime-data'>
                         <h5>100 TO 150</h5>
                         {isPremiumBetween100And150 && (
-                            <h5>Remaining seats {150 - premiumState.data.premiumCount}</h5>
+                            <h5>Remaining seats {150 - premiumState.response.totalpremiumUsers}</h5>
                         )}
                         <h4>&#8377; 30,000</h4>
                     </div>
