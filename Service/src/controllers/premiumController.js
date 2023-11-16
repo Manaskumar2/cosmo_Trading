@@ -53,7 +53,7 @@ const getpremiumRequest = async (req, res) => {
     const limit = parseInt(req.query.limit) || 20;
 
 
-    const count = await userModel.countDocuments({status: status })
+    const count = await userModel.countDocuments({isPremiumUser:true})
     const skip = (page - 1) * limit;
     const premiumApplyRequest = await premiumModel.find({ status: status }).sort({ createdAt: -1 }).skip(skip)
       .limit(limit);
