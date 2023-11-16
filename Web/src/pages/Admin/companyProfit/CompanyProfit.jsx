@@ -23,11 +23,11 @@ const toastProps = {
 };
 
 function CompanyProfit() {
-    const navigate=useNavigate()
-    const [page,setPage]=useState(1)
+    const navigate = useNavigate()
+    const [page, setPage] = useState(1)
     const [specificDate, setSpecificDate] = useState(new Date().toISOString().split('T')[0]);
     const [specificDay, setSpecificDay] = useState(new Date().toISOString().split('T')[0]);
-    
+
 
     const [companyProfits, setCompanyProfits] = useState(null);
     const authData = useRecoilValue(AdminAuthState);
@@ -45,7 +45,7 @@ function CompanyProfit() {
                     headers: { Authorization: `Bearer ${token}` },
                 }
             );
-    
+
             if (response.status === 200) {
                 console.log(response.data)
                 setCompanyProfits(response.data);
@@ -56,7 +56,7 @@ function CompanyProfit() {
                 : error.message;
         }
     };
-    
+
     const handleDay = async () => {
         try {
             let token = authData.authToken;
@@ -70,7 +70,7 @@ function CompanyProfit() {
                     headers: { Authorization: `Bearer ${token}` },
                 }
             );
-    
+
             if (response.status === 200) {
                 setCompanyProfits(response.data);
             }
@@ -80,14 +80,14 @@ function CompanyProfit() {
                 : error.message;
         }
     };
-    
+
 
     useEffect(() => {
         handleDate();
-    }, [specificDate]);
+    }, [specificDay]);
     useEffect(() => {
         handleDay();
-    }, [specificDay]);
+    }, [ specificDate]);
 
     return (
         <div>
@@ -99,29 +99,29 @@ function CompanyProfit() {
                     <div className="container ">
                         <div className='admin-total-head'>
                             <div> <h4>Company Profit</h4> </div>
-                            <div style={{ display: 'flex', gap: '2rem',alignItems:'center' }}>
-                                <h5 style={{margin:'0'}}>Search By Month : </h5>
-                                
+                            <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
+                                <h5 style={{ margin: '0' }}>Search By Month : </h5>
+
                                 <DatePicker
-    selected={new Date(specificDay)}
-    onChange={(newSpecificDay) => { setSpecificDay(newSpecificDay.toISOString()); }}
-    dateFormat="yyyy-MM"
-    showMonthYearPicker
-    className='calender-input'
-/>
-<h5 style={{ margin: '0' }}>Search By Day : </h5>
-<DatePicker
-    className='calender-input'
-    selected={new Date(specificDate)}
-    onChange={(newDate) => { 
-        console.log('newDate:', newDate);
-        setSpecificDate(newDate); 
-    }}
-    dateFormat="yyyy-MM-dd"
-/>
+                                    selected={new Date(specificDay)}
+                                    onChange={(newSpecificDay) => { setSpecificDay(newSpecificDay.toISOString()); }}
+                                    dateFormat="yyyy-MM"
+                                    showMonthYearPicker
+                                    className='calender-input'
+                                />
+                                <h5 style={{ margin: '0' }}>Search By Day : </h5>
+                                <DatePicker
+                                    className='calender-input'
+                                    selected={new Date(specificDate)}
+                                    onChange={(newDate) => {
+                                        console.log('newDate:', newDate);
+                                        setSpecificDate(newDate);
+                                    }}
+                                    dateFormat="yyyy-MM-dd"
+                                />
 
 
-                                <button className='back-btn' onClick={()=>{navigate('/admin/home')}}><img src={arr} alt="" /><p>Back</p></button>
+                                <button className='back-btn' onClick={() => { navigate('/admin/home') }}><img src={arr} alt="" /><p>Back</p></button>
                             </div>
                         </div>
                         <div className='container total-table'>
@@ -139,17 +139,17 @@ function CompanyProfit() {
                                     </div>
                                 ))}
                             </div>
-                            {companyProfits && companyProfits.overallTotalProfit &&<div className='total-profit row'>
-<div className="col-10"> <h4>Total Profit : </h4> </div>
-<div className="col-2"> <h4>{companyProfits &&companyProfits.overallTotalProfit.toFixed(2)}</h4> </div>
+                            {companyProfits && companyProfits.overallTotalProfit && <div className='total-profit row'>
+                                <div className="col-10"> <h4>Total Profit : </h4> </div>
+                                <div className="col-2"> <h4>{companyProfits && companyProfits.overallTotalProfit.toFixed(2)}</h4> </div>
                             </div>}
                             <div>
                                 {companyProfits && companyProfits.totalPages &&
-                            <div className="pagination-buttons-p2p">
-                            <button onClick={() => { setPage(Math.max(page - 1, 1)); }} className='page-leftarr'>  <img src={right} alt="" /> </button>
-                            {companyProfits && <div>{page}/{companyProfits.totalPages}</div>}
-                            <button onClick={() => { setPage(Math.min(page + 1, companyProfits.totalPages)); }} className='page-rightarr'>  <img src={left} alt="" /> </button>
-                        </div>}
+                                    <div className="pagination-buttons-p2p">
+                                        <button onClick={() => { setPage(Math.max(page - 1, 1)); }} className='page-leftarr'>  <img src={right} alt="" /> </button>
+                                        {companyProfits && <div>{page}/{companyProfits.totalPages}</div>}
+                                        <button onClick={() => { setPage(Math.min(page + 1, companyProfits.totalPages)); }} className='page-rightarr'>  <img src={left} alt="" /> </button>
+                                    </div>}
                             </div>
                         </div>
                     </div>

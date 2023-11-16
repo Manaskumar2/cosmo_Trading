@@ -1,5 +1,5 @@
 .PromoNav{background: #001C3E; background-image: url('../../images/belips.png');background-position: bottom; background-repeat: no-repeat; padding:15px 1.5rem;border-bottom: 1px solid #133B77;}
-.PromoNav .row .col-8{color: #FFF;text-align: center;font-family: 'Montserrat';font-size: 1.1rem;font-weight: 500;letter-spacing: 0.00688rem;text-transform: capitalize;}
+.PromoNav .row .col-8{color: #FFF;text-align: center;font-family: 'Montserrat';font-size: 1.1rem;font-weight: 500;letter-spacing: 0.00688rem;}
 .upi{background: #001C3E;overflow: hidden;min-height: 100vh;}
 .body{padding: 1rem;}
 .step-container{display: flex; align-items: center;gap: 1.2rem;margin: 1.2rem 0;}
@@ -9,7 +9,7 @@ font-size: 1rem;font-weight: 500;}
 .upiId-container{border: 2px solid #3778C6; border-radius: 1.2rem;padding: 1rem;}
 .upiId-container .row{border-bottom: 1px solid #14548E;padding: .5rem ;margin:0 .5rem ;}
 .upiId-container .row .col-9 h6{color: #29CEE4;font-family: Montserrat;font-size: 1rem;font-style: normal;font-weight: 300;line-height: normal;}
-.upiId-container .row .col-9 p{color: #FFF;font-family: Montserrat;font-size: 1.1rem;font-style: normal;font-weight: 500;letter-spacing: 0.00563rem;text-transform: capitalize;}
+.upiId-container .row .col-9 p{color: #FFF;font-family: Montserrat;font-size: 1.1rem;font-style: normal;font-weight: 500;letter-spacing: 0.00563rem;}
 .upiId-container .row .col-3 button{border: 1px solid #3778C6;background: #033066; border: 0; outline: none;    padding: 0.625rem;color: #FFF;text-align: center;font-family: Montserrat;font-size: 1rem;
 }
 .upiId-container .row .col-3 {display: flex;

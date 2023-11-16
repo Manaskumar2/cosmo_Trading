@@ -24,11 +24,11 @@ function PremiumUser() {
     const navigate = useNavigate();
     const [amount, setAmount] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
-  
+
 
     const handlePageChange = (newPage) => {
         setCurrentPage(newPage);
-      };
+    };
     const authData = useRecoilValue(AdminAuthState);
     const [premiumState, setPremiumState] = useState(null);
 
@@ -74,7 +74,7 @@ function PremiumUser() {
         handlePrimeRequest();
     }, [currentPage]);
 
-    
+
     const handleLogin = async (phoneNumber, password) => {
         try {
             const response = await axios.post(`${import.meta.env.VITE_API_URL}/signIn`, {
@@ -116,18 +116,23 @@ function PremiumUser() {
                                 <th>UID</th>
                                 <th>Name</th>
                                 <th>Phone No</th>
+                                <th>Total Betting Amount</th>
+                                <th>Today Betting Amount</th>
                                 <th>Commission Amount</th>
                                 <th>Wallet Amount</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {premiumState &&  premiumState.response &&  premiumState.response.getUsers && premiumState.response.getUsers.map((user, index) => (
+                            {premiumState && premiumState.response && premiumState.response.getUsers && premiumState.response.getUsers.map((user, index) => (
                                 <tr key={index} className='table-row'>
-                                    <td>{index + 1}</td>
+                                    <td>{(currentPage - 1) * 20 + index + 1}</td>
                                     <td>{user.UID}</td>
                                     <td>{user.name}</td>
                                     <td>{user.phoneNumber}</td>
+                                    <td>{user.bettingAmount.toFixed(2)}</td>
+                                    <td>{user.dailyTotalBettingAmount.toFixed(2)}</td>
+
                                     <td>{user.commissionAmount.toFixed(2)}</td>
                                     <td>{user.walletAmount.toFixed(2)}</td>
                                     <td>
@@ -141,17 +146,17 @@ function PremiumUser() {
                     </table>
 
                     {/* Pagination */}
-                    {premiumState && premiumState.response && premiumState.response.totalPages &&  <div className='pagination-prime'>
-            <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>-</button>
-            <span>{currentPage} / {premiumState &&  premiumState.response &&  premiumState.response.getUsers && premiumState.response.totalPages}</span>
-            <button
-    onClick={() => handlePageChange(currentPage + 1)}
-    disabled={currentPage === premiumState.response.totalPages}
->
-    +
-</button>
+                    {premiumState && premiumState.response && premiumState.response.totalPages && <div className='pagination-prime'>
+                        <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>-</button>
+                        <span>{currentPage} / {premiumState && premiumState.response && premiumState.response.getUsers && premiumState.response.totalPages}</span>
+                        <button
+                            onClick={() => handlePageChange(currentPage + 1)}
+                            disabled={currentPage === premiumState.response.totalPages}
+                        >
+                            +
+                        </button>
 
-          </div>}
+                    </div>}
                 </div>
             </div>
         </div>

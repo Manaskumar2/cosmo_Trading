@@ -32,8 +32,8 @@ function PremiumApply() {
     const [amount, setPremiumMoney] = useState(null);
 
     useEffect(() => {
-        if (premium && premium.data && premium.data.data) {
-            const dataLength = premium.data.data.length;
+        if (premium && premium.response && premium.response.totalpremiumUsers) {
+            const dataLength = premium.response.totalpremiumUsers;
 
             if (dataLength < 50) {
                 setPremiumMoney(10000);
@@ -112,11 +112,9 @@ function PremiumApply() {
             </div>
             <div className='Premium-Body'>
                 <p>Transaction Amount</p>
-                <input type="text" value={amount} disabled />
+                <input type="text" value={amount} />
                 
                 <button onClick={() => {  handleUserdata(); }} className='premiumApply-Submit'>Submit</button>
-
-
             </div>
             <Modal isOpen={isModalOpen} onRequestClose={closeModal}>
                 
