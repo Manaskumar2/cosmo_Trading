@@ -71,12 +71,12 @@ const Company= require("../models/companyModel");
 
 const getCompanyProfit = async (req, res) => {
   try {
-    const { specificDate, specificDay, page = 1, pageSize = 10 } = req.query;
+    const { specificMonth, specificDay, page = 1, pageSize = 10 } = req.query;
 
     let startDate, endDate;
 
-    if (specificDate) {
-      const date = new Date(specificDate);
+    if (specificMonth) {
+      const date = new Date(specificMonth);
       startDate = new Date(date.getFullYear(), date.getMonth(), 1);
       endDate = new Date(date.getFullYear(), date.getMonth() + 1, 0);
     } else {
@@ -91,20 +91,22 @@ const getCompanyProfit = async (req, res) => {
       return res.status(200).json({ status: true, data: [], totalPages: 0, overallTotalProfit: 0 });
     }
 
-    const matchStage = {
+    let matchStage = {
       createdAt: {
         $gte: startDate,
         $lte: endDate,
       },
     };
 
-       if (specificDay) {
-      const day = new Date(specificDay).getDate();
-      matchStage.createdAt = {
-        $gte: new Date(startDate.getFullYear(), startDate.getMonth(), day),
-        $lte: new Date(endDate.getFullYear(), endDate.getMonth(), day, 23, 59, 59, 999),
+    if (specificDay) {
+      matchStage = {
+        createdAt: {
+          $gte: new Date(specificDay),
+          $lt: new Date(specificDay + 'T23:59:59.999Z'),
+        },
       };
     }
+
 
     const totalCount = await Company.countDocuments(matchStage);
 

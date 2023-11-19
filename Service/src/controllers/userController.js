@@ -10,75 +10,6 @@ const { generateUniqueReferralCode, } = require("../util/util");
 const twilio = require('twilio')("ACfe32400dd6c9efafd446cecf70102c0b", "7a4d599d44148524de82afe08e75b4d2");
 
 
-// const signUp = async (req, res) => {
-//   try {
-//     let data = req.body;
-
-//     let { phoneNumber, password, referralCode,userName} = data
-
-//     if (validation.isValidBody(data)) return res.status(400).send({ status: false, message: "provide all required fields" })
-//     if (!referralCode) return res.status(400).send({ status: false, message: "please provide refferal code" })
-//     const checkrefferalCode = await userModel.findOne({ referralCode: referralCode })
-//     if (!checkrefferalCode) return res.status(400).send({ status: false, message: "Invalid referral code" })
-//     if (!userName) return res.status(404).send({ status: false, message: "please enter your Name" })
-//    if (!validation.isValidName(userName)) return res.status(404).send({ status: false, messaage: "Please enter valid Name" })
-    
-
-
-//     if (!validation.isValid(phoneNumber)) return res.status(400).send({ status: false, message: `PhoneNumber  is Required` })
-
-//     let uniquePhone = await userModel.findOne({ phoneNumber: phoneNumber})
-//     if (!validation.isValidPhone(phoneNumber)) return res.status(400).send({ status: false, message: `This PhoneNumber is Invalid` })
-
-//     if (uniquePhone) return res.status(400).send({ status: false, message: `This PhoneNumber  has already registered Please Sign In`, })
-
-//     if (!validation.isValidPwd(password)) return res.status(400).send({ status: false, message: "Password should be 8-15 characters long and must contain one of 0-9,A-Z,a-z and special characters", })
-    
-//     const parentDetails = await userModel.findOne({ referralCode: referralCode })
-//     if (!parentDetails) return res.status(404).send({ status: false, message: "invalid referralcode" })
-
-
-
-  
-//     const latestUser = await userModel
-//       .findOne()
-//       .sort({ createdAt: -1 })
-//     let latestUID = latestUser.UID
-//     let  UID = latestUID+1;
-   
-    
-//     if (!UID) return res.status(404).send({ status: false, message: "UID is not available" })
-//     const createUser = await userModel.create({
-//       phoneNumber: phoneNumber,
-//       password:password,
-//       parentReferralCode: referralCode,
-//       referralCode: await generateUniqueReferralCode()+UID,
-//       UID: UID,
-//       name: userName,
-//       parentUserUid:parentDetails.UID
-//     })
-   
-//     if (referralCode) {
-//       findParentUser = await userModel.findOne({ referralCode: referralCode })
-
-//       if (!findParentUser) {
-//         return res.status(400).send({ status: false, message: `Invalid Referal Code`, })
-//       }
-
-//       const newUserObjectId = createUser._id;
-     
-
-//       findParentUser.downline.push({ user: newUserObjectId });
-//       await findParentUser.save();
-//     }
-  
-
-//     res.status(201).json({ status: true, message: "user create sucessfully", data: createUser })
-//   } catch (error) {
-//     console.log(error)
-//     res.status(500).send({ status: false, message: error.message })
-//   }
-// }
 const signUp = async (req, res) => {
   try {
     const data = req.body;
@@ -466,160 +397,54 @@ const getUserDetailsByUserId = async (req, res) => {
 //   try {
 //     const userId = req.params.userId;
 //     const level = parseInt(req.query.level) || 1;
-//     const limit = parseInt(req.query.limit) || 10;
+//     const UID = parseInt(req.query.UID);
 
-//     const user = await userModel.findById(userId);
-
-//     if (!user) {
-//       res.status(404).json({ error: 'User not found' });
-//       return;
-//     }
-
-//     const getDownline = async (user, currentLevel) => {
-//       if (currentLevel === level) {
-//         return [
-//           {
-//             phoneNumber: user.phoneNumber || null,
-//             UID: user.UID || null,
-//             referralDate: user.createdAt || null,
-//             name: user.name || null,
-//             downline: [],
-//           }
-//         ];
-//       }
-
-//       const downlineDetails = [];
-//       for (const downlineUser of user.downline) {
-//         if (downlineUser.user) {
-//           const subUser = await userModel.findById(downlineUser.user._id);
-//           if (subUser) {
-//             const subUserDownline = await getDownline(subUser, currentLevel + 1);
-//             downlineDetails.push(...subUserDownline);
-//           }
-//         }
-//       }
-
-//       return downlineDetails;
-//     };
-
-//     const downlineDetails = await getDownline(user, 1);
-
-//     res.json({
-//       level: level,
-//       totalUsers: downlineDetails.length,
-//       downlineDetails: downlineDetails.slice(0, limit),
-//     });
-//   } catch (error) {
-//     console.error('Error fetching downline user details:', error);
-//     res.status(500).json({ error: 'An error occurred while fetching downline user details' });
-//   }
-// };
-
-// const getDownlineDetails = async (req, res) => {
-//   try {
-//     const userId = req.params.userId;
-//     const level = parseInt(req.query.level) || 1;
-
-//     const user = await userModel.findById(userId);
-
-//     if (!user) {
-//       res.status(404).json({ error: 'User not found' });
-//       return;
-//     }
-
-//     const getDownline = async (user, currentLevel) => {
-//       if (currentLevel === level) {
-//         return [
-//           {
-//             phoneNumber: user.phoneNumber || null,
-//             UID: user.UID || null,
-//             referralDate: user.createdAt || null,
-//             name: user.name || null,
-//             downline: [],
-//           }
-//         ];
-//       }
-
-//       const downlineDetails = [];
-//       for (const downlineUser of user.downline) {
-//         if (downlineUser.user) {
-//           const subUser = await userModel.findById(downlineUser.user._id);
-//           if (subUser) {
-//             const subUserDownline = await getDownline(subUser, currentLevel + 1);
-//             downlineDetails.push(...subUserDownline);
-//           }
-//         }
-//       }
-
-//       return downlineDetails;
-//     };
-
-//     const downlineDetails = await getDownline(user, 1);
-
-//     res.json({
-//       level: level,
-//       totalUsers: downlineDetails.length,
-//       downlineDetails: downlineDetails,
-//     });
-//   } catch (error) {
-//     console.error('Error fetching downline user details:', error);
-//     res.status(500).json({ error: 'An error occurred while fetching downline user details' });
-//   }
-// };
-// const getDownlineDetails = async (req, res) => {
-//   try {
-//     const userId = req.params.userId;
-//     const level = parseInt(req.query.level) || 1;
-//     const UID = parseInt(req.query.UID)
 //     if (UID) {
-//       const userDetails = await userModel.findOne({ UID: UID }).select({downline:0});
+//       const userDetails = await userModel.findOne({ UID: UID }).lean().select({ downline: 0 });
+
 //       if (!userDetails) return res.status(404).send({ status: false, message: "User not found" });
-//       return res.status(201).send({status:true,message:'sucessfull get details', data: userDetails});
+
+//       return res.status(201).send({ status: true, message: 'successful get details', data: userDetails });
 //     }
 
-//     const user = await userModel.findById(userId);
+//     const user = await userModel.findById(userId).lean();
 
 //     if (!user) {
 //       res.status(404).json({ error: 'User not found' });
 //       return;
 //     }
 
-//     const cache = new Map();
+//     const stack = [{ user, currentLevel: 1 }];
+//     const downlineDetails = [];
 
-//     const getDownline = async (user, currentLevel) => {
+//     while (stack.length > 0) {
+//       const { user, currentLevel } = stack.pop();
+
 //       if (currentLevel === level) {
-//         return [
-//           {
-//             phoneNumber: user.phoneNumber || null,
-//             UID: user.UID || null,
-//             referralDate: user.createdAt || null,
-//             name: user.name || null,
-//             bettingAmount: user.bettingAmount || null,
-//             isDeleted: user.isDeleted||false,
-//           }
-//         ];
-//       }
+//         downlineDetails.push({
+//           phoneNumber: user.phoneNumber || null,
+//           UID: user.UID || null,
+//           referralDate: user.createdAt || null,
+//           name: user.name || null,
+//           bettingAmount: user.bettingAmount || null,
+//           isDeleted: user.isDeleted || false,
+//         });
+//       } else {
+//         const userIDs = user.downline
+//           .filter(downlineUser => downlineUser.user && downlineUser.user._id)
+//           .map(downlineUser => downlineUser.user._id);
 
-//       if (cache.has(user._id)) {
-//         return cache.get(user._id);
-//       }
+//         const subUsers = await Promise.all(
+//           userIDs.map(subUserId => userModel.findById(subUserId).lean())
+//         );
 
-//       const downlineDetails = [];
-//       for (const downlineUser of user.downline) {
-//         if (downlineUser.user) {
-//           const subUser = await userModel.findById(downlineUser.user._id);
+//         for (const subUser of subUsers) {
 //           if (subUser) {
-//             const subUserDownline = await getDownline(subUser, currentLevel + 1);
-//             downlineDetails.push(...subUserDownline);
+//             stack.push({ user: subUser, currentLevel: currentLevel + 1 });
 //           }
 //         }
 //       }
-
-//       cache.set(user._id, downlineDetails);
-//       return downlineDetails;
-//     };
-
-//     const downlineDetails = await getDownline(user, 1);
+//     }
 
 //     return res.status(200).json({
 //       level: level,
@@ -638,22 +463,28 @@ const getDownlineDetails = async (req, res) => {
     const level = parseInt(req.query.level) || 1;
     const UID = parseInt(req.query.UID);
 
+    const userCache = {}; // Cache to store fetched users
+
     if (UID) {
-      const userDetails = await userModel.findOne({ UID: UID }).select({ downline: 0 });
+      const userDetails = await userModel.findOne({ UID: UID }).lean().select({ downline: 0 });
 
       if (!userDetails) return res.status(404).send({ status: false, message: "User not found" });
 
       return res.status(201).send({ status: true, message: 'successful get details', data: userDetails });
     }
 
-    const user = await userModel.findById(userId);
+    // Fetch user with specified ID
+    const user = await userModel.findById(userId).lean();
 
     if (!user) {
       res.status(404).json({ error: 'User not found' });
       return;
     }
 
+    // Create a stack to store users to be processed
     const stack = [{ user, currentLevel: 1 }];
+
+    // Initialize downline details array
     const downlineDetails = [];
 
     while (stack.length > 0) {
@@ -669,12 +500,30 @@ const getDownlineDetails = async (req, res) => {
           isDeleted: user.isDeleted || false,
         });
       } else {
-        for (const downlineUser of user.downline) {
-          if (downlineUser.user) {
-            const subUser = await userModel.findById(downlineUser.user._id);
-            if (subUser) {
-              stack.push({ user: subUser, currentLevel: currentLevel + 1 });
+        // Fetch downline user IDs in batches to optimize database queries
+        const downlineUserIDs = user.downline
+          .filter(downlineUser => downlineUser.user && downlineUser.user._id)
+          .map(downlineUser => downlineUser.user._id);
+
+        // Fetch downline users in batches
+        const downlineUsers = await Promise.all(
+          downlineUserIDs.slice(0, 100).map(async subUserId => {
+            // Check if user is cached
+            if (userCache[subUserId]) {
+              return userCache[subUserId]; // Use cached user
+            } else {
+              // Fetch user from database and cache it
+              const subUser = await userModel.findById(subUserId).lean();
+              userCache[subUserId] = subUser; // Cache fetched user
+              return subUser;
             }
+          })
+        );
+
+        // Add downline users to stack for further processing
+        for (const subUser of downlineUsers) {
+          if (subUser) {
+            stack.push({ user: subUser, currentLevel: currentLevel + 1 });
           }
         }
       }
@@ -690,6 +539,7 @@ const getDownlineDetails = async (req, res) => {
     res.status(500).json({ error: 'An error occurred while fetching downline user details' });
   }
 };
+
 
 const getTotalTeams = async (req, res) => {
   try {
