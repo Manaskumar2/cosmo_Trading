@@ -18,7 +18,7 @@ async function calculateResult(gameId) {
   try {
     const game = await Game.findOne({ _id: gameId }).populate({
       path: "bets.user",
-      populate: { path: "downline" },
+      // populate: { path: "downline" },
     });
 
     if (!game) {

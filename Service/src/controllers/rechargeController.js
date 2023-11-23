@@ -52,7 +52,7 @@ const getPaymentRequest = async (req, res) => {
     }
     else {
      
-      const paymentsRequest = await rechargeModel.find({ status:status }) .sort({ createdAt: -1 })
+      const paymentsRequest = await rechargeModel.find({ status:status }) .sort({updatedAt: -1 })
       .skip(skip)
         .limit(limit);
       
@@ -100,7 +100,7 @@ const updatePaymentRequest = async (req, res) => {
         user.walletAmount += manualPayment.amount;
         user.commissionAmount+=commission
         user.walletAmount += commission
-        user.lastRechargeAmount = manualPayment.amount;
+        user.lastRechargeAmount += manualPayment.amount;
        await commissionModel.create({
         userId: user._id,
         amount: commission,
@@ -114,7 +114,7 @@ const updatePaymentRequest = async (req, res) => {
 
       user.walletAmount += manualPayment.amount;
       user.rechargeAmount += manualPayment.amount;
-      user.lastRechargeAmount =manualPayment.amount;
+      user.lastRechargeAmount +=manualPayment.amount;
       await user.save();
     } else if (status === 'cancel') {
       manualPayment.status = 'cancelled';

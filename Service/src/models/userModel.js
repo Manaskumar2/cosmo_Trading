@@ -1,4 +1,5 @@
-const mongoose = require("mongoose")
+const mongoose = require('mongoose');
+
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -23,7 +24,6 @@ const userSchema = new mongoose.Schema({
   parentUserUid: {
     type: Number,
     default: 11111,
-    
   },
   profilePhoto: {
     type: String,
@@ -32,19 +32,6 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
-    downline: [
-    {
-      user: {
-        type: mongoose.Schema.Types.ObjectId,
-        unique: true,
-        ref: 'users',
-      },
-      referralDate: {
-        type: Date,
-        default: Date.now,
-      },
-    },
-  ],
   UID: {
     type: Number,
     required: true,
@@ -76,24 +63,23 @@ const userSchema = new mongoose.Schema({
   },
   bettingAmount: {
     type: Number,
-    default:0
+    default: 0,
   },
-    dailyTotalBettingAmount: {
+  dailyTotalBettingAmount: {
     type: Number,
     default: 0,
   },
   rechargeAmount: {
     type: Number,
-    default: 0
+    default: 0,
   },
   lastRechargeAmount: {
     type: Number,
-    default:0
+    default: 0,
   },
   token: {
     type: String,
-  }
+  },
 
 }, { timestamps: true });
-
-module.exports = mongoose.model("users", userSchema);
+module.exports = mongoose.model("users",userSchema)

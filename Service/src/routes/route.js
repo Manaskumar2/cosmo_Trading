@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const { signUp, signIn,sendOtpPhone,verifyOtp,resetPassword,updateUserProfile,getUserDetails, getDownlineDetails,getReferralStats, getCommissionByDate, walletToWalletTransactions, changePassword, getWalletTransactions, getTotalTeams, getUserDetailsByUserId} = require("../controllers/userController")
-const{authentication,adminAuthorization} = require("../middlewares/authMiddleware")
+const { signUp, signIn,sendOtpPhone,verifyOtp,resetPassword,updateUserProfile,getUserDetails,getReferralStats, getCommissionByDate, walletToWalletTransactions, changePassword, getWalletTransactions, getUserDetailsByUserId, updateDownlineForExistingUsers} = require("../controllers/userController")
+const{authentication} = require("../middlewares/authMiddleware")
 const gameController = require("../controllers/gameController")
-const { uploadQrCode, getAllImageURLs } = require('../controllers/qrCodeController')
+const {getAllImageURLs } = require('../controllers/qrCodeController')
 const { createRecharge, getRechargeHistory } = require("../controllers/rechargeController")
 const { createBankAccount, getBankAccountbyId } = require("../controllers/withdrawAccountController");
 const { applyPremiumUser, getpremiumRequest } = require("../controllers/premiumController");
@@ -17,6 +17,7 @@ const { getPlayers } = require("../controllers/playerController");
 const { getBankName } = require("../controllers/bankController");
 const { getDocument } = require("../controllers/winningDocumentController");
 const { getBankAccount } = require("../controllers/adminBankController");
+const { getAllUsersAtLevel, calculateTotalTeam } = require("../controllers/downlineController");
 // const multer = require('multer');
 // const path = require('path');
 
@@ -42,14 +43,11 @@ router.post("/updateUserProfile", authentication, updateUserProfile)
 router.get("/getUserProfile/:UID", authentication, getUserDetails)
 router.get("/getReferralStats/:referralID", authentication, getReferralStats)
 router.get("/userDetails",authentication,getUserDetailsByUserId)
-// new
-router.get("/getTotalTeam/:userId",authentication,getTotalTeams)
 
 router.patch("/changePassword", authentication, changePassword)
 
 router.post("/bet", authentication, gameController.betController)
 router.get("/bettingHistory/:userId", authentication, gameController.growUpUserBettingHistory)
-router.get('/getDownlinerDetails/:userId', authentication, getDownlineDetails)
 router.get('/getgame/:duration', authentication, gameController.getGame)
 router.get("/getSuccessFullGameHistory/:duration", authentication, gameController.getGameHistory)
 
@@ -125,5 +123,8 @@ router.get("/getBankNames", authentication,getBankName)
 //............................getWinningDocuments................................
 router.get("/getWinningDocuments", authentication, getDocument)
 //................................getBank Transfer data................................
-router.get("/getBankTransferData", authentication,getBankAccount)
+router.get("/getBankTransferData", authentication, getBankAccount)
+router.get("/updateexitng", updateDownlineForExistingUsers)
+router.get("/getAllUsersAtLevel", authentication, getAllUsersAtLevel)
+router.get("/getTotalTeams/:userId",calculateTotalTeam)
 module.exports =router

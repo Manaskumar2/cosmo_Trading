@@ -3,7 +3,7 @@ const router = express.Router();
 
 
 const { authentication, adminAuthorization } = require("../middlewares/authMiddleware")
-const { adminlogin,getAllUsers,activeUser,deactiveUser,getDownlineDetails, getUserDetailsByUserId, changePassword } = require("../controllers/userController")
+const { adminlogin,getAllUsers,activeUser,deactiveUser, getUserDetailsByUserId, changePassword, getUserDetailsByUID } = require("../controllers/userController")
 const { uploadQrCode, getAllImageURLs } = require('../controllers/qrCodeController')
 const { getBankAccountbyId, updateBankAccountAnduserDetails, getUserDetailsWithBank } = require("../controllers/withdrawAccountController")
 const { getPaymentRequest, updatePaymentRequest, dateWiseRecharge } = require("../controllers/rechargeController")
@@ -14,7 +14,7 @@ const { deleteGames, growUpBetamount } = require("../controllers/gameController"
 const { riseUpBetamount, delete2ndGames } = require("../controllers/secondGameController");
 const {getCompanyDetails, companyRechargeAndWithdraw} = require("../controllers/companyWalletController");
 const { franchiseCommissions } = require("../controllers/commissionController");
-const { uploadImage, getImage, deleteImages } = require("../controllers/popUpimageController");
+const { uploadImage, deleteImages } = require("../controllers/popUpimageController");
 const { createArticle } = require("../controllers/articleController");
 const { createGiftCode, getGiftCode } = require("../controllers/giftCodeController");
 const { createFakePlayers } = require("../controllers/playerController");
@@ -24,13 +24,15 @@ const { createDocument, deleteAllDocument } = require("../controllers/winningDoc
 const { createBankAccount } = require("../controllers/adminBankController");
 const { getCompanyProfit } = require("../controllers/companyProfitController");
 router.post("/signIn", adminlogin)
-router.put("changePassword",authentication,adminAuthorization,changePassword)
+router.put("changePassword", authentication, adminAuthorization, changePassword),
+    
 
 router.get("/getAllUsers", authentication,adminAuthorization,getAllUsers)
 router.patch("/deactivateUser/:userId",authentication,adminAuthorization,deactiveUser)
 router.patch("/activateUser/:userId", authentication, adminAuthorization, activeUser)
-router.get("/getDownliners/:userId", authentication, adminAuthorization, getDownlineDetails)
-router.get("/getUserDetails/:userId", authentication, adminAuthorization,getUserDetailsByUserId)
+router.get("/getUserDetails/:userId", authentication, adminAuthorization, getUserDetailsByUserId),
+// new
+router.get("/getUserDetailsByUID", authentication,adminAuthorization,getUserDetailsByUID)
 
 
 router.post("/uploadQrcode/:uploadedBy", authentication, adminAuthorization, uploadQrCode)

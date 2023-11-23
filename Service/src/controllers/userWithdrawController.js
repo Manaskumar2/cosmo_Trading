@@ -13,6 +13,11 @@ const withdrawrequest = async (req, res) => {
     if (!userId) return res.status(403).send({ status: false, message: "Please login" });
     if (!wAmount) return res.status(400).send({ status: false, message: "Please enter amount" });
     if (wAmount < 500) return res.status(400).send({ status: false, message: "Cannot withdraw below 500rs" });
+    
+    if (wAmount % 100 !== 0) {
+      return res.status(400).send({ status: false, message: "Withdraw amount should be a multiple of 100." });
+    }
+    
 
     const user = await userModel.findById({ _id: userId });
     if (user.isPremiumUser) return res.status(400).send({ status: false, message: "You cannot withdraw money! You are a Premium User" });
@@ -57,7 +62,7 @@ const getWithdrawRequest = async (req, res) => {
     const skip = (page - 1) * limit;
     const count  = await withdrawModel.countDocuments({status:status})
      
-        const pendingWithdrawRequests = await withdrawModel.find({ status:status }) .sort({ createdAt: -1 })
+        const pendingWithdrawRequests = await withdrawModel.find({ status:status }) .sort({updatedAt: -1 })
       .skip(skip)
       .limit(limit);
     

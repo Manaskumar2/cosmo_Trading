@@ -20,7 +20,7 @@ let downloadResult = [0.7, 0.5, 0.3, 0.2, 0.15, 0.1, 0.08, 0.06, 0.05, 0.04];
 async function calculateResult(gameId) {
   const game = await Game.findOne({ _id: gameId }).populate({
     path: "bets.user",
-    populate: { path: "downline" },
+    // populate: { path: "downline" },
   });
   if (!game) {
     return; 
@@ -304,8 +304,8 @@ const betController = async (req, res) => {
 
     if (
       !group ||
-      !duration 
-  
+      !duration ||
+      !amount
 
     ) {
       return res
@@ -325,8 +325,6 @@ const betController = async (req, res) => {
     if (!game) {
       return res.status(404).json({ status: false, message: "Game not found" });
     }
-
-
     if (user.walletAmount < amount) {
       return res
         .status(400)
