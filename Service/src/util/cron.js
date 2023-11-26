@@ -6,7 +6,7 @@ const startCron = () => {
   cron.schedule('0 0 * * *', async () => {
     try {
       
-      await userModel.updateMany({}, { dailyTotalBettingAmount: 0,lastRechargeAmount:0 });
+    await userModel.updateMany({}, { $set: { lastRechargeAmount: 0,dailyTotalBettingAmount: 0 } });
       console.log('Daily reset completed.');
     } catch (error) {
       console.error('Error during daily reset:', error);
