@@ -3,6 +3,8 @@
 .total-table-heading {color: #fff;background: #173A93;padding: 0.625rem 1.25rem;font-weight: 600;}
 .total-table-heading >.col-4{text-align: right;}
 .total-table{padding: 2rem 15rem;}
+.pagination-buttons-p-m ,.pagination-buttons-p-m> .increaseBtn  , .pagination-buttons-p-m >.decreaseBtn{color: #fff; font-weight: bold;}
+.pagination-buttons-p-m> .increaseBtn  , .pagination-buttons-p-m >.decreaseBtn{color: #fff; font-weight: bold; font-size: 1.5rem;}
 .total-table-parent> div:nth-child(odd) {
     background-color: #172957;color: #fff;}
 .total-table-parent> div {color: #fff;padding: 0.625rem 1.25rem;}

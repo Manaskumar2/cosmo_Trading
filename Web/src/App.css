@@ -141,9 +141,32 @@ input[type="number"]::-ms-outer-spin-button {
 .back-icon i{font-size: 20px;vertical-align: middle;color: #3592D3;}
 
 .inputBox:hover .back-icon i{color: #26B5E2;}
-
+.table-heading-admin>th{background-color: #DE781E; font-weight: bold; font-size: 15px; }
 .winNav .col-2 img{max-width: 24px; max-height: 24px;}
-
+.pagination-buttons-container{width: 100%; display: flex; justify-content: center; align-items: center;}
+    .pagination-buttons{display: flex; width: 10rem; justify-content: center; align-items: center;}
+    .increaseBtn{display: flex;
+        width: 3.75rem;
+        height: 2.875rem;
+        justify-content: center;
+        align-items: center;
+        gap: 0.625rem;
+        background: #045B73;}
+    .decreaseBtn{display: flex;
+        width: 3.75rem;
+        height: 2.875rem;
+        justify-content: center;
+        align-items: center;
+        gap: 0.625rem;
+        background: #045B73;}
+    .page-count{display: flex;
+        width: 4.75rem;
+        height: 2.875rem;
+        justify-content: center;
+        align-items: center;}
+        .increaseBtn:hover{background: linear-gradient(180deg, #EA3038 0%, #F55860 100%);}
+        .decreaseBtn:hover{background: linear-gradient(180deg, #EA3038 0%, #F55860 100%);}
+.pagination-buttons .decreaseBtn, .pagination-buttons .increaseBtn{border: 0;}
 /*ICONS FONTS*/
 @font-face {
   font-family: 'icomoon';

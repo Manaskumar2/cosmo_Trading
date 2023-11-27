@@ -89,8 +89,6 @@ function AdminUserData() {
         setifscCode('')
         setbankBranchAddress('')
         handleClose()
-
-
         return response;
       }
     } catch (error) {
@@ -106,8 +104,6 @@ function AdminUserData() {
       });
   
       if (response.status === 200) {
-        console.log(response.data.response.getUsers);
-        console.log(response) 
         setAllUser(response); 
       }
     } catch (error) {
@@ -120,7 +116,6 @@ function AdminUserData() {
 
   const handleSearch = async () => {
     try {
-      
       let token = authData.authToken;
       const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/getAllUsers?queryPageFilter=${searchQuery}`,{
         headers: { Authorization: `Bearer ${token}` },
@@ -132,6 +127,27 @@ function AdminUserData() {
       console.error('Error searching users:', error);
     }
   };
+  const handleDownline = async (userId) => {
+    try {
+      let token = authData.authToken;
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/getTotalTeams/${userId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (response.status === 200) {
+        sessionStorage.setItem('downLine', JSON.stringify(response.data));
+        sessionStorage.setItem('user', JSON.stringify(userId));
+        navigate('/admin/downline')
+        return response;
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        toast.error("This user doesn't have downline.", { ...toastProps });
+      }
+      const errorMessage = error.response ? error.response.data.message : error.message;
+      console.error(errorMessage);
+    }
+  }
+  
 
 
 
@@ -226,35 +242,24 @@ function AdminUserData() {
       console.error(errorMessage);
     }
   };
-
   useEffect(() => { handleUser() }, [queryPageIndex, queryPageFilter, queryPageSortBy,bettingAmountSort])
-
-
-
   const totalPages = allUser && allUser.data.response.totalPages;
-
-
   const handleDecrement = () => {
     if (queryPageIndex > 1) {
       setQueryPageIndex(queryPageIndex - 1);
     }
   };
-
-
   const handleIncrement = () => {
     if (queryPageIndex < totalPages) {
       setQueryPageIndex(queryPageIndex + 1);
     }
   };
-
   const handleLogin = async (phoneNumber, password) => {
-
     try {
       const response = await axios.post(`${import.meta.env.VITE_API_URL}/signIn`, {
         phoneNumber,
         password,
       });
-
       if (response.status === 200) {
         toast.success('Welcome to our Gaming Zone', { ...toastProps });
         localStorage.setItem('authUserToken', JSON.stringify(response.data.data));
@@ -308,12 +313,10 @@ function AdminUserData() {
           <div className='total-wallet-amount'>
             <h4>Total Wallet Amount Of All Users</h4>
             <div>{allUser && allUser.data.response.totalWalletAmount.toFixed(2)}</div>
-
           </div>
-
           <table>
             <thead>
-              <tr className='table-row'>
+              <tr className='table-row table-heading-admin'>
                 <th>Sl No</th>
                 <th>UID</th>
                 <th>Name</th>
@@ -346,12 +349,12 @@ function AdminUserData() {
                       <td>{user.password}</td>
                       <td>{formatDate(user.createdAt)}</td>
 
-                      <td>{user.downline.length}</td>
+                      <td> <button class="btn btn-info" onClick={()=>{handleDownline(user._id)}}>Show</button> </td>
                       <td>{user.parentUserUid}</td>
                       <td>{user.commissionAmount.toFixed(2)}</td>
-                      <td>{(user.walletAmount).toFixed(2)}</td>
+                      <td  style={{fontSize:'.9rem', fontWeight:'bold'}}>{(user.walletAmount).toFixed(2)}</td>
                       <td>{user.bettingAmount ? (user.bettingAmount).toFixed(2):"0"}</td>
-                      <td>{(user.dailyTotalBettingAmount).toFixed(2)}</td>
+                      <td>{user.dailyTotalBettingAmount ?(user.dailyTotalBettingAmount).toFixed(2) : "0"}</td>
                       <td>
                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter" variant="primary" onClick={() => { getAllUserData(user._id) }}>
                           Details

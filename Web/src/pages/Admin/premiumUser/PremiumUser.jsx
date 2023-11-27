@@ -9,7 +9,7 @@ import { AdminAuthState } from '../../../Atoms/AdminAuthState';
 import '../AdminPrime/AdminPrime.css';
 import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from 'react-router-dom';
-
+import Modal from 'react-bootstrap/Modal';
 export const toastProps = {
     position: "top-center",
     duration: 2000,
@@ -24,7 +24,9 @@ function PremiumUser() {
     const navigate = useNavigate();
     const [amount, setAmount] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
-
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
 
     const handlePageChange = (newPage) => {
         setCurrentPage(newPage);
@@ -61,6 +63,7 @@ function PremiumUser() {
             if (response.status === 200) {
                 handlePrimeRequest()
                 toast.success('Commission Successfully Distributed!', { ...toastProps })
+                handleClose()
                 setAmount('')
                 return response;
             }
@@ -81,11 +84,9 @@ function PremiumUser() {
                 phoneNumber,
                 password,
             });
-
             if (response.status === 200) {
                 toast.success('Welcome to our Gaming Zone', { ...toastProps });
                 sessionStorage.setItem('authUserToken', JSON.stringify(response.data.data));
-
                 navigate('/');
                 window.location.reload();
                 return response;
@@ -106,12 +107,12 @@ function PremiumUser() {
                     <div className='Amount-distribution-box'>
                         <h5>Enter Premium Member Distribution Amount</h5>
                         <div><input type="number" value={amount} onChange={(e) => { setAmount(e.target.value) }} placeholder='Enter Amount' /></div>
-                        <button onClick={handleDistribution}>SEND COMMISSION</button>
+                        <button onClick={handleShow}>SEND COMMISSION</button>
                     </div>
                     <Toaster />
                     <table>
                         <thead>
-                            <tr className='table-row'>
+                            <tr className='table-row table-heading-admin'>
                                 <th>Serial No.</th>
                                 <th>UID</th>
                                 <th>Name</th>
@@ -130,8 +131,8 @@ function PremiumUser() {
                                     <td>{user.UID}</td>
                                     <td>{user.name}</td>
                                     <td>{user.phoneNumber}</td>
-                                    {user.bettingAmount?<td>{user.bettingAmount.toFixed(2)}</td>:<td>0</td>}
-                                    {user.dailyTotalBettingAmount ?<td>{user.dailyTotalBettingAmount.toFixed(2)}</td>:<td>0</td>}
+                                    {user.bettingAmount ? <td>{user.bettingAmount.toFixed(2)}</td> : <td>0</td>}
+                                    {user.dailyTotalBettingAmount ? <td>{user.dailyTotalBettingAmount.toFixed(2)}</td> : <td>0</td>}
                                     <td>{user.commissionAmount.toFixed(2)}</td>
                                     <td>{user.walletAmount.toFixed(2)}</td>
                                     <td>
@@ -156,6 +157,27 @@ function PremiumUser() {
                         </button>
 
                     </div>}
+                    <Modal
+                        show={show}
+                        onHide={handleClose}
+                        centered>
+                        <Modal.Header closeButton>
+                            <Modal.Title>Premium Commission Details</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body className='userModalBody'>
+                            {premiumState && premiumState.response && premiumState.response.getUsers &&
+                                <div>
+                                    <p>Total Prime User : {premiumState && premiumState.response && premiumState.response.getUsers && premiumState.response.totalpremiumUsers}</p>
+                                    <p>Total Amount : {amount}</p>
+                                    <p>Distribution Amount : {(amount/premiumState.response.totalpremiumUsers).toFixed(2)}</p>
+                                </div>}
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <button type="button" class="btn btn-primary" onClick={handleDistribution} >
+                                Confirm Submit
+                            </button>
+                        </Modal.Footer>
+                    </Modal>
                 </div>
             </div>
         </div>

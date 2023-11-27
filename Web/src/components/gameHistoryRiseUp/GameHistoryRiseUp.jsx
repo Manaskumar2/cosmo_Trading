@@ -130,7 +130,7 @@ const endIndex = startIndex + itemsPerPage;
                         <p>Game Record</p>
                     </button></div>
                     <div className='col-6'>
-                        <button className={activeTab === 2 ? 'activeTab record-btn' : 'record-btn '} onClick={() => { handleTabClick(2) }}>
+                        <button className={activeTab === 2 ? 'activeTab record-btn' : 'record-btn '} onClick={() => { handleTabClick(2), setPage(1) }}>
                             <p>My Game Record</p>
                         </button>
                     </div>
@@ -314,10 +314,10 @@ const endIndex = startIndex + itemsPerPage;
                                 </thead>
                                 
                                 <tbody>
-                                {userGames.history.slice(startIndex, endIndex).map((item, index) => (
+                                {userGames.history && userGames.history && userGames.history.slice(startIndex, endIndex).map((item, index) => (
                                             <React.Fragment key={index}>
                                                 <tr onClick={() => toggleRow(index)}>
-                                                    <td><div style={{ display: 'flex',gap:'1.2rem' }}>
+                                                    <td><div style={{ display: 'flex',}} className='gp'>
                                                             <div className="icon_rate">
                                                             {item.group === 'A' ? (
                                                                     <img src={Alpha} alt="Alpha" style={{ height: "2rem", width: "2rem" }} />
@@ -367,8 +367,8 @@ const endIndex = startIndex + itemsPerPage;
                                                                             : item.group === item.runnerUpGroup
                                                                                 ? '#279775'
                                                                                 : '#B2983C'
-                                                                    : '#B2983C'}`,fontWeight:'bold',fontSize:'1.1rem',textAlign:'right'
-                                                                }}> {item.isCompleted ? item.winningAmount ? '+' : '-' : ''} {item.isCompleted ? item.winningAmount ? item.winningAmount.toFixed(2) :item.amount : 'Pending'}</div>
+                                                                    : '#B2983C'}`,textAlign:'right'
+                                                                }} className='b-fs'> {item.isCompleted ? item.winningAmount ? '+' : '-' : ''} {item.isCompleted ? item.winningAmount ? item.winningAmount.toFixed(2) :item.amount : 'Pending'}</div>
                                                     </td>
                                                 </tr>
                                                 {expandedRowIndex === index && (

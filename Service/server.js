@@ -7,7 +7,7 @@ const cors = require('cors')
 const path = require('path');
 const server = require("http").Server(app)
 const mongoose = require('mongoose');
-
+const { startCron}=require("./src/util/cron");
 const bodyParser = require('body-parser');
 const multer = require('multer');
 const { initSocket } = require("./src/socket/sockets");
@@ -51,7 +51,7 @@ initSocket(server);
 
 app.use("/api", route);
 app.use("/api/admin", admin);
-
+startCron()
 
 
 // if (

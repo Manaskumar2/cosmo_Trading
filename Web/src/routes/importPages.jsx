@@ -91,6 +91,8 @@ const TotalRecharge= lazy(()=>
 import('../../src/pages/Admin/companyProfit/TotalRecharge'))
 const TotalWithdraw= lazy(()=>
 import('../../src/pages/Admin/companyProfit/TotalWithdraw'))
+const Downline= lazy(()=>
+import('../../src/pages/Admin/companyProfit/UserDownLine'))
 
 
-export {Login,Register,Forgot,OTP,Reset,Success,Home,Growup,ProfileComponent,Promotion,Recharge,UPI,Withdraw,BankCard,Wallet,Gift,BeginnerTutorial,About,Customer,Message,Transection,Launch,AdminHome,AdminUser,AdminRecharge,AdminWithdraw,AdminLogin,Terms,SRegister,AdminPrime,Premium,PremiumApply,Security,RiseUp,WidthdrawHistory,RechargeHistory,WalletTransfer,PremiumUser,UploadPopUpAndNews,ResetPasswordAdmin,CreateGiftCard,TotalProfit,GrowAndRiseProfit,TotalRecharge,TotalWithdraw}
+export {Login,Register,Forgot,OTP,Reset,Success,Home,Growup,ProfileComponent,Promotion,Recharge,UPI,Withdraw,BankCard,Wallet,Gift,BeginnerTutorial,About,Customer,Message,Transection,Launch,AdminHome,AdminUser,AdminRecharge,AdminWithdraw,AdminLogin,Terms,SRegister,AdminPrime,Premium,PremiumApply,Security,RiseUp,WidthdrawHistory,RechargeHistory,WalletTransfer,PremiumUser,UploadPopUpAndNews,ResetPasswordAdmin,CreateGiftCard,TotalProfit,GrowAndRiseProfit,TotalRecharge,TotalWithdraw,Downline}

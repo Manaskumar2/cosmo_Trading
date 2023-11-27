@@ -15,11 +15,12 @@ import gift from './myCommission.svg';
 import paper from './papers 1.svg';
 import line from './Line 28.svg';
 import { useNavigate } from 'react-router-dom';
-import { TotalTeam } from '../../Atoms/TotalTeam';
 
 function Promotion() {
     
+    const [downline, setDownline]=useState(null)
     const [total, setTotal]=useState(0)
+    const [totalTeam, setTotalTeam]=useState(null)
     const [commission,setCommission]=useState(0)
     const navigate=useNavigate()
     const handleBackButtonClick = () => {
@@ -64,28 +65,21 @@ function Promotion() {
 
         }
     }
-    // const handleTeam = async () => {
-    //     try {
-    //         let token = auth.authToken
-    //         let userId = auth._id
-    //         const response = await axios.get(`${import.meta.env.VITE_API_URL}/getTotalTeam/${userId}`, {
-    //             headers: { Authorization: `Bearer ${token}` }
-    //         }
-    //         );
-    //         if (response.status === 200) {
-    //             // toast.success("got user money data", { ...toastProps });
-    //             setTotal(response.data.totalUsersIn10Levels)
-    //             return response;
-    //         }
-    //     } catch (error) {
-    //         if (error.response.status === 403) {
-    //             navigate('/signIn')
-    //             return response;
-    //         }
-    //         const errorMessage = error.response ? error.response.data.message : error.message;
-
-    //     }
-    // }
+    const handleLevelData = async () => {
+        try {
+            let token = auth.authToken;
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/getAllUsersAtLevel?levelNumber=${1}`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            if (response.status === 200) {
+                setDownline(response.data);
+            
+            }
+            return response
+        } catch (error) {
+            const errorMessage = error.response ? error.response.data.message : error.message;
+        }
+    };
     const handleUserdata = async () => {
         try {
             let token = auth.authToken
@@ -109,11 +103,9 @@ function Promotion() {
         }
     }
     const handleReferrelData = async () => {
-
         try {
             let referralID = userData.data.data.userDetails.referralCode
             let token = auth.authToken
-
             const response = await axios.get(`${import.meta.env.VITE_API_URL}/getReferralStats/${referralID}`, {
                 headers: { Authorization: `Bearer ${token}` }
             }
@@ -125,18 +117,32 @@ function Promotion() {
             }
         } catch (error) {
             const errorMessage = error.response ? error.response.data.message : error.message;
-
+        }
+    }
+    const handleDownline = async () => {
+        try {
+            let token = auth.authToken
+            let userId = auth._id
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/getTotalTeams/${userId}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            }
+            );
+            if (response.status === 200) {
+                // toast.success("got user money data", { ...toastProps });
+                console.log(response.data)
+                setTotalTeam(response.data)
+                return response;
+            }
+        } catch (error) {
+            const errorMessage = error.response ? error.response.data.message : error.message;
         }
     }
     useEffect(() => {
-
-        // setTimeout(() => {
+        handleLevelData()
         handleCommission()
         handleReferrelData();
         handleUserdata();
-        setTotal(localStorage.getItem('total'));
-        // handleTeam()
-        // }, 100);
+         handleDownline()
     }, []);
 
 
@@ -149,15 +155,15 @@ function Promotion() {
         document.execCommand('copy');
         document.body.removeChild(textField);
     };
-    const copyLinkToClipboard = () => {
-        const textField = document.createElement('textarea');
-        textField.innerText = `${import.meta.env.VITE_LIVE_URL}/#/signUp?referral=${userData.data.data.userDetails.referralCode}`
-        document.body.appendChild(textField);
-        textField.select();
-        alert("Invitation Link Copied!")
-        document.execCommand('copy');
-        document.body.removeChild(textField);
-    };
+const copyLinkToClipboard = () => {
+    const textField = document.createElement('textarea');
+    textField.innerText = `${import.meta.env.VITE_LIVE_URL}/#/signUp?referral=${userData.data.data.userDetails.referralCode}`
+    document.body.appendChild(textField);
+    textField.select();
+    alert("Invitation Link Copied!")
+    document.execCommand('copy');
+    document.body.removeChild(textField);
+};
 
     return (
         <div className='promotionContainer'>
@@ -211,16 +217,16 @@ function Promotion() {
                     </div>
                     <div className='container commission'>
                         <div className="container">
-                            {userData && <div className="row commission-bot-row">
+                            {downline && downline.totalUsers && <div className="row commission-bot-row">
                                 <div className="col-10">Number Of Direct Subordinates</div>
                                 <div className="col-2">
-                                    {userData.data.data.userDetails.downline.length}
+                                    {downline.totalUsers} 
                                 </div>
                             </div>}
-                            {total && <div className="row commission-bot-row">
+                            {totalTeam &&  totalTeam.totalTeam && <div className="row commission-bot-row">
                                 <div className="col-10">Total Invite Team </div>
                                 <div className="col-2">
-                                    {total}
+                                    {totalTeam.totalTeam}
                                 </div>
                             </div>}
                             <div className="row commission-bot-row">
@@ -250,7 +256,7 @@ function Promotion() {
                             <div className="row invitation-row"  >
                                 {userData && <div className="col-10">Copy Invitation Link</div>}
 
-                                <button onClick={copyLinkToClipboard} className="col-2"><img src={paper} alt="" /></button>
+                                <button onClick={copyLinkToClipboard} className="col-2"><img src={paper} alt="" /></button> 
                             </div>
                         </div>
                     </div>

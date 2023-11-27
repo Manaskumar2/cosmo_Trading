@@ -127,7 +127,7 @@ function GameHistory({ duration }) {
                         <p>Game Record</p>
                     </button></div>
                     <div className='col-6'>
-                        <button className={activeTab === 2 ? 'activeTab record-btn' : 'record-btn '} onClick={() => { handleTabClick(2) }}>
+                        <button className={activeTab === 2 ? 'activeTab record-btn' : 'record-btn '} onClick={() => { handleTabClick(2),setPage(1) }}>
                             <p>My Game Record</p>
                         </button>
                     </div>
@@ -215,7 +215,7 @@ function GameHistory({ duration }) {
                                     <tr>
                                         <th>Game Period</th>
                                         <th width="140" style={{ textAlign: 'center' }}>Result</th>
-                                        <th style={{ textAlign: 'right' }}>Price</th>
+                                        <th style={{ textAlign: 'center' }}>Price</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -225,7 +225,7 @@ function GameHistory({ duration }) {
                                             <React.Fragment key={index}>
                                                 <tr onClick={() => toggleRow(index)}>
                                                     <td >
-                                                        <div style={{ display: 'flex',gap:'1.2rem' }}>
+                                                        <div style={{ display: 'flex', }} className='gp'>
                                                             <div className="icon_rate">
                                                                 <img
                                                                     src={item.group === 'small' ? Alpha : Beta}
@@ -252,10 +252,10 @@ function GameHistory({ duration }) {
 
                                                     </td>
                                                     <td>
-<div style={{color: `${item.isCompleted ? item.winnerGroup === item.group.toUpperCase()
+<div className='b-fs' style={{color: `${item.isCompleted ? item.winnerGroup === item.group.toUpperCase()
                                                                         ? '#1BD09A'
                                                                         : '#FF565E'
-                                                                        : '#F0C52C'}`,fontWeight:'bold',fontSize:'1.1rem',textAlign:'right'
+                                                                        : '#F0C52C'}`,textAlign:'right'
                                                                 }}> {item.isCompleted ? item.winningAmount ? '+' : '-' : ''} {item.isCompleted ? item.winningAmount ? item.winningAmount.toFixed(2) :item.amount : 'Pending'}</div>
                                                     </td>
                                                 </tr>

@@ -8,7 +8,7 @@ import pp2 from './PhonePay 2.jpg';
 import axios from 'axios';
 import toast, { Toaster } from 'react-hot-toast';
 import { AuthState } from '../../Atoms/AuthState';
-import { useRecoilValue } from 'recoil';
+import {useRecoilValue , useRecoilState} from 'recoil';
 import { RechargeAmount } from '../../Atoms/RechargeAmount';
 import {useNavigate} from 'react-router-dom'
 import { RechargeAtom } from '../../Atoms/RechargeAtom';
@@ -26,7 +26,7 @@ function Upi() {
     const navigate=useNavigate()
     const option = useRecoilValue(RechargeAtom);
     const auth = useRecoilValue(AuthState);
-    const money = useRecoilValue(RechargeAmount);
+    const [money, setMoney] = useRecoilState(RechargeAmount);
     const [upiData, setUpiData] = useState(null);
     const [upiReferenceNo, setUpiReferenceNo] = useState('');
     const [currentUpiDataIndex, setCurrentUpiDataIndex] = useState(0);
@@ -49,6 +49,10 @@ function Upi() {
             if (response.status === 201) {
                 toast.success("Recharge request successfully Sent!", { ...toastProps });
                 setUpiReferenceNo("")
+                setMoney(null)
+                setTimeout(() => {
+                    navigate('/recharge');
+                }, 2000);
             }
         } catch (error) {
             const errorMessage = error.response ? error.response.data.message : error.message;
@@ -65,13 +69,11 @@ function Upi() {
                 });
                 if (response.status === 200) {
                     const newUpiData = response.data;
-                   
                     const matchingIndex = newUpiData.reverse().findIndex(item => item.options === option);
                     if (matchingIndex !== -1) {
                         setCurrentUpiDataIndex(matchingIndex);
                         setUpiData(newUpiData);
                     } else {
-                      
                     }
                 }
             } catch (error) {

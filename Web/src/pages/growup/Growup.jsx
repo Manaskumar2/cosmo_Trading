@@ -276,15 +276,16 @@ function Growup() {
     const handleSubmit = async () => {
         setSmShow(false)
         setLgShow(false)
-
+        
         if (countDownGrowup < 5) {
             toast.error("Wait for the next game", { ...toastProps });
             return null;
         }
         try {
+            const amountInt = parseInt(amount, 10);
             let token = auth.authToken
             const response = await axios.post(`${import.meta.env.VITE_API_URL}/bet`, {
-                amount,
+                amount: amountInt,
                 group,
                 duration
             }, {

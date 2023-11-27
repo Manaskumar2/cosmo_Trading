@@ -189,10 +189,11 @@ function RiseUp() {
             return null;
         }
         try {
+            const amountInt = parseInt(amount, 10);
             const response = await axios.post(
                 `${import.meta.env.VITE_API_URL}/betSecondGame`,
                 {
-                    amount,
+                    amount: amountInt,
                     group,
                     duration
                 },

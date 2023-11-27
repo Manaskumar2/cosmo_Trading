@@ -84,5 +84,20 @@ font-weight: 500;
 line-height: normal;}
 
 .record-btn-container .col-6{padding-left: 7px;padding-right: 7px;}
-
+.gp{gap:1.2rem}
 .pagination-buttons .decreaseBtn, .pagination-buttons .increaseBtn{border: 0;}
+.b-fs{font-weight: bold;font-size: 1.1rem;}
+@media(max-width:385px){
+    .b-fs{font-weight: bold;font-size: .85rem;}
+    .gp{gap: 0}
+    .table th {
+        font-size: 13px;
+      }
+      .flex-div-space-Betn {
+        font-size: .7rem;
+      }
+      .game_history_table {
+        padding-left: 5px;
+        padding-right: 5px;
+      }
+}

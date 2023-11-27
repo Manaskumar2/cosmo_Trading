@@ -20,6 +20,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import { AuthState } from '../../Atoms/AuthState';
 import Modal from 'react-modal';
 import '../accountSecurity/AccountSecurity.css'
+
 export const toastProps = {
   position: 'top-center',
   duration: 2000,
@@ -31,11 +32,15 @@ export const toastProps = {
 };
 
 function Withdraw() {
+
+const [isLoading, setIsLoading] = useState(false);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [userBankCard, setUserBankCard] = useState(null);
   const [userData, setUserData] = useState(null);
+  const navigate = useNavigate();
   const auth = useRecoilValue(AuthState);
-  const [withdrawAmount, setAmount] = useState(0);
+  const [withdrawAmount, setAmount] = useState(null);
   const [multiplier, setMultiplier] = useState(100);
   const [selectedRoute, setSelectedRouteButton] = useState(true);
   const closeModal = () => {
@@ -56,6 +61,11 @@ function Withdraw() {
         return response;
       }
     } catch (error) {
+      if (error.response.status === 403) {
+        localStorage.removeItem('authUserToken');
+        navigate('/signIn')
+        return response;
+    }
       const errorMessage = error.response
         ? error.response.data.message
         : error.message;
@@ -84,62 +94,63 @@ function Withdraw() {
     }
   };
   useEffect(() => {
-    if(withdrawAmount > 0 && withdrawAmount<5){
-      setAmount(5)
-    }
     getBankCard();
     handleUserdata();
   }, [withdrawAmount]);
 
-  const increaseAmount = () => {
-    if(withdrawAmount<1000){
-    setAmount((prevAmount) => prevAmount + 1);}
-  };
+  // const increaseAmount = () => {
+  //   if(withdrawAmount<1000){
+  //   setAmount((prevAmount) => prevAmount + 1);}
+  // };
 
-  const decreaseAmount = () => {
-    if (withdrawAmount > 5) {
-      setAmount((prevAmount) => prevAmount - 1);
-    }
-  };
+  // const decreaseAmount = () => {
+  //   if (withdrawAmount > 5) {
+  //     setAmount((prevAmount) => prevAmount - 1);
+  //   }
+  // };
 
   const handleRouteButtonClick = (buttonIndex) => {
     setSelectedRouteButton(buttonIndex);
   };
 
-  const navigate = useNavigate();
 
   const createPost = async () => {
-    const actualWithdrawAmount = withdrawAmount * multiplier;
-    if(actualWithdrawAmount<100000){
-    try {
-      let token = auth.authToken;
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/createWithdrawalRequest`,
-        {
-          withdrawAmount: actualWithdrawAmount,
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` },
+    if (withdrawAmount < 100000 && withdrawAmount !==null) {
+      try {
+        setIsLoading(true); 
+        let token = auth.authToken;
+        const response = await axios.post(
+          `${import.meta.env.VITE_API_URL}/createWithdrawalRequest`,
+          {
+            withdrawAmount: withdrawAmount,
+          },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        if (response.status === 200) {
+          toast.success('Withdraw Request Sent', { ...toastProps });
+          closeModal();
+          setTimeout(() => {
+            navigate('/wallet');
+          }, 1200);
+  
+          setAmount(null);
+          return response;
         }
-      );
-      if (response.status === 200) {
-        toast.success('Withdraw Request Sent', { ...toastProps });
-        closeModal()
-        setTimeout(() => {
-          navigate('/wallet');
-        }, 1200);
-
-        setAmount(5); 
-        return response;
+      } catch (error) {
+        const errorMessage = error.response
+          ? error.response.data.message
+          : error.message;
+        toast.error(errorMessage || 'Something went wrong', { ...toastProps });
+      } finally {
+        setIsLoading(false);
       }
-    } catch (error) {
-      
-      const errorMessage = error.response
-        ? error.response.data.message
-        : error.message;
-      toast.error(errorMessage || 'Something went wrong', { ...toastProps });
-    }}else{ toast.error('Please Enter Amount Less Than 100000')}
+    } else {
+      toast.error('Please Enter a Valid Amount Between 500 to 10000000');
+    }
   };
+  
   
 
   return (
@@ -217,11 +228,12 @@ function Withdraw() {
               <img src={rupee} alt='' />
             </div>
             <div className='col-10'>
-              <input value={withdrawAmount * multiplier} type='number' readOnly />
+            <input type="number" value={withdrawAmount} onChange={(e)=>{setAmount(parseInt(e.target.value))}} />
+
               <div className='withdraw-inc-dec'>
-              <button onClick={decreaseAmount}>-</button>
-              <input type="number" value={withdrawAmount} onChange={(e)=>{setAmount(e.target.value)}}/>
-              <button onClick={increaseAmount}>+</button>
+              {/* <button onClick={decreaseAmount}>-</button> */}
+              {/* <input type="number" value={withdrawAmount} onChange={(e)=>{setAmount(e.target.value)}}/> */}
+              {/* <button onClick={increaseAmount}>+</button> */}
               </div>
               
               
@@ -296,7 +308,6 @@ function Withdraw() {
       </div>
       <Modal isOpen={isModalOpen} onRequestClose={closeModal}>
                 <div className='modal-body-w2w'>
-
                     <div>
                         {userData && (
                             <div className='userDetaisW2W'>
@@ -304,10 +315,7 @@ function Withdraw() {
                                 <p>Name: {userData.data.data.userDetails.name}</p>
                                 <p>UID: {userData.data.data.userDetails.UID}</p>
                                 <p>Phone no: {userData.data.data.userDetails.phoneNumber}</p>
-                               
-
                             </div>
-
                         )}
                         {userBankCard &&
           <div className='container'>
@@ -318,13 +326,12 @@ function Withdraw() {
                 <p>Bank Name: {userBankCard.bankName} </p>
                 <p>Account Number: {String(userBankCard.bankAccountNo).slice(0, 4) + 'X'.repeat(String(userBankCard.bankAccountNo).length - 6) + String(userBankCard.bankAccountNo).slice(-4)}</p>
                 <p>IFSC Code: {userBankCard.ifscCode} </p>
-                <p>Amount: {withdrawAmount * multiplier}</p>
+                <p>Amount: {withdrawAmount}</p>
               </>
             </div>
           </div>}
                     </div>
-
-                    <button className='confirm' onClick={createPost}>Confirm Submit</button>
+                    <button className='confirm' onClick={createPost}  disabled={isLoading}>  {isLoading ? 'Loading...' : 'Confirm Submit'}</button>
                     <button className='close' onClick={closeModal}>Close</button>
                 </div>
             </Modal>

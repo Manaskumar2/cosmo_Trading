@@ -19,7 +19,7 @@ export const toastProps = {
 };
 
 function Register() {
-
+  const [loading, setLoading] = useState(false);
   const [uid , setUid]=useRecoilState(Uid)
   const [phoneNumber, setPhone] = useState('');
   const [userName, setUserName] = useState('');
@@ -53,6 +53,7 @@ function Register() {
     }
 
     try {
+      setLoading(true);
       const response = await axios.post(`${import.meta.env.VITE_API_URL}/SignUp`, {
         userName,
         phoneNumber,
@@ -82,6 +83,8 @@ function Register() {
       setPhone('');
         setPassword('');
         setUserName('')
+    } finally {
+      setLoading(false);
     }
     
   };
@@ -181,8 +184,8 @@ function Register() {
                 </label>
               </div>
               <div className="btn-container">
-                <button className="top-btn" type="submit" disabled={!agreed}>
-                  Register
+                <button className="top-btn" type="submit" disabled={!agreed || loading}>
+                {loading ? 'Registering...' : 'Register'}
                 </button>
                 <button className="bot-btn" onClick={navigateToLogin}>
                   Already have an account, Log in

@@ -39,6 +39,30 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     top: 0;
     width: auto;
 }
+.pagination-buttons-container{width: 100%; display: flex; justify-content: center; align-items: center;}
+    .pagination-buttons{display: flex; width: 10rem; justify-content: center; align-items: center;}
+    .increaseBtn{display: flex;
+        width: 3.75rem;
+        height: 2.875rem;
+        justify-content: center;
+        align-items: center;
+        gap: 0.625rem;
+        background: #045B73;}
+    .decreaseBtn{display: flex;
+        width: 3.75rem;
+        height: 2.875rem;
+        justify-content: center;
+        align-items: center;
+        gap: 0.625rem;
+        background: #045B73;}
+    .page-count{display: flex;
+        width: 4.75rem;
+        height: 2.875rem;
+        justify-content: center;
+        align-items: center;}
+        .increaseBtn:hover{background: linear-gradient(180deg, #EA3038 0%, #F55860 100%);}
+        .decreaseBtn:hover{background: linear-gradient(180deg, #EA3038 0%, #F55860 100%);}
+.pagination-buttons .decreaseBtn, .pagination-buttons .increaseBtn{border: 0;}
 .details-btn{border-radius: 0.25rem;
     background: #0E6FA6;display: flex;
     padding: 0.125rem 0.3125rem;
@@ -52,3 +76,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     .popup{position: absolute;top: 0;background-color: #4991D3;width: 100%;padding: 1rem;}
     .down-details >p{text-align: left !important;}
     .close-popup{background-color: #EC4E55;color: #fff; border: 0;outline: none;padding: .2rem .8rem;}
+    @media (max-width:410px){
+  .sm-font{font-size: .5rem;}
+  .b-font{font-size: .6rem;}
+  .myTeam .table-responsive .tableBodyRow td .details-btn {
+    padding: 3px 5px;
+    font-size: .6rem;
+  }
+    }

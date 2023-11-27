@@ -55,7 +55,7 @@ function PromotionHistory() {
             <div className="gameHistory">
                 <Toaster />
                 <div>
-                    <div className='period-heading' style={{ marginTop: '2rem' }}>
+                    <div className='period-heading' style={{ margin: '2rem 0 5rem 0' }}>
                         <div className="table-responsive game_history_table ">
                             <table class="table table-striped box-shadow">
                                 <thead>
@@ -65,7 +65,7 @@ function PromotionHistory() {
                                         <th style={{ textAlign: 'right' }}>Receiving Amount</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody >
                                     {data && Object.keys(data).map((key, index) => (
                                         <React.Fragment key={index}>
                                             <tr>

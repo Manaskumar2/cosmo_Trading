@@ -28,23 +28,7 @@ function Home() {
     const[commission,setCommission]=useRecoilState(TotalTeam)
 
 
-    const handleCommission = async () => {
-        try {
-            let token = auth.authToken
-            let userId = auth._id
-            const response = await axios.get(`${import.meta.env.VITE_API_URL}/getTotalTeam/${userId}`, {
-                headers: { Authorization: `Bearer ${token}` }
-            }
-            );
-            if (response.status === 200) {
-                // setCommission(response.data.totalUsersIn10Levels)
-                localStorage.setItem('total',response.data.totalUsersIn10Levels)
-                return response;
-            }
-        } catch (error) {
-            const errorMessage = error.response ? error.response.data.message : error.message;
-        }
-    }
+
 
     const handleClosePopup = () => {
         setShowPopup(false);
@@ -89,7 +73,6 @@ function Home() {
     };
 
     useEffect(() => {
-        handleCommission()
         getGameHistory();
         getPopUpImage()
     }, []);

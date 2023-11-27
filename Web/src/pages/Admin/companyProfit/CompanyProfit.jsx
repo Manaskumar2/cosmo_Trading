@@ -25,22 +25,22 @@ const toastProps = {
 function CompanyProfit() {
     const navigate = useNavigate()
     const [page, setPage] = useState(1)
-    const [specificDate, setSpecificDate] = useState(new Date().toISOString().split('T')[0]);
+    const [specificMonth, setSpecificMonth] = useState(new Date().toISOString().split('T')[0]);
     const [specificDay, setSpecificDay] = useState(new Date().toISOString().split('T')[0]);
 
 
     const [companyProfits, setCompanyProfits] = useState(null);
     const authData = useRecoilValue(AdminAuthState);
 
-    const handleDate = async () => {
+    const handleMonth = async () => {
         try {
             let token = authData.authToken;
             const response = await axios.get(
                 `${import.meta.env.VITE_API_URL}/admin/getComapnyProfits`,
                 {
                     params: {
-                        specificDay: specificDay,
-                        specificDate: null,
+                        specificMonth: specificMonth,
+                        specificDay: null
                     },
                     headers: { Authorization: `Bearer ${token}` },
                 }
@@ -64,8 +64,9 @@ function CompanyProfit() {
                 `${import.meta.env.VITE_API_URL}/admin/getComapnyProfits`,
                 {
                     params: {
-                        specificDate: specificDate,
-                        specificDay: null
+                        specificDay: specificDay,
+                        specificDate: null,
+                        
                     },
                     headers: { Authorization: `Bearer ${token}` },
                 }
@@ -83,11 +84,11 @@ function CompanyProfit() {
 
 
     useEffect(() => {
-        handleDate();
-    }, [specificDay]);
+        handleMonth();
+    }, [specificMonth]);
     useEffect(() => {
         handleDay();
-    }, [ specificDate]);
+    }, [ specificDay]);
 
     return (
         <div>
@@ -103,8 +104,10 @@ function CompanyProfit() {
                                 <h5 style={{ margin: '0' }}>Search By Month : </h5>
 
                                 <DatePicker
-                                    selected={new Date(specificDay)}
-                                    onChange={(newSpecificDay) => { setSpecificDay(newSpecificDay.toISOString()); }}
+                                    selected={new Date(specificMonth)}
+                                    onChange={(newDate) => {
+                                        setSpecificMonth(newDate.toISOString().split('T')[0]);
+                                    }}
                                     dateFormat="yyyy-MM"
                                     showMonthYearPicker
                                     className='calender-input'
@@ -112,11 +115,9 @@ function CompanyProfit() {
                                 <h5 style={{ margin: '0' }}>Search By Day : </h5>
                                 <DatePicker
                                     className='calender-input'
-                                    selected={new Date(specificDate)}
-                                    onChange={(newDate) => {
-                                        console.log('newDate:', newDate);
-                                        setSpecificDate(newDate);
-                                    }}
+                                    selected={new Date(specificDay)}
+                                    onChange={(newSpecificDay) => { setSpecificDay(newSpecificDay.toISOString().split('T')[0]) }}
+                                    
                                     dateFormat="yyyy-MM-dd"
                                 />
 

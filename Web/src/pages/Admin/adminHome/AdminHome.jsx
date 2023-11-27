@@ -89,7 +89,7 @@ function AdminHome() {
               <div className="row">
                 {cosmo &&
                   <div className="col-4">
-                    <div className='admin-home-box link-box-admin'  onClick={()=>{navigate('/admin/totalProfit')}}>
+                    <div className='admin-home-box link-box-admin arrow-img-container'  onClick={()=>{navigate('/admin/totalProfit')}}>
                       <h5>Company Profit</h5>
                       <p>{cosmo.data.data[0].amount.toFixed(2)}</p>
                       <img src={arrow} alt="" className='arrow-img-admin'/>
@@ -97,7 +97,7 @@ function AdminHome() {
                   </div>}
                 {cosmo &&
                   <div className="col-4">
-                    <div className='admin-home-box link-box-admin' onClick={()=>{navigate('/admin/RiseUpAndGrowUpProfit')}}>
+                    <div className='admin-home-box link-box-admin arrow-img-container' onClick={()=>{navigate('/admin/RiseUpAndGrowUpProfit')}}>
                       <h5>Total Betting Amount</h5>
                       <p>{cosmo.data.data[0].totalBettingAmount.toFixed(2)}</p>
                       <img src={arrow} alt="" className='arrow-img-admin'  />
@@ -122,7 +122,7 @@ function AdminHome() {
                     </div>
                   </div>
                   <div className="col-4">
-                    <div className='admin-home-box link-box-admin'  onClick={()=>{navigate('/admin/totalRecharge')}}>
+                    <div className='admin-home-box link-box-admin arrow-img-container'  onClick={()=>{navigate('/admin/totalRecharge')}}>
                       <h5>Total Recharge</h5>
                       <p>{transaction.overallTotalRecharge.toFixed(2)}</p>
                       <img src={arrow} alt="" className='arrow-img-admin' />
@@ -135,7 +135,7 @@ function AdminHome() {
                     </div>
                   </div>
                   <div className="col-4">
-                    <div className='admin-home-box link-box-admin'  onClick={()=>{navigate('/admin/totalWithdraw')}}>
+                    <div className='admin-home-box link-box-admin arrow-img-container'  onClick={()=>{navigate('/admin/totalWithdraw')}}>
                       <h5>Total Withdraw</h5>
                       <p>{transaction.overallTotalWithdraw.toFixed(2)}</p>
                       <img src={arrow} alt="" className='arrow-img-admin' />

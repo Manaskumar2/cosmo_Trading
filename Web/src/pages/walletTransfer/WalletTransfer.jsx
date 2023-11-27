@@ -51,7 +51,7 @@ function WalletTransfer() {
                 handleTransferdata()
             }
         } catch (error) {
-            if (error.response && error.response.status === 400) {
+            if (error.response && error.response.status === 401) {
                 const errorMessage = `You cannot send money until remaining bet amount 0`;
                 toast.error(errorMessage, { ...toastProps });
             } else if (error.response.status === 403) {

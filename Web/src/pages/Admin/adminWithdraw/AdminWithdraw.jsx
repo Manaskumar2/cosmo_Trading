@@ -23,7 +23,7 @@ export const toastProps = {
 
 function AdminWithdraw() {
   // bankName, ifscCode, accountHolderName, accountNumber
-
+  const [selectedItem, setSelectedItem]=useState(null)
   const [bankName, setbankName] = useState('');
   const [ifscCode, setifscCode] = useState('');
   const [accountHolderName, setaccountHolderName] = useState('');
@@ -206,7 +206,7 @@ function AdminWithdraw() {
 
           <table>
             <thead>
-              <tr className='table-row'>
+              <tr className='table-row table-heading-admin'>
                 <th>Sl No</th>
                 <th>Transaction Id</th>
                 <th>Amount</th>
@@ -219,7 +219,7 @@ function AdminWithdraw() {
             </thead>
             <tbody>
               {withDrawdata && withDrawdata.data.pendingWithdrawRequests.map((item, index) => (
-                <tr key={index} className='table-row'>
+                <tr key={index} className='table-row '>
                   <td>{(page - 1) * 20 + index + 1}</td>
                   <td>{item._id}</td>
                   <td>  {item.withdrawAmount}</td>
@@ -227,7 +227,7 @@ function AdminWithdraw() {
                   {status !== 'pending' && <td>{new Date(item.updatedAt).toLocaleString()}</td>}
                   <td>{item.status}</td>
                   {status !== 'pending' && <td >{item.approvedBy}</td>}
-                  <td> <button type="button" class="btn btn-primary" onClick={() => { handleBankData(item.userId); handleUser(item.userId) }}>Details</button> </td>
+                  <td> <button type="button" class="btn btn-primary" onClick={() => { handleBankData(item.userId); handleUser(item.userId); setSelectedItem(item) }}>Details</button> </td>
                   <Modal
                     show={showModal2}
                     onHide={handleClose}
@@ -246,7 +246,7 @@ function AdminWithdraw() {
                           <p>Wallet Amount: {user && user.data.data.userDetails.walletAmount}</p>
                           <p>Commission Amount: {user && user.data.data.userDetails.commissionAmount}</p>
                           <p>Winning Amount: {user && user.data.data.userDetails.winningAmount}</p>
-                          <p>Downline Count: {user && user.data.data.userDetails.downline.length}</p>
+                          
                         </div>
                         <div style={{ marginLeft: "6rem" }}>
                           
@@ -262,7 +262,7 @@ function AdminWithdraw() {
                             {item.status !== 'confirmed' && item.status !== 'cancelled' && (
                               <>
                                 <div > <input type="text" value={approvedBy} onChange={(e) => { setapprovedBy(e.target.value) }} placeholder='Enter Name' className='name-input-admin' /> </div>
-                                <div className='flex-div'><button onClick={() => { handleConfirm(item._id, "confirmed") }} className='prime-approve-btn'>Approve</button> <button onClick={() => { handleConfirm(item._id, "cancelled") }} className='prime-reject-btn'>Reject</button></div>
+                                <div className='flex-div'><button onClick={() => { handleConfirm(selectedItem._id, "confirmed") }} className='prime-approve-btn'>Approve</button> <button onClick={() => { handleConfirm(selectedItem._id, "cancelled") }} className='prime-reject-btn'>Reject</button></div>
                               </>
                             )}
 

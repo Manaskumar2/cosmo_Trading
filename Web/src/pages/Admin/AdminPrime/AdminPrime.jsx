@@ -115,7 +115,7 @@ function AdminPrime() {
           <Toaster />
           <table>
             <thead>
-              <tr className='table-row'>
+              <tr className='table-row table-heading-admin'>
                 <th>Sl No</th>
                 <th>User Id</th>
                 <th>Amount</th>
