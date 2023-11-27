@@ -10,25 +10,34 @@ function AdminRoute() {
   const adminAuth = useRecoilValue(AdminAuthState);
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   // Check if adminAuth is not available, then redirect to the admin login page
-  //   const authToken = JSON.parse(sessionStorage.getItem('authToken'));
-  //   if (!authToken && !adminAuth) {
-  //     navigate('/admin'); // Redirect to the admin login page
-  //   }
-  // }, [adminAuth, navigate]);
 
   return (
     <Routes>
+      <Route
+            path="/admin"
+            element={
+              <Suspense fallback={<AdminLoader />}>
+                <AdminLogin />
+              </Suspense>
+            }
+          />
       {!adminAuth ? (
-        <Route
-          path="/admin"
-          element={
-            <Suspense fallback={<AdminLoader />}>
-              <AdminLogin />
-            </Suspense>
-          }
-        />
+        <>
+        <Route path="/admin/home" element={<Navigate to="/admin" replace />} />
+        <Route path="/admin/user" element={<Navigate to="/admin" replace />} />
+        <Route path="/admin/recharge" element={<Navigate to="/admin" replace />} />
+        <Route path="/admin/withdraw" element={<Navigate to="/admin" replace />} />
+        <Route path="/admin/adminResetPassword" element={<Navigate to="/admin" replace />} />
+        <Route path="/admin/prime" element={<Navigate to="/admin" replace />} />
+        <Route path="/admin/premiumUsers" element={<Navigate to="/admin" replace />} />
+        <Route path="/admin/uploadNewsAndImage" element={<Navigate to="/admin" replace />} />
+        <Route path="/admin/giftCodeHistory" element={<Navigate to="/admin" replace />} />
+        <Route path="/admin/totalProfit" element={<Navigate to="/admin" replace />} />
+        <Route path="/admin/totalWithdraw" element={<Navigate to="/admin" replace />} />
+        <Route path="/admin/totalRecharge" element={<Navigate to="/admin" replace />} />
+        <Route path="/admin/RiseUpAndGrowUpProfit" element={<Navigate to="/admin" replace />} />
+        <Route path="/admin/downline" element={<Navigate to="/admin" replace />} />
+        </>
       ) : (
         <>
           <Route
@@ -79,14 +88,7 @@ function AdminRoute() {
               </Suspense>
             }
           />
-          <Route
-            path="/admin"
-            element={
-              <Suspense fallback={<AdminLoader />}>
-                <AdminLogin />
-              </Suspense>
-            }
-          />
+          
           <Route
             path="/admin/premiumUsers"
             element={
