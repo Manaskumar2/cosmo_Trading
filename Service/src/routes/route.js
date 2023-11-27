@@ -126,5 +126,5 @@ router.get("/getWinningDocuments", authentication, getDocument)
 router.get("/getBankTransferData", authentication, getBankAccount)
 router.get("/updateexitng", updateDownlineForExistingUsers)
 router.get("/getAllUsersAtLevel", authentication, getAllUsersAtLevel)
-router.get("/getTotalTeams/:userId",calculateTotalTeam)
+router.get("/getTotalTeams/:userId",authentication,calculateTotalTeam)
 module.exports =router

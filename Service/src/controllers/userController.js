@@ -235,7 +235,8 @@ const signIn = async (req, res) => {
 
     const token = jwt.sign({ phoneNumber: findUser.phoneNumber, userId: findUser._id,isAdmin:findUser.isAdmin,UID:findUser.UID}, process.env.JWT_TOKEN, { expiresIn: '1d' });
     
-
+    findUser.token = token
+    await findUser.save();
     const response = {
       phoneNumber: findUser.phoneNumber,
       _id: findUser._id,

@@ -10,7 +10,6 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { Toaster } from 'react-hot-toast';
 import arr from './arr.svg';
 import left from '../../../images/leftArr.svg'
-
 import right from '../../../images/RightArr.svg'
 const toastProps = {
     position: 'top-center',
@@ -89,6 +88,7 @@ function RiseUpAndgrowUp() {
     dateFormat="yyyy-MM"
     showMonthYearPicker
 />
+<button className='back-btn' onClick={() => {setDate(new Date().toISOString().split('T')[0]) }} style={{background:'#e44f4fed'}}><p>Reset</p></button>
                                 <button className='back-btn' onClick={()=>{navigate('/admin/home')}}><img src={arr} alt="" /><p>Back</p></button>
                             </div>
                         </div>

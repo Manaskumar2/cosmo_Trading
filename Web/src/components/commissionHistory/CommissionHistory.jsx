@@ -40,23 +40,30 @@ function CommissionHistory() {
     <div className='CommissionHistory'>
       <div className="container">
         <div className="row salary-commission-data">
-          {commission && <div className='col-4'>
-            <div >Rs:
+          {commission && <div className='col-6'>
+            <div className='price-wrap'>Rs:
               {!commission.totalCommissions.RECHARGE ? "0": commission.totalCommissions.RECHARGE.toFixed(2)}
+              <p >Recharge Commission</p>
             </div>
-            <div>Recharge Commission</div>
+            
           </div>}
-          {commission && <div className='col-4'>
-            <div >Rs:
+          {commission && <div className='col-6'>
+            <div className='price-wrap'>Rs:
               {!commission.totalCommissions.PREMIUM ? "0":commission.totalCommissions.PREMIUM.toFixed(2)}
+              <p>Premium Commission</p>
             </div>
-            <div>Premium Commission</div>
           </div>}
-          {commission && <div className='col-4'>
-            <div >Rs:
+          {commission && <div className='col-6'>
+            <div className='price-wrap'>Rs:
               {!commission.totalCommissions.AGENT ? "0": commission.totalCommissions.AGENT.toFixed(2)}
+              <p>Agent Commission</p>
             </div>
-            <div>Agent Commission</div>
+          </div>}
+          {commission && <div className='col-6'>
+            <div className='price-wrap'>Rs:
+              {!commission.totalCommissions.GIFTCODE ? "0": commission.totalCommissions.GIFTCODE.toFixed(2)}
+              <p>Gift Card</p>
+            </div>
           </div>}
         </div>
         <div className="row headingCommission" >

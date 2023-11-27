@@ -18,4 +18,3 @@ const startCron = () => {
 };
 
 module.exports = { startCron };
-

@@ -63,7 +63,8 @@ function Profile() {
                 return response;
             }
         } catch (error) {
-            if (error.response.status === 403) {
+            if (error.response.status || error.status === 403) {
+                localStorage.removeItem('authUserToken');
                 navigate('/signIn')
                 return response;
             }

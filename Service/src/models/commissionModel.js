@@ -15,7 +15,7 @@ const commissionSchema = new mongoose.Schema({
     },
     commissionType: {
         type: String,
-        enum: ['RECHARGE', 'PREMIUM', 'AGENT'],
+        enum: ['RECHARGE', 'PREMIUM', 'AGENT','GIFTCODE'],
   },
   senderUID: {
     type: Number,

@@ -132,8 +132,6 @@ function AdminRecharge() {
       setPage(page - 1);
     }
   };
-
-
   const handleIncrement = () => {
     if (page < totalPages) {
       setPage(page + 1);
@@ -212,7 +210,6 @@ function AdminRecharge() {
                           <button className='prime-approve-btn' onClick={() => { handlePayment(selectedItem._id, 'confirm') }}>Approve</button>
                           <button onClick={() => { handlePayment(selectedItem._id, 'cancel') }} className='prime-reject-btn'>Reject</button>
                         </>}</div>
-
                     </Modal.Body>
                     <Modal.Footer>
                       <Button variant="secondary" onClick={handleClose} >
@@ -220,7 +217,6 @@ function AdminRecharge() {
                       </Button>
                     </Modal.Footer>
                   </Modal> </td>
-
                 </tr>
               ))
               }

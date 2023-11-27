@@ -201,3 +201,4 @@ const getCommission = async (req, res) => {
 
 
 module.exports = { franchiseCommissions ,getCommissionDetails,commissionAmount,getCommission};
+  

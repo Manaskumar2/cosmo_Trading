@@ -35,7 +35,22 @@ function Home() {
         localStorage.removeItem('showPopUp');
         document.body.style.overflow = 'auto';
     };
-
+    const handleCommission = async () => {
+        try {
+            let token = auth.authToken
+            let userId = auth._id
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/commissionAmount/${userId}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            }
+            );
+            if (response.status === 200) {
+                localStorage.setItem('commission', JSON.stringify(response.data));
+                return response;
+            }
+        } catch (error) {
+            const errorMessage = error.response ? error.response.data.message : error.message;
+        }
+    }
 
     const getPopUpImage = async () => {
         try {
@@ -63,7 +78,8 @@ function Home() {
                 return response;
             }
         } catch (error) {
-            if (error.response.status === 403) {
+            if (error.response.status || error.status === 403) {
+                localStorage.removeItem('authUserToken');
                 navigate('/signIn')
                 return response;
             }
@@ -73,6 +89,7 @@ function Home() {
     };
 
     useEffect(() => {
+        handleCommission()
         getGameHistory();
         getPopUpImage()
     }, []);

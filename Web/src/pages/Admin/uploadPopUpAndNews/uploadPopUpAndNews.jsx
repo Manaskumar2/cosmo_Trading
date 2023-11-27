@@ -22,11 +22,11 @@ function UploadPopUpAndNews() {
     const [winner, setWinner] = useState(null)
     const initialDocuments = Array(10).fill({ name: '', winningAmount: null });
     const [documents, setDocuments] = useState(initialDocuments);
-    const [totalPlayers, settotalPlayers] = useState(null)
+    const [totalPlayers, settotalPlayers] = useState('')
     const [bankName, setBank] = useState('')
-    const [TotalBetting, setTotalBetting] = useState(null)
-    const [onlinePlayers, setonlinePlayers] = useState(null)
-    const [todayTotalWithdrawal, settodayTotalWithdrawal] = useState(null)
+    const [TotalBetting, setTotalBetting] = useState('')
+    const [onlinePlayers, setonlinePlayers] = useState('')
+    const [todayTotalWithdrawal, settodayTotalWithdrawal] = useState('')
     const [file, setfile] = useState(null);
     const authData = useRecoilValue(AdminAuthState)
     const [newsText, setnewsText] = useState('')
@@ -38,7 +38,6 @@ function UploadPopUpAndNews() {
     const handleImg = async () => {
         const formData = new FormData();
         formData.append('image', file);
-        console.log(formData)
         try {
             let token = authData.authToken;
             const response = await axios.post(
@@ -115,31 +114,45 @@ function UploadPopUpAndNews() {
     const handleFakeData = async () => {
         try {
             let token = authData.authToken;
+            const requestData = {};
+            if (totalPlayers !== '') {
+                requestData.totalPlayers = totalPlayers;
+            }
+            if (TotalBetting !== '') {
+                requestData.TotalBetting = TotalBetting;
+            }
+            if (onlinePlayers !== '') {
+                requestData.onlinePlayers = onlinePlayers;
+            }
+            if (todayTotalWithdrawal !== '') {
+                requestData.todayTotalWithdrawal = todayTotalWithdrawal;
+            }
+            if (Object.keys(requestData).length === 0) {
+                console.error("All values are null. Data not sent to backend.");
+                return;
+            }
             const response = await axios.post(
                 `${import.meta.env.VITE_API_URL}/admin/fakePlayers`,
-                {
-                    totalPlayers,
-                    TotalBetting,
-                    onlinePlayers,
-                    todayTotalWithdrawal,
-                },
+                requestData,
                 {
                     headers: { Authorization: `Bearer ${token}` },
                 }
             );
             if (response.status === 201) {
                 toast.success("All Data Successfully Updated!", { ...toastProps });
-                settodayTotalWithdrawal('')
+                settodayTotalWithdrawal('');
                 settotalPlayers('');
                 setTotalBetting('');
                 setonlinePlayers('');
-    
+
                 return response;
             }
         } catch (error) {
             const errorMessage = error.response ? error.response.data.message : error.message;
+            console.error(errorMessage);
         }
     }
+
     const handleBankData = async () => {
         try {
             let token = authData.authToken;
@@ -232,18 +245,43 @@ function UploadPopUpAndNews() {
                     TotalBetting,
                     onlinePlayers,
                     todayTotalWithdrawal */}
-                    <div className='form-rechrge' >
+                    <div className='form-rechrge'>
                         <h3 className='text-centre'>Update Players & Total Withdraw</h3>
-                        <label htmlFor="">Enter Total Players </label>
-                        <input type='number' onChange={(e) => { settotalPlayers(e.target.value) }} placeholder='Enter Total Players' value={totalPlayers} />
-                        <label htmlFor="">Enter Total Betting </label>
-                        <input type='number' onChange={(e) => { setTotalBetting(e.target.value) }} placeholder='Enter Total Betting' value={TotalBetting} />
-                        <label htmlFor="">Enter Total Online Players</label>
-                        <input type='number' onChange={(e) => { setonlinePlayers(e.target.value) }} placeholder='Enter onlinePlayers' value={onlinePlayers} />
-                        <label htmlFor="">Enter Total Withdraw </label>
-                        <input type='number' onChange={(e) => { settodayTotalWithdrawal(e.target.value) }} placeholder='Enter Total Withdraw' value={todayTotalWithdrawal} />
+                        <label htmlFor="totalPlayers">Enter Total Players</label>
+                        <input
+                            type='number'
+                            id='totalPlayers'
+                            onChange={(e) => { settotalPlayers(parseInt(e.target.value)) }}
+                            placeholder='Enter Total Players'
+                            value={totalPlayers}
+                        />
+                        <label htmlFor="TotalBetting">Enter Total Betting</label>
+                        <input
+                            type='number'
+                            id='TotalBetting'
+                            onChange={(e) => { setTotalBetting(parseInt(e.target.value)) }}
+                            placeholder='Enter Total Betting'
+                            value={TotalBetting}
+                        />
+                        <label htmlFor="onlinePlayers">Enter Total Online Players</label>
+                        <input
+                            type='number'
+                            id='onlinePlayers'
+                            onChange={(e) => { setonlinePlayers(parseInt(e.target.value)) }}
+                            placeholder='Enter onlinePlayers'
+                            value={onlinePlayers}
+                        />
+                        <label htmlFor="todayTotalWithdrawal">Enter Total Withdraw</label>
+                        <input
+                            type='number'
+                            id='todayTotalWithdrawal'
+                            onChange={(e) => { settodayTotalWithdrawal(parseInt(e.target.value)) }}
+                            placeholder='Enter Total Withdraw'
+                            value={todayTotalWithdrawal}
+                        />
                         <button onClick={handleFakeData}>Submit</button>
                     </div>
+
                     <div className='form-rechrge' >
                         <h3 className='text-centre'>Add Bank Name</h3>
                         <label htmlFor="">Enter Bank Name</label>

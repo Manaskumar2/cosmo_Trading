@@ -86,6 +86,7 @@ function TotalRecharge() {
                                     onChange={(specificDate) => { setSpecificDate(specificDate.toISOString().split('T')[0]) }}
                                     dateFormat="yyyy-MM-dd"
                                 />
+                                <button className='back-btn' onClick={() => {setSpecificDate(new Date().toISOString().split('T')[0]) }} style={{background:'#e44f4fed'}}><p>Reset</p></button>
                                 <button className='back-btn' onClick={()=>{navigate('/admin/home')}}><img src={arr} alt="" /><p>Back</p></button>
                             </div>
                         </div>

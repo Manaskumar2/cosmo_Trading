@@ -1,3 +1,4 @@
+const commissionModel = require("../models/commissionModel");
 const giftCodeModel = require("../models/giftCodeModel");
 const userModel = require("../models/userModel");
 
@@ -53,7 +54,13 @@ const claimGiftcode = async (req, res) => {
        user.walletAmount += giftCode.amount
        giftCode.claimedBy.push(userId)
          await giftCode.save();
-         await user.save();
+       await user.save();
+       await commissionModel.create({
+        userId: user._id,
+        amount: giftCode.amount,
+        date: Date.now(),
+        commissionType: "GIFTCODE",
+       })
 
     res.status(200).json({ message: 'Gift code claimed successfully.',data:giftCode });
   } catch (error) {
@@ -63,12 +70,19 @@ const claimGiftcode = async (req, res) => {
 }
 const getGiftCode = async (req, res) => {
   try {
+        const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+    const skip = (page - 1) * limit;
+
+
     const giftCodes = await giftCodeModel.find({})
       .populate({
         path: 'claimedBy',
-        select: 'UID name', // Select the fields you want to retrieve from the User model
+        select: 'UID name',
       })
-      .sort({ createdAt: -1 })
+        .sort({ createdAt: -1 })
+       .skip(skip)
+        .limit(limit);
     
     if (giftCodes.length < 0) return res.status(404).json({ status: false, message: "gift code not yet created" })
 
@@ -91,5 +105,71 @@ const getGiftCode = async (req, res) => {
     res.status(500).json({ error: 'Server error. Failed to retrieve gift codes.' });
   }
 };
+// const getGiftcodesAmount = async (req, res) => { 
+//   try {
+//     const page = parseInt(req.query.page) || 1;
+//     const limit = parseInt(req.query.limit) || 20;
+//     const skip = (page - 1) * limit;
 
-module.exports = {createGiftCode,claimGiftcode,getGiftCode}
+//      const giftCodes = await giftCodeModel.find({isDeleted:false})
+//         .sort({ createdAt: -1 })
+//        .skip(skip)
+//       .limit(limit);
+//     const count  =  await giftCodeModel.countDocuments({isDeleted:false})
+    
+//       const response = {
+//       currentPage: page,
+//         totalPages: Math.ceil(count / limit),
+//       giftCodes
+//     };
+//     res.status(200).json({status:true,message:"Success",data:response});
+//   } catch (error) {
+//       console.error('Error:', error);
+//     return res.status(500).json({ error: 'Internal Server Error' });
+//   }
+// }
+const getGiftcodesAmount = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+    const skip = (page - 1) * limit;
+
+    const giftCodes = await giftCodeModel.find({ isDeleted: false })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    const count = await giftCodeModel.countDocuments({ isDeleted: false });
+
+    // Calculate total claimed amount across all gift codes
+    const totalClaimedAmount = await giftCodeModel.aggregate([
+      {
+        $match: { isDeleted: false }
+      },
+      {
+        $group: {
+          _id: null,
+          total: { $sum: { $multiply: ["$claims", "$amount"] } }
+        }
+      }
+    ]);
+
+    const response = {
+      currentPage: page,
+      totalPages: Math.ceil(count / limit),
+      overallClaimedAmount: totalClaimedAmount.length > 0 ? totalClaimedAmount[0].total : 0,
+      giftCodes: giftCodes.map((giftCode) => ({
+        ...giftCode.toObject(),
+        totalClaimedAmount: giftCode.claims * giftCode.amount,
+      })),
+    };
+
+    res.status(200).json({ status: true, message: "Success", data: response });
+  } catch (error) {
+    console.error('Error:', error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+
+module.exports = {createGiftCode,claimGiftcode,getGiftCode,getGiftcodesAmount}

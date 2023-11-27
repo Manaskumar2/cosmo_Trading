@@ -63,24 +63,24 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         .increaseBtn:hover{background: linear-gradient(180deg, #EA3038 0%, #F55860 100%);}
         .decreaseBtn:hover{background: linear-gradient(180deg, #EA3038 0%, #F55860 100%);}
 .pagination-buttons .decreaseBtn, .pagination-buttons .increaseBtn{border: 0;}
-.details-btn{border-radius: 0.25rem;
-    background: #0E6FA6;display: flex;
-    padding: 0.125rem 0.3125rem;
-    justify-content: center;
-    align-items: center;
+.details-btn-myteam{border-radius: 0.25rem;
+    background: #0E6FA6;vertical-align: middle;
     border: 0;outline: none;
-    font-family: Montserrat;color: #fff;
+    font-family: Montserrat;color: #fff;    padding: 4px 6px;
     }
     .calender{background: transparent;color: #fff;border: 0; outline: none;width: 6rem;}
     .down-details{color: #fff;display: flex;flex-direction: column;justify-content: flex-start !important;padding: .5rem;}
     .popup{position: absolute;top: 0;background-color: #4991D3;width: 100%;padding: 1rem;}
     .down-details >p{text-align: left !important;}
     .close-popup{background-color: #EC4E55;color: #fff; border: 0;outline: none;padding: .2rem .8rem;}
+    .b-font{vertical-align: middle;}
+    .sm-font{text-wrap: wrap !important;}
     @media (max-width:410px){
   .sm-font{font-size: .5rem;}
   .b-font{font-size: .6rem;}
   .myTeam .table-responsive .tableBodyRow td .details-btn {
-    padding: 3px 5px;
+    padding: 4px 6px;
     font-size: .6rem;
   }
+  .inquries .col-4 input{width: 100%;}
     }

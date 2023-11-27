@@ -43,7 +43,20 @@ function MyTeam() {
         setPage(1)
     };
 
+    // const handleUserLevelData = async () => {
+    //     try {
+    //         let token = auth.authToken;
+    //         const response = await axios.get(`${import.meta.env.VITE_API_URL}/getAllUsersAtLevel?levelNumber=${1}`, {
+    //             headers: { Authorization: `Bearer ${token}` },
+    //         });
+    //         if (response.status === 200) {
 
+    //         }
+    //         return response
+    //     } catch (error) {
+    //         const errorMessage = error.response ? error.response.data.message : error.message;
+    //     }
+    // };
     const handleLevelData = async () => {
         try {
             let token = auth.authToken;
@@ -177,8 +190,8 @@ function MyTeam() {
                                         <td className='sm-font'>{item.name}</td>
                                         <td style={{ paddingLeft: 0 }}>{item.bettingAmount===null?'0':item.bettingAmount}</td>
                                         <td style={{ paddingLeft: 0 }} className='sm-font'>{item.isDeleted===false?'Enable':'Disable'}</td>
-                                        <td style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} className='sm-font'>
-                                        <button className='details-btn' onClick={() => toggleAccordion(item.UID)} >Details</button>
+                                        <td className='sm-font'>
+                                        <button className='details-btn-myteam' onClick={() => toggleAccordion(item.UID)} >Details</button>
                                         </td>
                                     </tr>
                                     

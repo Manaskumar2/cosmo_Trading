@@ -26,7 +26,7 @@
     font-family: Montserrat;
     padding: .8rem 1.2rem;
     font-size: 1rem;margin-top: 1.2rem;margin: 0;}
-.gift-btn button{
+.submit-gft-btn{
     padding: 1rem 1.875rem;
     gap: 0.625rem;
     flex: 1 0 0;border-radius: 6.25rem;
@@ -40,6 +40,20 @@
     line-height: normal;
     letter-spacing: 0.02rem;
     text-transform: uppercase;margin-top: 4rem;width: 30vw;}
+.history-gft-btn{
+    padding: 1rem 1.875rem;
+    gap: 0.625rem;
+    flex: 1 0 0;border-radius: 6.25rem;
+    border: 1px solid #FFF;
+    background: linear-gradient(160deg, #2f58b9 0%, #0cc9fd 100%);
+    box-shadow: 0px 4px 10px 0px rgba(255, 84, 255, 0.3);color: #FFF;
+    font-family: Montserrat;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: 0.02rem;
+    text-transform: uppercase;margin-top: 2rem;width: 30vw;}
 
 .gift-code-row{display: flex;gap: 2rem;margin-top: 1.2rem;}
 .gift-code-row > input{background-color: transparent;border: 0; outline: none;color: #50B8D9;

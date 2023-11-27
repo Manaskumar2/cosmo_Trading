@@ -122,6 +122,7 @@ function CompanyProfit() {
                                 />
 
 
+                                <button className='back-btn' onClick={() => {setSpecificMonth(new Date().toISOString().split('T')[0]);setSpecificDay(new Date().toISOString().split('T')[0]) }} style={{background:'#e44f4fed'}}><p>Reset</p></button>
                                 <button className='back-btn' onClick={() => { navigate('/admin/home') }}><img src={arr} alt="" /><p>Back</p></button>
                             </div>
                         </div>
@@ -148,7 +149,7 @@ function CompanyProfit() {
                                 {companyProfits && companyProfits.totalPages &&
                                     <div className="pagination-buttons-p2p">
                                         <button onClick={() => { setPage(Math.max(page - 1, 1)); }} className='page-leftarr'>  <img src={right} alt="" /> </button>
-                                        {companyProfits && <div>{page}/{companyProfits.totalPages}</div>}
+                                        {companyProfits && <div>{page}</div>}
                                         <button onClick={() => { setPage(Math.min(page + 1, companyProfits.totalPages)); }} className='page-rightarr'>  <img src={left} alt="" /> </button>
                                     </div>}
                             </div>

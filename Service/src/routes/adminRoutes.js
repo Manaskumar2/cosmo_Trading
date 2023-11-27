@@ -16,7 +16,7 @@ const {getCompanyDetails, companyRechargeAndWithdraw} = require("../controllers/
 const { franchiseCommissions } = require("../controllers/commissionController");
 const { uploadImage, deleteImages } = require("../controllers/popUpimageController");
 const { createArticle } = require("../controllers/articleController");
-const { createGiftCode, getGiftCode } = require("../controllers/giftCodeController");
+const { createGiftCode, getGiftCode, getGiftcodesAmount } = require("../controllers/giftCodeController");
 const { createFakePlayers } = require("../controllers/playerController");
 const { getBetAmounts, getGameHistoryDateWise } = require("../controllers/gameHistoryController");
 const { addBank } = require("../controllers/bankController");
@@ -98,10 +98,11 @@ router.put("/updateUser/:userId", authentication, adminAuthorization, updateBank
 router.get("/userAndBankData/:userId", authentication, adminAuthorization, getUserDetailsWithBank)
 //**************************************************giftCode */
 router.post("/giftCode", authentication, adminAuthorization, createGiftCode)
-router.get("/getGiftCode",authentication,adminAuthorization,getGiftCode)
+router.get("/getGiftCode", authentication, adminAuthorization, getGiftCode)
+router.get("/getGiftCodeAmount",getGiftcodesAmount)
 //************************************************fakePlayers ************************************************
 router.post("/fakePlayers", authentication, adminAuthorization, createFakePlayers)
-router.get("/geBetAmount", getBetAmounts)
+router.get("/geBetAmount",authentication,adminAuthorization, getBetAmounts)
 
 //************************************************bank name ************************************************
 

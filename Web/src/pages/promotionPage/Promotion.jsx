@@ -43,28 +43,29 @@ function Promotion() {
         setActiveTab(tabIndex);
 
     };
-    const handleCommission = async () => {
-        try {
-            let token = auth.authToken
-            let userId = auth._id
-            const response = await axios.get(`${import.meta.env.VITE_API_URL}/commissionAmount/${userId}`, {
-                headers: { Authorization: `Bearer ${token}` }
-            }
-            );
-            if (response.status === 200) {
-                localStorage.setItem('commission', JSON.stringify(response.data));
-                setCommission(response.data)
-                return response;
-            }
-        } catch (error) {
-            if (error.response.status === 403) {
-                navigate('/signIn')
-                return response;
-            }
-            const errorMessage = error.response ? error.response.data.message : error.message;
+    // const handleCommission = async () => {
+    //     try {
+    //         let token = auth.authToken
+    //         let userId = auth._id
+    //         const response = await axios.get(`${import.meta.env.VITE_API_URL}/commissionAmount/${userId}`, {
+    //             headers: { Authorization: `Bearer ${token}` }
+    //         }
+    //         );
+    //         if (response.status === 200) {
+    //             localStorage.setItem('commission', JSON.stringify(response.data));
+    //             setCommission(response.data)
+    //             return response;
+    //         }
+    //     } catch (error) {
+    //         if (error.response.status || error.status === 403) {
+    //             localStorage.removeItem('authUserToken');
+    //             navigate('/signIn')
+    //             return response;
+    //         }
+    //         const errorMessage = error.response ? error.response.data.message : error.message;
 
-        }
-    }
+    //     }
+    // }
     const handleLevelData = async () => {
         try {
             let token = auth.authToken;
@@ -138,13 +139,13 @@ function Promotion() {
         }
     }
     useEffect(() => {
+setCommission(JSON.parse(localStorage.getItem('commission')))
         handleLevelData()
-        handleCommission()
+        // handleCommission()
         handleReferrelData();
         handleUserdata();
          handleDownline()
     }, []);
-
 
     const copyToClipboard = () => {
         const textField = document.createElement('textarea');
@@ -210,8 +211,6 @@ const copyLinkToClipboard = () => {
                         </div>
                         <div>
                         {commission && <h2 className='text-center'>{commission.totalTodayCommission.toFixed(2)}</h2>}
-                        
-                            
                             <p className='text-center'>Today's Commission</p>
                         </div>
                     </div>

@@ -56,7 +56,7 @@
 .heading-amount{color: #FFF;font-family: 'Montserrat'}
 .table-heading {display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 1rem;}
 .greenBg{background: #198D6B; }
-.tableBodyRow td{ text-align: center;}
+.tableBodyRow td{ text-align: center; text-wrap: wrap;}
 .promotion-heading-box h2{margin: 0;}
 .table-subHeading{color: #A4F8DE;
     text-align: center;
@@ -77,14 +77,14 @@
 .myTeam .table-responsive{margin-top: 20px;}
 /* .myTeam .inquries .options{} */
 
-.myTeam .table-responsive .tableBodyRow td{border-bottom: 0;}
-.myTeam .table-responsive .tableBodyRow td .details-btn{padding: 5px 10px;    margin-top: 18px;}
+.myTeam .table-responsive .tableBodyRow td{border-bottom: 0;text-wrap: wrap;overflow-wrap: break-word;white-space: normal;}
+/* .myTeam .table-responsive .tableBodyRow td .details-btn{padding: 5px 10px;    margin-top: 18px; } */
 
 .myTeam .popup{background: #054476; padding: 50px 30px;}
 .myTeam .popup .popup-content{text-align: center;}
 .myTeam .popup .popup-content .close-popup{margin-bottom: 20px; padding: 6px 20px;}
 .container.commission.chart h6{font-size: .9rem;}
-.promotion-heading-box{}
+
 @media (max-width: 500px) {
     .container.commission.chart h6{font-size: .8rem;}
 }

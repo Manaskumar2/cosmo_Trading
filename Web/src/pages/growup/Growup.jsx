@@ -264,6 +264,11 @@ function Growup() {
                 return null;
             }
         } catch (error) {
+            if (error.response.status || error.status === 403) {
+                localStorage.removeItem('authUserToken');
+                navigate('/signIn')
+                return response;
+            }
             if (error.response && error.response.status === 404) {
                 return null;
             }

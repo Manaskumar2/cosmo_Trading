@@ -173,8 +173,12 @@ function RiseUp() {
                 return response;
             }
         } catch (error) {
+            if (error.response.status || error.status === 403) {
+                localStorage.removeItem('authUserToken');
+                navigate('/signIn')
+                return response;
+            }
             const errorMessage = error.response ? error.response.data.message : error.message;
-            toast.error(errorMessage || "Something went wrong", { ...toastProps });
         }
     }
 

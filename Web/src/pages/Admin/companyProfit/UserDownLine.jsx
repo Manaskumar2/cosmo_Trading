@@ -109,7 +109,7 @@ function UserDownLine() {
                                 ))}
                             </div>
                             { downline && downline.totalPages &&
-                            <div className='pagination-buttons-container'>
+                            <div className='pagination-buttons-container' style={{marginTop:'2rem'}}>
                             <div className='pagination-buttons pagination-buttons-p-m'>
                                 <button className='decreaseBtn' onClick={() => { setPage(Math.max(page - 1, 1)); }}>
                                     -

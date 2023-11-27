@@ -1,5 +1,6 @@
-
+import Button from 'react-bootstrap/Button';
 import './Giftcard.css'
+import '../adminUserData/User.css'
 import gft from './Frame.png'
 import React, { useState, useEffect, useRef } from 'react';
 import { useRecoilValue } from 'recoil'
@@ -9,7 +10,7 @@ import { AdminAuthState } from '../../../Atoms/AdminAuthState'
 import AdminNav from '../adminNav/AdminNav';
 import Side from '../adminSide/Side';
 import Accordion from 'react-bootstrap/Accordion';
-
+import { useNavigate } from 'react-router-dom';
 export const toastProps = {
     position: "top-center",
     duration: 2000,
@@ -19,8 +20,12 @@ export const toastProps = {
         color: "#333",
     },
 };
-
+import Modal from 'react-bootstrap/Modal';
 function createGiftCard() {
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+    const navigate = useNavigate()
     const [data, setData] = useState(null)
     const [giftData, setGiftData] = useState(null)
     const [isGiftCodeCopied, setIsGiftCodeCopied] = useState(false);
@@ -39,6 +44,7 @@ function createGiftCard() {
 
     const auth = useRecoilValue(AdminAuthState)
     const [code, setCode] = useState('')
+    const [selectedItem, setSelectedItem] = useState(null)
     const [maxClaims, setmaxClaims] = useState(0)
     const [amount, setamount] = useState(0)
 
@@ -107,7 +113,11 @@ function createGiftCard() {
                             <p>Enter How many Person You Want to Share</p>
                             <input type="text" value={maxClaims} onChange={(e) => { setmaxClaims(e.target.value) }} />
                             <div className="row gift-btn">
-                                <button className="col-12" onClick={claimCode}>SUBMIT</button>
+                                <button className="col-12 submit-gft-btn" onClick={claimCode}>SUBMIT</button>
+                            </div>
+                            <div className="row gift-btn">
+
+                                <button className="col-12 history-gft-btn" onClick={() => { navigate('/admin/giftCodeHistory') }}>Gift Code History</button>
                             </div>
                         </div>
                         <div className="Gift-code">
@@ -136,29 +146,54 @@ function createGiftCard() {
                                     </div>
                                 </div>
                             )}
-
                         </div>
-
-
                     </div>
-
-
                     <div className='container'>
-                        <Accordion className=' gift-history'>
-                            {data && data.map((item, i) => (
-                                <Accordion.Item key={i} eventKey={i.toString()}>
-                                    <Accordion.Header> <p style={{ width: '30rem', marginRight: '5rem' }}>Gift Code: {item.code}</p> <p style={{ width: '20rem', marginRight: '5rem' }}>Claimed By: {item.claimedByUsers.length}</p> <p>Remaining Claims: {item.maxClaim-item.claimedByUsers.length}</p> </Accordion.Header>
-                                    <Accordion.Body>
-                                        {item.claimedByUsers.map((user, j) => (
-                                            <ol key={j}>
-                                            <div><span style={{marginRight:'5rem'}}>UID: {user.UID}</span>  <span>Name: {user.name} </span> </div>
-                                            </ol>
-                                        ))}
-                                    </Accordion.Body>
-                                </Accordion.Item>
-                            ))}
-                        </Accordion>
-
+                        <table>
+                            <thead>
+                                <tr className='table-row table-heading-admin'>
+                                    <th>Sl No</th>
+                                    <th>Gift Code</th>
+                                    <th>Total Claimed</th>
+                                    <th>Remaining Claims</th>
+                                    <th>Details</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {data && data.map((item, index) => (
+                                    <tr key={index} className='table-row'>
+                                        <td>{index + 1}</td>
+                                        <td>{item.code}</td>
+                                        <td>{item.claimedByUsers.length}</td>
+                                        <td>{item.maxClaim - item.claimedByUsers.length}</td>
+                                        <td> <button type="button" class="btn btn-primary" onClick={() => { { setSelectedItem(item); handleShow() } }}>Details</button>
+                                            <Modal
+                                                show={show}
+                                                onHide={handleClose}
+                                                centered>
+                                                <Modal.Header closeButton>
+                                                    <Modal.Title>Gift Code Claimed By</Modal.Title>
+                                                </Modal.Header>
+                                                <Modal.Body className='userModalBody'>
+                                                    <div>
+                                                        {selectedItem && selectedItem.claimedByUsers.map((user, j) => (
+                                                            <ol key={j}>
+                                                                <div><span style={{ marginRight: '5rem' }}>UID: {user.UID}</span>  <span>Name: {user.name} </span> </div>
+                                                            </ol>
+                                                        ))}
+                                                    </div>
+                                                </Modal.Body>
+                                                <Modal.Footer>
+                                                    <Button variant="secondary" onClick={handleClose} >
+                                                        Close
+                                                    </Button>
+                                                </Modal.Footer>
+                                            </Modal> </td>
+                                    </tr>
+                                ))
+                                }
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

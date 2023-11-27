@@ -1,37 +1,36 @@
 
 const Player = require("../models/playersModel")
 const createFakePlayers = async (req, res) => {
-        try {
-            const { totalPlayers, TotalBetting, onlinePlayers, todayTotalWithdrawal } = req.body;
-            
-            
-            const checkPlayers = await Player.findOne().sort({ createdAt: -1 })
-            if (!checkPlayers) {
+    try {
+        const { totalPlayers, TotalBetting, onlinePlayers, todayTotalWithdrawal } = req.body;
 
-                const newPlayer = new Player({
-                    totalPlayers,
-                    TotalBetting,
-                    onlinePlayers,
-                    todayTotalWithdrawal
-                });
-                const player = await newPlayer.save();
-                res.status(201).json(player);
-            } else {
-                    checkPlayers.totalPlayers = totalPlayers,
-                    checkPlayers.onlinePlayers = onlinePlayers,
-                    checkPlayers.TotalBetting = TotalBetting,
-                    checkPlayers.todayTotalWithdrawal= todayTotalWithdrawal
-                        
-                await checkPlayers.save();
-                
-                return res.status(201).send({status:true ,message:"successfully updated "})
+        const checkPlayers = await Player.findOne().sort({ createdAt: -1 });
 
-            }
-        } catch (error) {
-            console.error(error)
-     return   res.status(500).json({ error: 'An error occurred while creating a player' });
+        if (!checkPlayers) {
+            const newPlayer = new Player({
+                totalPlayers,
+                TotalBetting,
+                onlinePlayers,
+                todayTotalWithdrawal
+            });
+            const player = await newPlayer.save();
+            res.status(201).json(player);
+        } else {
+            // Update only the fields that are provided in the request body
+            if (totalPlayers) checkPlayers.totalPlayers = totalPlayers;
+            if (onlinePlayers) checkPlayers.onlinePlayers = onlinePlayers;
+            if (TotalBetting) checkPlayers.TotalBetting = TotalBetting;
+            if (todayTotalWithdrawal) checkPlayers.todayTotalWithdrawal = todayTotalWithdrawal;
+
+            await checkPlayers.save();
+            return res.status(201).send({ status: true, message: "Successfully updated" });
+        }
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'An error occurred while creating/updating a player' });
     }
-}
+};
+
 
 const getPlayers = async (req, res) => {
     try {

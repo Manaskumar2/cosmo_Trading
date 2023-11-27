@@ -30,7 +30,9 @@ const giftCodeSchema = new mongoose.Schema({
         default: false
    },
 },{timestamps: true});
-
+giftCodeSchema.virtual('totalClaimedAmount').get(function () {
+  return this.claims * this.amount;
+});
 const GiftCode = mongoose.model('GiftCode', giftCodeSchema);
 
 module.exports = GiftCode;
