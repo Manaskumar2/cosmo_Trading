@@ -128,6 +128,7 @@ function AdminHome() {
                       <img src={arrow} alt="" className='arrow-img-admin' />
                     </div>
                   </div>
+                  <div className="col-4"></div>
                   <div className="col-4">
                     <div className='admin-home-box'>
                       <h5>Today Withdraw</h5>

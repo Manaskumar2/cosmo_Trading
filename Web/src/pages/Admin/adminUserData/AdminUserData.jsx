@@ -100,29 +100,30 @@ function AdminUserData() {
       let token = authData.authToken;
       const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/getAllUsers`, {
         headers: { Authorization: `Bearer ${token}` },
-        params: { queryPageIndex, queryPageSortBy,bettingAmountSort },
+        params: { queryPageIndex, queryPageSortBy, bettingAmountSort },
       });
-  
+
       if (response.status === 200) {
-        setAllUser(response); 
+        setAllUser(response);
       }
     } catch (error) {
       const errorMessage = error.response ? error.response.data.message : error.message;
       console.error("An error occurred:", errorMessage);
     }
   };
-  
+
   const [searchQuery, setSearchQuery] = useState('');
 
   const handleSearch = async () => {
     try {
       let token = authData.authToken;
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/getAllUsers?queryPageFilter=${searchQuery}`,{
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/getAllUsers?queryPageFilter=${searchQuery}`, {
         headers: { Authorization: `Bearer ${token}` },
       },);
-      if(response.status===200){
-      setAllUser(response)
-      setSearchQuery('')}
+      if (response.status === 200) {
+        setAllUser(response)
+        setSearchQuery('')
+      }
     } catch (error) {
       console.error('Error searching users:', error);
     }
@@ -147,7 +148,7 @@ function AdminUserData() {
       console.error(errorMessage);
     }
   }
-  
+
 
 
 
@@ -242,7 +243,7 @@ function AdminUserData() {
       console.error(errorMessage);
     }
   };
-  useEffect(() => { handleUser() }, [queryPageIndex, queryPageFilter, queryPageSortBy,bettingAmountSort])
+  useEffect(() => { handleUser() }, [queryPageIndex, queryPageFilter, queryPageSortBy, bettingAmountSort])
   const totalPages = allUser && allUser.data.response.totalPages;
   const handleDecrement = () => {
     if (queryPageIndex > 1) {
@@ -284,37 +285,49 @@ function AdminUserData() {
         <Side />
         <div className='admin-rightSection'>
           <Toaster />
-          <div className='all-user-top'>
-          <input
-          className="user-input"
-        type="text"
-        placeholder="Search by UID"
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-      />
-      <button onClick={handleSearch} type="button" class="btn btn-primary">
-        Search
-      </button>
-      <button onClick={handleUser} type="button" class="btn btn-success">
-        All Users
-      </button>
+          <div className="row">
+            <div className="col-6">
+              <div className='all-user-top'>
+                <input
+                  className="user-input"
+                  type="text"
+                  placeholder="Search by UID"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+                <button onClick={handleSearch} type="button" class="btn btn-primary">
+                  Search
+                </button>
+                <button onClick={handleUser} type="button" class="btn btn-success">
+                  All Users
+                </button>
+              </div>
+              <div className="sort-dropdown">
+                <h5>Sort by Betting Amount:</h5>
+                <select
+                  onChange={(e) => setbettingAmountSort(e.target.value)}
+                  value={bettingAmountSort}
+                >
+                  <option value="">Select Sort By</option>
+                  <option value="-1">Ascending</option>
+                  <option value="1">Descending</option>
+                </select>
+              </div>
+            </div>
+            <div className="col-2 total-wallet-amount-container" >
+              <div className='total-wallet-amount'>
+                <h4>Total Number Of All Users</h4>
+                <div>{allUser && allUser.data.response.totalUsers}</div>
+              </div>
+            </div>
+            <div className="col-4 total-wallet-amount-container" >
+              <div className='total-wallet-amount'>
+                <h4>Total Wallet Amount Of All Users</h4>
+                <div>{allUser && allUser.data.response.totalWalletAmount.toFixed(2)}</div>
+              </div>
+            </div>
           </div>
-          <div className="sort-dropdown">
-        <h5>Sort by Betting Amount:</h5>
-        <select
-          onChange={(e) => setbettingAmountSort(e.target.value)}
-          value={bettingAmountSort}
-        >
-          <option value="">Select Sort By</option>
-          <option value="-1">Ascending</option>
-          <option value="1">Descending</option>
-        </select>
-      </div>
-          <div className='total-wallet-amount'>
-            <h4>Total Wallet Amount Of All Users</h4>
-            <div>{allUser && allUser.data.response.totalWalletAmount.toFixed(2)}</div>
-          </div>
-          <table>
+          <table style={{marginTop:'2rem'}}>
             <thead>
               <tr className='table-row table-heading-admin'>
                 <th>Sl No</th>
@@ -337,77 +350,77 @@ function AdminUserData() {
             <tbody>
               {allUser &&
                 allUser.data.response.getUsers.filter((user) =>
-                String(user.UID).toLowerCase().includes(uidFilter.toLowerCase())
-              ).map((user, index) => (
-                    <tr key={index} className='table-row'>
-                      <td>{(queryPageIndex - 1) * 20 + index + 1}</td>
+                  String(user.UID).toLowerCase().includes(uidFilter.toLowerCase())
+                ).map((user, index) => (
+                  <tr key={index} className='table-row'>
+                    <td>{(queryPageIndex - 1) * 20 + index + 1}</td>
 
 
-                      <td>{user.UID}</td>
-                      <td>{user.name}</td>
-                      <td>{user.phoneNumber}</td>
-                      <td>{user.password}</td>
-                      <td>{formatDate(user.createdAt)}</td>
+                    <td>{user.UID}</td>
+                    <td>{user.name}</td>
+                    <td>{user.phoneNumber}</td>
+                    <td>{user.password}</td>
+                    <td>{formatDate(user.createdAt)}</td>
 
-                      <td> <button class="btn btn-info" onClick={()=>{handleDownline(user._id)}}>Show</button> </td>
-                      <td>{user.parentUserUid}</td>
-                      <td>{user.commissionAmount.toFixed(2)}</td>
-                      <td  style={{fontSize:'.9rem', fontWeight:'bold'}}>{(user.walletAmount).toFixed(2)}</td>
-                      <td>{user.bettingAmount ? (user.bettingAmount).toFixed(2):"0"}</td>
-                      <td>{user.dailyTotalBettingAmount ?(user.dailyTotalBettingAmount).toFixed(2) : "0"}</td>
-                      <td>
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter" variant="primary" onClick={() => { getAllUserData(user._id) }}>
-                          Details
-                        </button>
-                        <Modal
-                          show={modalShow}
-                          onHide={handleClose}
-                          size="lg"
-                          aria-labelledby="contained-modal-title-vcenter"
-                          centered
-                        >
-                          <Modal.Header closeButton>
-                            <Modal.Title id="contained-modal-title-vcenter">
-                              User Personal & Bank Data
-                            </Modal.Title>
-                          </Modal.Header>
-                          <Modal.Body className='userModalBody'>
-                            <div>
-                              <h5>Personal Details</h5>
-                              <div>  User Name :  <input type="text" value={name} onChange={(e) => { setname(e.target.value) }} /> </div>
-                              <div> Password :  <input type="text" value={password} onChange={(e) => { setpassword(e.target.value) }} /> </div>
-                              <div> PhoneNumber :  <input type="text" value={phoneNumber} onChange={(e) => { setphoneNumber(e.target.value) }} /> </div>
-                              <div> Parent Referral Code :  <input type="text" value={parentReferralCode} onChange={(e) => { setparentReferralCode(e.target.value) }} /> </div>
-                              <div> Wallet Amount :  <input type="text" value={walletAmount} onChange={(e) => { setwalletAmount(e.target.value) }} /> </div>
-                              <div> Recharge Amount :  <input type="text" value={rechargeAmount} onChange={(e) => { setrechargeAmount(e.target.value) }} /> </div>
-                            </div>
+                    <td> <button class="btn btn-info" onClick={() => { handleDownline(user._id) }}>Show</button> </td>
+                    <td>{user.parentUserUid}</td>
+                    <td>{user.commissionAmount.toFixed(2)}</td>
+                    <td style={{ fontSize: '.9rem', fontWeight: 'bold' }}>{(user.walletAmount).toFixed(2)}</td>
+                    <td>{user.bettingAmount ? (user.bettingAmount).toFixed(2) : "0"}</td>
+                    <td>{user.dailyTotalBettingAmount ? (user.dailyTotalBettingAmount).toFixed(2) : "0"}</td>
+                    <td>
+                      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter" variant="primary" onClick={() => { getAllUserData(user._id) }}>
+                        Details
+                      </button>
+                      <Modal
+                        show={modalShow}
+                        onHide={handleClose}
+                        size="lg"
+                        aria-labelledby="contained-modal-title-vcenter"
+                        centered
+                      >
+                        <Modal.Header closeButton>
+                          <Modal.Title id="contained-modal-title-vcenter">
+                            User Personal & Bank Data
+                          </Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body className='userModalBody'>
+                          <div>
+                            <h5>Personal Details</h5>
+                            <div>  User Name :  <input type="text" value={name} onChange={(e) => { setname(e.target.value) }} /> </div>
+                            <div> Password :  <input type="text" value={password} onChange={(e) => { setpassword(e.target.value) }} /> </div>
+                            <div> PhoneNumber :  <input type="text" value={phoneNumber} onChange={(e) => { setphoneNumber(e.target.value) }} /> </div>
+                            <div> Parent Referral Code :  <input type="text" value={parentReferralCode} onChange={(e) => { setparentReferralCode(e.target.value) }} /> </div>
+                            <div> Wallet Amount :  <input type="text" value={walletAmount} onChange={(e) => { setwalletAmount(e.target.value) }} /> </div>
+                            <div> Recharge Amount :  <input type="text" value={rechargeAmount} onChange={(e) => { setrechargeAmount(e.target.value) }} /> </div>
+                          </div>
 
-                            {bankName && accountHolderName && <div>
-                              <h5>Bank Details</h5>
-                              {bankName &&
-                                <div> Bank Name :  <input type="text" value={bankName} onChange={(e) => { setbankName(e.target.value) }} /> </div>}
-                              {accountHolderName &&
-                                <div> Account Holder Name :  <input type="text" value={accountHolderName} onChange={(e) => { setaccountHolderName(e.target.value) }} /> </div>}
-                              {bankAccountNo && <div> Bank Account No :  <input type="text" value={bankAccountNo} onChange={(e) => { setbankAccountNo(e.target.value) }} /> </div>}
-                              {city && <div> City :  <input type="text" value={city} onChange={(e) => { setcity(e.target.value) }} /> </div>}
-                              {ifscCode && <div> IFSC Code :  <input type="text" value={ifscCode} onChange={(e) => { setifscCode(e.target.value) }} /> </div>}
-                              {bankBranchAddress && <div> Bank Branch Address :  <input type="text" value={bankBranchAddress} onChange={(e) => { setbankBranchAddress(e.target.value) }} /> </div>}
-                            </div>}
-                          </Modal.Body>
-                          <Modal.Footer style={{ textAlign: 'center' }}>
-                            <button onClick={() => handleUpdateData(uid)} className='userUpdate'>Submit</button>
-                          </Modal.Footer>
-                        </Modal>
-                      </td>
-                      <td>
-                        <button onClick={() => handleActive(user._id)} className='activate'>Activate</button>
-                        <button onClick={() => handleDeactive(user._id)} className='deactivate'>Deactivate</button>
-                      </td>
-                      <td>
-                        <button className='login-user' onClick={() => { handleLogin(user.phoneNumber, user.password) }}>Login</button>
-                      </td>
-                    </tr>
-                  ))}
+                          {bankName && accountHolderName && <div>
+                            <h5>Bank Details</h5>
+                            {bankName &&
+                              <div> Bank Name :  <input type="text" value={bankName} onChange={(e) => { setbankName(e.target.value) }} /> </div>}
+                            {accountHolderName &&
+                              <div> Account Holder Name :  <input type="text" value={accountHolderName} onChange={(e) => { setaccountHolderName(e.target.value) }} /> </div>}
+                            {bankAccountNo && <div> Bank Account No :  <input type="text" value={bankAccountNo} onChange={(e) => { setbankAccountNo(e.target.value) }} /> </div>}
+                            {city && <div> City :  <input type="text" value={city} onChange={(e) => { setcity(e.target.value) }} /> </div>}
+                            {ifscCode && <div> IFSC Code :  <input type="text" value={ifscCode} onChange={(e) => { setifscCode(e.target.value) }} /> </div>}
+                            {bankBranchAddress && <div> Bank Branch Address :  <input type="text" value={bankBranchAddress} onChange={(e) => { setbankBranchAddress(e.target.value) }} /> </div>}
+                          </div>}
+                        </Modal.Body>
+                        <Modal.Footer style={{ textAlign: 'center' }}>
+                          <button onClick={() => handleUpdateData(uid)} className='userUpdate'>Submit</button>
+                        </Modal.Footer>
+                      </Modal>
+                    </td>
+                    <td>
+                      <button onClick={() => handleActive(user._id)} className='activate'>Activate</button>
+                      <button onClick={() => handleDeactive(user._id)} className='deactivate'>Deactivate</button>
+                    </td>
+                    <td>
+                      <button className='login-user' onClick={() => { handleLogin(user.phoneNumber, user.password) }}>Login</button>
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </table>
 

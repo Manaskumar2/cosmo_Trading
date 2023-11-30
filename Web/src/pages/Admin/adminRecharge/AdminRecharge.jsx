@@ -204,11 +204,11 @@ function AdminRecharge() {
                         {user && user.data && user.data.data && user.data.data.userDetails && <> <p>Name: {user.data.data.userDetails.name}</p>
                           <p>UID: {user.data.data.userDetails.UID}</p>
                           <p>Phone: {user.data.data.userDetails.phoneNumber}</p> </>}
-                        <p>Upi ReferenceNo: {item.upiReferenceNo}</p>
-                        <p>Upi Id: {item.upiId}</p>
+                        <p>Upi ReferenceNo: {selectedItem && selectedItem.upiReferenceNo}</p>
+                        <p>Upi Id: {selectedItem && selectedItem.upiId}</p>
                         {status == 'pending' && <> <div > <input type="text" value={approvedBy} onChange={(e) => { setapprovedBy(e.target.value) }} placeholder='Enter Name' className='name-input-admin' style={{ width: '14rem' }} /> </div>
-                          <button className='prime-approve-btn' onClick={() => { handlePayment(selectedItem._id, 'confirm') }}>Approve</button>
-                          <button onClick={() => { handlePayment(selectedItem._id, 'cancel') }} className='prime-reject-btn'>Reject</button>
+                          <button className='prime-approve-btn' onClick={() => { handlePayment(selectedItem && selectedItem._id, 'confirm') }}>Approve</button>
+                          <button onClick={() => { handlePayment(selectedItem && selectedItem._id, 'cancel') }} className='prime-reject-btn'>Reject</button>
                         </>}</div>
                     </Modal.Body>
                     <Modal.Footer>

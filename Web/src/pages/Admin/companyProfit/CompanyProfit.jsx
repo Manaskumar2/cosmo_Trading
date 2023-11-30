@@ -47,7 +47,7 @@ function CompanyProfit() {
             );
 
             if (response.status === 200) {
-                console.log(response.data)
+                
                 setCompanyProfits(response.data);
             }
         } catch (error) {
@@ -71,7 +71,25 @@ function CompanyProfit() {
                     headers: { Authorization: `Bearer ${token}` },
                 }
             );
-
+            if (response.status === 200) {
+                setCompanyProfits(response.data);
+            }
+        } catch (error) {
+            const errorMessage = error.response
+                ? error.response.data.message
+                : error.message;
+        }
+    };
+    const reSet = async () => {
+        try {
+            let token = authData.authToken;
+            const response = await axios.get(
+                `${import.meta.env.VITE_API_URL}/admin/getComapnyProfits`,
+                {
+                
+                    headers: { Authorization: `Bearer ${token}` },
+                }
+            );
             if (response.status === 200) {
                 setCompanyProfits(response.data);
             }
@@ -102,7 +120,6 @@ function CompanyProfit() {
                             <div> <h4>Company Profit</h4> </div>
                             <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
                                 <h5 style={{ margin: '0' }}>Search By Month : </h5>
-
                                 <DatePicker
                                     selected={new Date(specificMonth)}
                                     onChange={(newDate) => {
@@ -120,9 +137,7 @@ function CompanyProfit() {
                                     
                                     dateFormat="yyyy-MM-dd"
                                 />
-
-
-                                <button className='back-btn' onClick={() => {setSpecificMonth(new Date().toISOString().split('T')[0]);setSpecificDay(new Date().toISOString().split('T')[0]) }} style={{background:'#e44f4fed'}}><p>Reset</p></button>
+                                <button className='back-btn' onClick={() => {reSet()}} style={{background:'#e44f4fed'}}><p>Reset</p></button>
                                 <button className='back-btn' onClick={() => { navigate('/admin/home') }}><img src={arr} alt="" /><p>Back</p></button>
                             </div>
                         </div>
