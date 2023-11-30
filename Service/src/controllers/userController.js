@@ -743,6 +743,7 @@ const getAllUsers = async (req, res) => {
       currentPage: parseInt(queryPageIndex),
       totalCount: count,
       totalWalletAmount,
+      totalUsers:count
     };
                 return res.status(200).send({
                     status: true,
@@ -770,6 +771,7 @@ const getAllUsers = async (req, res) => {
       currentPage: parseInt(queryPageIndex),
       totalCount: count,
       totalWalletAmount,
+      totalUsers:count
     };
 
     return res.status(200).send({ status: true, message: "Successful", response });
