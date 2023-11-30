@@ -87,9 +87,9 @@ const getCompanyProfit = async (req, res) => {
 
  
     const currentDate = new Date();
-    if (startDate > currentDate || endDate < currentDate) {
-      return res.status(200).json({ status: true, data: [], totalPages: 0, overallTotalProfit: 0 });
-    }
+    // if (startDate > currentDate || endDate < currentDate) {
+    //   return res.status(200).json({ status: true, data: [], totalPages: 0, overallTotalProfit: 0 });
+    // }
 
     let matchStage = {
       createdAt: {
