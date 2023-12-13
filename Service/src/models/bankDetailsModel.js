@@ -10,7 +10,7 @@ const accountSchema = new mongoose.Schema({
         required: true
     },
     bankAccountNo: {
-        type: Number,
+        type: String,
         required: true
     },
     city: {
