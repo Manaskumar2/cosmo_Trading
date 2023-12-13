@@ -30,7 +30,7 @@ const createBankAccount = async (req, res) => {
       const checkBankAccount = await accountDetail.findOne({ userId: userId })
       if (checkBankAccount) return res.status(404).json({ error: false, message: 'Bank account details is already present' });
       
-    const newAccountDetail = new accountDetail({
+  const accountDetails ={
       bankName,
       accountHolderName,
       bankAccountNo,
@@ -38,9 +38,9 @@ const createBankAccount = async (req, res) => {
       ifscCode,
       bankBranchAddress,
       userId,
-    });
+    };
 
-    await newAccountDetail.save();
+    const newAccountDetail =await accountDetail.create(accountDetails)
 
     res.status(201).json({ message: 'Bank account created successfully', accountDetail: newAccountDetail });
   } catch (error) {
