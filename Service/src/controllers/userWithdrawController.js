@@ -8,7 +8,6 @@ const withdrawrequest = async (req, res) => {
     const { withdrawAmount } = req.body;
     const wAmount = parseInt(withdrawAmount);
     const userId = req.decodedToken.userId;
-  if (wAmount) return res.status(401).send({ status: false, message: "withdraw not done" });
 
     if (!userId) return res.status(403).send({ status: false, message: "Please login" });
     if (!wAmount) return res.status(400).send({ status: false, message: "Please enter amount" });
